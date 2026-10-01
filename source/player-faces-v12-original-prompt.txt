@@ -1,0 +1,15 @@
+Use case: stylized-concept
+Asset type: original cartoon football manager game face sprite atlas.
+Primary request: create ONE contact sheet of exactly 28 wholly original fictional adult male football players in a perfectly aligned grid of 7 columns and 4 rows. Every cell is an equal square, no gutters or spacing, overall aspect ratio exactly 7:4. Each cell contains one head and upper chest portrait centered with consistent eye height and clear hair margins, suitable for cropping into a small circular avatar.
+Style/medium: premium hand-drawn comic and painted toy character illustration. Soft clean ink outlines, rounded sculpted shapes, expressive brows and eyes, warm textured brush shading, playful confident faces. Clearly illustrated original characters, not photorealistic and not celebrity caricatures.
+Characters: 28 distinct original adult men aged 20 to 38, diverse skin tones and facial structures, four to six East Asian looking characters among a broadly varied fictional international squad. Use individually different hair silhouettes, short crops, curls, swept fringes, bald heads, tied hair, one cheerful redhead, close beard, moustache, clean shave. Give each a distinct friendly expression, a grin, thoughtful focus, cheeky raised eyebrow or quiet confidence. No duplicate heads.
+Composition/framing: exactly seven equal squares across and four down; heads and shoulders only, every head fully inside its cell, consistent camera scale and near-forward pose. Background in every cell is a clean deep navy field with a subtle circular navy-blue halo behind the head. All 28 cells are filled. No frames, cell dividers or text.
+Color palette: dark navy with fresh teal, lime and warm orange accents. Invented simple teal/navy football jerseys with varied lime or orange piping. No official uniforms. Warm skin shading and lively clear hair silhouettes readable at 48 to 64 pixels.
+Lighting/mood: soft consistent studio-style painted light, bright spirited small club sports game mood.
+Constraints: wholly original invented faces; no real person references, no resemblance targets, no celebrity names or likeness. No real team logos, club crests, sponsors, brand marks, jersey numbers, lettering, labels, captions or watermarks. Strict 7 by 4 regular square-cell grid, no missing or empty cells, no visible grid lines. This is a fresh new image rather than editing a previous asset.
+
+Generation mode: built-in image_gen; new generation without any referenced images.
+Outcome: successful first result adopted, original copied without image edits.
+Saved asset: work/football-prototype/dist/assets/player-faces-v12.png
+Dimensions: 1659 x 948 pixels; exactly 7 x 4 square cells of 237 x 237 pixels.
+Characters: entirely fictional; actual footballer photographs and real-person likeness guides were not supplied to this successful request.

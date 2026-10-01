@@ -1,0 +1,27 @@
+var movementElapsed=0,movementStamp=0,movementSeed=null,movementEvent=null,movementEventAge=Infinity,movementDemo=false,movementDemoElapsed=0,lastMotionFrame=null;
+function cancelMovementPreview(){const wasPreview=movementDemo;movementDemo=false;movementDemoElapsed=0;if(wasPreview){lastEvent=null;movementEvent=null;movementEventAge=Infinity;}movementStamp=performance.now();renderMovementControls();}
+function renderMovementControls(){const host=$('movement-controls');if(!host||!state)return;const preview=state.phase==='prep',html='<div class="movement-controls"><span><b>2D 경기 중계</b><small id="movement-label">'+(movementDemo?'미리보기 · 경기 기록은 바뀌지 않아요.':'전술과 주요 장면을 보여주는 경기 중계')+'</small></span><button id="movement-preview" class="secondary" '+(!preview||!motionEnabled()?'disabled':'')+'>'+(movementDemo?'미리보기 끝내기':'움직임 미리보기')+'</button></div>';if(host.dataset.markup!==html){host.innerHTML=html;host.dataset.markup=html;$('movement-preview').onclick=()=>{if(state.phase!=='prep'||!motionEnabled())return;if(movementDemo)cancelMovementPreview();else{movementDemo=true;movementDemoElapsed=0;movementElapsed=0;movementStamp=performance.now();renderMovementControls();}if(innerWidth<730)$('pitch').scrollIntoView({behavior:'instant',block:'center'});};}}
+function motionFrame(now=performance.now()){
+ if(!state)return null;if(movementSeed!==state.seed){movementSeed=state.seed;movementElapsed=0;movementStamp=now;movementEvent=null;movementEventAge=Infinity;movementDemo=false;movementDemoElapsed=0;}
+ const rawDelta=Math.max(0,now-movementStamp),visualDelta=Math.min(80,rawDelta);movementStamp=now;
+ const eventChanged=movementEvent!==lastEvent;if(eventChanged){movementEvent=lastEvent;movementEventAge=lastEvent?0:Infinity;}
+ const visible=view==='match'&&!document.hidden,enabled=motionEnabled();if(movementDemo&&(!enabled||state.phase!=='prep'))cancelMovementPreview();
+ const playing=visible&&enabled&&!state.paused&&(F.running(state)||movementEventAge<2200),demo=visible&&enabled&&movementDemo;
+ if(playing||demo){movementElapsed+=visualDelta;if(Number.isFinite(movementEventAge)&&!eventChanged)movementEventAge+=rawDelta;if(demo){movementDemoElapsed+=rawDelta;if(movementDemoElapsed>=12000)cancelMovementPreview();}}
+ const match=movementDemo?{...state,phase:'first',paused:false}:state;
+ lastMotionFrame=Movement.frame({match,positions:positions(),elapsedMs:movementElapsed,event:movementDemo?null:movementEvent,eventAgeMs:movementEventAge,motion:enabled});
+ const label=$('movement-label');if(label){const text=movementDemo?'미리보기 · '+lastMotionFrame.label:state.paused?'일시 정지 · '+lastMotionFrame.label:lastMotionFrame.label;if(label.textContent!==text)label.textContent=text;}
+ return lastMotionFrame;
+}
+function drawMotionActors(ctx,w,h){
+ const motion=motionFrame();if(!motion)return;
+ for(const player of motion.own){const node=$('players').querySelector('[data-player="'+player.id+'"]');if(!node)continue;node.style.left=player.x+'%';node.style.top=player.y+'%';node.style.marginLeft='';node.style.marginTop='';node.classList.toggle('ball-carrier',motion.carrierId===player.id);}
+ if(state.phase==='prep'&&!movementDemo)return;
+ const scale=w<360?.72:1;
+ for(const p of motion.opponent){const x=w*p.x/100,y=h*p.y/100;ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);ctx.shadowColor='#031811';ctx.shadowBlur=4;ctx.shadowOffsetY=3;ctx.fillStyle='#d7dbe1';ctx.strokeStyle='#677382';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(-5,-9);ctx.lineTo(-11,-4);ctx.lineTo(-7,2);ctx.lineTo(-5,0);ctx.lineTo(-5,11);ctx.lineTo(5,11);ctx.lineTo(5,0);ctx.lineTo(7,2);ctx.lineTo(11,-4);ctx.lineTo(5,-9);ctx.closePath();ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.fillStyle='#18212c';ctx.font='bold 8px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(p.no),0,2);ctx.restore();}
+ motion.trail.forEach((p,i)=>{ctx.fillStyle='rgba(249,255,231,'+((i+1)/Math.max(1,motion.trail.length)*.24)+')';ctx.beginPath();ctx.arc(w*p.x/100,h*p.y/100,2.5,0,Math.PI*2);ctx.fill();});
+ const bx=w*motion.ball.x/100,by=h*motion.ball.y/100;ctx.save();ctx.shadowColor='#061912';ctx.shadowBlur=7;ctx.shadowOffsetY=2;ctx.fillStyle='#ffffff';ctx.strokeStyle='#25342a';ctx.lineWidth=1;ctx.beginPath();ctx.arc(bx,by,4.8,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.fillStyle='#273526';ctx.beginPath();ctx.arc(bx+1,by-1,1.6,0,Math.PI*2);ctx.fill();ctx.restore();
+}
+function movementShouldAnimate(){return !!state&&view==='match'&&!document.hidden&&motionEnabled()&&(movementDemo||!state.paused&&(F.running(state)||movementEventAge<2200));}
+function movementSnapshot(){return {preview:movementDemo,elapsedMs:movementElapsed,eventAgeMs:Number.isFinite(movementEventAge)?movementEventAge:null,frame:lastMotionFrame};}
+document.addEventListener('visibilitychange',()=>{movementStamp=performance.now();if(document.hidden)cancelMovementPreview();});

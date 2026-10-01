@@ -1,0 +1,17 @@
+휴대폰 최신 개발 안내 (2026-10-02)
+
+정적 HTML/JS/CSS. node build.cjs standalone.html 또는 node build.cjs index.html --pwa
+python -m http.server 8765 --bind 127.0.0.1 --directory dist
+저장소 루트에서 node source/run-tests.cjs · 42파일/503검증그룹.
+공개 전체 빌드: node source/build-pwa.cjs. Football5/Season8/Statistics1.
+시즌 저장 win-again-season-v17, 연습 저장 win-again-touchline-v17. 구버전 복원 유지.
+CampaignFile은 원본 모델을 바꾸지 않고 안전한 버전 백업과 S.restore 검증을 제공합니다.
+portability-ui는 native file→preview→명시적 import, 이전 저장 보관, storage 실패 시 현재 모델 보존을 처리합니다.
+pwa-ui는 보안 문맥의 실제 index에서만 worker를 등록하며 설치/오프라인 상태를 표시합니다.
+SW는 scope와 contents revision별 정적 캐시, 네트워크 우선 index, 성공한 업데이트만 교체합니다.
+cache-assets.js는 해당 빌드의 실제 정적 자산 whitelist로 생성하세요.
+공개 단일 HTML 배포는 WIN_AGAIN_INLINE_SHELL=true, 실제 문서 SHA-256 검증값과 icon/manifest/SW를 함께 생성합니다.
+공개 폴더에는 개인 저장 파일·QA·인증파일을 넣지 않습니다.
+Staff는 포지션·의무 코치의 실제 훈련·의료 효과, 리그7경기 계약과 장부를 관리합니다.
+SaveRecovery는 손상·미래 버전 저장 원본을 보관하며 덮어쓰기를 차단합니다.
+모바일 성능·실제 화면·로딩 진행 표시를 계속 확인합니다. AGENTS.md 필수 원칙을 지키세요.
