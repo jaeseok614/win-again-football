@@ -8,3 +8,5 @@
 #pwa-preparation[data-state="error"]{border-color:#9d5157}
 #pwa-preparation[data-state="ready"]{border-color:#548a64}
 @media(prefers-reduced-motion:reduce){.pwa-preparation-progress{animation:none}}
+
+#mobile-club-life{grid-column:1/-1;min-height:44px;font-size:12px}

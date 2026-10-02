@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- Test APK only: synthetic document provider for SAF import/export QA. -->
+        <provider android:name="com.jaeseok614.winagainfootball.CampaignTestProvider"
+            android:authorities="com.jaeseok614.winagainfootball.testdocuments"
+            android:exported="true" />
+    </application>
+</manifest>

@@ -1,0 +1,48 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.jaeseok614.winagainfootball'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'com.jaeseok614.winagainfootball'
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName '1.0.0'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+    buildTypes {
+        debug { applicationIdSuffix '.debug'; versionNameSuffix '-debug' }
+        release {
+            minifyEnabled false
+            // Release bundles intentionally remain unsigned until the owner creates
+            // a private upload key. Never distribute the CI debug key as a Play key.
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    buildFeatures { buildConfig true }
+    lint { abortOnError true }
+}
+
+tasks.register('prepareGameAssets', Exec) {
+    workingDir rootProject.projectDir.parentFile
+    commandLine 'node', 'source/build-android.cjs'
+    inputs.dir(rootProject.file('../source/dist'))
+    inputs.file(rootProject.file('../source/build.cjs'))
+    inputs.file(rootProject.file('../source/build-android.cjs'))
+    inputs.file(rootProject.file('web/android-adapter.js'))
+    outputs.dir(file('src/main/assets/game'))
+}
+tasks.named('preBuild').configure { dependsOn 'prepareGameAssets' }
+
+dependencies {
+    implementation 'androidx.activity:activity:1.12.4'
+    implementation 'androidx.webkit:webkit:1.17.1'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test:rules:1.6.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.6.1'
+}

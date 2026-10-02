@@ -6,7 +6,7 @@ function test(name,fn){fn();groups++;console.log('PASS '+name);}
 function oldV8(){const ctx=vm.createContext({});for(const file of ['engine','economy','career','cup','health','statistics','season'])vm.runInContext(fs.readFileSync(path.join(__dirname,'legacy-v8',file+'.js'),'utf8'),ctx,{filename:'personality-v8-'+file});return {F:ctx.Football,S:ctx.Season,ST:ctx.Statistics};}
 function finish(m,engine=F){while(m.phase!=='full'){if(!engine.running(m))engine.begin(m);engine.finishSegment(m);}return m;}
 function play(s,season=S,engine=F){finish(s.match,engine);return season.settle(s);}
-function withoutNames(value){const out=copy(value);delete out.staff;delete out.europe;for(const row of out.history||[])delete row.europeChampion;const visit=o=>{if(!o||typeof o!=='object')return;delete o.name;delete o.scorerName;delete o.assistName;for(const v of Object.values(o))visit(v);};visit(out);return out;}
+function withoutNames(value){const out=copy(value);delete out.staff;delete out.europe;delete out.clubLife;for(const row of out.history||[])delete row.europeChampion;const visit=o=>{if(!o||typeof o!=='object')return;delete o.name;delete o.scorerName;delete o.assistName;for(const v of Object.values(o))visit(v);};visit(out);return out;}
 function canonPlayers(s){for(const p of Object.values(s.squad))assert.equal(p.name,F.identityProfile(p.identity).name);if(s.match)for(const p of Object.values(s.match.players))assert.equal(p.name,F.identityProfile(p.identity).name);}
 function sameState(a,b){const expected=copy(b);if(expected.match)expected.match.paused=F.running(expected.match);assert.deepEqual(withoutNames(a),withoutNames(expected));}
 function displayedLogs(m){return m.logs.map(e=>({...e,text:F.displayText(e.text,m.players)}));}

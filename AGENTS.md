@@ -41,3 +41,15 @@ Legacy saves keep their current match and season without adding European games;
 qualification applies after the next season transition. Keep strict deterministic
 fixture, RNG, receipt and historical champion validation. National-team matches
 remain future work. The Europe panel renders only when the tournament view opens.
+
+ClubLife provides optional pre-match, halftime and 65-minute team talks, canonical
+pre/post-match interviews and recent articles derived from real game receipts.
+Preserve deterministic RNG and old saves without morale. Talk confidence is capped
+at +/-3, and a spoken-to player cannot be replaced through recruitment mid-fixture.
+Keep hidden journal/talk views cheap. Coach portraits are original fictional art;
+do not substitute real club/player photos or download portrait assets at runtime.
+
+Android is the intended Google Play release route. Build the offline native app
+with `node source/build-android.cjs` and android/gradlew. Keep local.properties,
+signing keys, generated assets and build outputs out of Git. Release bundles are
+unsigned until the owner creates a Play account and provides an upload key.
