@@ -57,8 +57,21 @@ public final class GameSmokeTest {
         }
         fail("Timed out verifying: " + script);
     }
-    private void screenshot(String filename) throws Exception {
+    private void awaitAppWindowFocus(ActivityScenario<MainActivity> scenario) throws Exception {
+        long until = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+        while (System.nanoTime() < until) {
+            AtomicReference<Boolean> focused = new AtomicReference<>(false);
+            scenario.onActivity(activity -> focused.set(activity.hasWindowFocus()));
+            if (focused.get()) return;
+            Thread.sleep(100);
+        }
+        android.view.accessibility.AccessibilityNodeInfo window = InstrumentationRegistry.getInstrumentation()
+            .getUiAutomation().getRootInActiveWindow();
+        fail("App window was covered or unfocused; active package: " + (window == null ? "unknown" : window.getPackageName()));
+    }
+    private void screenshot(ActivityScenario<MainActivity> scenario, String filename) throws Exception {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        awaitAppWindowFocus(scenario);
         Thread.sleep(200); // Let the requested WebView scroll and raster frame paint.
         Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
         assertNotNull("Emulator screenshot was unavailable", bitmap);
@@ -77,15 +90,18 @@ public final class GameSmokeTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
             assertEquals("true", evaluate(scenario, "WinAgainAndroid.available"));
-            evaluate(scenario,
+            assertEquals("The rendered coach and player portraits must have real image backgrounds", "true", evaluate(scenario,
                 "(()=>{window.androidPortraitsReady=false;setView('squad');squadTab='health';render();" +
-                "const coach=document.querySelector('.staff-portrait');const player=document.querySelector('[style*=portrait]');" +
-                "const coachUrl=coach&&getComputedStyle(coach).backgroundImage.match(/^url\\([\"']?(.*?)[\"']?\\)$/)?.[1];" +
-                "const playerUrl=Portraits.asset;const urls=[coachUrl,playerUrl];let loaded=0;" +
-                "urls.forEach(url=>{const image=new Image();image.onload=()=>{if(image.naturalWidth>0&&++loaded===2)androidPortraitsReady=true};image.src=url});return true;})()");
+                "const backgroundUrl=selector=>{const element=document.querySelector(selector);if(!element)return null;" +
+                "const background=getComputedStyle(element).backgroundImage;if(!background.startsWith('url(')||!background.endsWith(')'))return null;" +
+                "let url=background.slice(4,-1);if((url[0]===String.fromCharCode(34)&&url.at(-1)===String.fromCharCode(34))" +
+                "||(url[0]===String.fromCharCode(39)&&url.at(-1)===String.fromCharCode(39)))url=url.slice(1,-1);return url};" +
+                "const urls=[backgroundUrl('.staff-portrait'),backgroundUrl('.player-portrait')];" +
+                "if(urls.some(url=>!url||!url.startsWith('data:image/')))return 'Missing rendered portrait background';let loaded=0;" +
+                "urls.forEach(url=>{const image=new Image();image.onload=()=>{if(image.naturalWidth>0&&++loaded===2)androidPortraitsReady=true};image.src=url});return true;})()"));
             awaitTrue(scenario, "window.androidPortraitsReady===true");
             evaluate(scenario, "document.getElementById('staff-panel').scrollIntoView({block:'start'});true");
-            screenshot("android-coaches.png");
+            screenshot(scenario, "android-coaches.png");
             assertEquals("true", evaluate(scenario,
                 "(()=>{save();const original=JSON.stringify(currentCampaignPayload());const file=CampaignFile.stringify(currentCampaignPayload());" +
                 "previewCampaignText(file);const restored=applyCampaignImport();return restored&&JSON.stringify(currentCampaignPayload())===original;})()"));
@@ -101,9 +117,9 @@ public final class GameSmokeTest {
             fingerprint = evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,phase:state.phase,minute:state.minute,rng:state.rng})");
             scenario.onActivity(activity -> assertTrue("Game emitted JavaScript console errors: " + activity.consoleErrorsForTest(), activity.consoleErrorsForTest().isEmpty()));
             evaluate(scenario, "window.scrollTo(0,0);true");
-            screenshot("android-game.png");
+            screenshot(scenario, "android-game.png");
             evaluate(scenario, "document.getElementById('club-life-panel')?.scrollIntoView({block:'start'});true");
-            screenshot("android-interviews.png");
+            screenshot(scenario, "android-interviews.png");
         }
         try (ActivityScenario<MainActivity> reopened = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(reopened);
@@ -143,13 +159,13 @@ public final class GameSmokeTest {
             scenario.onActivity(activity -> activity.showLoadingPreviewForTest());
             InstrumentationRegistry.getInstrumentation().waitForIdleSync();
             scenario.onActivity(activity -> assertTrue("Portrait title or gauge was clipped", activity.loadingBrandFitsForTest()));
-            screenshot("android-loading-portrait.png");
+            screenshot(scenario, "android-loading-portrait.png");
             scenario.onActivity(activity -> activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));
             awaitOrientation(scenario, Configuration.ORIENTATION_LANDSCAPE); awaitReady(scenario);
             scenario.onActivity(activity -> activity.showLoadingPreviewForTest());
             InstrumentationRegistry.getInstrumentation().waitForIdleSync();
             scenario.onActivity(activity -> assertTrue("Landscape title or gauge was clipped", activity.loadingBrandFitsForTest()));
-            screenshot("android-loading-landscape.png");
+            screenshot(scenario, "android-loading-landscape.png");
             scenario.onActivity(activity -> { activity.hideLoadingPreviewForTest(); activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); });
             awaitOrientation(scenario, Configuration.ORIENTATION_PORTRAIT);
         }
@@ -182,10 +198,16 @@ public final class GameSmokeTest {
             String pointJson = evaluate(scenario,
                 "(()=>{const r=document.getElementById('campaign-import-file').getBoundingClientRect();return JSON.stringify([r.x+r.width/2,r.y+r.height/2,devicePixelRatio])})()");
             JSONArray point = new JSONArray(new JSONTokener(pointJson).nextValue().toString());
-            int[] origin = new int[2];
-            scenario.onActivity(activity -> activity.gameViewForTest().getLocationOnScreen(origin));
+            awaitAppWindowFocus(scenario);
+            int[] origin = new int[2]; int[] size = new int[2];
+            scenario.onActivity(activity -> {
+                activity.gameViewForTest().getLocationOnScreen(origin);
+                size[0] = activity.gameViewForTest().getWidth(); size[1] = activity.gameViewForTest().getHeight();
+            });
             float x = origin[0] + (float)(point.getDouble(0) * point.getDouble(2));
             float y = origin[1] + (float)(point.getDouble(1) * point.getDouble(2));
+            assertTrue("Import picker touch must be inside the visible WebView: " + pointJson,
+                x >= origin[0] && x < origin[0] + size[0] && y >= origin[1] && y < origin[1] + size[1]);
             Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
             long now = SystemClock.uptimeMillis();
             MotionEvent down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN, x, y, 0);

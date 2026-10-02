@@ -43,7 +43,16 @@ test('explicit browser rejection is contained, throttled and can recover after a
 });
 
 test('vibration exceptions cannot interrupt match execution or trigger repeated failed calls',()=>{
- let calls=0;const c=Feedback.create({vibrate:()=>{calls++;throw Error('Vibration not allowed');},visible:()=>true,active:()=>true,now:()=>1000,haptics:true});assert.equal(status(c.play('goal')),'error');assert.equal(c.snapshot().lastStatus,'error');assert.equal(status(c.play('goal')),'cooldown');assert.equal(calls,1);assert.doesNotThrow(()=>c.setEnabled(false));assert.equal(c.snapshot().enabled,false);assert.equal(c.snapshot().lastStatus,'disabled');assert.equal(calls,2);
+ let calls=0;const c=Feedback.create({vibrate:()=>{calls++;throw Error('Vibration not allowed');},visible:()=>true,active:()=>true,now:()=>1000,haptics:true});assert.equal(status(c.play('goal')),'error');assert.equal(c.snapshot().lastStatus,'error');assert.equal(status(c.play('goal')),'cooldown');assert.equal(calls,1);assert.doesNotThrow(()=>c.setEnabled(false));assert.equal(c.snapshot().enabled,false);assert.equal(c.snapshot().lastStatus,'disabled');assert.equal(calls,1);
+});
+
+test('startup, disabled preferences and cancellation before the first touch never call the vibration API',()=>{
+ let calls=0;const c=Feedback.create({vibrate:()=>{calls++;throw Error('WebView has no user activation');},active:()=>false});assert.equal(status(c.cancel()),'idle');c.setEnabled(false);c.setEnabled(false);assert.equal(status(c.play('preview')),'disabled');c.setEnabled(true);assert.equal(status(c.play('preview')),'inactive');assert.equal(status(c.cancel()),'idle');c.setEnabled(false);assert.equal(calls,0);assert.equal(c.snapshot().enabled,false);
+});
+
+test('only a currently accepted pattern is cancelled once; expired or rejected patterns need no stop request',()=>{
+ const {controller:c,calls,env}=harness();assert.equal(status(c.play('goal')),'played');assert.equal(status(c.cancel()),'cancelled');assert.equal(status(c.cancel()),'idle');assert.deepEqual(calls,[[55,35,80],0]);c.setEnabled(false);assert.equal(calls.length,2);c.setEnabled(true);env.time+=1000;assert.equal(status(c.play('save')),'played');env.time+=20;assert.equal(status(c.cancel()),'idle');c.setEnabled(false);assert.equal(calls.length,3);
+ let rejectedCalls=0;const rejected=Feedback.create({haptics:true,vibrate:()=>{rejectedCalls++;return false;},active:()=>true});assert.equal(status(rejected.play('goal')),'blocked');assert.equal(status(rejected.cancel()),'idle');rejected.setEnabled(false);assert.equal(rejectedCalls,1);
 });
 
 test('cancellation sends zero duration, disabling stops feedback and snapshots cannot change preferences',()=>{

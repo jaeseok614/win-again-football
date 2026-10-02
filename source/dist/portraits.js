@@ -2,9 +2,11 @@
  'use strict';
  // This atlas contains original fictional faces. Identity mapping never uses game RNG.
  const asset='assets/player-faces-v12.png?v=12';
- // Share the atlas once. In standalone builds this URL is a large data URI;
- // repeating it in each portrait's style would inflate squad markup by 100 MB.
- if(typeof root.document?.documentElement?.style?.setProperty==='function')root.document.documentElement.style.setProperty('--player-portrait-atlas',"url('"+asset+"')");
+ // Share the atlas once. Large inline data URIs exceed browsers' custom-property
+ // limits, so use one ordinary rule rather than a variable or per-card styles.
+ if(typeof root.document?.createElement==='function'&&typeof root.document?.head?.appendChild==='function'){
+  const stylesheet=root.document.createElement('style');stylesheet.id='player-portrait-atlas';stylesheet.textContent='.player-portrait{background-image:url("'+asset+'")}';root.document.head.appendChild(stylesheet);
+ }
  const base={g1:0,g2:10,d1:1,d2:4,d3:7,d4:6,d5:9,d6:13,m1:8,m2:3,m3:23,m4:12,m5:11,m6:18,f1:21,f2:15,f3:20,f4:22,t_g1:24,t_g2:2,t_d1:16,t_d2:14,t_m1:5,t_m2:17,t_f1:25,t_f2:19};
  function index(player){
   const identity=String(typeof player==='string'?player:player?.identity||player?.id||'unknown');
