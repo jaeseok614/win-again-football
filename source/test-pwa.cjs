@@ -123,8 +123,9 @@ function readPNG(file) {
 }
 
 (async () => {
-  await test('manifest is relative, standalone and has readable original mask-safe PNG icons', async () => {
-    assert.equal(manifest.name, '이번엔 우승한다'); assert.equal(manifest.short_name, '우승한다');
+  await test('manifest preserves relative installation and the long Korean title with recognizable mask-safe football icons', async () => {
+    assert.equal(manifest.name, '눈 떠보니 2부 리그 감독이었다! 이번 생엔 우승한다'); assert.equal(manifest.short_name, '이번 생엔 우승한다');
+    assert.equal(Array.from(manifest.name).length, 29);
     for (const key of ['id', 'scope', 'start_url']) assert.equal(manifest[key], './');
     assert.equal(manifest.display, 'standalone'); assert.equal(manifest.theme_color, '#0c0e12');
     assert.equal(manifest.background_color, '#0c0e12');
@@ -132,14 +133,19 @@ function readPNG(file) {
     for (const icon of manifest.icons) {
       const png = readPNG(path.join(dir, icon.src)), size = Number(icon.sizes.split('x')[0]);
       assert.equal(png.width, size); assert.equal(png.height, size);
-      let white = 0, red = 0;
+      let centralWhite = 0, centralBlack = 0, grass = 0, sky = 0;
       for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
         const offset = (y * size + x) * 3, pixel = [...png.pixels.subarray(offset, offset + 3)];
-        if (pixel.every(channel => channel > 240)) white++;
-        if (pixel[0] > 190 && pixel[1] < 40) red++;
-        if (icon.purpose === 'maskable' && Math.hypot(x + .5 - size / 2, y + .5 - size / 2) > size * .4) assert.deepEqual(pixel, [12, 14, 18]);
+        const safe = Math.hypot(x + .5 - size / 2, y + .5 - size / 2) <= size * .4;
+        if (safe && pixel.every(channel => channel > 165) && Math.max(...pixel) - Math.min(...pixel) < 55) centralWhite++;
+        if (safe && y > size * .25 && y < size * .7 && pixel.every(channel => channel < 55)) centralBlack++;
+        if (y > size * .68 && pixel[1] > pixel[0] * 1.2 && pixel[1] > pixel[2] * 1.2) grass++;
+        if (y < size * .4 && pixel[2] > pixel[0] * 1.3 && pixel[2] > 20) sky++;
       }
-      assert(white > size * size * .02); assert(red > size * size * .15);
+      assert(centralWhite > size * size * .06, 'the white football remains visible in the central safe circle');
+      assert(centralBlack > size * size * .015, 'the black football panels remain visible in the central safe circle');
+      assert(grass > size * size * .05, 'the icon retains its green pitch');
+      assert(sky > size * size * .08, 'the icon retains its blue stadium background');
     }
     assert(!/localStorage|indexedDB|season\.squad/.test(workerSource));
   });

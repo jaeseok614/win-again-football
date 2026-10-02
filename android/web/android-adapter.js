@@ -4,6 +4,7 @@
  const pending = new Map();
  let sequence = 0, exportBusy = false;
  const maxBytes = 2 * 1024 * 1024;
+ const appTitle = '눈 떠보니 2부 리그 감독이었다! 이번 생엔 우승한다';
  const api = {
   version: '1.0.0',
   get available() { return !!(window.WinAgainNative && typeof WinAgainNative.postMessage === 'function'); },
@@ -67,7 +68,7 @@
   dialog.setAttribute('aria-labelledby', 'android-privacy-title');
   dialog.style.cssText = 'width:min(560px,calc(100% - 24px));max-height:80dvh;overflow:auto;padding:20px';
   dialog.innerHTML = '<h2 id="android-privacy-title">개인정보처리 안내</h2>' +
-   '<p>시행일 2026-10-02 · 윈 어게인 · 축구 감독</p>' +
+   '<p>시행일 2026-10-02 · ' + appTitle + '</p>' +
    '<p>가입과 로그인이 없는 오프라인 게임입니다. 광고, 결제, 분석·추적 SDK가 없으며 개발자 서버로 개인정보나 게임 기록을 보내지 않습니다.</p>' +
    '<h3>기기 안의 구단</h3><p>구단, 선수, 경기, 전술, 대화·기사와 설정은 이 앱의 내부 저장 공간에 보관합니다. 개발자가 원격으로 읽지 않으며 자동 클라우드 동기화는 제공하지 않습니다.</p>' +
    '<h3>직접 선택한 파일</h3><p>내보내기는 문서 선택기에서 고른 위치에 JSON 파일을 씁니다. 불러오기는 선택한 파일 하나를 읽고, 확인 후 교체를 누르면 반영합니다. 다른 문서, 사진, 주소록, 위치, 마이크, 카메라에 접근하지 않습니다.</p>' +
@@ -105,7 +106,7 @@
  window.renderPwaStatus = () => {
   const installation = document.getElementById('pwa-state')?.closest('section');
   if (installation) {
-   installation.innerHTML = '<h3>앱 정보</h3><p class="portable-hint">윈 어게인 · 축구 감독 ' + api.version + ' · 인터넷 없이 플레이 · 광고와 결제 없음</p>' +
+   installation.innerHTML = '<h3>앱 정보</h3><p class="portable-hint">' + appTitle + ' ' + api.version + ' · 인터넷 없이 플레이 · 광고와 결제 없음</p>' +
     '<button type="button" class="secondary" data-android-privacy>개인정보처리 안내</button>';
    installation.querySelector('[data-android-privacy]').onclick = showPrivacy;
   }

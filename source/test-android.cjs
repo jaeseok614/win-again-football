@@ -15,6 +15,19 @@ test('official Gradle wrapper and distribution SHA256 are pinned',()=>{
  assert.equal(read('gradle/wrapper/gradle-wrapper.jar.sha256').trim(),actual);
  assert.match(read('gradle/wrapper/gradle-wrapper.properties'),/distributionSha256Sum=20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78/);
 });
+test('Android title, stadium loader, football bitmap and adaptive safe icon are bundled',()=>{
+ const manifest=read('app/src/main/AndroidManifest.xml'),strings=read('app/src/main/res/values/strings.xml');
+ assert.match(manifest,/android:label="@string\/app_name"/);assert.match(manifest,/@mipmap\/ic_launcher_round/);
+ assert.ok(strings.includes('눈 떠보니 2부 리그 감독이었다! 이번 생엔 우승한다'));
+ const png=fs.readFileSync(path.join(android,'app/src/main/res/drawable-nodpi/football_icon.png'));
+ assert.equal(png.subarray(1,4).toString(),'PNG');assert.equal(png.readUInt32BE(16),512);assert.equal(png.readUInt32BE(20),512);
+ const stadium=fs.readFileSync(path.join(android,'app/src/main/res/drawable-nodpi/launch_stadium.webp'));
+ assert.equal(stadium.subarray(8,12).toString(),'WEBP');assert.ok(stadium.length<150000);
+ for(const file of ['ic_launcher','ic_launcher_round'])assert.match(read('app/src/main/res/mipmap-anydpi-v26/'+file+'.xml'),/<adaptive-icon/);
+ const java=read('app/src/main/java/com/jaeseok614/winagainfootball/MainActivity.java');
+ assert.match(java,/R\.drawable\.launch_stadium/);assert.match(java,/compact \? 0\.70f : 0\.50f/);
+ assert.match(java,/setIndeterminate\(indeterminate\)/);assert.match(java,/setProgress\(value\)/);
+});
 test('WebView restricts local origin, untrusted navigation, file access, and bridge',()=>{
  const java=read('app/src/main/java/com/jaeseok614/winagainfootball/MainActivity.java');
  assert.match(java,/WebViewAssetLoader/);assert.match(java,/setAllowFileAccess\(false\)/);assert.match(java,/setAllowContentAccess\(false\)/);

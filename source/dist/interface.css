@@ -16,7 +16,13 @@
 body { background: var(--bg); color: var(--ink); font-size: 14px; }
 .app { max-width: 1260px; padding: 23px 30px 28px; }
 .masthead { padding: 0 0 17px; border: 0; min-height: 50px; gap: 16px; }
-.brand { gap: 11px; font-size: 17px; font-weight: 700; letter-spacing: -.5px; }
+.brand { gap: 11px; font-size: 17px; font-weight: 700; letter-spacing: -.5px; min-width: 0; }
+.brand-title { display: block; min-width: 0; line-height: 1.4; }
+.brand-title-first,.brand-title-last { display: block; }
+.brand-title-first { font-size: 14px; font-weight: 600; letter-spacing: -.35px; }
+.brand-title-last { font-size: 18px; font-weight: 800; }
+.brand .brand-mark { flex: 0 0 38px; width: 38px; height: 38px; overflow: hidden; }
+.brand-mark img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .brand-mark { display: flex; align-items: center; justify-content: center; gap: 0; width: 34px; height: 34px; padding: 0; font: 800 17px/1 system-ui,sans-serif; background: #df0f19; color: #fff; border-radius: 7px; }
 .brand-mark > span { font-size: 11px; align-self: end; margin: 0 0 8px -2px; }
 .brand small, .prototype-tag { display: none; }
@@ -583,6 +589,14 @@ footer { margin-top: 24px; padding-top: 13px; color: #7f8a99; font-size: 10px; }
 }
 @media(prefers-reduced-motion:reduce) {
   .app *,#player-detail-dialog * { scroll-behavior: auto!important; }
+}
+@media(max-width:1000px) {
+  .masthead { flex-direction: column; align-items: stretch; gap: 11px; }
+  .brand { align-self: flex-start; max-width: 100%; }
+  .brand-title-first { font-size: 14px; }
+  .brand-title-last { font-size: 18px; }
+  .header-actions { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; width: 100%; }
+  .masthead button { width: 100%; min-height: 44px; padding: 9px 8px; font-size: 11px; }
 }
 /* Club name and division already appear in the page heading. Keep the outcome
    panel at season end; during a season, use the space for the four real KPIs. */

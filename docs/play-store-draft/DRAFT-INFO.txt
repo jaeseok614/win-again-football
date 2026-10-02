@@ -1,9 +1,11 @@
 Google Play 스토어 그래픽 초안
 
-app-icon-512-draft.png: 기존 게임 WR 아이콘을 그대로 사용한 512 × 512 PNG 초안.
+app-icon-512-draft.png: 새 축구공·잔디·야간 경기장 아이콘을 사용한 512 × 512 PNG 초안.
 feature-graphic-1024x500-draft.png: 1024 × 500 PNG 홍보 그래픽 초안. 실제 앱 스크린샷이 아닙니다.
 feature-graphic-1024x500-draft.svg: 편집 가능한 벡터 원본.
 
-문구: 이번엔 우승한다 / 축구 감독
+앱 제목: 눈 떠보니 2부 리그 감독이었다! 이번 생엔 우승한다 (공백·문장부호 포함 29자)
+문구: 축구 감독
+공식 제목 30자 제한: https://support.google.com/googleplay/android-developer/answer/9898842
 기존 게임 색상: 배경 #10191d, 라임 #c8f36e.
 스토어 등록 전 최종 브랜드·문구·배치를 검토해 주세요.

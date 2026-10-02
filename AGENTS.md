@@ -53,3 +53,9 @@ Android is the intended Google Play release route. Build the offline native app
 with `node source/build-android.cjs` and android/gradlew. Keep local.properties,
 signing keys, generated assets and build outputs out of Git. Release bundles are
 unsigned until the owner creates a Play account and provides an upload key.
+
+The public game title is now "눈 떠보니 2부 리그 감독이었다! 이번 생엔 우승한다"
+(29 characters). The owner wants a long anime/light-novel-style title and football
+imagery in the app icon and startup loading screen. Keep the title readable on
+small screens; keep win-again protocol identifiers, save keys and package IDs
+stable when changing branding. Preserve original-art provenance in docs/.

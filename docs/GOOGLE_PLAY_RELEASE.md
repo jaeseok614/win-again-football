@@ -8,7 +8,7 @@
 
 | 항목 | 설정 |
 | --- | --- |
-| 앱 이름 | 윈 어게인 · 축구 감독 |
+| 앱 이름 | 눈 떠보니 2부 리그 감독이었다! 이번 생엔 우승한다 |
 | 출시 패키지 | `com.jaeseok614.winagainfootball` |
 | 버전 | `1.0.0`, versionCode `1` |
 | 최소 Android | Android 7.0 / API 24 |
@@ -122,7 +122,11 @@ Bundle / APK → Android App Bundle**에서 업로드 키를 만들고 서명한
 
 ## 스토어 문구 초안
 
-**제목:** 윈 어게인 · 축구 감독
+**제목:** 눈 떠보니 2부 리그 감독이었다! 이번 생엔 우승한다
+
+공백·문장부호를 포함해 29자입니다. 애니메이션·라이트노벨처럼 상황과 목표를
+표현하면서 Google Play의 제목 30자 제한 안에 맞췄습니다.
+[공식 메타데이터 정책](https://support.google.com/googleplay/android-developer/answer/9898842?hl=ko)
 
 **짧은 설명:** 전술과 선수 육성, 감독의 한마디로 구단을 성장시키는 오프라인 축구 게임
 

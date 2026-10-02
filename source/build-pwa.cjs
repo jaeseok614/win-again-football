@@ -5,7 +5,7 @@ const digest=files=>{const hash=crypto.createHash('sha256');for(const file of fi
 const template=fs.readFileSync(path.join(dist,'index.html'),'utf8');
 const modules=[...template.matchAll(/(?:src|href)="([^"?]+\.(?:js|css)\?v=\d+)"/g)].map(match=>'./'+match[1]);
 const assets=[...new Set([...modules,'./assets/player-faces-v12.png?v=12','./assets/coach-faces-v1.webp?v=1'])];
-const modularFiles=['index.html','sw.js','manifest.webmanifest',...assets.map(asset=>asset.replace(/^\.\//,'').split('?')[0])].map(file=>path.join(dist,file));
+const modularFiles=['index.html','sw.js','manifest.webmanifest','assets/app-icon-192.png','assets/app-icon-512.png',...assets.map(asset=>asset.replace(/^\.\//,'').split('?')[0])].map(file=>path.join(dist,file));
 fs.writeFileSync(path.join(dist,'cache-assets.js'),'self.WIN_AGAIN_CACHE_REVISION = '+JSON.stringify(digest(modularFiles))+';\nself.WIN_AGAIN_ASSETS = '+JSON.stringify(assets,null,2)+';\n');
 cp.execFileSync(process.execPath,[path.join(__dirname,'build.cjs'),path.join(publish,'index.html'),'--pwa'],{stdio:'inherit'});
 let html=fs.readFileSync(path.join(publish,'index.html'),'utf8');

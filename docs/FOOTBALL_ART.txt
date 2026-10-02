@@ -1,0 +1,35 @@
+Football game artwork provenance
+Generated: 2026-10-02
+Mode: built-in image_gen.imagegen (no CLI/API fallback)
+All subjects are original fictional football imagery. No team brands, people, or text were requested.
+
+Generated originals are preserved in this deliverable folder and in the built-in tool's generated_images folder.
+Icon original: 1254 x 1254 PNG; original image tool path:
+C:/Users/황재석/.codex/generated_images/01a0fa2e-29da-7660-bd5e-a38bae8a521d/exec-2226932e-aa56-4110-82e4-7778ff1737d9.png
+Loading original: 948 x 1659 PNG; original image tool path:
+C:/Users/황재석/.codex/generated_images/01a0fa2e-29da-7660-bd5e-a38bae8a521d/exec-dca0e87f-4260-4c5d-ab97-1bf56b0289be.png
+
+Final mechanical export transformations (sharp 0.35.4):
+- football-icon-512.png: 512 x 512 PNG, palette compression (256 colors, quality 100, effort 10, dither 0.6), 124299 bytes.
+- football-icon-192.png: 192 x 192 PNG, same PNG settings, 25062 bytes.
+- football-loading-v1.webp: 720 x 1260 WebP, quality 76, effort 6, 94926 bytes.
+Inspection: both final assets visually checked with view_image; the ball silhouette and stadium lighting remain clear, the portrait has dark upper space for title and status added in code.
+
+EXACT APP ICON PROMPT
+Use case: stylized-concept
+Asset type: Android football management game launcher icon, square 1024x1024 composition.
+Primary request: An instantly recognizable bold black-and-white football in the center, standing on vivid emerald football pitch turf, with subtle night stadium floodlights in the distance. Original fictional soccer game artwork.
+Style/medium: Polished game illustration with crisp dimensional shapes, refined realistic material highlights, simple iconic composition suitable for tiny launcher icons.
+Composition/framing: A single prominent spherical football occupies roughly 53 percent of the canvas width and sits exactly at canvas center. Keep its whole silhouette and all essential content comfortably inside the central 65 percent safe area for Android circle and squircle masks. Restrained stadium hints, darker navy sky around the ball, green turf beneath it. Full bleed image with no drawn border or rounded corners.
+Lighting/mood: Bright clean floodlit highlights on the football, deep navy and emerald atmosphere, inviting football night.
+Constraints: No typography, letters, logos, badges, watermark, people or club branding. Football panel pattern must read clearly as a standard black-and-white soccer ball. Simple high contrast foreground, avoid tiny decorative details and excessive light effects. Opaque background.
+
+EXACT LOADING BACKGROUND PROMPT
+Use case: stylized-concept
+Asset type: Portrait smartphone startup and loading screen background for an original football management game, 1024x1792 vertical composition.
+Primary request: A beautiful fictional football stadium at night with floodlights, vivid emerald pitch and a classic black-and-white football resting on the grass in the lower foreground.
+Style/medium: Premium polished sports game illustration, dimensional material detail and cinematic lighting, tasteful rather than crowded.
+Composition/framing: Low pitch-side camera facing the open stadium. Football clearly visible near the lower center, within the middle 60 percent width, positioned about 73 percent down the canvas. The upper quarter consists of calm deep navy night sky suitable for app title text added later in code. Keep the center around 42–58 percent height calm and dark enough for a subtitle or loading status. Bottom 10 percent remains calm dark grass for a progress bar added later. Floodlights and stadium stands frame the left and right edges, the pitch extends to the horizon near mid-height. No interfaces or baked-in text.
+Lighting/mood: Match-night anticipation, luminous emerald grass against navy sky, restrained cool white floodlights. Atmospheric glow with clean dark negative space.
+Constraints: No text, letters, numbers, logo, badge, watermark, people, branded equipment or real club identities. Football has recognizably crisp black-and-white pentagonal panels and a complete silhouette. Full bleed opaque background. No border.
+

@@ -5,6 +5,9 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
@@ -25,6 +28,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,7 +71,13 @@ public final class MainActivity extends ComponentActivity {
     private final ExecutorService io = Executors.newSingleThreadExecutor();
     private final List<String> consoleErrors = new CopyOnWriteArrayList<>();
     private FrameLayout root;
-    private LinearLayout loading;
+    private FrameLayout loading;
+    private LinearLayout loadingContent;
+    private ImageView loadingBackdrop;
+    private ImageView loadingBall;
+    private TextView loadingTitle;
+    private TextView loadingSubtitle;
+    private Boolean compactLoading;
     private TextView loadingText;
     private ProgressBar progress;
     private Button retry;
@@ -141,25 +151,59 @@ public final class MainActivity extends ComponentActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         root = new FrameLayout(this);
         root.setBackgroundColor(Color.rgb(16, 27, 35));
-        loading = new LinearLayout(this);
-        loading.setOrientation(LinearLayout.VERTICAL);
-        loading.setGravity(Gravity.CENTER);
-        loading.setPadding(dp(24), dp(24), dp(24), dp(24));
+        loading = new FrameLayout(this);
         loading.setBackgroundColor(Color.rgb(16, 27, 35));
+        loadingBackdrop = new ImageView(this);
+        loadingBackdrop.setImageResource(R.drawable.launch_stadium);
+        loadingBackdrop.setScaleType(ImageView.ScaleType.MATRIX);
+        loadingBackdrop.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        loading.addView(loadingBackdrop, new FrameLayout.LayoutParams(-1, -1));
+        View shade = new View(this);
+        shade.setBackground(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+            new int[]{0xB8071420, 0xCC091A20, 0xDD07151D}));
+        loading.addView(shade, new FrameLayout.LayoutParams(-1, -1));
+        loadingContent = new LinearLayout(this);
+        loadingContent.setOrientation(LinearLayout.VERTICAL);
+        loadingContent.setGravity(Gravity.CENTER);
+        loadingContent.setPadding(dp(24), dp(24), dp(24), dp(24));
+        loadingBall = new ImageView(this);
+        loadingBall.setImageResource(R.drawable.football_icon);
+        loadingBall.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        loadingBall.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        loadingContent.addView(loadingBall, new LinearLayout.LayoutParams(dp(88), dp(88)));
+        loadingTitle = new TextView(this);
+        loadingTitle.setText(R.string.loading_title);
+        loadingTitle.setTextColor(Color.WHITE);
+        loadingTitle.setTextSize(24);
+        loadingTitle.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+        loadingTitle.setGravity(Gravity.CENTER);
+        loadingTitle.setLineSpacing(dp(5), 1);
+        loadingTitle.setPadding(0, dp(12), 0, dp(10));
+        loadingContent.addView(loadingTitle);
+        loadingSubtitle = new TextView(this);
+        loadingSubtitle.setText(R.string.loading_subtitle);
+        loadingSubtitle.setTextColor(0xFFE1ECD8);
+        loadingSubtitle.setTextSize(14);
+        loadingSubtitle.setGravity(Gravity.CENTER);
+        loadingSubtitle.setPadding(0, 0, 0, dp(24));
+        loadingContent.addView(loadingSubtitle);
         progress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
         progress.setMax(100);
-        loading.addView(progress, new LinearLayout.LayoutParams(dp(220), dp(12)));
+        loadingContent.addView(progress, new LinearLayout.LayoutParams(dp(250), dp(12)));
         loadingText = new TextView(this);
         loadingText.setTextColor(Color.WHITE);
         loadingText.setTextSize(17);
         loadingText.setGravity(Gravity.CENTER);
         loadingText.setPadding(0, dp(20), 0, dp(12));
-        loading.addView(loadingText);
+        loadingContent.addView(loadingText);
         retry = new Button(this);
-        retry.setText("다시 시도");
+        retry.setText(R.string.retry);
         retry.setMinHeight(dp(48));
         retry.setOnClickListener(view -> verifyAndLoad());
-        loading.addView(retry);
+        loadingContent.addView(retry);
+        loading.addView(loadingContent, new FrameLayout.LayoutParams(-1, -2, Gravity.CENTER));
+        loading.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
+            layoutLoadingBrand(right - left, bottom - top));
         root.addView(loading, new FrameLayout.LayoutParams(-1, -1));
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
             Insets safe = insets.getInsets(WindowInsetsCompat.Type.systemBars()
@@ -279,7 +323,7 @@ public final class MainActivity extends ComponentActivity {
             @Override public void onProgressChanged(WebView view, int value) {
                 if (pendingExportId != null) return;
                 progress.setIndeterminate(false); progress.setProgress(value);
-                loadingText.setText("게임을 불러오는 중… " + value + "%");
+                loadingText.setText(getString(R.string.loading_progress, value));
             }
             @Override public boolean onConsoleMessage(ConsoleMessage message) {
                 if (BuildConfig.DEBUG && message.messageLevel() == ConsoleMessage.MessageLevel.ERROR)
@@ -405,6 +449,30 @@ public final class MainActivity extends ComponentActivity {
         loadingText.setText(text); progress.setVisibility(View.GONE);
         retry.setVisibility(View.VISIBLE); loading.setVisibility(View.VISIBLE);
     }
+    private void layoutLoadingBrand(int width, int height) {
+        if (width <= 0 || height <= 0) return;
+        boolean compact = width > height || height < dp(420);
+        // Keep the ball visible when a portrait background is cropped on a wide screen.
+        float scale = Math.max((float) width / loadingBackdrop.getDrawable().getIntrinsicWidth(),
+            (float) height / loadingBackdrop.getDrawable().getIntrinsicHeight());
+        float scaledWidth = loadingBackdrop.getDrawable().getIntrinsicWidth() * scale;
+        float scaledHeight = loadingBackdrop.getDrawable().getIntrinsicHeight() * scale;
+        float focus = compact ? 0.70f : 0.50f;
+        float offsetY = Math.max(height - scaledHeight, Math.min(0, height * 0.5f - scaledHeight * focus));
+        Matrix matrix = new Matrix(); matrix.setScale(scale, scale);
+        matrix.postTranslate((width - scaledWidth) / 2, offsetY); loadingBackdrop.setImageMatrix(matrix);
+        int side = Math.max(dp(24), (width - dp(660)) / 2);
+        loadingContent.setPadding(side, dp(compact ? 10 : 24), side, dp(compact ? 10 : 24));
+        if (compactLoading == null || compactLoading != compact) {
+            compactLoading = compact;
+            loadingBall.setLayoutParams(new LinearLayout.LayoutParams(dp(compact ? 44 : 88), dp(compact ? 44 : 88)));
+            loadingTitle.setTextSize(compact ? 20 : 24);
+            loadingTitle.setPadding(0, dp(compact ? 5 : 12), 0, dp(compact ? 5 : 10));
+            loadingSubtitle.setTextSize(compact ? 12 : 14);
+            loadingSubtitle.setPadding(0, 0, 0, dp(compact ? 12 : 24));
+            loadingText.setPadding(0, dp(compact ? 10 : 20), 0, dp(compact ? 6 : 12));
+        }
+    }
     private void confirmExit() {
         pauseGame();
         new AlertDialog.Builder(this).setMessage("게임을 닫을까요? 구단은 이 기기에 저장됩니다.")
@@ -429,4 +497,13 @@ public final class MainActivity extends ComponentActivity {
     }
     WebView gameViewForTest() { return gameView; }
     List<String> consoleErrorsForTest() { return consoleErrors; }
+    // Instrumentation can preview the real loading layout without delaying startup
+    // or inventing a progress percentage. These methods do nothing in release builds.
+    void showLoadingPreviewForTest() { if (BuildConfig.DEBUG) showLoading("게임 파일을 확인하는 중…", true); }
+    void hideLoadingPreviewForTest() { if (BuildConfig.DEBUG) loading.setVisibility(View.GONE); }
+    boolean loadingBrandFitsForTest() {
+        return loading.getVisibility() == View.VISIBLE && progress.isIndeterminate()
+            && loadingTitle.getText().toString().equals(getString(R.string.loading_title))
+            && loadingContent.getTop() >= 0 && loadingContent.getBottom() <= loading.getHeight();
+    }
 }

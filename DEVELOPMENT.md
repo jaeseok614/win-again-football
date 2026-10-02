@@ -33,6 +33,14 @@
 화면을 숨겼을 때 대화·기사 계산을 생략하고 표시 중에는 변경된 상태만 다시 그립니다.
 코치 얼굴 10명은 73KB WebP 한 장으로 제공하며 외부 이미지 요청이 없습니다.
 
+앱 이름은 "눈 떠보니 2부 리그 감독이었다! 이번 생엔 우승한다"로 바꿨습니다.
+축구공 아이콘과 95KB 야간 경기장 배경을 Android 첫 로딩 화면에 사용하며
+긴 제목은 두 줄로 표시합니다. 앱 패키지 ID와 저장 형식은 유지합니다.
+단일 파일에서는 얼굴 atlas data URL을 CSS 변수로 한 번만 공유합니다.
+선수단 40개 초상화 HTML이 약 129MB에서 6.8KB로 줄어듭니다. 매 카드마다
+큰 이미지 URL을 직접 넣는 방식으로 되돌리지 마세요. 생성 이미지 프롬프트는
+`docs/COACH_ART.md`와 `docs/FOOTBALL_ART.txt`에 남겼습니다.
+
 Google Play용 오프라인 Android 앱은 `android/`에서 개발합니다. 먼저
 `node source/build-android.cjs`로 검증한 단일 실행 파일과 Android 파일 저장 어댑터를
 생성한 뒤 `cd android` → `./gradlew assembleDebug bundleRelease lintDebug`로 빌드합니다.
@@ -71,7 +79,7 @@ python3 -m http.server 8765 --bind 127.0.0.1 --directory source/dist
 node source/run-tests.cjs
 ```
 
-현재 51개 파일의 595개 검증 그룹을 통과했습니다. 구단 저장 키와 구버전 복원,
+현재 52개 파일의 602개 검증 그룹을 통과했습니다. 구단 저장 키와 구버전 복원,
 경기 일시정지 복원, 훈련·경제·컵 규칙을 유지하세요.
 
 ## 단일 실행 파일 만들기

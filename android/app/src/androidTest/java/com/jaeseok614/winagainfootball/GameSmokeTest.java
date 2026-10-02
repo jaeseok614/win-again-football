@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.SystemClock;
@@ -124,6 +126,33 @@ public final class GameSmokeTest {
         assertTrue(MainActivity.isInlineImage(Uri.parse("data:image/jpeg;base64,AA==")));
         assertFalse(MainActivity.isInlineImage(Uri.parse("data:text/html;base64,AA==")));
         assertFalse(MainActivity.isInlineImage(Uri.parse("data:image/svg+xml;base64,AA==")));
+    }
+    private void awaitOrientation(ActivityScenario<MainActivity> scenario, int orientation) throws Exception {
+        long until = System.nanoTime() + TimeUnit.SECONDS.toNanos(20);
+        while (System.nanoTime() < until) {
+            AtomicReference<Boolean> correct = new AtomicReference<>(false);
+            scenario.onActivity(activity -> correct.set(activity.getResources().getConfiguration().orientation == orientation));
+            if (correct.get()) return;
+            Thread.sleep(100);
+        }
+        fail("Activity did not change orientation");
+    }
+    @Test public void brandedLoadingFitsPortraitAndLandscape() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            scenario.onActivity(activity -> activity.showLoadingPreviewForTest());
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+            scenario.onActivity(activity -> assertTrue("Portrait title or gauge was clipped", activity.loadingBrandFitsForTest()));
+            screenshot("android-loading-portrait.png");
+            scenario.onActivity(activity -> activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));
+            awaitOrientation(scenario, Configuration.ORIENTATION_LANDSCAPE); awaitReady(scenario);
+            scenario.onActivity(activity -> activity.showLoadingPreviewForTest());
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+            scenario.onActivity(activity -> assertTrue("Landscape title or gauge was clipped", activity.loadingBrandFitsForTest()));
+            screenshot("android-loading-landscape.png");
+            scenario.onActivity(activity -> { activity.hideLoadingPreviewForTest(); activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); });
+            awaitOrientation(scenario, Configuration.ORIENTATION_PORTRAIT);
+        }
     }
 
     @Test public void storageAccessFrameworkExportAndFileInputImportRoundTrip() throws Exception {
