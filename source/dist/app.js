@@ -10,16 +10,17 @@ function setView(next){if(next==='match'&&!state)return;if(next!==view){if(next!
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
 function clubMark(c){return `<span class="club-mark" style="--club-color:${c.color}" aria-hidden="true">${c.code}</span>`;}
 let mobileDashboardExpanded=false;
+function setMobileDashboardExpanded(expanded){mobileDashboardExpanded=!!expanded;$('club-pane')?.classList.toggle('mobile-details-open',mobileDashboardExpanded);const toggle=$('mobile-dashboard-toggle');if(toggle){toggle.setAttribute('aria-expanded',String(mobileDashboardExpanded));toggle.textContent=mobileDashboardExpanded?'상세 현황 접기':'상세 현황 펼치기';}}
 function renderMobileCommandCenter(table,me,own,tier,finished){
  const host=$('mobile-command-center');if(!host)return;
  const players=Object.values(season.squad),injured=players.filter(p=>(p.injury?.remaining||0)>0).length;
  const available=players.length-injured,finance=season.finance.balance,fixture=finished?null:S.fixtureFor(season),opp=fixture?S.club(fixture.home===S.own?fixture.away:fixture.home):null;
  const event=finished?'시즌 종료':season.competition==='europe'?'챔피언스리그 · '+Europe.stageNames[season.europe.stage]:season.competition==='cup'?tier.cupName+' · '+P.stageNames[season.cup.stage]:(season.round+1)+'R · '+(fixture?.home===S.own?'홈':'원정');
  host.innerHTML=`<section class="mobile-command-card" aria-label="모바일 구단 한눈에 보기"><div class="mobile-command-top"><div><span>MANAGER SNAPSHOT</span><strong>${season.year}시즌 · ${event}</strong></div><span class="mobile-save-state">${canSave?'● 저장됨':'저장 불가'}</span></div><div class="mobile-kpis"><div><span>순위</span><b>${season.round||finished?me.rank+'위':'—'}</b></div><div><span>승점</span><b>${me.points}</b></div><div><span>자금</span><b class="${finance<0?'loss':''}">${finance<0?'−':''}${moneyLabel(finance)}</b></div><div><span>가용 선수</span><b>${available}<small> / ${players.length}</small></b></div></div>${opp?`<div class="mobile-next"><span><small>다음 경기</small><b>${own.short}</b></span><i>VS</i><span><small>${fixture.home===S.own?'HOME':'AWAY'}</small><b>${opp.short}</b></span></div>`:`<div class="mobile-next mobile-season-done"><b>${table[0].name} 우승 · 최종 ${me.rank}위</b></div>`}<div class="mobile-command-actions"><button type="button" id="mobile-match-action" class="primary">${finished?'다음 시즌 준비':state?.phase==='prep'?'선발 정하고 경기 준비':state?.phase==='full'?'경기 결과 확인':'진행 중인 경기'}</button><button type="button" id="mobile-dashboard-toggle" class="secondary" aria-expanded="${mobileDashboardExpanded}">${mobileDashboardExpanded?'상세 현황 접기':'상세 현황 펼치기'}</button><button type="button" id="mobile-club-life" class="secondary">인터뷰·기사 보기</button></div><p>${injured?`부상 ${injured}명 · `:'전원 출전 가능 · '}${season.competition!=='league'?'다음 리그 준비 때 훈련 가능':season.trained?'이번 주 훈련 완료':'이번 주 훈련 가능'} · ${canSave?'진행 자동 저장':'저장 공간 확인 필요'}</p></section>`;
- $('club-pane').classList.toggle('mobile-details-open',mobileDashboardExpanded);
- $('mobile-club-life').onclick=()=>{mobileDashboardExpanded=true;$('club-pane').classList.add('mobile-details-open');$('club-life-panel')?.scrollIntoView({block:'start',behavior:'instant'});};
- $('mobile-dashboard-toggle').onclick=()=>{mobileDashboardExpanded=!mobileDashboardExpanded;renderMobileCommandCenter(table,me,own,tier,finished);};
- $('mobile-match-action').onclick=()=>{if(finished){mobileDashboardExpanded=true;$('club-pane').classList.add('mobile-details-open');$('next-season')?.scrollIntoView({block:'center',behavior:'instant'});$('next-season')?.focus({preventScroll:true});}else setView('match');};
+ setMobileDashboardExpanded(mobileDashboardExpanded);
+ $('mobile-club-life').onclick=()=>{setMobileDashboardExpanded(true);$('club-life-panel')?.scrollIntoView({block:'start',behavior:'instant'});};
+ $('mobile-dashboard-toggle').onclick=()=>setMobileDashboardExpanded(!mobileDashboardExpanded);
+ $('mobile-match-action').onclick=()=>{if(finished){setMobileDashboardExpanded(true);$('next-season')?.scrollIntoView({block:'center',behavior:'instant'});$('next-season')?.focus({preventScroll:true});}else setView('match');};
 }
 function renderSeason(){
  document.querySelectorAll('[data-view]').forEach(b=>{b.setAttribute('aria-current',b.dataset.view===view?'page':'false');b.disabled=b.dataset.view==='match'&&!state;});

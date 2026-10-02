@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
 import android.webkit.WebView;
@@ -25,6 +26,7 @@ import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.JSONTokener;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -80,6 +82,12 @@ public final class GameSmokeTest {
             assertTrue("WebView cannot synchronize its rendered DOM", WebViewFeature.isFeatureSupported(WebViewFeature.VISUAL_STATE_CALLBACK));
             web.postVisualStateCallback(1000, new WebView.VisualStateCallback() {
                 @Override public void onComplete(long requestId) {
+                    if (Build.VERSION.SDK_INT >= 29 && web.isHardwareAccelerated()) {
+                        // onDraw starts before rendering; commit waits for the submitted frame.
+                        web.getViewTreeObserver().registerFrameCommitCallback(drawn::countDown);
+                        web.invalidate();
+                        return;
+                    }
                     web.getViewTreeObserver().addOnDrawListener(new ViewTreeObserver.OnDrawListener() {
                         private boolean done;
                         @Override public void onDraw() {
@@ -99,22 +107,79 @@ public final class GameSmokeTest {
             "(()=>{const element=document.querySelector('" + selector + "');if(!element)return false;const r=element.getBoundingClientRect();" +
             "return element.textContent.includes('" + text + "')&&r.width>0&&r.height>0&&r.top>=0&&r.bottom<=innerHeight;})()"));
     }
-    private void screenshot(ActivityScenario<MainActivity> scenario, String filename) throws Exception {
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
-        awaitAppWindowFocus(scenario);
-        if (!filename.startsWith("android-loading-")) awaitWebViewFrame(scenario);
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
-        Thread.sleep(200); // Allow the submitted frame to reach the system compositor.
-        Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
-        assertNotNull("Emulator screenshot was unavailable", bitmap);
+    private File verificationFolder() {
         String additional = InstrumentationRegistry.getArguments().getString("additionalTestOutputDir");
         File folder = additional != null && !additional.isEmpty() ? new File(additional)
             : new File(InstrumentationRegistry.getInstrumentation().getTargetContext()
                 .getExternalFilesDir(Environment.DIRECTORY_PICTURES), "verification");
         assertTrue(folder.isDirectory() || folder.mkdirs());
+        return folder;
+    }
+    private JSONObject screenState(ActivityScenario<MainActivity> scenario, String stage) throws Exception {
+        String encoded = evaluate(scenario,
+            "(()=>{const bounds=id=>{const e=document.getElementById(id);if(!e)return null;const r=e.getBoundingClientRect();" +
+            "return {text:e.textContent,left:r.left,top:r.top,bottom:r.bottom,width:r.width,height:r.height,display:getComputedStyle(e).display}};" +
+            "return JSON.stringify({view,expanded:mobileDashboardExpanded,clubClass:document.getElementById('club-pane').className," +
+            "panelDisplay:getComputedStyle(document.getElementById('club-life-panel')).display,heading:bounds('life-club-heading')," +
+            "coach:bounds('staff-heading'),scrollY,innerHeight,activeElement:document.activeElement?.id,hidden:document.hidden});})()");
+        JSONObject state = new JSONObject(new JSONTokener(encoded).nextValue().toString());
+        state.put("stage", stage);
+        scenario.onActivity(activity -> {
+            try {
+                state.put("nativeScrollY", activity.gameViewForTest().getScrollY());
+                state.put("nativeFocus", activity.hasWindowFocus());
+            } catch (org.json.JSONException error) { throw new AssertionError(error); }
+        });
+        return state;
+    }
+    private void tapWebElement(ActivityScenario<MainActivity> scenario, String selector) throws Exception {
+        evaluate(scenario, "document.querySelector('" + selector + "').scrollIntoView({block:'center',behavior:'instant'});true");
+        awaitWebViewFrame(scenario); awaitAppWindowFocus(scenario);
+        String pointJson = evaluate(scenario,
+            "(()=>{const r=document.querySelector('" + selector + "').getBoundingClientRect();return JSON.stringify([r.x+r.width/2,r.y+r.height/2,devicePixelRatio])})()");
+        JSONArray point = new JSONArray(new JSONTokener(pointJson).nextValue().toString());
+        int[] origin = new int[2]; int[] size = new int[2];
+        scenario.onActivity(activity -> {
+            activity.gameViewForTest().getLocationOnScreen(origin);
+            size[0] = activity.gameViewForTest().getWidth(); size[1] = activity.gameViewForTest().getHeight();
+        });
+        float x = origin[0] + (float)(point.getDouble(0) * point.getDouble(2));
+        float y = origin[1] + (float)(point.getDouble(1) * point.getDouble(2));
+        assertTrue("Touch must be inside the visible WebView: " + pointJson,
+            x >= origin[0] && x < origin[0] + size[0] && y >= origin[1] && y < origin[1] + size[1]);
+        long now = SystemClock.uptimeMillis();
+        MotionEvent down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN, x, y, 0);
+        MotionEvent up = MotionEvent.obtain(now, now + 50, MotionEvent.ACTION_UP, x, y, 0);
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        instrumentation.sendPointerSync(down); instrumentation.sendPointerSync(up);
+        down.recycle(); up.recycle();
+    }
+    private void screenshot(ActivityScenario<MainActivity> scenario, String filename) throws Exception {
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        awaitAppWindowFocus(scenario);
+        boolean webScreen = !filename.startsWith("android-loading-");
+        JSONArray metadata = new JSONArray();
+        if (webScreen) {
+            metadata.put(screenState(scenario, "beforeFrame"));
+            awaitWebViewFrame(scenario);
+            metadata.put(screenState(scenario, "afterFirstCommit"));
+            awaitWebViewFrame(scenario);
+            metadata.put(screenState(scenario, "afterSecondCommit"));
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        Thread.sleep(200); // Allow the submitted frame to reach the system compositor.
+        Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
+        assertNotNull("Emulator screenshot was unavailable", bitmap);
+        File folder = verificationFolder();
         try (FileOutputStream stream = new FileOutputStream(new File(folder, filename))) {
             assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream));
         } finally { bitmap.recycle(); }
+        if (webScreen) {
+            metadata.put(screenState(scenario, "afterPng"));
+            try (FileOutputStream stream = new FileOutputStream(new File(folder, filename.replace(".png", ".json")))) {
+                stream.write(metadata.toString(2).getBytes(StandardCharsets.UTF_8));
+            }
+        }
     }
 
     @Test public void offlineGameSaveImportPauseBackAndRelaunch() throws Exception {
@@ -155,12 +220,15 @@ public final class GameSmokeTest {
             scenario.onActivity(activity -> assertTrue("Game emitted JavaScript console errors: " + activity.consoleErrorsForTest(), activity.consoleErrorsForTest().isEmpty()));
             evaluate(scenario, "window.scrollTo(0,0);true");
             screenshot(scenario, "android-game.png");
+            tapWebElement(scenario, "#mobile-club-life");
+            awaitTrue(scenario, "view==='club'&&mobileDashboardExpanded&&document.getElementById('club-pane').classList.contains('mobile-details-open')");
             assertEquals("The mobile journal button must reveal the interview panel", "true", evaluate(scenario,
-                "(()=>{document.getElementById('mobile-club-life').click();return view==='club'&&" +
+                "(()=>{return view==='club'&&" +
                 "document.getElementById('club-pane').classList.contains('mobile-details-open')&&" +
                 "getComputedStyle(document.getElementById('club-life-panel')).display!=='none';})()"));
             assertVisibleWebText(scenario, "#life-club-heading", "구단의 목소리.");
             screenshot(scenario, "android-interviews.png");
+            assertVisibleWebText(scenario, "#life-club-heading", "구단의 목소리.");
         }
         try (ActivityScenario<MainActivity> reopened = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(reopened);
