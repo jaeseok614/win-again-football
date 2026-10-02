@@ -92,6 +92,7 @@ public final class MainActivity extends ComponentActivity {
             }
             // Read metadata away from the UI thread. The web importer performs the
             // canonical campaign validation before the player confirms replacement.
+            showLoading("저장 파일을 확인하는 중…", true);
             io.execute(() -> {
                 boolean allowed = true;
                 try (Cursor cursor = getContentResolver().query(uri,
@@ -102,6 +103,7 @@ public final class MainActivity extends ComponentActivity {
                 final boolean accepted = allowed;
                 runOnUiThread(() -> {
                     if (destroyed) return;
+                    loading.setVisibility(View.GONE);
                     callback.onReceiveValue(accepted ? new Uri[]{uri} : null);
                     if (!accepted) toast("저장 파일은 2MB 이하만 불러올 수 있어요.");
                 });

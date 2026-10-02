@@ -55,6 +55,20 @@ public final class GameSmokeTest {
         }
         fail("Timed out verifying: " + script);
     }
+    private void screenshot(String filename) throws Exception {
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        Thread.sleep(200); // Let the requested WebView scroll and raster frame paint.
+        Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
+        assertNotNull("Emulator screenshot was unavailable", bitmap);
+        String additional = InstrumentationRegistry.getArguments().getString("additionalTestOutputDir");
+        File folder = additional != null && !additional.isEmpty() ? new File(additional)
+            : new File(InstrumentationRegistry.getInstrumentation().getTargetContext()
+                .getExternalFilesDir(Environment.DIRECTORY_PICTURES), "verification");
+        assertTrue(folder.isDirectory() || folder.mkdirs());
+        try (FileOutputStream stream = new FileOutputStream(new File(folder, filename))) {
+            assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream));
+        } finally { bitmap.recycle(); }
+    }
 
     @Test public void offlineGameSaveImportPauseBackAndRelaunch() throws Exception {
         String fingerprint;
@@ -68,6 +82,8 @@ public final class GameSmokeTest {
                 "const playerUrl=Portraits.asset;const urls=[coachUrl,playerUrl];let loaded=0;" +
                 "urls.forEach(url=>{const image=new Image();image.onload=()=>{if(image.naturalWidth>0&&++loaded===2)androidPortraitsReady=true};image.src=url});return true;})()");
             awaitTrue(scenario, "window.androidPortraitsReady===true");
+            evaluate(scenario, "document.getElementById('staff-panel').scrollIntoView({block:'start'});true");
+            screenshot("android-coaches.png");
             assertEquals("true", evaluate(scenario,
                 "(()=>{save();const original=JSON.stringify(currentCampaignPayload());const file=CampaignFile.stringify(currentCampaignPayload());" +
                 "previewCampaignText(file);const restored=applyCampaignImport();return restored&&JSON.stringify(currentCampaignPayload())===original;})()"));
@@ -82,12 +98,10 @@ public final class GameSmokeTest {
                 "(()=>{setView('squad');return WinAgainAndroid.handleBack()&&view==='club';})()"));
             fingerprint = evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,phase:state.phase,minute:state.minute,rng:state.rng})");
             scenario.onActivity(activity -> assertTrue("Game emitted JavaScript console errors: " + activity.consoleErrorsForTest(), activity.consoleErrorsForTest().isEmpty()));
-            Bitmap screenshot = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
-            File folder = new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "verification");
-            assertTrue(folder.isDirectory() || folder.mkdirs());
-            try (FileOutputStream stream = new FileOutputStream(new File(folder, "android-game.png"))) {
-                assertTrue(screenshot.compress(Bitmap.CompressFormat.PNG, 100, stream));
-            }
+            evaluate(scenario, "window.scrollTo(0,0);true");
+            screenshot("android-game.png");
+            evaluate(scenario, "document.getElementById('club-life-panel')?.scrollIntoView({block:'start'});true");
+            screenshot("android-interviews.png");
         }
         try (ActivityScenario<MainActivity> reopened = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(reopened);

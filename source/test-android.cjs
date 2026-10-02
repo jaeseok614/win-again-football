@@ -7,6 +7,7 @@ test('native app targets API36, keeps offline permissions, and disables OS backu
  assert.match(gradle,/applicationId 'com\.jaeseok614\.winagainfootball'/);assert.match(gradle,/targetSdk 36/);assert.match(gradle,/minSdk 24/);
  assert.doesNotMatch(manifest,/<uses-permission/);assert.match(manifest,/allowBackup="false"/);assert.match(manifest,/usesCleartextTraffic="false"/);
  assert.doesNotMatch(gradle,/signingConfig\s/);assert.match(read('.gitignore'),/\*\.jks/);
+ assert.doesNotMatch(read('app/src/main/res/values/styles.xml'),/windowLightNavigationBar/);
 });
 test('official Gradle wrapper and distribution SHA256 are pinned',()=>{
  const actual=crypto.createHash('sha256').update(fs.readFileSync(path.join(android,'gradle/wrapper/gradle-wrapper.jar'))).digest('hex');
