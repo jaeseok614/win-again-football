@@ -1,4 +1,4 @@
-self.WIN_AGAIN_CACHE_REVISION = "e69892ea737b";
+self.WIN_AGAIN_CACHE_REVISION = "b9b2c4f43c84";
 self.WIN_AGAIN_ASSETS = [
   "./style.css?v=22",
   "./coach-guide.css?v=22",
@@ -12,6 +12,7 @@ self.WIN_AGAIN_ASSETS = [
   "./staff-portraits.css?v=22",
   "./performance.css?v=22",
   "./portability.css?v=22",
+  "./app-home.css?v=22",
   "./engine.js?v=22",
   "./europe.js?v=22",
   "./economy.js?v=22",
@@ -22,6 +23,7 @@ self.WIN_AGAIN_ASSETS = [
   "./staff.js?v=22",
   "./staff-portraits.js?v=22",
   "./club-life.js?v=22",
+  "./media-room.js?v=22",
   "./season.js?v=22",
   "./training.js?v=22",
   "./portraits.js?v=22",
@@ -63,7 +65,9 @@ self.WIN_AGAIN_ASSETS = [
   "./pwa-ui.js?v=22",
   "./staff-ui.js?v=22",
   "./club-life-ui.js?v=22",
+  "./app-shell.js?v=22",
   "./app.js?v=22",
   "./assets/player-faces-v12.png?v=12",
-  "./assets/coach-faces-v1.webp?v=1"
+  "./assets/coach-faces-v1.webp?v=1",
+  "./assets/launch-stadium.webp"
 ];

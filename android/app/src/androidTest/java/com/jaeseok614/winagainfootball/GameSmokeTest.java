@@ -220,21 +220,40 @@ public final class GameSmokeTest {
             scenario.onActivity(activity -> assertTrue("Game emitted JavaScript console errors: " + activity.consoleErrorsForTest(), activity.consoleErrorsForTest().isEmpty()));
             evaluate(scenario, "window.scrollTo(0,0);true");
             screenshot(scenario, "android-game.png");
-            tapWebElement(scenario, "#mobile-club-life");
-            awaitTrue(scenario, "view==='club'&&mobileDashboardExpanded&&document.getElementById('club-pane').classList.contains('mobile-details-open')");
-            assertEquals("The mobile journal button must reveal the interview panel", "true", evaluate(scenario,
-                "(()=>{return view==='club'&&" +
-                "document.getElementById('club-pane').classList.contains('mobile-details-open')&&" +
-                "getComputedStyle(document.getElementById('club-life-panel')).display!=='none';})()"));
-            assertVisibleWebText(scenario, "#life-club-heading", "구단의 목소리.");
+            assertEquals("The journal is visible without an expansion click", "true", evaluate(scenario,
+                "(()=>{const panel=document.getElementById('club-life-panel');" +
+                "panel.scrollIntoView({block:'start',behavior:'instant'});return view==='club'&&!mobileDashboardExpanded&&" +
+                "getComputedStyle(panel).display!=='none'&&panel.querySelectorAll('.media-review').length===3&&" +
+                "!panel.querySelector('details.life-newspaper');})()"));
+            assertVisibleWebText(scenario, "#life-club-heading", "오늘의 축구 헤드라인");
             screenshot(scenario, "android-interviews.png");
-            assertVisibleWebText(scenario, "#life-club-heading", "구단의 목소리.");
+            assertVisibleWebText(scenario, "#life-club-heading", "오늘의 축구 헤드라인");
         }
         try (ActivityScenario<MainActivity> reopened = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(reopened);
             assertEquals(fingerprint, evaluate(reopened, "JSON.stringify({year:season.year,round:season.round,phase:state.phase,minute:state.minute,rng:state.rng})"));
             assertEquals("true", evaluate(reopened, "state.paused"));
             reopened.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
+    @Test public void titleMenuHomeAndCompactLiveMatch() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            assertEquals("true", evaluate(scenario, "!appSessionStarted&&!document.getElementById('launch-screen').hidden&&document.querySelector('.app').hidden"));
+            String before = evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})");
+            screenshot(scenario, "android-title-menu.png");
+            tapWebElement(scenario, "#launch-continue");
+            awaitTrue(scenario, "appSessionStarted&&view==='club'&&document.getElementById('launch-screen').hidden");
+            assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
+            assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display!=='none'&&document.querySelectorAll('.media-review').length===3"));
+            screenshot(scenario, "android-home-media.png");
+            tapWebElement(scenario, "#mobile-match-action");
+            awaitTrue(scenario, "view==='match'&&!document.getElementById('match-pane').hidden");
+            assertEquals("Score, pitch and main action must share the phone viewport", "true", evaluate(scenario,
+                "(()=>{const p=document.getElementById('pitch').getBoundingClientRect(),b=document.getElementById('primary').getBoundingClientRect(),s=document.querySelector('.scoreboard').getBoundingClientRect();return s.top>=0&&p.top>=0&&p.bottom<=b.top&&b.bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth;})()"));
+            screenshot(scenario, "android-compact-match.png");
+            scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
         }
     }
 

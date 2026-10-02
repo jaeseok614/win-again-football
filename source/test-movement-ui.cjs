@@ -55,7 +55,7 @@ test('preview stops after twelve display seconds and effects off cancels preview
 test('drawMotionActors places active own players and draws eleven opposing jerseys and a ball',()=>{
  const h=harness();F.begin(h.context.state);let numbers=0,arcs=0;const noop=()=>{},canvas=new Proxy({fillText(){numbers++;},arc(){arcs++;}},{get(target,key){return key in target?target[key]:noop;},set(target,key,value){target[key]=value;return true;}});
  h.env.time=80;h.context.drawMotionActors(canvas,500,600);assert.equal(numbers,11);assert.ok(arcs>=2);
- for(const player of h.snapshot().frame.own){const style=h.nodes.get('player-'+player.id).style;assert.equal(style.left,player.x+'%');assert.equal(style.top,player.y+'%');assert.equal(style.marginLeft,'');assert.equal(style.marginTop,'');}
+ for(const player of h.snapshot().frame.own){const style=h.nodes.get('player-'+player.id).style;assert.equal(style.left,'0px');assert.equal(style.top,'0px');assert.equal(style.transform,'translate('+500*player.x/100+'px,'+600*player.y/100+'px) translate(-50%,-50%)');assert.equal(style.marginLeft,'');assert.equal(style.marginTop,'');}
 });
 test('a different match seed resets the display clock and removes an old preview',()=>{
  const h=harness();h.preview();h.frame(80);h.frame(160);h.context.state=F.create(909);h.context.lastEvent=null;const next=h.frame(240);

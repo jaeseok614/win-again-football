@@ -11,7 +11,7 @@ if(html.includes('assets/stadium-v10.png?v=10')){
  const stadium='data:image/png;base64,'+fs.readFileSync(path.join(dist,'assets','stadium-v10.png')).toString('base64');
  html=html.replaceAll('assets/stadium-v10.png?v=10',stadium);
 }
-for(const asset of [...new Set(html.match(/assets\/(?:(?:player-faces-v\d+[.]png|coach-faces-v\d+[.]webp)\?v=\d+|app-icon-192[.]png)/g)||[])]){const file=asset.split('?')[0],data='data:image/'+(file.endsWith('.webp')?'webp':'png')+';base64,'+fs.readFileSync(path.join(dist,file)).toString('base64');html=html.replaceAll(asset,data);}
+for(const asset of [...new Set(html.match(/assets\/(?:(?:player-faces-v\d+[.]png|coach-faces-v\d+[.]webp)\?v=\d+|app-icon-192[.]png|launch-stadium[.]webp)/g)||[])]){const file=asset.split('?')[0],data='data:image/'+(file.endsWith('.webp')?'webp':'png')+';base64,'+fs.readFileSync(path.join(dist,file)).toString('base64');html=html.replaceAll(asset,data);}
 if(!process.argv.includes('--pwa'))html=html.replace(/<link rel="(?:manifest|apple-touch-icon)"[^>]+>/g,'');
 if(/<script src=|<link rel="stylesheet"/.test(html))throw Error('The offline bundle is missing a required file.');
 html=html.replace(/\r\n/g,'\n');

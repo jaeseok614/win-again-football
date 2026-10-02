@@ -12,7 +12,7 @@ function renderCoachGuide(){
  const d=CoachGuide.read(season),visible=view==='club'&&d.valid;
  host.hidden=!visible;
  if(visible){const html=coachGuideMarkup(d);if(host.dataset.coachMarkup!==html){host.innerHTML=html;host.dataset.coachMarkup=html;}}
- if(dock){const show=visible&&!!state&&d.action?.id==='match';dock.hidden=!show;if(show){const html='<button type="button" data-guide-action="match"><span><small>'+coachGuideText(d.eyebrow)+'</small><strong>'+coachGuideText(d.action.label)+'</strong></span><span aria-hidden="true">→</span></button>';if(dock.dataset.coachMarkup!==html){dock.innerHTML=html;dock.dataset.coachMarkup=html;}}document.body.classList.toggle('coach-dock-active',show);}
+ if(dock){const show=typeof appSessionStarted==='undefined'&&visible&&!!state&&d.action?.id==='match';dock.hidden=!show;if(show){const html='<button type="button" data-guide-action="match"><span><small>'+coachGuideText(d.eyebrow)+'</small><strong>'+coachGuideText(d.action.label)+'</strong></span><span aria-hidden="true">→</span></button>';if(dock.dataset.coachMarkup!==html){dock.innerHTML=html;dock.dataset.coachMarkup=html;}}document.body.classList.toggle('coach-dock-active',show);}
 }
 document.addEventListener('click',event=>{
  const button=event.target.closest('[data-guide-action]');if(!button||!button.closest('#coach-guide,#coach-next-action'))return;

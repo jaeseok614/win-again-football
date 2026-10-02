@@ -59,3 +59,11 @@ The public game title is now "눈 떠보니 2부 리그 감독이었다! 이번 
 imagery in the app icon and startup loading screen. Keep the title readable on
 small screens; keep win-again protocol identifiers, save keys and package IDs
 stable when changing branding. Preserve original-art provenance in docs/.
+
+The owner tested the APK and wants an app title menu before the management home,
+visible articles without expansion buttons, and manager/player media assessments.
+Keep startup presentation out of campaign exports; never advance a restored match
+behind the title menu. Main score, pitch and match actions must fit a phone viewport.
+MediaRoom derives opinions from confirmed statistics without touching RNG or saves.
+Use clearly labelled original fictional outlets, never credit simulated quotes to
+actual journalists or newsrooms. Keep articles visible on the home dashboard.
