@@ -10,6 +10,9 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.view.MotionEvent;
+import android.view.ViewTreeObserver;
+import android.webkit.WebView;
+import androidx.webkit.WebViewFeature;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -69,10 +72,39 @@ public final class GameSmokeTest {
             .getUiAutomation().getRootInActiveWindow();
         fail("App window was covered or unfocused; active package: " + (window == null ? "unknown" : window.getPackageName()));
     }
+    private void awaitWebViewFrame(ActivityScenario<MainActivity> scenario) throws Exception {
+        CountDownLatch drawn = new CountDownLatch(1);
+        scenario.onActivity(activity -> {
+            WebView web = activity.gameViewForTest();
+            assertNotNull(web);
+            assertTrue("WebView cannot synchronize its rendered DOM", WebViewFeature.isFeatureSupported(WebViewFeature.VISUAL_STATE_CALLBACK));
+            web.postVisualStateCallback(1000, new WebView.VisualStateCallback() {
+                @Override public void onComplete(long requestId) {
+                    web.getViewTreeObserver().addOnDrawListener(new ViewTreeObserver.OnDrawListener() {
+                        private boolean done;
+                        @Override public void onDraw() {
+                            if (done) return; done = true;
+                            web.post(() -> web.getViewTreeObserver().removeOnDrawListener(this));
+                            drawn.countDown();
+                        }
+                    });
+                    web.invalidate();
+                }
+            });
+        });
+        assertTrue("The updated WebView frame was never drawn", drawn.await(15, TimeUnit.SECONDS));
+    }
+    private void assertVisibleWebText(ActivityScenario<MainActivity> scenario, String selector, String text) throws Exception {
+        assertEquals("Requested screen text must be visible: " + text, "true", evaluate(scenario,
+            "(()=>{const element=document.querySelector('" + selector + "');if(!element)return false;const r=element.getBoundingClientRect();" +
+            "return element.textContent.includes('" + text + "')&&r.width>0&&r.height>0&&r.top>=0&&r.bottom<=innerHeight;})()"));
+    }
     private void screenshot(ActivityScenario<MainActivity> scenario, String filename) throws Exception {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         awaitAppWindowFocus(scenario);
-        Thread.sleep(200); // Let the requested WebView scroll and raster frame paint.
+        if (!filename.startsWith("android-loading-")) awaitWebViewFrame(scenario);
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        Thread.sleep(200); // Allow the submitted frame to reach the system compositor.
         Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
         assertNotNull("Emulator screenshot was unavailable", bitmap);
         String additional = InstrumentationRegistry.getArguments().getString("additionalTestOutputDir");
@@ -100,7 +132,12 @@ public final class GameSmokeTest {
                 "if(urls.some(url=>!url||!url.startsWith('data:image/')))return 'Missing rendered portrait background';let loaded=0;" +
                 "urls.forEach(url=>{const image=new Image();image.onload=()=>{if(image.naturalWidth>0&&++loaded===2)androidPortraitsReady=true};image.src=url});return true;})()"));
             awaitTrue(scenario, "window.androidPortraitsReady===true");
-            evaluate(scenario, "document.getElementById('staff-panel').scrollIntoView({block:'start'});true");
+            assertEquals("Coach screen must select the squad and display its faces", "true", evaluate(scenario,
+                "(()=>{document.querySelector('[data-staff-role]').open=true;const panel=document.getElementById('staff-panel');" +
+                "panel.scrollIntoView({block:'start',behavior:'instant'});const face=panel.querySelector('.staff-portrait').getBoundingClientRect();" +
+                "return view==='squad'&&!document.getElementById('squad-pane').hidden&&" +
+                "document.querySelector('[data-view=squad]').getAttribute('aria-current')==='page'&&face.width>0&&face.height>0&&face.top>=0&&face.bottom<innerHeight;})()"));
+            assertVisibleWebText(scenario, "#staff-heading", "코치 계약");
             screenshot(scenario, "android-coaches.png");
             assertEquals("true", evaluate(scenario,
                 "(()=>{save();const original=JSON.stringify(currentCampaignPayload());const file=CampaignFile.stringify(currentCampaignPayload());" +
@@ -118,7 +155,11 @@ public final class GameSmokeTest {
             scenario.onActivity(activity -> assertTrue("Game emitted JavaScript console errors: " + activity.consoleErrorsForTest(), activity.consoleErrorsForTest().isEmpty()));
             evaluate(scenario, "window.scrollTo(0,0);true");
             screenshot(scenario, "android-game.png");
-            evaluate(scenario, "document.getElementById('club-life-panel')?.scrollIntoView({block:'start'});true");
+            assertEquals("The mobile journal button must reveal the interview panel", "true", evaluate(scenario,
+                "(()=>{document.getElementById('mobile-club-life').click();return view==='club'&&" +
+                "document.getElementById('club-pane').classList.contains('mobile-details-open')&&" +
+                "getComputedStyle(document.getElementById('club-life-panel')).display!=='none';})()"));
+            assertVisibleWebText(scenario, "#life-club-heading", "구단의 목소리.");
             screenshot(scenario, "android-interviews.png");
         }
         try (ActivityScenario<MainActivity> reopened = ActivityScenario.launch(MainActivity.class)) {
