@@ -2,23 +2,25 @@
  'use strict';
  const F=root.Football||(typeof require==='function'?require('./engine.js'):null),S=root.Season||(typeof require==='function'?require('./season.js'):null),ST=root.Statistics||(typeof require==='function'?require('./statistics.js'):null),P=root.Cup||(typeof require==='function'?require('./cup.js'):null);
  const copy=value=>JSON.parse(JSON.stringify(value)),same=(a,b)=>JSON.stringify(a)===JSON.stringify(b),own='brynwell',growthLabels={attack:'결정력',defense:'수비',passing:'패스',keeping:'선방'};
+ const europeModule=()=>root.Europe||(typeof require==='function'?require('./europe.js'):null);
+ const resultId=(year,competition,round,stage)=>competition==='league'?'match-'+year+'-'+round:competition+'-'+year+'-'+stage;
  const invalid=(source,reason)=>({valid:false,source,reason});
  function oriented(f,score){return f.home===own?[...score]:[score[1],score[0]];}
  function resultContext(s,competition,round,stage){
-  const r=competition==='cup'?s.cup?.results?.find(item=>item.stage===stage&&item.week===round&&(item.home===own||item.away===own)):s.results?.find(item=>item.round===round-1&&(item.home===own||item.away===own));
+  const r=competition!=='league'?(competition==='cup'?s.cup:s.europe)?.results?.find(item=>item.stage===stage&&item.week===round&&(item.home===own||item.away===own)):s.results?.find(item=>item.round===round-1&&(item.home===own||item.away===own));
   if(!r)return null;
   const score=oriented(r,r.goals),opponentId=r.home===own?r.away:r.home;
-  return {id:competition==='cup'?'cup-'+s.year+'-'+stage:'match-'+s.year+'-'+round,year:s.year,competition,round,stage:competition==='cup'?stage:null,home:r.home,away:r.away,opponentId,score,penalties:competition==='cup'&&r.penalties?oriented(r,r.penalties):null,winner:competition==='cup'?r.winner:score[0]===score[1]?null:score[0]>score[1]?own:opponentId};
+  return {id:resultId(s.year,competition,round,stage),year:s.year,competition,round,stage:competition!=='league'?stage:null,home:r.home,away:r.away,opponentId,score,penalties:competition!=='league'&&r.penalties?oriented(r,r.penalties):null,winner:competition!=='league'?r.winner:score[0]===score[1]?null:score[0]>score[1]?own:opponentId};
  }
  function latestContext(s,receipt){
-  if(receipt)return resultContext(s,receipt.type==='cup'?'cup':'league',receipt.round,receipt.type==='cup'?receipt.stage:null);
+  if(receipt)return resultContext(s,receipt.type==='match'?'league':receipt.type,receipt.round,receipt.type!=='match'?receipt.stage:null);
   // Older saves may predate financial receipts as well as player records.
   const cup=s.cup?.results?.filter(item=>item.home===own||item.away===own).at(-1);
   if(cup&&cup.week===s.round)return resultContext(s,'cup',cup.week,cup.stage);
   return s.round>0?resultContext(s,'league',s.round,null):null;
  }
  function reportMatches(report,context){
-  return !!report&&(report.year===undefined||report.year===context.year)&&report.competition===context.competition&&report.round===context.round&&(context.competition!=='cup'||report.stage===context.stage)&&report.fixturehome===context.home&&report.opponent===context.opponentId&&same(report.score,context.score)&&same(report.penalties??null,context.penalties)&&report.winner===context.winner;
+  return !!report&&(report.year===undefined||report.year===context.year)&&report.competition===context.competition&&report.round===context.round&&(context.competition==='league'||report.stage===context.stage)&&report.fixturehome===context.home&&report.opponent===context.opponentId&&same(report.score,context.score)&&same(report.penalties??null,context.penalties)&&report.winner===context.winner;
  }
  function person(s,row){
   const profile=F.identityProfile(row.identity),registered=Object.values(s.squad).find(p=>p.identity===row.identity),slot=F.roster.find(p=>p.id===row.id);
@@ -51,8 +53,8 @@
   try{
    const match=F.restore(m),fixture=S.fixtureFor(s);if(!fixture||match.isHome!==(fixture.home===own))return invalid(source,'현재 경기와 대진이 맞지 않아 리포트를 표시할 수 없어요.');
    const opponentId=fixture.home===own?fixture.away:fixture.home;if(match.opponentName!==S.club(opponentId)?.name)return invalid(source,'현재 경기와 상대 구단이 맞지 않아요.');
-   const competition=s.competition,round=competition==='cup'?s.round:s.round+1,stage=competition==='cup'?fixture.stage:null,result=competition==='cup'?P.preview(s,match):null;
-   const context={id:competition==='cup'?'cup-'+s.year+'-'+stage:'match-'+s.year+'-'+round,year:s.year,competition,round,stage,home:fixture.home,away:fixture.away,opponentId,score:[...match.score],penalties:result?.penalties?oriented(result,result.penalties):null,winner:result?result.winner:match.score[0]===match.score[1]?null:match.score[0]>match.score[1]?own:opponentId};
+   const competition=s.competition,round=competition!=='league'?s.round:s.round+1,stage=competition!=='league'?fixture.stage:null,result=competition==='cup'?P.preview(s,match):competition==='europe'?europeModule().preview(s,match):null;
+   const context={id:resultId(s.year,competition,round,stage),year:s.year,competition,round,stage,home:fixture.home,away:fixture.away,opponentId,score:[...match.score],penalties:result?.penalties?oriented(result,result.penalties):null,winner:result?result.winner:match.score[0]===match.score[1]?null:match.score[0]>match.score[1]?own:opponentId};
    const events=eventsFor(F.goalAttributions(match)),players=Object.values(match.players).map(p=>player(s,{id:p.id,identity:p.identity,minutes:p.minutes,started:match.segments[0].lineup.includes(p.id),goals:events.filter(e=>e.scorerIdentity===p.identity).length,assists:events.filter(e=>e.assistIdentity===p.identity).length,cleanSheets:p.pos==='GK'&&p.minutes===90&&match.score[1]===0?1:0})),unassignedGoals=match.score[0]-events.length;
    return {valid:true,source,reason:null,confirmed:false,pending:true,legacy:false,limited:match.statisticsOriginMinute>0||unassignedGoals>0,...presentation(context),rank:null,points:null,cashflow:null,players,events,growth:[],injuries:[],recovered:[],healthAligned:false,coverage:{statisticsOriginMinute:match.statisticsOriginMinute,unassignedGoals,partial:match.statisticsOriginMinute>0||unassignedGoals>0},leader:leaderFor(players)};
   }catch{return invalid(source,'현재 경기 기록을 읽을 수 없어요.');}
@@ -62,7 +64,7 @@
   if(!s||!Number.isInteger(s.year)||!s.statistics||!s.finance||!s.squad)return invalid(source,'현재 시즌의 경기 기록을 확인할 수 없어요.');
   if(source==='pending')return pending(s);
   try{
-  const receipt=s.finance.ledger.filter(entry=>entry.year===s.year&&['match','cup'].includes(entry.type)).at(-1),record=ST.lastMatch(s),context=latestContext(s,receipt),report=s.lastReport;
+  const receipt=s.finance.ledger.filter(entry=>entry.year===s.year&&['match','cup','europe'].includes(entry.type)).at(-1),record=ST.lastMatch(s),context=latestContext(s,receipt),report=s.lastReport;
   if(!context||!report)return invalid(source,'아직 확정한 경기 리포트가 없습니다.');
   if(!reportMatches(report,context))return invalid(source,'최근 경기와 결산 리포트가 맞지 않아 내용을 섞어 표시할 수 없어요.');
   if(record&&(record.id!==context.id||record.year!==context.year||record.competition!==context.competition||record.round!==context.round||record.stage!==context.stage||record.home!==context.home||record.away!==context.away||!same(record.score,context.score)))return invalid(source,'최근 선수 기록과 경기 결과가 맞지 않아 리포트를 표시할 수 없어요.');

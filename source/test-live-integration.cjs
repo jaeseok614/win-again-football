@@ -7,6 +7,8 @@ function finish(m,engine=F){while(m.phase!=='full'){if(!engine.running(m))engine
 function plainSettle(s){finish(s.match);return S.settle(s);}
 function canonical(value){if(Array.isArray(value))return value.map(canonical);if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])]));return value;}
 const digest=value=>crypto.createHash('sha256').update(JSON.stringify(canonical(value))).digest('hex');
+// Project optional migration metadata out of the shipped campaign golden only.
+function shippedCampaignFields(value){const out=copy(value);delete out.staff;delete out.europe;for(const row of out.history||[])delete row.europeChampion;return out;}
 function replacement(m,pos,protectedId){const outgoing=m.lineup.find(id=>m.players[id].pos===pos&&id!==protectedId),incoming=Object.keys(m.players).find(id=>m.players[id].pos===pos&&!m.lineup.includes(id)&&!m.out.includes(id)&&F.isAvailable(m.players[id]));return outgoing&&incoming?{outgoing,incoming}:null;}
 function possible(m,protectedId){return ['FW','MID','GK'].every(pos=>replacement(m,pos,protectedId));}
 function assertCoverage(m){
@@ -88,7 +90,7 @@ const V15_HALF_SAVE={"version":8,"league":{"version":1,"division":2,"rules":"pyr
 test('shipped v15 saves keep their historical segments and finish with the exact previous outcome',()=>{
  assert.ok(V15_HALF_SAVE);const raw=copy(V15_HALF_SAVE),restored=S.restore(copy(raw));
  for(const key of ['rng','minute','phase','score','shots','chances','xg','segments','logs','decisions','lineup','out','subs'])assert.deepEqual(restored.match[key],raw.match[key],key);
- finish(restored.match);assert.equal(restored.match.segments.length,3);assert.equal(digest(restored.match),V15_FULL_MATCH_HASH);const settled=S.settle(restored);const priorFields=copy(settled);delete priorFields.staff;assert.equal(digest(priorFields),V15_SETTLED_HASH);assert.deepEqual(S.restore(copy(settled)),settled);
+ finish(restored.match);assert.equal(restored.match.segments.length,3);assert.equal(digest(restored.match),V15_FULL_MATCH_HASH);const settled=S.settle(restored);assert.equal(digest(shippedCampaignFields(settled)),V15_SETTLED_HASH);assert.deepEqual(S.restore(copy(settled)),settled);
 });
 
 console.log('Live integration tests passed: '+checks+' groups.');

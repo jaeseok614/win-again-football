@@ -4,8 +4,9 @@
  const minimum={GK:1,DEF:4,MID:5,FW:3},kinds=['muscle','knock'];
  const kindLabel=kind=>({muscle:'근육 부상',knock:'타박상'}[kind]||'부상');
  const ownCupResults=s=>(Array.isArray(s.cup?.results)?s.cup.results:[]).filter(r=>r.home==='brynwell'||r.away==='brynwell');
- function completed(s,h=s.health){return s.round-h.originRound+ownCupResults(s).length-h.originCupGames;}
- function latestCompetition(s){const result=ownCupResults(s).at(-1);return result&&result.week===s.round?'cup':'league';}
+ const ownEuropeResults=s=>(Array.isArray(s.europe?.results)?s.europe.results:[]).filter(r=>r.home==='brynwell'||r.away==='brynwell');
+ function completed(s,h=s.health){return s.round-h.originRound+ownCupResults(s).length-h.originCupGames+ownEuropeResults(s).length-(h.originEuropeGames??0);}
+ function latestCompetition(s){const receipt=s.finance?.ledger?.filter(e=>e.year===s.year&&['match','cup','europe'].includes(e.type)).at(-1);if(receipt)return receipt.type==='match'?'league':receipt.type;const result=ownCupResults(s).at(-1);return result&&result.week===s.round?'cup':'league';}
  function canonical(id,identity){const slot=F.roster.find(p=>p.id===id),person=typeof identity==='string'?F.identityProfile(identity):null;if(!slot||!person||slot.pos!==person.pos)throw Error('등록한 선수의 건강 기록을 확인할 수 없어요.');return {id,identity:person.identity,name:person.name};}
  function normalizeInjury(injury){
   if(injury===null)return null;
@@ -14,7 +15,7 @@
  }
  function initialize(s,{legacy=false}={}){
   for(const p of Object.values(s.squad))p.injury=null;
-  s.health={version:1,year:s.year,originRound:legacy?s.round:0,originCupGames:legacy?ownCupResults(s).length:0,playedGames:0,lastReport:null};return s;
+  s.health={version:1,year:s.year,originRound:legacy?s.round:0,originCupGames:legacy?ownCupResults(s).length:0,...(s.europe?.enabled?{originEuropeGames:legacy?ownEuropeResults(s).length:0}:{}),playedGames:0,lastReport:null};return s;
  }
  function riskFor(m,p){
   if(!p||!Number.isFinite(p.minutes)||p.minutes<30||!Number.isFinite(p.energy))return 0;
@@ -26,7 +27,7 @@
   hash^=hash>>>16;hash=Math.imul(hash,0x85ebca6b)>>>0;hash^=hash>>>13;hash=Math.imul(hash,0xc2b2ae35)>>>0;hash^=hash>>>16;return (hash>>>0)/4294967296;
  }
  function afterMatch(s,m){
-  const h=s.health,game=h?.playedGames+1;if(!h||h.year!==s.year||!Number.isInteger(h.playedGames)||!m||m.phase!=='full'||m.minute!==90||completed(s)!==game||!['league','cup'].includes(s.competition))throw Error('완료한 경기의 건강 기록만 반영할 수 있어요.');
+  const h=s.health,game=h?.playedGames+1;if(!h||h.year!==s.year||!Number.isInteger(h.playedGames)||!m||m.phase!=='full'||m.minute!==90||completed(s)!==game||!['league','cup','europe'].includes(s.competition))throw Error('완료한 경기의 건강 기록만 반영할 수 있어요.');
   for(const p of Object.values(s.squad)){const played=m.players?.[p.id];if(!played||played.identity!==p.identity||p.injury&&played.minutes>0)throw Error('출전 선수의 건강 기록을 확인할 수 없어요.');}
   const recovered=[];
   for(const p of Object.values(s.squad))if(p.injury){p.injury.remaining--;if(p.injury.remaining===0){p.injury=null;recovered.push(canonical(p.id,p.identity));}}
@@ -55,8 +56,8 @@
   s.health=health;return validate(s);
  }
  function validate(s){
-  const fail=()=>{throw Error('저장한 선수 건강 기록을 읽을 수 없어요.');},h=s.health,cupCount=ownCupResults(s).length;
-  if(!h||h.version!==1||h.year!==s.year||!Number.isInteger(h.originRound)||h.originRound<0||h.originRound>s.round||!Number.isInteger(h.originCupGames)||h.originCupGames<0||h.originCupGames>cupCount||cupCount>3||!Number.isInteger(h.playedGames)||h.playedGames<0||h.playedGames>17||h.playedGames!==completed(s)||Object.keys(s.squad||{}).length!==18)fail();
+  const fail=()=>{throw Error('저장한 선수 건강 기록을 읽을 수 없어요.');},h=s.health,cupCount=ownCupResults(s).length,europeResults=ownEuropeResults(s),originEurope=h?.originEuropeGames===undefined?0:h.originEuropeGames;
+  if(!h||h.version!==1||h.year!==s.year||!Number.isInteger(h.originRound)||h.originRound<0||h.originRound>s.round||!Number.isInteger(h.originCupGames)||h.originCupGames<0||h.originCupGames>cupCount||cupCount>3||!Number.isInteger(originEurope)||originEurope<0||originEurope>europeResults.filter(r=>r.week<=h.originRound).length||europeResults.length>8||!Number.isInteger(h.playedGames)||h.playedGames<0||h.playedGames>25||h.playedGames!==completed(s)||Object.keys(s.squad||{}).length!==18)fail();
   let injured=0;for(const slot of F.roster){const p=s.squad[slot.id];if(!p||p.id!==slot.id||p.pos!==slot.pos)fail();try{canonical(p.id,p.identity);}catch{fail();}let injury;try{injury=normalizeInjury(p.injury);}catch{fail();}if(injury){injured++;if(injury.since>h.playedGames||injury.remaining+h.playedGames-injury.since>2)fail();}}
   if(injured>4||Object.entries(minimum).some(([pos,count])=>Object.values(s.squad).filter(p=>p.pos===pos&&!p.injury).length<count))fail();
   const report=h.lastReport;if(h.playedGames===0){if(report!==null||injured)fail();return s;}

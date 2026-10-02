@@ -47,7 +47,7 @@
   return {
    season,view,playback:Flow.normalize(raw.playback),media:{effects:media.effects!==false,haptics:media.haptics===true},
    individual:{slot:typeof individual.slot==='string'&&Object.hasOwn(season.squad,individual.slot)?individual.slot:'',focus:typeof individual.focus==='string'&&Object.hasOwn(T.choices,individual.focus)?individual.focus:'technique'},
-   records:{tab:['health','training','records'].includes(records.tab)?records.tab:'health',filter:['all','league','cup'].includes(records.filter)?records.filter:'all',sort:['goals','assists','minutes','cleanSheets'].includes(records.sort)?records.sort:'goals',year:Number.isInteger(records.year)&&records.year>=1&&records.year<=season.year?records.year:null},
+   records:{tab:['health','training','records'].includes(records.tab)?records.tab:'health',filter:['all','league','cup','europe'].includes(records.filter)?records.filter:'all',sort:['goals','assists','minutes','cleanSheets'].includes(records.sort)?records.sort:'goals',year:Number.isInteger(records.year)&&records.year>=1&&records.year<=season.year?records.year:null},
    ...(lineupPlan?{lineupPlan}:{})
   };
  }
@@ -63,7 +63,7 @@
   if(envelope.version!==version)throw Error('현재 게임에서 지원하지 않는 백업 버전이에요.');
   if(Object.keys(envelope).some(key=>!['format','version','createdAt','payload'].includes(key)))throw Error('백업 파일의 형식을 확인할 수 없어요.');timestamp(envelope.createdAt);
   const payload=normalize(envelope.payload),s=payload.season,me=S.standings(s).find(c=>c.id===S.own);
-  return {payload,summary:{year:s.year,round:s.round+1,competition:s.competition,phase:s.match?.phase??'season-complete',minute:s.match?.minute??null,club:S.club(S.own).name,rank:me.rank,points:me.points,balance:s.finance.balance,playerCount:Object.keys(s.squad).length}};
+  return {payload,summary:{year:s.year,round:s.round+1,competition:s.competition,...(s.competition==='europe'?{stage:s.europe.stage}:{}),phase:s.match?.phase??'season-complete',minute:s.match?.minute??null,club:S.club(S.own).name,rank:me.rank,points:me.points,balance:s.finance.balance,playerCount:Object.keys(s.squad).length}};
  }
  const api={create,stringify,read,maxBytes};root.CampaignFile=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

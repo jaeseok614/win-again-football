@@ -1,5 +1,5 @@
 let squadTab='health',recordFilter='all',recordSort='goals',recordYear=null;
-const recordCompetitionNames={all:'전체 대회',league:'리그',cup:'컵'};
+const recordCompetitionNames={all:'전체 대회',league:'리그',cup:'컵',europe:'챔피언스리그'};
 function recordYears(){return [season.year,...ST.history(season).map(h=>h.year)].sort((a,b)=>b-a);}
 function recordLeader(players,key){return [...players].filter(p=>p[key]>0).sort((a,b)=>b[key]-a[key]||b.minutes-a.minutes||a.name.localeCompare(b.name,'ko'))[0]||null;}
 function renderRecords(){

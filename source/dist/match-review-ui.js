@@ -7,7 +7,7 @@ function matchReviewMarkup(d,{compact=false}={}){
  if(!d?.valid)return '';
  const played=d.players.filter(p=>p.minutes>0),creators=played.filter(p=>p.goals>0||p.assists>0).sort((a,b)=>b.goals-a.goals||b.assists-a.assists||b.minutes-a.minutes||a.name.localeCompare(b.name,'ko'));
  const featured=creators.length?creators:played.filter(p=>p.cleanSheets>0),outcome=d.winner===S.own?'승리':d.winner?'패배':'무승부';
- const label=d.competition==='cup'?'컵 '+P.stageNames[d.stage]:'리그 '+d.round+'R',header=d.pending?'경기 결과와 선수 기록':'최근 경기 결과';
+ const label=d.competition==='cup'?'컵 '+P.stageNames[d.stage]:d.competition==='europe'?'챔피언스리그 '+Europe.stageNames[d.stage]:'리그 '+d.round+'R',header=d.pending?'경기 결과와 선수 기록':'최근 경기 결과';
  const partial=d.legacy?'이전 저장에는 이 경기의 선수별 출전·득점 자료가 없습니다.':d.coverage.unassignedGoals>0?'이 경기에는 득점 선수가 기록되지 않은 골이 있습니다.':d.coverage.partial?'이전 저장에서 이어진 경기입니다. 기록이 있는 득점부터 집계합니다.':'';
  const board=d.confirmed&&d.cashflow?season.finance.ledger.slice(season.finance.ledger.findIndex(e=>e.id===d.cashflow.id)+1).filter(e=>e.type==='board'&&e.year===d.year&&e.round===d.round):[];
  const cashflow=typeof matchCashflow==='function'?matchCashflow(d.cashflow):d.cashflow;
@@ -25,7 +25,7 @@ function matchReviewMarkup(d,{compact=false}={}){
   ${partial?'<p class="review-limited">'+partial+(d.coverage.unassignedGoals?' 선수 미지정 '+d.coverage.unassignedGoals+'골.':'')+'</p>':''}
   ${featured.length?'<div class="review-contributors"><h4>'+ (creators.length?'골을 만든 선수들':'90분 무실점의 주인공')+'</h4><div class="review-featured-grid">'+playerCards+'</div>'+(featured.length>4?'<small>전체 '+featured.length+'명은 출전 명단에서 확인하세요.</small>':'')+'</div>':d.legacy?'':'<p class="review-no-contributor">이번 경기에는 우리 구단의 득점·도움·골키퍼 무실점 기록이 없습니다.</p>'}
   ${d.confirmed?'<div class="review-settlement"><section><h4>출전이 성장으로</h4>'+(growing?'<div class="review-growth-list">'+growing+'</div>':'<p>'+ (d.legacy?'이전 저장에 남아 있는 능력 상승 자료는 없습니다.':'이번 경기에는 주요 능력 상승이 없습니다. 출전 경험은 다음 성장에 쌓입니다.')+'</p>')+'</section><section><h4>경기 뒤 몸 상태</h4>'+(d.healthAligned?(health||'<p>새 부상·복귀 선수가 없습니다.</p>'):'<p>이 경기의 건강 점검 자료가 없습니다.</p>')+'</section></div>':''}
-  ${d.confirmed&&cashflow?'<div class="review-cash"><span>이 경기 정산</span><strong class="'+(cashflow.amount<0?'loss':'')+'">'+signedMoney(cashflow.amount)+'</strong><small>경기 순수익'+(d.competition==='cup'?' · 컵 상금 포함':cashflow.staffPayroll?' · 선수·코치 급여 포함':' · 선수 급여 포함')+'</small></div>':''}
+  ${d.confirmed&&cashflow?'<div class="review-cash"><span>이 경기 정산</span><strong class="'+(cashflow.amount<0?'loss':'')+'">'+signedMoney(cashflow.amount)+'</strong><small>경기 순수익'+(d.competition==='cup'?' · 컵 상금 포함':d.competition==='europe'?' · 유럽 대회 수입·상금':cashflow.staffPayroll?' · 선수·코치 급여 포함':' · 선수 급여 포함')+'</small></div>':''}
   ${board.length?'<p class="review-board">이사회 과제 보상 · '+board.map(e=>playerUiText(missionInfo[e.task].title)+' '+moneyLabel(e.amount)).join(' / ')+'</p>':''}
   ${played.length?'<details class="review-roster"><summary>전체 출전 선수 '+played.length+'명 <span>출전 시간 · 득점 · 도움</span></summary><div class="table-wrap"><table><thead><tr><th>선수</th><th>투입</th><th>출전</th><th>골</th><th>도움</th><th>무실점</th></tr></thead><tbody>'+rows+'</tbody></table></div><p>선발은 킥오프 명단, 시간은 실제 뛴 분입니다. 무실점은 90분 출전한 골키퍼 기록입니다.'+(d.pending?' 아직 시즌 기록에 반영하지 않았습니다.':'')+'</p></details>':''}
   ${events?'<details class="review-events"><summary>우리 구단 득점 장면 '+d.events.length+'개</summary><ol>'+events+'</ol><p>승부차기 득점은 포함하지 않습니다.</p></details>':''}

@@ -26,6 +26,6 @@ test('hidden staff screens defer rendering and inaccessible contract stages rema
  const poor=S.create(4405);poor.finance.balance=1;const debt=harness(poor);debt.render();assert.ok(debt.buttons.every(b=>b.disabled));assert.ok(debt.html.includes('구단 자금이 부족'));
 });
 test('controls and details have accessible target sizes and explicit financial terms',()=>{
- const css=fs.readFileSync(path.join(__dirname,'dist/staff.css'),'utf8'),h=harness(S.create(4406));h.render();assert.ok(css.includes('min-height:44px'));assert.ok(css.includes('@media(max-width:730px)'));assert.ok(css.includes('summary:focus-visible'));assert.equal((h.html.match(/aria-label=/g)||[]).length,10);assert.ok(h.html.includes('COACHING TEAM'));assert.ok(h.html.includes('계약금 즉시 차감'));assert.ok(h.html.includes('컵 경기에는 주급과 계약 기간이 소모되지'));
+ const css=fs.readFileSync(path.join(__dirname,'dist/staff.css'),'utf8'),h=harness(S.create(4406));h.render();assert.ok(css.includes('min-height:44px'));assert.ok(css.includes('@media(max-width:730px)'));assert.ok(css.includes('summary:focus-visible'));assert.equal((h.html.match(/aria-label=/g)||[]).length,10);assert.ok(h.html.includes('COACHING TEAM'));assert.ok(h.html.includes('계약금 즉시 차감'));assert.ok(h.html.includes('컵·챔피언스리그 경기에는 주급과 계약 기간이 소모되지'));
 });
 console.log('Validated '+groups+' staff UI groups including real actions, mobile compact details, lazy hidden panels and accessible controls.');

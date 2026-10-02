@@ -31,3 +31,13 @@ Source now includes the full modular tree. Run `node source/run-tests.cjs` and b
 the complete public PWA with `node source/build-pwa.cjs`. Do not commit personal
 QA fixtures or browser saves. The v22 ZIP is the original fallback, not the newest
 source; setup-source.py only fills missing files and preserves current edits.
+
+Champions League is implemented in europe.js with the shared Football engine.
+Prior-season division 1 ranks 1 and 2 qualify for the following season. Preserve
+the 14 league rounds and 56 league result rows; international matches use their
+own results, receipts and statistics. Domestic Cup takes priority at a shared
+calendar gate. Only league matches consume salaries and staff contract weeks.
+Legacy saves keep their current match and season without adding European games;
+qualification applies after the next season transition. Keep strict deterministic
+fixture, RNG, receipt and historical champion validation. National-team matches
+remain future work. The Europe panel renders only when the tournament view opens.
