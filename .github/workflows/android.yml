@@ -56,13 +56,13 @@ jobs:
           target: google_apis
           profile: pixel_6
           ram-size: 3072M
+          working-directory: android
           disable-animations: true
           script: |
             # The disposable Google image's launcher ANR can cover the tested app.
             # Disable that unrelated launcher only; app ANRs still fail the tests.
             adb shell pm disable-user --user 0 com.google.android.apps.nexuslauncher
             adb shell am force-stop com.google.android.apps.nexuslauncher
-            cd android
             bash ./gradlew --no-daemon connectedDebugAndroidTest
       - name: Upload emulator verification and screenshots
         if: always()
