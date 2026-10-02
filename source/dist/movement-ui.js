@@ -1,16 +1,16 @@
 var movementElapsed=0,movementStamp=0,movementSeed=null,movementEvent=null,movementEventAge=Infinity,movementDemo=false,movementDemoElapsed=0,lastMotionFrame=null;
-var movementNodeHost=null,movementFirstNode=null,movementPlayerNodes=new Map();
+var movementNodeHost=null,movementFirstNode=null,movementPlayerNodes=new Map(),movementOpponentFormation='442';
 function cancelMovementPreview(){const wasPreview=movementDemo;movementDemo=false;movementDemoElapsed=0;if(wasPreview){lastEvent=null;movementEvent=null;movementEventAge=Infinity;}movementStamp=performance.now();renderMovementControls();}
 function renderMovementControls(){const host=$('movement-controls');if(!host||!state)return;const preview=state.phase==='prep',html='<div class="movement-controls"><span><b>2D 경기 중계</b><small id="movement-label">'+(movementDemo?'미리보기 · 경기 기록은 바뀌지 않아요.':'전술과 주요 장면을 보여주는 경기 중계')+'</small></span><button id="movement-preview" class="secondary" '+(!preview||!motionEnabled()?'disabled':'')+'>'+(movementDemo?'미리보기 끝내기':'움직임 미리보기')+'</button></div>';if(host.dataset.markup!==html){host.innerHTML=html;host.dataset.markup=html;$('movement-preview').onclick=()=>{if(state.phase!=='prep'||!motionEnabled())return;if(movementDemo)cancelMovementPreview();else{movementDemo=true;movementDemoElapsed=0;movementElapsed=0;movementStamp=performance.now();renderMovementControls();}if(innerWidth<730)$('pitch').scrollIntoView({behavior:'instant',block:'center'});};}}
 function motionFrame(now=performance.now()){
- if(!state)return null;if(movementSeed!==state.seed){movementSeed=state.seed;movementElapsed=0;movementStamp=now;movementEvent=null;movementEventAge=Infinity;movementDemo=false;movementDemoElapsed=0;}
+ if(!state)return null;if(movementSeed!==state.seed){movementSeed=state.seed;movementElapsed=0;movementStamp=now;movementEvent=null;movementEventAge=Infinity;movementDemo=false;movementDemoElapsed=0;movementOpponentFormation=typeof Opposition!=='undefined'?Opposition.plan(S.opponentFor(season)).formation:'442';}
  const rawDelta=Math.max(0,now-movementStamp),visualDelta=Math.min(80,rawDelta);movementStamp=now;
  const eventChanged=movementEvent!==lastEvent;if(eventChanged){movementEvent=lastEvent;movementEventAge=lastEvent?0:Infinity;}
  const visible=view==='match'&&!document.hidden,enabled=motionEnabled();if(movementDemo&&(!enabled||state.phase!=='prep'))cancelMovementPreview();
  const playing=visible&&enabled&&!state.paused&&(F.running(state)||movementEventAge<2200),demo=visible&&enabled&&movementDemo;
  if(playing||demo){movementElapsed+=visualDelta;if(Number.isFinite(movementEventAge)&&!eventChanged)movementEventAge+=rawDelta;if(demo){movementDemoElapsed+=rawDelta;if(movementDemoElapsed>=12000)cancelMovementPreview();}}
  const match=movementDemo?{...state,phase:'first',paused:false}:state;
- lastMotionFrame=Movement.frame({match,positions:positions(),elapsedMs:movementElapsed,event:movementDemo?null:movementEvent,eventAgeMs:movementEventAge,motion:enabled});
+ lastMotionFrame=Movement.frame({match,opponentFormation:movementOpponentFormation,dismissedOpponent:typeof Discipline!=='undefined'?Discipline.dismissed(state,1):[],positions:positions().filter(row=>typeof Discipline==='undefined'||!Discipline.dismissed(state).includes(row.id)),elapsedMs:movementElapsed,event:movementDemo?null:movementEvent,eventAgeMs:movementEventAge,motion:enabled});
  const text=movementDemo?'미리보기 · '+lastMotionFrame.label:state.paused?'일시 정지 · '+lastMotionFrame.label:lastMotionFrame.label;
  for(const id of ['movement-label','live-play-label']){const label=$(id);if(label&&label.textContent!==text)label.textContent=text;}
  return lastMotionFrame;

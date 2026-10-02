@@ -1,5 +1,6 @@
 (function(root){
  'use strict';
+ const Discipline=root.Discipline||(typeof require==='function'?require('./discipline.js'):null);
  const F=root.Football||(typeof require==='function'?require('./engine.js'):null),copy=x=>JSON.parse(JSON.stringify(x)),own='brynwell';
  const integer=(n,min,max)=>Number.isInteger(n)&&n>=min&&n<=max;
  const competitions=['league','cup','europe'],receiptTypes=['match','cup','europe'];
@@ -12,7 +13,7 @@
   if(!t||t.year!==s.year||!receipt||receipt.type!==(competition==='league'?'match':competition)||t.records.some(r=>r.id===id))throw Error('이 경기의 선수 기록을 이미 확정했거나 결과가 준비되지 않았어요.');
   const fixture=competition!=='league'?{home:receipt.home,away:receipt.away}:root.Season.fixturesFor(s)[round-1].find(f=>f.home===own||f.away===own),events=F.goalAttributions(m).map(e=>({minute:e.minute,scorerId:e.scorerId,scorerIdentity:e.scorerIdentity,assistId:e.assistId,assistIdentity:e.assistIdentity}));
   const players=F.roster.map(slot=>{const p=m.players[slot.id];return {id:slot.id,identity:p.identity,minutes:p.minutes,started:m.segments[0].lineup.includes(slot.id),goals:events.filter(e=>e.scorerIdentity===p.identity).length,assists:events.filter(e=>e.assistIdentity===p.identity).length,cleanSheets:p.pos==='GK'&&p.minutes===90&&m.score[1]===0?1:0};});
-  const record={id,year:s.year,division:s.league.division,competition,round,stage:competition!=='league'?stage:null,home:fixture.home,away:fixture.away,score:[...m.score],statisticsOriginMinute:m.statisticsOriginMinute,unassignedGoals:m.score[0]-events.length,players,events,segments:m.segments.map(seg=>({start:seg.start,end:seg.end,lineup:[...seg.lineup]}))};
+  const record={...(m.discipline?{cards:copy(m.discipline.events)}:{}),id,year:s.year,division:s.league.division,competition,round,stage:competition!=='league'?stage:null,home:fixture.home,away:fixture.away,score:[...m.score],statisticsOriginMinute:m.statisticsOriginMinute,unassignedGoals:m.score[0]-events.length,players,events,segments:m.segments.map(seg=>({start:seg.start,end:seg.end,lineup:[...seg.lineup]}))};
   validateRecord(record);t.records.push(record);return s;
  }
  function nextYear(s){const t=s.statistics;if(!t||t.year!==s.year-1)throw Error('이전 시즌의 선수 기록을 확인하세요.');t.archive.push({year:t.year,records:t.records});t.year=s.year;t.records=[];return s;}
@@ -24,19 +25,20 @@
   const records=recordsFor(s,year).filter(r=>filter==='all'||r.competition===filter),rows=new Map();if(year===s.year)for(const p of Object.values(s.squad))rows.set(p.identity,personRow(p.identity));
   for(const r of records)for(const p of r.players){if(!p.minutes&&year!==s.year)continue;if(!rows.has(p.identity))rows.set(p.identity,personRow(p.identity));const row=rows.get(p.identity);row.apps+=p.minutes>0?1:0;row.starts+=p.started?1:0;for(const key of ['minutes','goals','assists','cleanSheets'])row[key]+=p[key];}
   const league=root.Season.leagueForYear(s,year),t=s.statistics,goals=records.reduce((n,r)=>n+r.score[0],0),unassignedGoals=records.reduce((n,r)=>n+r.unassignedGoals,0);
-  return {year,division:league.division,filter,players:[...rows.values()],matches:records.length,goals,assists:records.reduce((n,r)=>n+r.events.filter(e=>e.assistIdentity!==null).length,0),unassignedGoals,minutes:records.length*990,partial:year===t.originYear&&(t.originRound>0||t.originMatchMinute>0)||unassignedGoals>0,trackedSinceRound:year===t.originYear?t.originRound+1:1};
+  return {year,division:league.division,filter,players:[...rows.values()],matches:records.length,goals,assists:records.reduce((n,r)=>n+r.events.filter(e=>e.assistIdentity!==null).length,0),unassignedGoals,minutes:records.reduce((n,r)=>n+r.players.reduce((sum,p)=>sum+p.minutes,0),0),partial:year===t.originYear&&(t.originRound>0||t.originMatchMinute>0)||unassignedGoals>0,trackedSinceRound:year===t.originYear?t.originRound+1:1};
  }
- function lastMatch(s){const r=s.statistics.records.at(-1);if(!r)return null;return {...copy(r),players:r.players.map(p=>({...p,...personRow(p.identity),apps:p.minutes>0?1:0,starts:p.started?1:0,minutes:p.minutes,goals:p.goals,assists:p.assists,cleanSheets:p.cleanSheets})),events:r.events.map(e=>({...e,scorerName:F.identityProfile(e.scorerIdentity).name,assistName:e.assistIdentity===null?null:F.identityProfile(e.assistIdentity).name})),goals:r.score[0],assists:r.events.filter(e=>e.assistIdentity!==null).length,minutes:990};}
+ function lastMatch(s){const r=s.statistics.records.at(-1);if(!r)return null;return {...copy(r),players:r.players.map(p=>({...p,...personRow(p.identity),apps:p.minutes>0?1:0,starts:p.started?1:0,minutes:p.minutes,goals:p.goals,assists:p.assists,cleanSheets:p.cleanSheets})),events:r.events.map(e=>({...e,scorerName:F.identityProfile(e.scorerIdentity).name,assistName:e.assistIdentity===null?null:F.identityProfile(e.assistIdentity).name})),goals:r.score[0],assists:r.events.filter(e=>e.assistIdentity!==null).length,minutes:r.players.reduce((sum,p)=>sum+p.minutes,0)};}
  function history(s){return s.statistics.archive.map(a=>summary(s,'all',a.year));}
  function validateRecord(r){
   if(!r||typeof r.id!=='string'||!integer(r.year,1,10000)||![1,2].includes(r.division)||!competitions.includes(r.competition)||!integer(r.round,1,14)||r.competition==='league'&&r.stage!==null||r.competition==='cup'&&!integer(r.stage,0,2)||r.competition==='europe'&&!integer(r.stage,0,7)||r.id!==recordId(r.year,r.competition,r.round,r.stage)||typeof r.home!=='string'||typeof r.away!=='string'||r.home===r.away||![r.home,r.away].includes(own)||!Array.isArray(r.score)||r.score.length!==2||r.score.some(n=>!integer(n,0,90))||!integer(r.statisticsOriginMinute,0,90)||!integer(r.unassignedGoals,0,r.score[0])||!Array.isArray(r.players)||r.players.length!==18||!Array.isArray(r.events)||r.events.length!==r.score[0]-r.unassignedGoals||!Array.isArray(r.segments)||!integer(r.segments.length,3,90))failure();
   const bySlot=new Map();for(let i=0;i<F.roster.length;i++){const slot=F.roster[i],p=r.players[i],profile=F.identityProfile(p?.identity);if(!p||p.id!==slot.id||!profile||profile.pos!==slot.pos||!integer(p.minutes,0,90)||typeof p.started!=='boolean'||!integer(p.goals,0,r.score[0])||!integer(p.assists,0,r.score[0])||!integer(p.cleanSheets,0,1))failure();bySlot.set(p.id,p);}
   if(new Set(r.players.map(p=>p.identity)).size!==18)failure();
+  Discipline.validateRecord(r);
   const played=Object.fromEntries(F.roster.map(p=>[p.id,0])),ended=new Set();let changes=0,formationCounts=null,end=0;
   for(let i=0;i<r.segments.length;i++){
    const seg=r.segments[i];if(!seg||seg.start!==end||!integer(seg.end,seg.start+1,90)||[45,65].some(boundary=>seg.start<boundary&&seg.end>boundary)||!Array.isArray(seg.lineup)||seg.lineup.length!==11||new Set(seg.lineup).size!==11||seg.lineup.some(id=>!bySlot.has(id)))failure();
    const duration=seg.end-seg.start,counts={GK:0,DEF:0,MID:0,FW:0};end=seg.end;
-   for(const id of seg.lineup){counts[F.identityProfile(bySlot.get(id).identity).pos]++;played[id]+=duration;}
+   for(const id of seg.lineup){counts[F.identityProfile(bySlot.get(id).identity).pos]++;played[id]+=Math.max(0,Math.min(seg.end,r.cards?.find(e=>e.team===0&&e.id===id&&e.card==='red')?.minute??90)-seg.start);}
    if(counts.GK!==1||!Object.values(F.formations).some(f=>Object.entries(f).every(([pos,n])=>counts[pos]===n))||formationCounts&&JSON.stringify(counts)!==formationCounts)failure();formationCounts=JSON.stringify(counts);
    if(i){const prior=r.segments[i-1].lineup,entered=seg.lineup.filter(id=>!prior.includes(id));if(entered.some(id=>ended.has(id)))failure();for(const id of prior)if(!seg.lineup.includes(id))ended.add(id);changes+=entered.length;}
   }

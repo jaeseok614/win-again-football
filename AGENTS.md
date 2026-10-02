@@ -1,6 +1,8 @@
 # Football manager development
 
 Read DEVELOPMENT.md before changing the game.
+If HANDOFF.md is present, read it for the latest checkpoint, known failures and
+unfinished requests before editing or describing the build as ready.
 The latest modular source is tracked in source/. The original fallback snapshot is
 football-source-v22.zip. If source/ is absent,
 run `python3 setup-source.py` (Windows: `python setup-source.py`). This verifies the

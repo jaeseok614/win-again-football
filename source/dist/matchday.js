@@ -15,8 +15,8 @@
   }
   const running=F.running(m),liveMode=m.phase==='prep'?'prep':m.phase==='full'?'full':running?(m.paused?'paused':'live'):'break';
   const status=liveMode==='paused'?'작전 타임':{prep:'경기 준비',first:'전반 진행',half:'하프타임',second:'후반 진행',late:'65분 작전 타임',third:'마지막 승부',full:'경기 종료'}[m.phase];
-  const lineup=m.lineup.map(id=>m.players[id]);
-  const selected=m.phase!=='full'&&typeof selectedId==='string'&&m.lineup.includes(selectedId)?m.players[selectedId]:null;
+  const active=typeof Discipline!=='undefined'?Discipline.active(m):m.lineup,lineup=active.map(id=>m.players[id]);
+  const selected=m.phase!=='full'&&typeof selectedId==='string'&&active.includes(selectedId)?m.players[selectedId]:null;
   const candidates=selected?Object.values(m.players).filter(p=>p.pos===selected.pos&&!m.lineup.includes(p.id)&&!m.out.includes(p.id)&&!(p.injuryRemaining||p.injury?.remaining)).map(person):[];
   const allowed=m.phase==='prep'||['half','late'].includes(m.phase)||running&&m.minute>0&&m.minute<90;
   return {

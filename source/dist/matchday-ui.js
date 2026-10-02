@@ -11,14 +11,16 @@ function matchdaySelectionMarkup(d){
 function renderMatchday(){
  const host=document.getElementById('matchday-summary');if(!host)return;
  const d=Matchday.read(season,selected);host.hidden=!d.valid;if(!d.valid)return;
+ if(typeof Opposition!=='undefined'&&typeof opponentMatchContext!=='undefined'&&opponentMatchContext!==state.seed){opponentMatchContext=state.seed;if(d.liveMode==='prep')matchdayTab='opponent';}
  if(d.liveMode==='live'||d.liveMode==='full')matchdayTab='live';
  const stats=d.stats.map(s=>'<div class="matchday-stat"><span>'+s.label+'</span><strong>'+s.own+' <i>:</i> '+s.opponent+'</strong><small>우리 : 상대</small></div>').join('');
- const summary='<div class="matchday-summary-grid">'+stats+'<div class="matchday-stat"><span>선발 평균 체력</span><strong>'+Math.round(d.averageEnergy)+'</strong><small>'+d.tiredCount+'명 체력 50 미만</small></div><div class="matchday-stat"><span>'+(d.liveMode==='prep'?'교체 가능 횟수':'남은 교체')+'</span><strong>'+d.substitution.remaining+' <small>/ '+d.substitution.limit+'</small></strong><small>'+matchdayText(d.tacticLabel)+'</small></div></div>';
+ const summary='<div class="matchday-summary-grid">'+stats+'<button type="button" class="matchday-stat matchday-fatigue '+(d.lowestEnergy[0].energy<50?'critical':'')+'" data-matchday-player="'+matchdayText(d.lowestEnergy[0].id)+'" aria-label="'+matchdayText(d.lowestEnergy[0].name)+' 체력 '+Math.round(d.lowestEnergy[0].energy)+', 평균 '+Math.round(d.averageEnergy)+'. 교체 준비"><span>선발 평균 체력</span><strong>'+Math.round(d.averageEnergy)+'</strong><small class="fatigue-low">최저 '+matchdayText(d.lowestEnergy[0].name.split(' ').at(-1))+' '+Math.round(d.lowestEnergy[0].energy)+'</small></button><div class="matchday-stat"><span>'+(d.liveMode==='prep'?'교체 가능 횟수':'남은 교체')+'</span><strong>'+d.substitution.remaining+' <small>/ '+d.substitution.limit+'</small></strong><small>'+matchdayText(d.tacticLabel)+'</small></div></div>';
  if(host.dataset.markup!==summary){host.innerHTML=summary;host.dataset.markup=summary;}
  const analysis=matchdayTab==='analysis';
- document.getElementById('matchday-live').hidden=analysis;
+ document.getElementById('matchday-live').hidden=matchdayTab!=='live';
+ const opponentHost=document.getElementById('opposition-report');if(opponentHost)opponentHost.hidden=matchdayTab!=='opponent';
  document.getElementById('tactics-board').hidden=!analysis;
- for(const id of ['live','analysis']){const button=document.getElementById('matchday-tab-'+id),active=matchdayTab===id;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;button.disabled=id==='analysis'&&d.liveMode==='full';}
+ for(const id of ['live','opponent','analysis']){const button=document.getElementById('matchday-tab-'+id),active=matchdayTab===id;if(!button)continue;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;button.disabled=id==='analysis'&&d.liveMode==='full';}
  const selection=document.getElementById('matchday-selection'),html=matchdaySelectionMarkup(d);
  if(selection.dataset.markup!==html){
   const focused=selection.contains(document.activeElement)?document.activeElement:null;
@@ -33,9 +35,12 @@ function renderMatchday(){
  if(!d.selected&&d.liveMode!=='full')note.textContent='선발을 선택하면 같은 포지션의 후보만 표시합니다.';
  document.getElementById('bench-heading').textContent=d.selected?d.selected.role+' 교체 후보':'교체 명단';
  document.getElementById('pause').textContent=d.paused?'5분 진행':'일시 정지';
+ if(typeof renderOpponentReport==='function')renderOpponentReport();
+ const cards=document.getElementById('card-counter');if(cards&&typeof Discipline!=='undefined'){cards.hidden=!state.discipline;const own=Discipline.count(state),opp=Discipline.count(state,1);cards.textContent='🟨 '+own.yellow+':'+opp.yellow+' · 🟥 '+own.red+':'+opp.red;}
 }
 function setMatchdayTab(tab){
- if(!['live','analysis'].includes(tab)||!state||tab==='analysis'&&state.phase==='full')return;
+ if(!['live','opponent','analysis'].includes(tab)||!state||tab==='analysis'&&state.phase==='full')return;
+ if(tab==='opponent')pauseForPlanning();
  if(tab==='analysis'){pauseForPlanning();tacticsBoardOpen=true;const details=document.getElementById('tactics-board')?.querySelector('details');if(details)details.open=true;}
  matchdayTab=tab;save();render();
  document.getElementById('matchday-tab-'+tab)?.focus({preventScroll:true});
@@ -53,7 +58,7 @@ function selectMatchdayPlayer(id){
 document.getElementById('matchday-tabs')?.addEventListener('click',event=>{const button=event.target.closest('[data-matchday-tab]');if(button&&!button.disabled)setMatchdayTab(button.dataset.matchdayTab);});
 document.getElementById('matchday-tabs')?.addEventListener('keydown',event=>{
  const button=event.target.closest('[data-matchday-tab]');if(!button||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
- event.preventDefault();setMatchdayTab(event.key==='Home'?'live':event.key==='End'?'analysis':button.dataset.matchdayTab==='live'?'analysis':'live');
+ event.preventDefault();const tabs=document.getElementById('matchday-tab-opponent')?['live','opponent','analysis']:['live','analysis'],index=tabs.indexOf(button.dataset.matchdayTab);setMatchdayTab(event.key==='Home'?tabs[0]:event.key==='End'?tabs.at(-1):tabs[(index+(event.key==='ArrowRight'?1:tabs.length-1))%tabs.length]);
 });
 document.getElementById('match-pane')?.addEventListener('click',event=>{
  const player=event.target.closest('[data-matchday-player]'),button=event.target.closest('[data-matchday]');

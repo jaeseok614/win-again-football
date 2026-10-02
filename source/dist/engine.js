@@ -1,4 +1,6 @@
 (function(root){
+ const Discipline=root.Discipline||(typeof require==='function'?require('./discipline.js'):null);
+ const activeLineup=(s,minute=s.minute)=>s.discipline?Discipline.active(s,minute):s.lineup;
  const roster=[
  ['g1','에런 켈윅','GK',1,38,62,57,45,64,100,73],['g2','마테오 브렌델','GK',21,25,52,50,46,60,100,63],
  ['d1','리오 하스웰','DEF',2,42,75,61,62,68,95],['d2','니코 바르덴','DEF',4,36,78,57,51,72,94],['d3','루카스 에버릭','DEF',5,40,73,63,54,70,98],['d4','이안 모렐','DEF',3,49,68,68,76,69,92],['d5','에밀 렌코','DEF',15,42,65,56,80,75,100],['d6','토마스 윌렌','DEF',16,38,66,66,62,77,100],
@@ -106,8 +108,8 @@
  function fitLineup(players,formation,preferred=[]){if(!formations[formation])throw Error('올바른 포메이션을 선택하세요.');const counts={GK:1,...formations[formation]},lineup=[];for(const [pos,n] of Object.entries(counts)){const fit=Object.values(players).filter(p=>p.pos===pos&&isAvailable(p));if(fit.length<n)throw Error('이 포메이션에 출전할 건강한 선수가 부족합니다.');fit.sort((a,b)=>{const ai=preferred.indexOf(a.id),bi=preferred.indexOf(b.id);if(ai>=0&&bi>=0)return ai-bi;if(ai>=0)return -1;if(bi>=0)return 1;return b.energy-a.energy||b[roleKey(b)]-a[roleKey(a)]||a.id.localeCompare(b.id);});lineup.push(...fit.slice(0,n).map(p=>p.id));}return lineup;}
  function create(seed=20260132,options={}){let players=Object.fromEntries(roster.map(slot=>{const p=profileForSlot(slot.id,options.players?.[slot.id]?.identity||slot.id),injuryRemaining=options.players?.[slot.id]?.injury?.remaining??options.players?.[slot.id]?.injuryRemaining??0;if(!Number.isInteger(injuryRemaining)||injuryRemaining<0||injuryRemaining>2)throw Error('선수의 부상 정보를 확인할 수 없어요.');return [p.id,{...p,...Object.fromEntries(["attack","defense","passing","speed","endurance","keeping","energy"].map(key=>[key,options.players?.[p.id]?.[key]??p[key]])),id:p.id,name:p.name,pos:p.pos,no:p.no,potential:options.players?.[p.id]?.potential??p.potential,initialEnergy:options.players?.[p.id]?.energy??(options.players?p.energy:slot.energy),energy:options.players?.[p.id]?.energy??(options.players?p.energy:slot.energy),injuryRemaining,minutes:0}];}));return {version:5,statisticsOriginMinute:0,homeName:options.homeName||'브린웰 로버스',opponentName:options.opponentName||'팔켄루 04',opponent:options.opponent||{attack:79,defense:75,middle:80,speed:48,energy:94},isHome:options.isHome!==false,seed,rng:seed>>>0,formation:'442',tactic:'balanced',phase:'prep',minute:0,lineup:fitLineup(players,'442',['g1','d1','d2','d3','d4','m1','m2','m3','m4','f1','f2']),players,out:[],subs:0,score:[0,0],shots:[0,0],chances:[0,0],xg:[0,0],logs:[],segments:[],decisions:[],paused:false};}
  function setFormation(s,key){if(s.phase!=='prep'||!formations[key])throw Error('포메이션은 경기 전에 정할 수 있어요.');const lineup=fitLineup(s.players,key,s.lineup);s.lineup=lineup;s.formation=key;}
- function swap(s,outId,inId){if(!['prep','half','late'].includes(s.phase)&&!running(s))throw Error('교체는 경기 준비와 경기 중에 할 수 있어요.');if(running(s)&&s.minute===0)throw Error('첫 1분부터 교체할 수 있어요. 경기 준비에서는 선발을 자유롭게 바꾸세요.');const a=s.players[outId],b=s.players[inId];if(!a||!b||!s.lineup.includes(outId)||s.lineup.includes(inId)||s.out.includes(inId)||a.pos!==b.pos)throw Error('같은 포지션의 대기 선수를 선택하세요.');if(!isAvailable(b))throw Error('부상 중인 선수는 출전할 수 없어요.');if(s.phase!=='prep'&&s.subs>=3)throw Error('교체 3명을 모두 사용했어요.');const lineup=[...s.lineup];lineup[lineup.indexOf(outId)]=inId;replaceLiveSnapshot(s,s.tactic,lineup);s.lineup=lineup;if(s.phase!=='prep'){s.subs++;s.out.push(outId);s.decisions.push({minute:s.minute,type:'sub',out:outId,in:inId,speedDelta:b.speed-a.speed,energyDelta:b.energy-a.energy,attackDelta:b.attack-a.attack});s.logs.push({minute:s.minute,type:'sub',text:a.name+' 대신 '+b.name+' 투입.'});}return {out:a,in:b};}
- const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+ function swap(s,outId,inId){if(s.discipline&&Discipline.dismissed(s).includes(outId))throw Error('퇴장한 선수는 교체할 수 없어요.');if(!['prep','half','late'].includes(s.phase)&&!running(s))throw Error('교체는 경기 준비와 경기 중에 할 수 있어요.');if(running(s)&&s.minute===0)throw Error('첫 1분부터 교체할 수 있어요. 경기 준비에서는 선발을 자유롭게 바꾸세요.');const a=s.players[outId],b=s.players[inId];if(!a||!b||!s.lineup.includes(outId)||s.lineup.includes(inId)||s.out.includes(inId)||a.pos!==b.pos)throw Error('같은 포지션의 대기 선수를 선택하세요.');if(!isAvailable(b))throw Error('부상 중인 선수는 출전할 수 없어요.');if(s.phase!=='prep'&&s.subs>=3)throw Error('교체 3명을 모두 사용했어요.');const lineup=[...s.lineup];lineup[lineup.indexOf(outId)]=inId;replaceLiveSnapshot(s,s.tactic,lineup);s.lineup=lineup;if(s.phase!=='prep'){s.subs++;s.out.push(outId);s.decisions.push({minute:s.minute,type:'sub',out:outId,in:inId,speedDelta:b.speed-a.speed,energyDelta:b.energy-a.energy,attackDelta:b.attack-a.attack});s.logs.push({minute:s.minute,type:'sub',text:a.name+' 대신 '+b.name+' 투입.'});}return {out:a,in:b};}
+ const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
  const talkChoices=Object.freeze([{id:'encourage',label:'격려하기',description:'할 수 있다는 믿음을 전합니다.'},{id:'praise',label:'칭찬하기',description:'좋은 경기력을 인정합니다. 뒤지고 있다면 어색할 수 있어요.'},{id:'demand',label:'분발 요구',description:'더 집중하라고 요구합니다. 성격에 따라 반응이 달라요.'},{id:'calm',label:'침착하게',description:'부담을 덜고 차분한 판단을 부탁합니다.'}]);
  function temperament(identity){let hash=2166136261;for(const ch of identity)hash=(Math.imul(hash,16777619)^ch.charCodeAt(0))>>>0;return ['steady','ambitious','sensitive','team'][hash%4];}
  function talkReactions(s,choice,{minute=s.minute,lineup=s.lineup,score=s.score,energy=null,morale=s.morale||{}}={}){
@@ -129,7 +131,7 @@
  }
  const running=s=>['first','second','third'].includes(s.phase);
  function random(s){s.rng=(Math.imul(s.rng,1664525)+1013904223)>>>0;return s.rng/4294967296;}
- function ratings(s){const team=s.lineup.map(id=>s.players[id]);const field=pos=>team.filter(p=>p.pos===pos),eff=(p,key)=>{const base=p[key]*(.65+.0035*p.energy),morale=s.morale?.[p.id]||0;return morale?base*(1+morale*.01):base;};let fw=field('FW'),mid=field('MID'),def=field('DEF'),gk=field('GK')[0];let pace=avg(fw.map(p=>eff(p,'speed'))),attack=.65*avg(fw.map(p=>eff(p,'attack')))+.35*avg(mid.map(p=>eff(p,'passing'))),defense=(.7*avg(def.map(p=>eff(p,'defense')))+.3*eff(gk,'keeping'))*(1+.06*(def.length-4)),middle=avg(mid.map(p=>eff(p,'passing')))*(1+.05*(mid.length-4));let profile=s.opponent||{attack:79,defense:75,middle:80,speed:48,energy:94},oppFactor=.65+.0035*(profile.energy-s.minute*35/90),opp={attack:profile.attack*oppFactor,defense:profile.defense*oppFactor,middle:profile.middle*oppFactor,speed:profile.speed*oppFactor};let paceBonus=s.tactic==='counter'?clamp((pace-opp.speed)*.42,0,15):0;let rate=6/90*clamp(1+(middle-opp.middle)*.008,.85,1.15)*(1+.06*(fw.length-2));let ourRate=rate*({press:1.18,balanced:1,counter:.9}[s.tactic])*(s.isHome===false?.96:1),oppRate=6/90*clamp(1+(opp.middle-middle)*.008,.85,1.15)*({press:1.13,balanced:1,counter:.92}[s.tactic]);return {attack,defense,middle,pace,paceBonus,ourRate,oppRate,ourGoal:clamp(.18+.005*(attack+paceBonus-opp.defense),.06,.4),oppGoal:clamp(.18+.005*(opp.attack-defense),.06,.4),opponent:opp};}
+ function ratings(s){const active=activeLineup(s),team=active.map(id=>s.players[id]);const field=pos=>team.filter(p=>p.pos===pos),eff=(p,key)=>{const base=(p?.[key]||0)*(.65+.0035*(p?.energy||0)),morale=p?s.morale?.[p.id]||0:0;return morale?base*(1+morale*.01):base;};let fw=field('FW'),mid=field('MID'),def=field('DEF'),gk=field('GK')[0];let pace=avg(fw.map(p=>eff(p,'speed'))),attack=.65*avg(fw.map(p=>eff(p,'attack')))+.35*avg(mid.map(p=>eff(p,'passing'))),defense=(.7*avg(def.map(p=>eff(p,'defense')))+.3*eff(gk,'keeping'))*(1+.06*(def.length-4)),middle=avg(mid.map(p=>eff(p,'passing')))*(1+.05*(mid.length-4));let profile=s.opponent||{attack:79,defense:75,middle:80,speed:48,energy:94},oppFactor=.65+.0035*(profile.energy-s.minute*35/90),opponentCount=11-(s.discipline?Discipline.dismissed(s,1).length:0),manpower=opponentCount/11,opp={attack:profile.attack*oppFactor*manpower,defense:profile.defense*oppFactor*manpower,middle:profile.middle*oppFactor*manpower,speed:profile.speed*oppFactor};defense*=active.length/11;let paceBonus=s.tactic==='counter'?clamp((pace-opp.speed)*.42,0,15):0;let rate=6/90*clamp(1+(middle-opp.middle)*.008,.85,1.15)*(1+.06*(fw.length-2));let ourRate=rate*({press:1.18,balanced:1,counter:.9}[s.tactic])*(s.isHome===false?.96:1),oppRate=6/90*clamp(1+(opp.middle-middle)*.008,.85,1.15)*({press:1.13,balanced:1,counter:.92}[s.tactic]);ourRate*=active.length/11;oppRate*=manpower;if(!fw.length)ourRate=0;return {attack,defense,middle,pace,paceBonus,ourRate,oppRate,ourGoal:clamp(.18+.005*(attack+paceBonus-opp.defense),.06,.4),oppGoal:clamp(.18+.005*(opp.attack-defense),.06,.4),opponent:opp};}
  function makeSegment(s,tactic=s.tactic,lineup=s.lineup){return {start:s.minute,end:null,tactic,lineup:[...lineup],rating:ratings({...s,tactic,lineup}),chances:[0,0],shots:[0,0],xg:[0,0],goals:[0,0]};}
  function replaceLiveSnapshot(s,tactic,lineup){
   if(!running(s))return;
@@ -149,13 +151,13 @@
  }
  function tick(s){
   if(!running(s)||s.paused)return [];
-  const r=ratings(s),rolls=Array.from({length:8},()=>random(s));s.minute++;
-  for(const id of s.lineup){const p=s.players[id];p.energy=clamp(p.energy-(35*(1+(50-p.endurance)/250)+(s.tactic==='press'?8:0))/90,0,100);p.minutes++;}
+  const active=activeLineup(s),r=ratings(s),rolls=Array.from({length:8},()=>random(s));s.minute++;
+  for(const id of active){const p=s.players[id];p.energy=clamp(p.energy-(35*(1+(50-p.endurance)/250)+(s.tactic==='press'?8:0))/90,0,100);p.minutes++;}
   const events=[],segment=s.segments[s.segments.length-1];
   for(let team=0;team<2;team++){
    const rate=team===0?r.ourRate:r.oppRate;if(rolls[team]>=rate)continue;
    s.chances[team]++;segment.chances[team]++;
-   const attackers=s.lineup.map(id=>s.players[id]).filter(p=>p.pos==='FW'),scorer=attackers[Math.min(attackers.length-1,Math.floor(rolls[6]*attackers.length))],shooter=team===0?scorer.name:s.opponentName;
+   const attackers=active.map(id=>s.players[id]).filter(p=>p.pos==='FW'),scorer=attackers[Math.min(attackers.length-1,Math.floor(rolls[6]*attackers.length))],shooter=team===0?scorer.name:s.opponentName;
    let text,type='chance';
    if(rolls[2+team]>.86){text=team===0?shooter+'의 침투, 마지막 패스가 끊깁니다.':s.opponentName+'의 공격을 수비진이 차단합니다.';}
    else{
@@ -164,9 +166,10 @@
     else{type='shot';text=team===0?shooter+'의 슈팅! 상대 골키퍼가 막아냅니다.':s.players[s.lineup.find(id=>s.players[id].pos==='GK')].name+'의 선방! '+s.opponentName+'의 슈팅을 막습니다.';}
    }
    const event={minute:s.minute,type,team,text,paceBonus:team===0?r.paceBonus:0};
-   if(team===0&&type==='goal'){const assist=assistFor(s.players,s.lineup,scorer.id,rolls[7]);Object.assign(event,{scorerId:scorer.id,scorerIdentity:scorer.identity,assistId:assist?.id||null,assistIdentity:assist?.identity||null});}
+   if(team===0&&type==='goal'){const assist=assistFor(s.players,active,scorer.id,rolls[7]);Object.assign(event,{scorerId:scorer.id,scorerIdentity:scorer.identity,assistId:assist?.id||null,assistIdentity:assist?.identity||null});}
    s.logs.push(event);events.push(event);
   }
+  if(s.discipline)events.push(...Discipline.tick(s));
   const next={45:'half',65:'late',90:'full'}[s.minute];if(next){segment.end=s.minute;s.phase=next;s.paused=false;const text={half:'전반 종료. 상대의 약점을 공략할 방법을 선택하세요.',late:'65분. 지친 선수와 남은 교체 횟수를 확인하세요.',full:'경기 종료. 감독의 선택과 경기 흐름을 돌아봅니다.'}[next];s.logs.push({minute:s.minute,type:'break',text});}
   return events;
  }
@@ -187,7 +190,7 @@
    if(event.assistId===null){if(event.assistIdentity!==null)fail();}
    else if(!assist||assist.pos==='GK'||assist.id===scorer.id||!isAvailable(assist)||!lineup.includes(assist.id)||event.assistIdentity!==assist.identity)fail();
    let rng=s.seed>>>0,rolls=[];for(let draw=0;draw<event.minute*8;draw++){rng=(Math.imul(rng,1664525)+1013904223)>>>0;if(draw>=(event.minute-1)*8)rolls.push(rng/4294967296);}
-   const attackers=lineup.map(id=>s.players[id]).filter(p=>p.pos==='FW'),expectedScorer=attackers[Math.min(attackers.length-1,Math.floor(rolls[6]*attackers.length))],expectedAssist=assistFor(s.players,lineup,expectedScorer.id,rolls[7]);
+   const eligible=lineup.filter(id=>!s.discipline||!Discipline.dismissed(s,0,event.minute-1).includes(id)),attackers=eligible.map(id=>s.players[id]).filter(p=>p.pos==='FW'),expectedScorer=attackers[Math.min(attackers.length-1,Math.floor(rolls[6]*attackers.length))],expectedAssist=assistFor(s.players,eligible,expectedScorer.id,rolls[7]);
    if(scorer.id!==expectedScorer.id||event.assistId!==(expectedAssist?.id||null))fail();
   }
   for(let team=0;team<2;team++){if(goalCounts[team]!==s.score[team])fail();for(let index=0;index<s.segments.length;index++)if(segmentCounts[index][team]!==s.segments[index].goals[team])fail();}
@@ -246,7 +249,7 @@
    const snapshotPlayers=Object.fromEntries(Object.entries(s.players).map(([id,p])=>[id,{...p,energy:energy[id]}])),expected=ratings({...s,morale,players:snapshotPlayers,lineup:seg.lineup,tactic:seg.tactic,minute:seg.start});
    for(const key of ['attack','defense','middle','pace','paceBonus','ourRate','oppRate','ourGoal','oppGoal'])if(!near(seg.rating[key],expected[key]))fail();for(const key of ['attack','defense','middle','speed'])if(!near(seg.rating.opponent[key],expected.opponent[key]))fail();
    const duration=(seg.end??s.minute)-seg.start;
-   for(let minute=0;minute<duration;minute++)for(const id of seg.lineup){const p=s.players[id];energy[id]=clamp(energy[id]-(35*(1+(50-p.endurance)/250)+(seg.tactic==='press'?8:0))/90,0,100);played[id]++;}
+   for(let minute=0;minute<duration;minute++)for(const id of seg.lineup.filter(id=>!s.discipline||!Discipline.dismissed(s,0,seg.start+minute).includes(id))){const p=s.players[id];energy[id]=clamp(energy[id]-(35*(1+(50-p.endurance)/250)+(seg.tactic==='press'?8:0))/90,0,100);played[id]++;}
   }
   if(!running(s)&&['half','late'].includes(s.phase)&&groups.has(s.minute)&&!handled.has(s.minute)){if(groups.get(s.minute).some(d=>d.type==='tactic'))fail();applyGroup(s.minute,null);}
   if([...groups.keys()].some(minute=>!handled.has(minute))||!equal(lineup,s.lineup))fail();
@@ -267,10 +270,11 @@
    const injuryRemaining=s.version>=4?saved.injuryRemaining:0;if(!Number.isInteger(injuryRemaining)||injuryRemaining<0||injuryRemaining>2||injuryRemaining>0&&saved.minutes!==0)fail();
    s.players[p.id]={...p,...stats,potential,energy:saved.energy,initialEnergy,injuryRemaining,minutes:saved.minutes};
   }
-  if(new Set(Object.values(s.players).map(p=>p.identity)).size!==roster.length||Object.values(s.players).reduce((n,p)=>n+p.minutes,0)!==s.minute*11)fail();
+  if(new Set(Object.values(s.players).map(p=>p.identity)).size!==roster.length||Object.values(s.players).reduce((n,p)=>n+p.minutes,0)!==s.minute*11-(s.discipline?.events||[]).filter(e=>e.team===0&&e.card==='red').reduce((n,e)=>n+s.minute-e.minute,0))fail();
   if(s.lineup.some(id=>!isAvailable(s.players[id]))||s.out.some(id=>!s.players[id]||s.lineup.includes(id)))fail();for(const [pos,count] of Object.entries(counts))if(s.lineup.filter(id=>s.players[id].pos===pos).length!==count)fail();
   for(const key of ['score','shots','chances','xg'])if(!Array.isArray(s[key])||s[key].length!==2||s[key].some(n=>!Number.isFinite(n)||n<0))fail();for(const key of ['logs','segments','decisions'])if(!Array.isArray(s[key]))fail();
   s.opponent=s.opponent||{attack:79,defense:75,middle:80,speed:48,energy:94};for(const key of ['attack','defense','middle','speed','energy'])if(!Number.isFinite(s.opponent[key])||s.opponent[key]<1||s.opponent[key]>99)fail();
+  try{Discipline.validate(s);}catch{fail();}
   validateSegments(s,fail);
   for(let team=0;team<2;team++){if(s.score[team]>s.shots[team]||s.shots[team]>s.chances[team]||['score','shots','chances'].some(key=>!Number.isInteger(s[key][team])))fail();for(const [sumKey,segKey] of [['score','goals'],['shots','shots'],['chances','chances'],['xg','xg']])if(Math.abs(s.segments.reduce((sum,seg)=>sum+seg[segKey][team],0)-s[sumKey][team])>1e-8)fail();}
   if(s.logs.some(log=>typeof log.text!=='string'||log.text.length>300||!Number.isInteger(log.minute)||log.minute<0||log.minute>s.minute))fail();validateAttributions(s,fail);

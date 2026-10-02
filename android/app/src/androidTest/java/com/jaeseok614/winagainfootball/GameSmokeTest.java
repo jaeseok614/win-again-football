@@ -250,6 +250,10 @@ public final class GameSmokeTest {
             screenshot(scenario, "android-home-media.png");
             tapWebElement(scenario, "#mobile-match-action");
             awaitTrue(scenario, "view==='match'&&!document.getElementById('match-pane').hidden");
+            awaitTrue(scenario, "!document.getElementById('opposition-report').hidden&&document.querySelectorAll('.opposition-roster tbody tr').length===11");
+            assertEquals("true", evaluate(scenario, "document.getElementById('opposition-report').textContent.includes('전술 성향')&&document.getElementById('opposition-report').textContent.includes('체력')"));
+            screenshot(scenario, "android-opposition-report.png");
+            tapWebElement(scenario, "#matchday-tab-live");
             assertEquals("Score, pitch and main action must share the phone viewport", "true", evaluate(scenario,
                 "(()=>{const p=document.getElementById('pitch').getBoundingClientRect(),b=document.getElementById('primary').getBoundingClientRect(),s=document.querySelector('.scoreboard').getBoundingClientRect();return s.top>=0&&p.top>=0&&p.bottom<=b.top&&b.bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth;})()"));
             screenshot(scenario, "android-compact-match.png");

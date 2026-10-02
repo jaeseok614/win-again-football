@@ -1,5 +1,7 @@
 (function(root){
  'use strict';
+ const Discipline=root.Discipline||(typeof require==='function'?require('./discipline.js'):null);
+ const Opposition=root.Opposition||(typeof require==='function'?require('./opposition.js'):null);
  const Staff=root.Staff||(typeof require==='function'?require('./staff.js'):null);
  const U=root.Europe||(typeof require==='function'?require('./europe.js'):null);
  const CL=root.ClubLife||(typeof require==='function'?require('./club-life.js'):null);
@@ -36,7 +38,7 @@
  function leagueFixture(s){return s.round<14?fixturesFor(s)[s.round].find(g=>g.home===own||g.away===own):null;}
  function fixtureFor(s){return s.competition==='cup'?P.fixtureFor(s):s.competition==='europe'?U?.fixtureFor(s):leagueFixture(s);}
  function opponentFor(s){const f=fixtureFor(s);return f?club(f.home===own?f.away:f.home):null;}
- function makeMatch(s){const f=fixtureFor(s),opp=opponentFor(s);const matchSeed=s.competition==='cup'?P.seedFor(s,f):s.competition==='europe'?U.seedFor(s,f):seedFor(s,s.round,f);const m=F.create(matchSeed,{players:s.squad,homeName:club(own).name,opponentName:opp.name,opponent:{attack:opp.attack,defense:opp.defense,middle:opp.middle,speed:opp.speed,energy:94},isHome:f.home===own});m.lineup=F.fitLineup(m.players,s.plan.formation,s.plan.lineup);m.formation=s.plan.formation;F.setTactic(m,s.plan.tactic);return m;}
+ function makeMatch(s){const f=fixtureFor(s),opp=opponentFor(s);const matchSeed=s.competition==='cup'?P.seedFor(s,f):s.competition==='europe'?U.seedFor(s,f):seedFor(s,s.round,f);const m=F.create(matchSeed,{players:s.squad,homeName:club(own).name,opponentName:opp.name,opponent:Opposition.profile(opp),isHome:f.home===own});Discipline.initialize(m);m.lineup=F.fitLineup(m.players,s.plan.formation,s.plan.lineup);m.formation=s.plan.formation;F.setTactic(m,s.plan.tactic);return m;}
  function selectNextMatch(s){for(;;){if(P.due(s)){if(P.fixtureFor(s)){s.competition='cup';s.match=makeMatch(s);return s;}P.advanceAI(s);continue;}if(U?.due(s)){if(U.fixtureFor(s)){s.competition='europe';s.match=makeMatch(s);return s;}U.advanceAI(s);continue;}s.competition='league';s.match=s.round<14?makeMatch(s):null;return s;}}
  function ready(s){return s.round===14&&!s.match&&P.ready(s)&&(U?.ready(s)??true);}
  function create(seed=20260930){const squad=Object.fromEntries(F.roster.map(p=>[p.id,{...p,xp:0}])),s={version:8,league:{version:1,division:2,rules:'pyramid'},competition:'league',seed:seed>>>0,year:1,round:0,squad,results:[],history:[],trained:null,lastReport:null,plan:{formation:'442',tactic:'balanced',lineup:F.create().lineup},match:null};E.initialize(s);Staff?.initialize(s);C.initialize(s);P.initialize(s);U?.initialize(s);H.initialize(s);ST.initialize(s);CL?.initialize(s);return selectNextMatch(s);}
