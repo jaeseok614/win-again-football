@@ -17,7 +17,8 @@ python3 setup-source.py
 ```
 
 Windows에서는 `python setup-source.py`를 사용하세요. 이미 `source/`가 있으면
-덮어쓰지 않습니다. 수동으로 ZIP을 source 폴더에 풀어도 됩니다.
+현재 파일은 그대로 보존하고 빠진 파일만 검증된 압축에서 복원합니다. 따라서 일부
+모듈만 Git에 있는 checkout에서도 안전하게 전체 개발 환경을 준비할 수 있습니다.
 
 ## 실행
 
