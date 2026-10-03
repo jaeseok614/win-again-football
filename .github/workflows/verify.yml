@@ -1,0 +1,28 @@
+name: Game source verification
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: node source/run-tests.cjs
+      - run: node source/build-pwa.cjs
+      - run: node source/test-pwa.cjs index.html
+        env:
+          PWA_DIST: .
+      - run: node source/build-android.cjs
+      - name: Verify committed public assets match source
+        run: git diff --exit-code -- index.html cache-assets.js manifest.webmanifest sw.js source/dist/cache-assets.js

@@ -1,6 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const F=require('./dist/engine.js'),S=require('./dist/season.js'),T=require('./dist/training.js'),P=require('./dist/cup.js'),H=require('./dist/health.js'),R=require('./dist/match-review.js'),Portraits=require('./dist/portraits.js');
+function legacyFixture(seed){const s=S.create(seed);delete s.disciplineRules;delete s.match.discipline;return s;}
 const copy=value=>JSON.parse(JSON.stringify(value));let groups=0;
 function test(name,fn){fn();groups++;console.log('PASS '+name);}
 function full(s,decisions=false){
@@ -8,7 +9,7 @@ function full(s,decisions=false){
  const sub=(pos,wantedOut,wantedIn)=>{const out=m.lineup.includes(wantedOut)?wantedOut:m.lineup.find(id=>m.players[id].pos===pos),fit=id=>m.players[id]?.pos===pos&&!m.lineup.includes(id)&&!m.out.includes(id)&&F.isAvailable(m.players[id]),incoming=fit(wantedIn)?wantedIn:Object.keys(m.players).find(fit);if(incoming)F.swap(m,out,incoming);};
  while(m.phase!=='full'){if(F.running(m)){F.tick(m);continue;}if(decisions&&m.phase==='half'){sub('FW','f1','f3');F.setTactic(m,'press');}if(decisions&&m.phase==='late'){sub('MID','m4','m5');F.setTactic(m,'balanced');}F.begin(m);}return s;
 }
-function fixtures(){let pending=S.create(2);pending=S.settle(full(pending));pending=S.settle(full(pending));full(pending,true);const confirmed=S.settle(copy(pending)),cupPrep=S.settle(full(copy(confirmed))),cupPending=full(copy(cupPrep),true),cupConfirmed=S.settle(copy(cupPending));return {pending,confirmed,cupPrep,cupPending,cupConfirmed};}
+function fixtures(){let pending=legacyFixture(2);pending=S.settle(full(pending));pending=S.settle(full(pending));full(pending,true);const confirmed=S.settle(copy(pending)),cupPrep=S.settle(full(copy(confirmed))),cupPending=full(copy(cupPrep),true),cupConfirmed=S.settle(copy(cupPending));return {pending,confirmed,cupPrep,cupPending,cupConfirmed};}
 function harness(season){
  const calls={settle:0,train:0,recruit:0,tick:0},portraits=[],target={innerHTML:''},deny=kind=>(()=>{calls[kind]++;throw Error('review attempted '+kind);});
  const context=vm.createContext({season,F:{...F,tick:deny('tick')},S:{...S,settle:deny('settle'),recruit:deny('recruit'),train:deny('train')},Training:{train:deny('train')},P,H,MatchReview:R,Portraits:{html(p,options){portraits.push(p.identity);return Portraits.html(p,options);}},$:id=>id==='last-round'?target:null});

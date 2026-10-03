@@ -1,4 +1,5 @@
 'use strict';
+const expectedMinutes=require('./participation-test-helper.cjs');
 const assert=require('node:assert/strict');
 const F=require('./dist/engine.js'),S=require('./dist/season.js'),E=require('./dist/economy.js'),U=require('./dist/europe.js'),Staff=require('./dist/staff.js'),ST=require('./dist/statistics.js'),C=require('./dist/career.js');
 const copy=value=>JSON.parse(JSON.stringify(value));let groups=0;
@@ -40,7 +41,7 @@ test('European participation adds real experience and recovery without advancing
  assert.deepEqual(ownEurope(next).at(-1),result);assert.equal(next.finance.ledger.filter(e=>e.type==='match').length,before.finance.ledger.filter(e=>e.type==='match').length);
  const receipt=next.finance.ledger.at(-1);assert.equal(receipt.type,'europe');assert(!Object.hasOwn(receipt,'payroll'));assert(!Object.hasOwn(receipt,'staffPayroll'));assert.equal(next.finance.balance,before.finance.balance+receipt.amount);
  for(const p of Object.values(next.squad)){const played=before.match.players[p.id];assert.equal(p.energy,Math.min(100,played.energy+20));assert.equal(p.xp,before.squad[p.id].xp+played.minutes);assert.equal(next.career.minutes[p.identity],before.career.minutes[p.identity]+played.minutes);}
- assert.equal(next.health.playedGames,before.health.playedGames+1);assert.equal(next.health.lastReport.competition,'europe');assert.equal(ST.summary(next,'europe').minutes,990);assert.equal(next.lastReport.competition,'europe');assert.deepEqual(S.restore(copy(next)),next);
+ assert.equal(next.health.playedGames,before.health.playedGames+1);assert.equal(next.health.lastReport.competition,'europe');assert.equal(ST.summary(next,'europe').minutes,expectedMinutes(before.match));assert.equal(next.lastReport.competition,'europe');assert.deepEqual(S.restore(copy(next)),next);
 });
 
 test('European preparation forbids training, recruitment, scouting and staff changes without partial mutation',()=>{

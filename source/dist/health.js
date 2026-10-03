@@ -19,7 +19,7 @@
  }
  function riskFor(m,p){
   if(!p||!Number.isFinite(p.minutes)||p.minutes<30||!Number.isFinite(p.energy))return 0;
-  const pressMinutes=(Array.isArray(m?.segments)?m.segments:[]).filter(segment=>segment.tactic==='press'&&segment.lineup?.includes(p.id)).reduce((sum,segment)=>sum+Math.max(0,(segment.end??m.minute)-segment.start),0);
+  const pressMinutes=(Array.isArray(m?.segments)?m.segments:[]).filter(segment=>segment.tactic==='press'&&segment.lineup?.includes(p.id)).reduce((sum,segment)=>sum+Math.max(0,Math.min(segment.end??m.minute,m.discipline?.events.find(e=>e.team===0&&e.id===p.id&&e.card==='red')?.minute??90)-segment.start),0);
   return Math.min(.20,Math.max(0,(.01+Math.max(0,60-p.energy)*.0025+pressMinutes/90*.02)*(p.minutes/90)));
  }
  function randomFor(s,m,identity,game,salt){
@@ -39,16 +39,38 @@
   }
   h.playedGames=game;h.lastReport={game,year:s.year,round:s.round,competition:s.competition,incidents,recovered};validate(s);return h.lastReport;
  }
- function rotate(s){
+ function depth(s){
+  const m=s?.match,formation=m?.formation||s?.plan?.formation,counts=F.formations[formation];
+  if(!s?.squad||!counts)return {valid:false,positions:[]};
+  const lineup=m?.lineup||s.plan.lineup,removed=new Set(m?.out||[]),dismissed=new Set(m?.discipline?.events.filter(e=>e.team===0&&e.card==='red').map(e=>e.id)||[]);
+  const positions=Object.entries({GK:1,...counts}).map(([position,required])=>{
+   const registered=Object.values(s.squad).filter(p=>p.pos===position);
+   const available=registered.filter(p=>!p.injury&&!m?.players[p.id]?.injuryRemaining&&!removed.has(p.id)&&!dismissed.has(p.id));
+   const starters=available.filter(p=>lineup.includes(p.id)),bench=available.filter(p=>!lineup.includes(p.id));
+   const energy=p=>m?.players[p.id]?.energy??p.energy,tired=starters.filter(p=>energy(p)<65).length,fresh=bench.filter(p=>energy(p)>=65).length;
+   const status=available.length<required?'shortage':!bench.length?'thin':tired?(fresh?'rotate':'recover'):'covered';
+   const content={shortage:['출전 인원 부족','출전 가능한 선수 '+available.length+'명 / 선발 필요 '+required+'명','market','선수 영입 검토'],thin:['후보 부족','이 포지션에 출전 가능한 후보가 없습니다.','market','선수 영입 검토'],rotate:['로테이션 가능','피로 선발 '+tired+'명 · 건강한 후보 '+fresh+'명','match','선발 조정하기'],recover:['회복 점검','피로 선발 '+tired+'명 · 체력이 충분한 후보가 없습니다.','training','회복 훈련 확인'],covered:['경쟁 충분','출전 가능 후보 '+bench.length+'명',null,null]}[status];
+   return {position,label:{GK:'골키퍼',DEF:'수비',MID:'중원',FW:'공격'}[position],required,registered:registered.length,available:available.length,starters:starters.length,bench:bench.length,tired,fresh,status,title:content[0],detail:content[1],action:content[2],actionLabel:content[3]};
+  });
+  const attention=positions.filter(p=>p.status!=='covered').length;
+  return {valid:true,formation,formationLabel:formation.split('').join('-'),attention,label:attention?attention+'개 포지션 점검 필요':'모든 포지션 준비 완료',positions};
+ }
+ function rotationPlan(s){
   const m=s.match;if(!m||m.phase!=='prep'||m.minute!==0||!F.formations[m.formation])throw Error('체력순 선발은 경기 준비 때 정할 수 있어요.');
   const before=[...m.lineup],counts={GK:1,...F.formations[m.formation]},after=[];
   for(const [pos,count] of Object.entries(counts)){
    const fit=Object.values(m.players).filter(p=>p.pos===pos&&!s.squad[p.id].injury&&(!F.isAvailable||F.isAvailable(p))).sort((a,b)=>b.energy-a.energy||b[F.roleKey(b)]-a[F.roleKey(a)]||a.id.localeCompare(b.id));
    if(fit.length<count)throw Error('이 포메이션에 필요한 출전 가능 선수가 부족해요.');after.push(...fit.slice(0,count).map(p=>p.id));
   }
-  const outgoing=before.filter(id=>!after.includes(id)),incoming=after.filter(id=>!before.includes(id)),changes=outgoing.map(out=>({out,in:incoming.splice(incoming.findIndex(id=>m.players[id].pos===m.players[out].pos),1)[0]}));
-  m.lineup=[...after];s.plan={...s.plan,formation:m.formation,lineup:[...after]};return {before,after:[...after],changes};
+  const outgoing=before.filter(id=>!after.includes(id)),incoming=after.filter(id=>!before.includes(id)),changes=outgoing.map(out=>{const inside=incoming.splice(incoming.findIndex(id=>m.players[id].pos===m.players[out].pos),1)[0];return {out,in:inside,outName:m.players[out].name,inName:m.players[inside].name,pos:m.players[out].pos,energyGain:Math.round(m.players[inside].energy-m.players[out].energy)};});
+  const fingerprint=JSON.stringify([m.seed,s.year,s.round,s.competition,m.formation,m.lineup,m.phase,m.minute,Object.values(m.players).map(p=>[p.id,p.identity,p.energy,p.injuryRemaining,p[F.roleKey(p)],s.squad[p.id].injury])]);
+  return {fingerprint,before,after:[...after],changes};
  }
+ function applyRotation(s,fingerprint){
+  const plan=rotationPlan(s);if(typeof fingerprint!=='string'||plan.fingerprint!==fingerprint)throw Error('선수 상태나 선발이 바뀌었습니다. 다시 미리 확인하세요.');
+  s.match.lineup=[...plan.after];s.plan={...s.plan,formation:s.match.formation,lineup:[...plan.after]};return plan;
+ }
+ function rotate(s){return applyRotation(s,rotationPlan(s).fingerprint);}
  function restore(s,rawHealth,rawSquad){
   if(!rawHealth||!rawSquad)throw Error('저장한 선수 건강 기록을 읽을 수 없어요.');
   const health=copy(rawHealth);for(const p of Object.values(s.squad))p.injury=normalizeInjury(rawSquad[p.id]?.injury);
@@ -69,5 +91,5 @@
   for(const p of Object.values(s.squad))if(p.injury?.since===report.game&&!report.incidents.some(row=>row.id===p.id&&row.identity===p.identity))fail();
   return s;
  }
- const api={kindLabel,riskFor,rotate,initialize,afterMatch,restore,validate};root.Health=api;if(typeof module!=='undefined')module.exports=api;
+ const api={kindLabel,riskFor,rotate,rotationPlan,applyRotation,depth,initialize,afterMatch,restore,validate};root.Health=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

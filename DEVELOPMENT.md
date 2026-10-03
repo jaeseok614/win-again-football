@@ -1,5 +1,9 @@
 # 다른 컴퓨터에서 개발 이어가기
 
+2026-10-03 통합본은 `codex/portable-development-20261003`입니다.
+최신 시작 방법과 복구 내역은 [HANDOFF.md](HANDOFF.md)를 먼저 읽으세요.
+클라우드 작업 제목만으로 최신 코드를 판단하지 말고 원격 커밋을 확인합니다.
+
 게임: https://jaeseok614.github.io/win-again-football/
 
 최신 모듈 소스와 테스트는 `source/`에 직접 보관합니다. `football-source-v22.zip`은

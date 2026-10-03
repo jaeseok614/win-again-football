@@ -1,3 +1,4 @@
+const expectedMinutes=require('./participation-test-helper.cjs');
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const F=require('./dist/engine.js'),S=require('./dist/season.js'),ST=require('./dist/statistics.js');
@@ -16,7 +17,7 @@ test('fresh records show the current squad without invented appearances or old g
 });
 
 test('only confirmation records a completed match and duplicate statistics cannot be settled',()=>{
- let s=S.create(121);F.begin(s.match);F.finishSegment(s.match);assert.equal(ST.summary(s).matches,0);finish(s.match);const score=[...s.match.score];assert.equal(ST.summary(s).matches,0);s=S.settle(s);const sum=ST.summary(s),record=ST.lastMatch(s);assert.equal(sum.matches,1);assert.equal(sum.minutes,990);assert.equal(sum.goals,score[0]);assert.deepEqual(record.score,score);assert.equal(record.id,'match-1-1');assert.equal(record.players.reduce((n,p)=>n+p.minutes,0),990);assert.equal(record.players.reduce((n,p)=>n+p.starts,0),11);assert.throws(()=>ST.afterMatch(s,s.match,{competition:'league',round:1}));assert.deepEqual(S.restore(copy(s)).statistics,s.statistics);
+ let s=S.create(121);F.begin(s.match);F.finishSegment(s.match);assert.equal(ST.summary(s).matches,0);finish(s.match);const score=[...s.match.score];assert.equal(ST.summary(s).matches,0);s=S.settle(s);const sum=ST.summary(s),record=ST.lastMatch(s);assert.equal(sum.matches,1);assert.equal(sum.minutes,expectedMinutes(s.statistics.records));assert.equal(sum.goals,score[0]);assert.deepEqual(record.score,score);assert.equal(record.id,'match-1-1');assert.equal(record.players.reduce((n,p)=>n+p.minutes,0),expectedMinutes(record));assert.equal(record.players.reduce((n,p)=>n+p.starts,0),11);assert.throws(()=>ST.afterMatch(s,s.match,{competition:'league',round:1}));assert.deepEqual(S.restore(copy(s)).statistics,s.statistics);
 });
 
 test('known goals and assists belong to actual on-field identities and canonical names',()=>{
@@ -27,7 +28,7 @@ test('known goals and assists belong to actual on-field identities and canonical
 
 test('starts and exact minutes survive three substitutions including a goalkeeper change',()=>{
  let s=S.create(128);F.begin(s.match);F.finishSegment(s.match);F.swap(s.match,'f1','f3');F.begin(s.match);F.finishSegment(s.match);F.swap(s.match,'m4','m5');F.swap(s.match,'g1','g2');finish(s.match);s=S.settle(s);const rows=ST.summary(s).players,player=id=>rows.find(p=>p.identity===id);
- for(const [id,minutes,starts] of [['f1',45,1],['f3',45,0],['m4',65,1],['m5',25,0],['g1',65,1],['g2',25,0]]){assert.equal(player(id).minutes,minutes);assert.equal(player(id).starts,starts);assert.equal(player(id).apps,1);}assert.equal(player('g1').cleanSheets,0);assert.equal(player('g2').cleanSheets,0);assert.equal(rows.reduce((n,p)=>n+p.minutes,0),990);assert.doesNotThrow(()=>S.restore(copy(s)));
+ for(const [id,minutes,starts] of [['f1',45,1],['f3',45,0],['m4',65,1],['m5',25,0],['g1',65,1],['g2',25,0]]){assert.equal(player(id).minutes,minutes);assert.equal(player(id).starts,starts);assert.equal(player(id).apps,1);}assert.equal(player('g1').cleanSheets,0);assert.equal(player('g2').cleanSheets,0);assert.equal(rows.reduce((n,p)=>n+p.minutes,0),expectedMinutes(s.statistics.records));assert.doesNotThrow(()=>S.restore(copy(s)));
 });
 
 test('full-match goalkeeper clean sheets require ninety minutes without conceding',()=>{
@@ -39,11 +40,11 @@ test('a replacement does not inherit appearances while sold identities remain in
 });
 
 test('league and Cup filters add up and a real shootout adds no player goals or appearances',()=>{
- let s=S.create(549);while(s.round<4)s=round(s);assert.equal(s.competition,'league','round helper resolves the Cup automatically');const cup=ST.summary(s,'cup'),league=ST.summary(s,'league'),all=ST.summary(s);assert.equal(cup.matches,1);assert.equal(league.matches,4);assert.equal(all.matches,cup.matches+league.matches);assert.equal(all.minutes,cup.minutes+league.minutes);assert.equal(all.goals,cup.goals+league.goals);const result=s.cup.results.find(r=>r.home===S.own||r.away===S.own);assert.deepEqual(result.goals,[1,1]);assert.ok(result.penalties);assert.equal(cup.goals,1);assert.equal(cup.players.reduce((n,p)=>n+p.goals,0),1);assert.equal(cup.players.reduce((n,p)=>n+p.minutes,0),990);assert.doesNotThrow(()=>S.restore(copy(s)));
+ let s=S.create(549);while(s.round<4)s=round(s);assert.equal(s.competition,'league','round helper resolves the Cup automatically');const cup=ST.summary(s,'cup'),league=ST.summary(s,'league'),all=ST.summary(s);assert.equal(cup.matches,1);assert.equal(league.matches,4);assert.equal(all.matches,cup.matches+league.matches);assert.equal(all.minutes,cup.minutes+league.minutes);assert.equal(all.goals,cup.goals+league.goals);const result=s.cup.results.find(r=>r.home===S.own||r.away===S.own);assert.deepEqual(result.goals,[1,1]);assert.ok(result.penalties);assert.equal(cup.goals,1);assert.equal(cup.players.reduce((n,p)=>n+p.goals,0),1);assert.equal(cup.players.reduce((n,p)=>n+p.minutes,0),expectedMinutes(s.statistics.records.filter(r=>r.competition==='cup')));assert.doesNotThrow(()=>S.restore(copy(s)));
 });
 
 test('new seasons archive complete identity records and keep their old league after promotion',()=>{
- const completed=complete(boosted(556)),before=ST.summary(completed);assert.equal(completed.cup.champion,S.own);const next=S.nextSeason(completed);assert.equal(next.league.division,1);assert.equal(ST.summary(next).matches,0);assert.equal(ST.summary(next).players.length,18);assert.equal(next.statistics.archive.length,1);const history=ST.history(next);assert.equal(history.length,1);assert.equal(history[0].year,1);assert.equal(history[0].division,2);assert.equal(history[0].goals,before.goals);assert.equal(history[0].minutes,before.minutes);assert.deepEqual(ST.summary(next,'cup',1).matches,3);assert.doesNotThrow(()=>S.restore(copy(next)));assert.equal(ST.lastMatch(next),null);
+ const completed=complete(boosted(558)),before=ST.summary(completed);assert.equal(completed.cup.champion,S.own);const next=S.nextSeason(completed);assert.equal(next.league.division,1);assert.equal(ST.summary(next).matches,0);assert.equal(ST.summary(next).players.length,18);assert.equal(next.statistics.archive.length,1);const history=ST.history(next);assert.equal(history.length,1);assert.equal(history[0].year,1);assert.equal(history[0].division,2);assert.equal(history[0].goals,before.goals);assert.equal(history[0].minutes,before.minutes);assert.deepEqual(ST.summary(next,'cup',1).matches,3);assert.doesNotThrow(()=>S.restore(copy(next)));assert.equal(ST.lastMatch(next),null);
 });
 
 test('v7 halftime migration leaves old goal names unknown and tracks all actual match minutes',()=>{

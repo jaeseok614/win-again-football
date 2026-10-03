@@ -190,8 +190,8 @@
    if(event.assistId===null){if(event.assistIdentity!==null)fail();}
    else if(!assist||assist.pos==='GK'||assist.id===scorer.id||!isAvailable(assist)||!lineup.includes(assist.id)||event.assistIdentity!==assist.identity)fail();
    let rng=s.seed>>>0,rolls=[];for(let draw=0;draw<event.minute*8;draw++){rng=(Math.imul(rng,1664525)+1013904223)>>>0;if(draw>=(event.minute-1)*8)rolls.push(rng/4294967296);}
-   const eligible=lineup.filter(id=>!s.discipline||!Discipline.dismissed(s,0,event.minute-1).includes(id)),attackers=eligible.map(id=>s.players[id]).filter(p=>p.pos==='FW'),expectedScorer=attackers[Math.min(attackers.length-1,Math.floor(rolls[6]*attackers.length))],expectedAssist=assistFor(s.players,eligible,expectedScorer.id,rolls[7]);
-   if(scorer.id!==expectedScorer.id||event.assistId!==(expectedAssist?.id||null))fail();
+   const eligible=lineup.filter(id=>!s.discipline||!Discipline.dismissed(s,0,event.minute-1).includes(id)),attackers=eligible.map(id=>s.players[id]).filter(p=>p.pos==='FW'),expectedScorer=attackers[Math.min(attackers.length-1,Math.floor(rolls[6]*attackers.length))],expectedAssist=expectedScorer?assistFor(s.players,eligible,expectedScorer.id,rolls[7]):null;
+   if(!expectedScorer||scorer.id!==expectedScorer.id||event.assistId!==(expectedAssist?.id||null))fail();
   }
   for(let team=0;team<2;team++){if(goalCounts[team]!==s.score[team])fail();for(let index=0;index<s.segments.length;index++)if(segmentCounts[index][team]!==s.segments[index].goals[team])fail();}
  }
@@ -202,7 +202,7 @@
   const groups=new Map();let lastDecision=-1;
   for(const d of s.decisions){
    if(!d||!['sub','tactic','talk'].includes(d.type)||!Number.isInteger(d.minute)||d.minute<0||d.minute>=90||d.minute>s.minute||d.minute<lastDecision)fail();lastDecision=d.minute;
-   if(d.type==='sub'){if(d.minute===0||!s.players[d.in]||!s.players[d.out]||d.in===d.out||s.players[d.in].pos!==s.players[d.out].pos||!isAvailable(s.players[d.in]))fail();}
+   if(d.type==='sub'){if(d.minute===0||s.discipline&&Discipline.dismissed(s,0,d.minute).includes(d.out)||!s.players[d.in]||!s.players[d.out]||d.in===d.out||s.players[d.in].pos!==s.players[d.out].pos||!isAvailable(s.players[d.in]))fail();}
    else if(d.type==='tactic'&&(!tactics.includes(d.from)||!tactics.includes(d.to)||d.from===d.to||d.minute===s.minute&&!running(s)))fail();
    else if(d.type==='talk'&&(![0,45,65].includes(d.minute)||!talkChoices.some(c=>c.id===d.choice)))fail();
    if(!groups.has(d.minute))groups.set(d.minute,[]);groups.get(d.minute).push(d);
@@ -274,7 +274,7 @@
   if(s.lineup.some(id=>!isAvailable(s.players[id]))||s.out.some(id=>!s.players[id]||s.lineup.includes(id)))fail();for(const [pos,count] of Object.entries(counts))if(s.lineup.filter(id=>s.players[id].pos===pos).length!==count)fail();
   for(const key of ['score','shots','chances','xg'])if(!Array.isArray(s[key])||s[key].length!==2||s[key].some(n=>!Number.isFinite(n)||n<0))fail();for(const key of ['logs','segments','decisions'])if(!Array.isArray(s[key]))fail();
   s.opponent=s.opponent||{attack:79,defense:75,middle:80,speed:48,energy:94};for(const key of ['attack','defense','middle','speed','energy'])if(!Number.isFinite(s.opponent[key])||s.opponent[key]<1||s.opponent[key]>99)fail();
-  try{Discipline.validate(s);}catch{fail();}
+  try{if(s.discipline)Discipline.validate(s);}catch{fail();}
   validateSegments(s,fail);
   for(let team=0;team<2;team++){if(s.score[team]>s.shots[team]||s.shots[team]>s.chances[team]||['score','shots','chances'].some(key=>!Number.isInteger(s[key][team])))fail();for(const [sumKey,segKey] of [['score','goals'],['shots','shots'],['chances','chances'],['xg','xg']])if(Math.abs(s.segments.reduce((sum,seg)=>sum+seg[segKey][team],0)-s[sumKey][team])>1e-8)fail();}
   if(s.logs.some(log=>typeof log.text!=='string'||log.text.length>300||!Number.isInteger(log.minute)||log.minute<0||log.minute>s.minute))fail();validateAttributions(s,fail);

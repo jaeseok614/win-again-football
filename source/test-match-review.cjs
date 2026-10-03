@@ -1,4 +1,5 @@
 'use strict';
+const expectedMinutes=require('./participation-test-helper.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const F=require('./dist/engine.js'),S=require('./dist/season.js'),ST=require('./dist/statistics.js'),P=require('./dist/cup.js'),R=require('./dist/match-review.js');
 const copy=x=>JSON.parse(JSON.stringify(x));let groups=0;
@@ -15,7 +16,7 @@ test('fresh, unfinished and unknown sources return honest unavailable reasons',(
 });
 
 test('pending ninety-minute reviews expose actual contributions but no applied cash, growth or injuries',()=>{
- const s=S.create(121);finish(s.match);const r=pure(s,'pending');assert.equal(r.valid,true);assert.equal(r.pending,true);assert.equal(r.confirmed,false);assert.equal(r.legacy,false);assert.equal(r.id,'match-1-1');assert.deepEqual(r.score,s.match.score);assert.equal(r.cashflow,null);assert.equal(r.rank,null);assert.equal(r.points,null);assert.deepEqual(r.growth,[]);assert.deepEqual(r.injuries,[]);assert.deepEqual(r.recovered,[]);assert.equal(r.healthAligned,false);assert.equal(r.players.reduce((n,p)=>n+p.minutes,0),990);assert.equal(r.events.length,F.goalAttributions(s.match).length);assert.equal(r.players.reduce((n,p)=>n+p.goals,0),s.match.score[0]);assert.equal(ST.summary(s).matches,0);assert.equal(s.finance.ledger.length,0);
+ const s=S.create(121);finish(s.match);const r=pure(s,'pending');assert.equal(r.valid,true);assert.equal(r.pending,true);assert.equal(r.confirmed,false);assert.equal(r.legacy,false);assert.equal(r.id,'match-1-1');assert.deepEqual(r.score,s.match.score);assert.equal(r.cashflow,null);assert.equal(r.rank,null);assert.equal(r.points,null);assert.deepEqual(r.growth,[]);assert.deepEqual(r.injuries,[]);assert.deepEqual(r.recovered,[]);assert.equal(r.healthAligned,false);assert.equal(r.players.reduce((n,p)=>n+p.minutes,0),expectedMinutes(s.match));assert.equal(r.events.length,F.goalAttributions(s.match).length);assert.equal(r.players.reduce((n,p)=>n+p.goals,0),s.match.score[0]);assert.equal(ST.summary(s).matches,0);assert.equal(s.finance.ledger.length,0);
 });
 
 test('confirmation aligns league score, fixture, rank, receipt and real individual records',()=>{

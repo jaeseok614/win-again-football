@@ -125,4 +125,18 @@ test('tab keyboard arrows, Home and End activate the matching panel and preserve
  const full=harness(at(90)),finished=JSON.stringify(full.context.season);full.render();full.get('matchday-tab-live').focus();full.dispatch('matchday-tabs','keydown',full.get('matchday-tab-live'),{key:'End'});assertTab(full,'live');assert.equal(full.document.activeElement,full.get('matchday-tab-live'));assert.equal(full.calls.save,0);unchanged(full,finished);
 });
 
+test('the accessible momentum chart shows six real windows and the active interval',()=>{
+ const s=at(37),h=harness(s),before=JSON.stringify(s);h.render();const html=h.get('matchday-summary').innerHTML,d=Matchday.read(s);
+ assert.match(html,/aria-label="15분 단위 경기 흐름"/);assert.match(html,/기회 · 슈팅 · 골 가중치/);assert.equal((html.match(/class="momentum-bars"/g)||[]).length,6);assert.equal((html.match(/aria-current="true"/g)||[]).length,1);assert.match(html,new RegExp('30분부터 45분, 우리 흐름 '+d.momentum.windows[2].own+', 상대 흐름 '+d.momentum.windows[2].opponent));assert.match(html,/우리 <i><\/i>상대/);unchanged(h,before);
+});
+
+test('a real analyst alert opens decision tools but never applies a suggested tactic automatically',()=>{
+ const s=at(37);s.match.logs.push({minute:37,type:'goal',team:1,text:'상대 골'});s.match.score[1]++;const h=harness(s),before=copy(s);h.render();const html=h.get('matchday-summary').innerHTML;
+ assert.match(html,/상대 흐름 차단/);assert.match(html,/data-matchday="analysis"/);assert.match(html,/전술 대응 보기/);h.dispatch('match-pane','click',h.element('', 'data-matchday="analysis"'));
+ onlyPaused(h,before);assertTab(h,'analysis');assert.equal(s.match.tactic,before.match.tactic);assert.equal(h.calls.setTactic,0);assert.equal(h.calls.save,1);
+});
+test('suggested substitution opens the existing review flow and never swaps players on first tap',()=>{
+ const s=at(23);for(const id of s.match.lineup)s.match.players[id].energy=80;s.match.players.f1.energy=25;s.match.players.f3.energy=95;const q=Matchday.read(s).substitution.suggestion,h=harness(s,{width:390}),before=copy(s);h.render();const suggestion=h.get('matchday-selection').querySelector('[data-matchday-player="'+q.out.id+'"]');assert.ok(suggestion);assert.match(h.get('matchday-selection').innerHTML,/코치 추천 교체/);assert.match(h.get('matchday-selection').innerHTML,new RegExp(escapeText(q.incoming.name)));h.dispatch('match-pane','click',suggestion);
+ onlyPaused(h,before);assert.equal(h.context.selected,q.out.id);assert.equal(s.match.subs,0);assert.ok(s.match.lineup.includes(q.out.id));assert.ok(!s.match.lineup.includes(q.incoming.id));assert.match(h.get('matchday-selection').innerHTML,/교체 후보를 고르세요/);
+});
 console.log('Validated '+groups+' matchday UI groups with actual campaign and football models.');

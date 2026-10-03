@@ -51,7 +51,12 @@
   const identities=new Set(Object.values(s.squad).map(p=>p.identity));for(const e of entries)if(e.type==='transfer'){identities.add(e.incoming);identities.add(e.outgoing);}
   const baselineIds=Object.keys(c.baselines),minuteIds=Object.keys(c.minutes);if(baselineIds.length!==identities.size||minuteIds.length!==identities.size||baselineIds.some(id=>!identities.has(id))||minuteIds.some(id=>!identities.has(id)))fail();
   const completed=matchesThrough(s,s.round);let minutes=0;for(const identity of identities){const profile=F.identityProfile(identity),base=c.baselines[identity],played=c.minutes[identity];if(!profile||profile.identity!==identity||!positions.includes(profile.pos)||!Number.isInteger(base)||base<0||base>99||!Number.isInteger(played)||played<0||played>completed*90)fail();minutes+=played;}
-  if(minutes!==completed*990)fail();
+  const receiptIds=new Set(entries.filter(e=>['match','cup','europe'].includes(e.type)).map(e=>e.id));
+  const tracked=(s.statistics?.records||[]).filter(r=>receiptIds.has(r.id));
+  const lost=tracked.reduce((sum,r)=>sum+(r.cards||[]).filter(e=>e.team===0&&e.card==='red').reduce((n,e)=>n+90-e.minute,0),0);
+  if(minutes!==completed*990-lost)fail();
+  // When every career match is tracked, check each identity, including sold players.
+  if(tracked.length===completed)for(const identity of identities){const actual=tracked.reduce((n,r)=>n+r.players.filter(p=>p.identity===identity).reduce((v,p)=>v+p.minutes,0),0);if(c.minutes[identity]!==actual)fail();}
   const current=progress(s);if(Object.keys(c.missions).length!==3||boards.length!==Object.values(c.missions).filter(r=>r!==null).length)fail();
   for(const [task,rule] of Object.entries(tasks)){
    const earned=c.missions[task],entry=boards.find(e=>e.id==='board-'+s.year+'-'+task);
