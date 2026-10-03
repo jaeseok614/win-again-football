@@ -1,0 +1,68 @@
+(function(root){
+ 'use strict';
+ const Discipline=root.Discipline||(typeof require==='function'?require('./discipline.js'):null);
+ const F=root.Football||(typeof require==='function'?require('./engine.js'):null),copy=x=>JSON.parse(JSON.stringify(x)),own='brynwell';
+ const integer=(n,min,max)=>Number.isInteger(n)&&n>=min&&n<=max;
+ const competitions=['league','cup','europe'],receiptTypes=['match','cup','europe'];
+ const recordId=(year,competition,round,stage)=>competition==='league'?'match-'+year+'-'+round:competition+'-'+year+'-'+stage;
+ const failure=()=>{throw Error('저장한 선수 경기 기록을 읽을 수 없어요.');};
+ function initialize(s,{legacy=false}={}){s.statistics={version:1,originLedger:s.finance.ledger.length,originYear:s.year,originRound:s.round,originMatchMinute:legacy?(s.match?.minute||0):0,year:s.year,records:[],archive:[]};return s;}
+ function afterMatch(s,match,{competition,round,stage=null}={}){
+  if(!match||match.phase!=='full'||match.minute!==90||!competitions.includes(competition)||!integer(round,1,14)||competition==='cup'&&!integer(stage,0,2)||competition==='europe'&&!integer(stage,0,7))throw Error('완료한 경기의 선수 기록만 확정할 수 있어요.');
+  const m=F.restore(match),t=s.statistics,id=recordId(s.year,competition,round,stage),receipt=s.finance.ledger.find(e=>e.id===id);
+  if(!t||t.year!==s.year||!receipt||receipt.type!==(competition==='league'?'match':competition)||t.records.some(r=>r.id===id))throw Error('이 경기의 선수 기록을 이미 확정했거나 결과가 준비되지 않았어요.');
+  const fixture=competition!=='league'?{home:receipt.home,away:receipt.away}:root.Season.fixturesFor(s)[round-1].find(f=>f.home===own||f.away===own),events=F.goalAttributions(m).map(e=>({minute:e.minute,scorerId:e.scorerId,scorerIdentity:e.scorerIdentity,assistId:e.assistId,assistIdentity:e.assistIdentity}));
+  const players=F.roster.map(slot=>{const p=m.players[slot.id];return {id:slot.id,identity:p.identity,minutes:p.minutes,started:m.segments[0].lineup.includes(slot.id),goals:events.filter(e=>e.scorerIdentity===p.identity).length,assists:events.filter(e=>e.assistIdentity===p.identity).length,cleanSheets:p.pos==='GK'&&p.minutes===90&&m.score[1]===0?1:0};});
+  const record={...(m.discipline?{cards:copy(m.discipline.events)}:{}),id,year:s.year,division:s.league.division,competition,round,stage:competition!=='league'?stage:null,home:fixture.home,away:fixture.away,score:[...m.score],statisticsOriginMinute:m.statisticsOriginMinute,unassignedGoals:m.score[0]-events.length,players,events,segments:m.segments.map(seg=>({start:seg.start,end:seg.end,lineup:[...seg.lineup]}))};
+  validateRecord(record);t.records.push(record);return s;
+ }
+ function nextYear(s){const t=s.statistics;if(!t||t.year!==s.year-1)throw Error('이전 시즌의 선수 기록을 확인하세요.');t.archive.push({year:t.year,records:t.records});t.year=s.year;t.records=[];return s;}
+ function recordsFor(s,year){return year===s.year?s.statistics.records:s.statistics.archive.find(a=>a.year===year)?.records||[];}
+ function personRow(identity){const p=F.identityProfile(identity);return {identity,name:p.name,pos:p.pos,apps:0,starts:0,minutes:0,goals:0,assists:0,cleanSheets:0};}
+ function summary(s,filter='all',year=s.year){
+  if(!['all',...competitions].includes(filter))throw Error('전체·리그·컵·유럽 기록 중 하나를 선택하세요.');
+  if(!integer(year,s.statistics.originYear,s.year))throw Error('선수 기록이 남아 있는 시즌을 선택하세요.');
+  const records=recordsFor(s,year).filter(r=>filter==='all'||r.competition===filter),rows=new Map();if(year===s.year)for(const p of Object.values(s.squad))rows.set(p.identity,personRow(p.identity));
+  for(const r of records)for(const p of r.players){if(!p.minutes&&year!==s.year)continue;if(!rows.has(p.identity))rows.set(p.identity,personRow(p.identity));const row=rows.get(p.identity);row.apps+=p.minutes>0?1:0;row.starts+=p.started?1:0;for(const key of ['minutes','goals','assists','cleanSheets'])row[key]+=p[key];}
+  const league=root.Season.leagueForYear(s,year),t=s.statistics,goals=records.reduce((n,r)=>n+r.score[0],0),unassignedGoals=records.reduce((n,r)=>n+r.unassignedGoals,0);
+  return {year,division:league.division,filter,players:[...rows.values()],matches:records.length,goals,assists:records.reduce((n,r)=>n+r.events.filter(e=>e.assistIdentity!==null).length,0),unassignedGoals,minutes:records.reduce((n,r)=>n+r.players.reduce((sum,p)=>sum+p.minutes,0),0),partial:year===t.originYear&&(t.originRound>0||t.originMatchMinute>0)||unassignedGoals>0,trackedSinceRound:year===t.originYear?t.originRound+1:1};
+ }
+ function lastMatch(s){const r=s.statistics.records.at(-1);if(!r)return null;return {...copy(r),players:r.players.map(p=>({...p,...personRow(p.identity),apps:p.minutes>0?1:0,starts:p.started?1:0,minutes:p.minutes,goals:p.goals,assists:p.assists,cleanSheets:p.cleanSheets})),events:r.events.map(e=>({...e,scorerName:F.identityProfile(e.scorerIdentity).name,assistName:e.assistIdentity===null?null:F.identityProfile(e.assistIdentity).name})),goals:r.score[0],assists:r.events.filter(e=>e.assistIdentity!==null).length,minutes:r.players.reduce((sum,p)=>sum+p.minutes,0)};}
+ function history(s){return s.statistics.archive.map(a=>summary(s,'all',a.year));}
+ function validateRecord(r){
+  if(!r||typeof r.id!=='string'||!integer(r.year,1,10000)||![1,2].includes(r.division)||!competitions.includes(r.competition)||!integer(r.round,1,14)||r.competition==='league'&&r.stage!==null||r.competition==='cup'&&!integer(r.stage,0,2)||r.competition==='europe'&&!integer(r.stage,0,7)||r.id!==recordId(r.year,r.competition,r.round,r.stage)||typeof r.home!=='string'||typeof r.away!=='string'||r.home===r.away||![r.home,r.away].includes(own)||!Array.isArray(r.score)||r.score.length!==2||r.score.some(n=>!integer(n,0,90))||!integer(r.statisticsOriginMinute,0,90)||!integer(r.unassignedGoals,0,r.score[0])||!Array.isArray(r.players)||r.players.length!==18||!Array.isArray(r.events)||r.events.length!==r.score[0]-r.unassignedGoals||!Array.isArray(r.segments)||!integer(r.segments.length,3,90))failure();
+  const bySlot=new Map();for(let i=0;i<F.roster.length;i++){const slot=F.roster[i],p=r.players[i],profile=F.identityProfile(p?.identity);if(!p||p.id!==slot.id||!profile||profile.pos!==slot.pos||!integer(p.minutes,0,90)||typeof p.started!=='boolean'||!integer(p.goals,0,r.score[0])||!integer(p.assists,0,r.score[0])||!integer(p.cleanSheets,0,1))failure();bySlot.set(p.id,p);}
+  if(new Set(r.players.map(p=>p.identity)).size!==18)failure();
+  if(Object.hasOwn(r,'cards'))Discipline.validateRecord(r);
+  const played=Object.fromEntries(F.roster.map(p=>[p.id,0])),ended=new Set();let changes=0,formationCounts=null,end=0;
+  for(let i=0;i<r.segments.length;i++){
+   const seg=r.segments[i];if(!seg||seg.start!==end||!integer(seg.end,seg.start+1,90)||[45,65].some(boundary=>seg.start<boundary&&seg.end>boundary)||!Array.isArray(seg.lineup)||seg.lineup.length!==11||new Set(seg.lineup).size!==11||seg.lineup.some(id=>!bySlot.has(id)))failure();
+   const duration=seg.end-seg.start,counts={GK:0,DEF:0,MID:0,FW:0};end=seg.end;
+   for(const id of seg.lineup){counts[F.identityProfile(bySlot.get(id).identity).pos]++;played[id]+=Math.max(0,Math.min(seg.end,r.cards?.find(e=>e.team===0&&e.id===id&&e.card==='red')?.minute??90)-seg.start);}
+   if(counts.GK!==1||!Object.values(F.formations).some(f=>Object.entries(f).every(([pos,n])=>counts[pos]===n))||formationCounts&&JSON.stringify(counts)!==formationCounts)failure();formationCounts=JSON.stringify(counts);
+   if(i){const prior=r.segments[i-1].lineup,entered=seg.lineup.filter(id=>!prior.includes(id));if(entered.some(id=>ended.has(id))||prior.some(id=>!seg.lineup.includes(id)&&(r.cards||[]).some(e=>e.team===0&&e.id===id&&e.card==='red'&&e.minute<=seg.start)))failure();for(const id of prior)if(!seg.lineup.includes(id))ended.add(id);changes+=entered.length;}
+  }
+  if(end!==90||changes>3)failure();
+  for(const p of r.players){const profile=F.identityProfile(p.identity);if(p.minutes!==played[p.id]||p.started!==r.segments[0].lineup.includes(p.id)||p.cleanSheets!==(profile.pos==='GK'&&p.minutes===90&&r.score[1]===0?1:0))failure();}
+  let minute=0;for(const e of r.events){if(!e||!integer(e.minute,r.statisticsOriginMinute+1,90)||e.minute<=minute)failure();minute=e.minute;const scorer=bySlot.get(e.scorerId),assist=e.assistId===null?null:bySlot.get(e.assistId),lineup=r.segments.find(seg=>e.minute>seg.start&&e.minute<=seg.end)?.lineup.filter(id=>!(r.cards||[]).some(card=>card.team===0&&card.id===id&&card.card==='red'&&card.minute<e.minute));if(!scorer||F.identityProfile(scorer.identity).pos!=='FW'||scorer.identity!==e.scorerIdentity||!lineup?.includes(scorer.id))failure();if(e.assistId===null){if(e.assistIdentity!==null)failure();}else if(!assist||assist.id===scorer.id||assist.identity!==e.assistIdentity||F.identityProfile(assist.identity).pos==='GK'||!lineup.includes(assist.id))failure();}
+  for(const p of r.players)if(p.goals!==r.events.filter(e=>e.scorerIdentity===p.identity).length||p.assists!==r.events.filter(e=>e.assistIdentity===p.identity).length||!p.minutes&&(p.goals||p.assists))failure();
+  if(!r.statisticsOriginMinute&&r.unassignedGoals||r.unassignedGoals>r.statisticsOriginMinute)failure();return r;
+ }
+ function validate(s){
+  const t=s.statistics,ledger=s.finance.ledger;
+  if(!t||t.version!==1||t.year!==s.year||!integer(t.originYear,s.finance.origin.year,s.year)||!integer(t.originLedger,0,ledger.length)||!integer(t.originRound,0,14)||!integer(t.originMatchMinute,0,90)||!Array.isArray(t.records)||t.records.length>25||!Array.isArray(t.archive)||t.archive.length!==s.year-t.originYear||t.archive.some((a,i)=>!a||a.year!==t.originYear+i||!Array.isArray(a.records)||a.records.length>25))failure();
+  const prefix=ledger.slice(0,t.originLedger),initialRound=t.originYear===s.finance.origin.year?s.finance.origin.round:0;if(prefix.some(e=>e.year>t.originYear)||t.originRound!==initialRound+prefix.filter(e=>e.year===t.originYear&&e.type==='match').length||ledger.slice(t.originLedger).some(e=>e.year<t.originYear))failure();
+  const records=t.archive.flatMap(a=>a.records).concat(t.records),receipts=ledger.slice(t.originLedger).filter(e=>receiptTypes.includes(e.type));if(records.length!==receipts.length||new Set(records.map(r=>r?.id)).size!==records.length)failure();
+  for(const a of t.archive)if(a.records.some(r=>r.year!==a.year))failure();if(t.records.some(r=>r.year!==s.year))failure();
+  const contracts=Object.fromEntries(F.roster.map(p=>[p.id,p.identity]));let index=0;
+  for(let i=0;i<ledger.length;i++){const e=ledger[i];if(e.type==='transfer'){contracts[e.slot]=e.incoming;continue;}if(i<t.originLedger||!receiptTypes.includes(e.type))continue;const r=records[index];validateRecord(r);const league=root.Season.leagueForYear(s,e.year);if(r.id!==e.id||r.year!==e.year||r.division!==league.division||r.round!==e.round||r.competition!==(e.type==='match'?'league':e.type)||r.players.some(p=>p.identity!==contracts[p.id])||r.statisticsOriginMinute!==(index===0?t.originMatchMinute:0))failure();
+   if(e.type==='match'){const fixture=root.Season.fixturesFor({league})[e.round-1].find(f=>f.home===own||f.away===own),rates=root.Economy.rates(s,e.year),bonus=r.score[0]>r.score[1]?rates.winBonus:r.score[0]===r.score[1]?rates.drawBonus:0;if(r.home!==fixture.home||r.away!==fixture.away||e.bonus!==bonus)failure();if(e.year===s.year){const result=s.results.find(x=>x.round===e.round-1&&(x.home===own||x.away===own)),score=result?.home===own?result.goals:result?[result.goals[1],result.goals[0]]:null;if(JSON.stringify(r.score)!==JSON.stringify(score))failure();}}
+   else{if(r.stage!==e.stage||r.home!==e.home||r.away!==e.away||r.score[0]!==r.score[1]&&e.winner!==(r.score[0]>r.score[1]?own:r.home===own?r.away:r.home))failure();if(e.type==='europe'){const score=e.home===own?e.goals:Array.isArray(e.goals)?[e.goals[1],e.goals[0]]:null;if(JSON.stringify(r.score)!==JSON.stringify(score))failure();}if(e.year===s.year){const result=(e.type==='cup'?s.cup:s.europe)?.results.find(x=>x.stage===e.stage&&(x.home===own||x.away===own)),score=result?.home===own?result.goals:result?[result.goals[1],result.goals[0]]:null;if(JSON.stringify(r.score)!==JSON.stringify(score))failure();}}
+   index++;
+  }
+  for(const a of t.archive){const leagueRecords=a.records.filter(r=>r.competition==='league');if((a.year!==t.originYear||t.originRound===0)&&leagueRecords.length===14){const points=leagueRecords.reduce((n,r)=>n+(r.score[0]>r.score[1]?3:r.score[0]===r.score[1]?1:0),0);if(s.history.find(h=>h.year===a.year)?.points!==points)failure();}}
+  if(!records.length&&t.originYear===s.year&&t.originRound>s.round)failure();return s;
+ }
+ function restore(s,raw){s.statistics=copy(raw);validate(s);return s;}
+ const api={initialize,afterMatch,nextYear,summary,lastMatch,history,restore,validate};root.Statistics=api;if(typeof module!=='undefined')module.exports=api;
+})(typeof window!=='undefined'?window:globalThis);

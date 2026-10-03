@@ -1,0 +1,10 @@
+work/
+.openai/
+standalone.html
+android/.gradle/
+android/**/build/
+android/app/src/main/assets/game/
+android/local.properties
+android/signing.properties
+*.jks
+*.keystore

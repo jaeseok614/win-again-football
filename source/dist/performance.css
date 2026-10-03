@@ -1,0 +1,12 @@
+#pwa-preparation{margin:10px 0;padding:12px 14px;background:#151d27;border:1px solid #304055;border-radius:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#pwa-preparation[hidden]{display:none}
+.pwa-preparation-copy{flex:1;min-width:160px}
+.pwa-preparation-copy strong{font-size:13px;display:block;color:#e7eef6}
+.pwa-preparation-copy p{margin:4px 0 0;font-size:12px;line-height:1.5;color:#acb8c9}
+.pwa-preparation-progress{display:block;width:100%;height:5px;accent-color:#c8f36e;flex-basis:100%}
+#pwa-preparation button{min-height:44px;min-width:44px;font-size:12px}
+#pwa-preparation[data-state="error"]{border-color:#9d5157}
+#pwa-preparation[data-state="ready"]{border-color:#548a64}
+@media(prefers-reduced-motion:reduce){.pwa-preparation-progress{animation:none}}
+
+#mobile-club-life{grid-column:1/-1;min-height:44px;font-size:12px}

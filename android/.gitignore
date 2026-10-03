@@ -1,0 +1,7 @@
+.gradle/
+**/build/
+local.properties
+app/src/main/assets/game/
+*.jks
+*.keystore
+signing.properties

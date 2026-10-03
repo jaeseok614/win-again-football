@@ -1,0 +1,40 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path'),cp=require('node:child_process'),vm=require('node:vm');
+const F=require('./dist/engine.js'),Portraits=require('./dist/portraits.js'),StaffFaces=require('./dist/staff-portraits.js');
+const playerSource=fs.readFileSync(path.join(__dirname,'dist/portraits.js'),'utf8'),staffSource=fs.readFileSync(path.join(__dirname,'dist/staff-portraits.js'),'utf8');let groups=0;
+function test(name,fn){fn();groups++;console.log('PASS '+name);}
+function context(sources,{style=true,document=true}={}){const calls=[],styles=[],sandbox={};if(document)sandbox.document=style?{documentElement:{style:{setProperty(key,value){if(value.length>1048576)throw Error('Atlas exceeds browser custom-property limit');calls.push([key,value]);}}},createElement(type){assert.equal(type,'style');return {id:'',textContent:''};},head:{appendChild(element){styles.push(element);}}}:{};const ctx=vm.createContext(sandbox);for(const source of sources)vm.runInContext(source,ctx);return {ctx,calls,styles};}
+function scripts(html){return [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match=>match[1]);}
+
+test('portrait modules remain safe in CommonJS and browser fixtures without a DOM or CSS style API',()=>{
+ assert.equal(Portraits.asset,'assets/player-faces-v12.png?v=12');assert.equal(StaffFaces.asset,'assets/coach-faces-v1.webp?v=1');
+ for(const options of [{document:false},{style:false}]){const h=context([playerSource,staffSource],options);assert.equal(h.calls.length,0);assert.equal(h.styles.length,0);assert.equal(h.ctx.Portraits.index('g1'),0);assert.equal(h.ctx.StaffPortraits.index('이든 브룩스'),0);assert.ok(h.ctx.Portraits.html('f2').includes('data-portrait-index="15"'));}
+});
+
+test('source modules register one shared atlas each and rendering hundreds of faces never repeats registration',()=>{
+ const h=context([playerSource,staffSource]);assert.deepEqual(h.calls,[['--staff-portrait-atlas',"url('"+StaffFaces.asset+"')"]]);assert.deepEqual(h.styles,[{id:'player-portrait-atlas',textContent:'.player-portrait{background-image:url("'+Portraits.asset+'")}'}]);
+ for(let i=0;i<500;i++){h.ctx.Portraits.html(F.roster[i%18]);h.ctx.StaffPortraits.html('노아 리드');}assert.equal(h.calls.length,1);assert.equal(h.styles.length,1);
+});
+
+test('portrait spans keep identity and tile coordinates while omitting atlas URLs and leaving game RNG untouched',()=>{
+ const match=F.create(121),before=JSON.stringify(match);for(const player of [...F.roster,...F.market]){const markup=Portraits.html(player,{size:'large'}),index=Portraits.index(player);assert.ok(markup.includes('data-portrait-index="'+index+'"'));assert.ok(markup.includes('portrait-large'));assert.ok(markup.includes('--portrait-x:'));assert.ok(markup.includes('--portrait-y:'));assert.ok(!markup.includes('background-image'));assert.ok(!markup.includes(Portraits.asset));}
+ for(const name of ['이든 브룩스','노아 리드','오스카 그린']){const markup=StaffFaces.html(name);assert.ok(markup.includes('--staff-face-x:'));assert.ok(!markup.includes('background-image'));assert.ok(!markup.includes(StaffFaces.asset));}assert.equal(JSON.stringify(match),before);
+});
+
+test('the existing atlas sizing and masks use one shared rule without placing the large atlas in a custom property',()=>{
+ const css=fs.readFileSync(path.join(__dirname,'dist/style.css'),'utf8'),staffCss=fs.readFileSync(path.join(__dirname,'dist/staff-portraits.css'),'utf8');
+ assert.ok(!css.includes('--player-portrait-atlas'));assert.ok(!playerSource.includes('setProperty'));assert.ok(playerSource.includes("createElement('style')"));assert.ok(playerSource.includes('root.document.head.appendChild(stylesheet)'));assert.ok(css.includes('background-position:var(--portrait-x) var(--portrait-y)'));assert.ok(staffCss.includes('background-image:var(--staff-portrait-atlas)'));assert.ok(staffCss.includes('background-size:500% 200%'));assert.ok(!css.includes(Portraits.asset));assert.ok(!staffCss.includes(StaffFaces.asset));
+});
+
+const temporary=fs.mkdtempSync(path.join(os.tmpdir(),'football-portrait-performance-'));try{
+ const output=path.join(temporary,'index.html');cp.execFileSync(process.execPath,[path.join(__dirname,'build.cjs'),output,'--pwa'],{encoding:'utf8'});const html=fs.readFileSync(output,'utf8'),all=scripts(html),compiledPlayers=all.find(source=>source.includes('// This atlas contains original fictional faces.')),compiledStaff=all.find(source=>source.includes('root.StaffPortraits=api')),h=context([compiledPlayers,compiledStaff]);
+ test('the actual compiled PWA installs a shared ordinary stylesheet for the atlas larger than one MiB',()=>{
+  const playerAsset=h.ctx.Portraits.asset,staffAsset=h.ctx.StaffPortraits.asset;assert.ok(playerAsset.startsWith('data:image/png;base64,'));assert.ok(staffAsset.startsWith('data:image/webp;base64,'));assert.ok(playerAsset.length>1048576);assert.equal(html.split(playerAsset).length-1,1);assert.equal(html.split(staffAsset).length-1,1);assert.equal(h.calls.length,1);assert.equal(h.styles.length,1);assert.equal(h.styles[0].id,'player-portrait-atlas');assert.equal(h.styles[0].textContent,'.player-portrait{background-image:url("'+playerAsset+'")}');assert.equal(h.calls[0][1],"url('"+staffAsset+"')");assert.ok(Buffer.byteLength(html)<4500000);
+ });
+ test('compiled eighteen-player roster and forty-player squad markup stay below twelve KB instead of copying 128 MB',()=>{
+  const roster=F.roster.map(player=>h.ctx.Portraits.html(player)).join(''),squad=Array.from({length:40},(_,index)=>h.ctx.Portraits.html(F.roster[index%18])).join(''),coaches=Array.from({length:20},(_,index)=>h.ctx.StaffPortraits.html('unknown-'+index)).join('');
+  assert.ok(Buffer.byteLength(roster)<6000);assert.ok(Buffer.byteLength(squad)<12000);assert.ok(Buffer.byteLength(coaches)<5000);assert.ok(!roster.includes('data:image'));assert.ok(!squad.includes('base64'));assert.ok(!coaches.includes('base64'));for(const p of F.roster)assert.equal(h.ctx.Portraits.index(p),Portraits.index(p));assert.equal(h.calls.length,1);assert.equal(h.styles.length,1);
+  console.log('Compiled portrait markup bytes: '+JSON.stringify({roster18:Buffer.byteLength(roster),squad40:Buffer.byteLength(squad),coaches20:Buffer.byteLength(coaches),sharedPlayerAtlas:h.ctx.Portraits.asset.length,sharedCoachAtlas:h.ctx.StaffPortraits.asset.length}));
+ });
+}finally{fs.rmSync(temporary,{recursive:true,force:true});}
+console.log('Validated '+groups+' portrait performance groups against source and an actual compiled PWA.');

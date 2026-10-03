@@ -1,0 +1,22 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),cp=require('node:child_process');
+const dist=path.join(__dirname,'dist'),publish=path.resolve(__dirname,'..');
+const digest=files=>{const hash=crypto.createHash('sha256');for(const file of files){const bytes=fs.readFileSync(file);hash.update(/\.(?:js|css|html|webmanifest)$/.test(file)?bytes.toString('utf8').replace(/\r\n/g,'\n'):bytes);}return hash.digest('hex').slice(0,12);};
+const template=fs.readFileSync(path.join(dist,'index.html'),'utf8');
+const modules=[...template.matchAll(/(?:src|href)="([^"?]+\.(?:js|css)\?v=\d+)"/g)].map(match=>'./'+match[1]);
+const assets=[...new Set([...modules,'./assets/player-faces-v12.png?v=12','./assets/coach-faces-v1.webp?v=1','./assets/launch-stadium.webp'])];
+const modularFiles=['index.html','sw.js','manifest.webmanifest','assets/app-icon-192.png','assets/app-icon-512.png',...assets.map(asset=>asset.replace(/^\.\//,'').split('?')[0])].map(file=>path.join(dist,file));
+fs.writeFileSync(path.join(dist,'cache-assets.js'),'self.WIN_AGAIN_CACHE_REVISION = '+JSON.stringify(digest(modularFiles))+';\nself.WIN_AGAIN_ASSETS = '+JSON.stringify(assets,null,2)+';\n');
+cp.execFileSync(process.execPath,[path.join(__dirname,'build.cjs'),path.join(publish,'index.html'),'--pwa'],{stdio:'inherit'});
+let html=fs.readFileSync(path.join(publish,'index.html'),'utf8');
+html=html.replace(/<meta name="win-again-inline-shell" content="v22:[a-f0-9]{64}">/,'').replaceAll('href="assets/app-icon-192.png"','href="app-icon-192.png"');
+const shellHash=crypto.createHash('sha256').update(html,'utf8').digest('hex');
+html=html.replace('</head>','<meta name="win-again-inline-shell" content="v22:'+shellHash+'"></head>');
+fs.writeFileSync(path.join(publish,'index.html'),html);
+const manifest=JSON.parse(fs.readFileSync(path.join(dist,'manifest.webmanifest'),'utf8'));
+for(const icon of manifest.icons){const name=path.basename(icon.src);fs.copyFileSync(path.join(dist,icon.src),path.join(publish,name));icon.src=name;}
+fs.writeFileSync(path.join(publish,'manifest.webmanifest'),JSON.stringify(manifest,null,2)+'\n');
+fs.writeFileSync(path.join(publish,'sw.js'),fs.readFileSync(path.join(dist,'sw.js'),'utf8').replace(/\r\n/g,'\n').replaceAll('./assets/app-icon-192.png','./app-icon-192.png').replaceAll('./assets/app-icon-512.png','./app-icon-512.png'));
+const publicFiles=['index.html','sw.js','manifest.webmanifest','app-icon-192.png','app-icon-512.png'].map(file=>path.join(publish,file));
+fs.writeFileSync(path.join(publish,'cache-assets.js'),'self.WIN_AGAIN_INLINE_SHELL = true;\nself.WIN_AGAIN_INLINE_SHELL_HASH = '+JSON.stringify(shellHash)+';\nself.WIN_AGAIN_CACHE_REVISION = '+JSON.stringify(digest(publicFiles))+';\nself.WIN_AGAIN_ASSETS = ["./index.html"];\n');
+console.log('Complete PWA generated; shell '+shellHash.slice(0,12)+', '+Buffer.byteLength(html)+' bytes.');

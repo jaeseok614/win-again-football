@@ -73,15 +73,26 @@ async function shellMatchesAssets(response) {
     .flatMap(tag => [...tag[0].matchAll(/(?:src|href)\s*=\s*["']([^"']+)["']/gi)])
     .map(match => new URL(match[1], SCOPE_URL))
     .filter(url => /\.(?:js|css)$/i.test(url.pathname));
-  return (self.WIN_AGAIN_INLINE_SHELL === true ||
-      resources.some(url => url.pathname === new URL('./app.js', SCOPE_URL).pathname)) &&
-    resources.every(url => ASSET_SET.has(url.href));
+  if (!resources.every(url => ASSET_SET.has(url.href))) return false;
+  if (self.WIN_AGAIN_INLINE_SHELL !== true) {
+    return resources.some(url => url.pathname === new URL('./app.js', SCOPE_URL).pathname);
+  }
+  // A successful HTTP response can still be a hosting error or a truncated build.
+  // The build marker binds the entire inline document to this release's asset list.
+  const expectedHash = self.WIN_AGAIN_INLINE_SHELL_HASH;
+  if (resources.length || typeof expectedHash !== 'string' || !/^[a-f0-9]{64}$/.test(expectedHash)) return false;
+  const markers = [...markup.matchAll(/<meta name="win-again-inline-shell" content="v22:([a-f0-9]{64})">/g)];
+  if (markers.length !== 1 || markers[0][1] !== expectedHash) return false;
+  const unsignedHTML = html.replace(markers[0][0], '');
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(unsignedHTML));
+  const actualHash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
+  return actualHash === expectedHash;
 }
 async function readyCache() {
   if (assetListError || !PRECACHE_URLS.length || !(await caches.keys()).includes(CACHE_NAME)) return false;
   const cache = await caches.open(CACHE_NAME);
   for (const url of PRECACHE_URLS) if (!cacheable(await cache.match(url))) return false;
-  return true;
+  return await shellMatchesAssets(await cache.match(INDEX_URL));
 }
 async function notifyPages(type) {
   const message = type === 'WIN_AGAIN_PWA_READY'
@@ -98,7 +109,7 @@ self.addEventListener('install', event => {
     try {
       if (assetListError) throw new Error('asset-list-unavailable');
       const cache = await caches.open(CACHE_NAME);
-      if (alreadyPresent && await readyCache() && await shellMatchesAssets(await cache.match(INDEX_URL))) {
+      if (alreadyPresent && await readyCache()) {
         await notifyPages('WIN_AGAIN_PWA_READY');
         await self.skipWaiting();
         return;
@@ -132,6 +143,8 @@ async function documentRequest(request) {
     if (!cacheable(response, true)) throw new Error('document-unavailable');
     if (await shellMatchesAssets(response)) {
       try { await cache.put(INDEX_URL, response.clone()); } catch (_) { /* Online play stays available. */ }
+    } else if (self.WIN_AGAIN_INLINE_SHELL === true) {
+      throw new Error('shell-assets-mismatch');
     }
     return response;
   } catch (_) {
