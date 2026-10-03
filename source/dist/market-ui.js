@@ -38,8 +38,9 @@ function renderMarket(){
  $('market-overview').querySelectorAll('[data-recruit]').forEach(button=>button.onclick=()=>{if(button.disabled)return;const identity=button.dataset.recruit;action(()=>{season=S.recruit(season,identity,outgoingChoices[identity]);state=season.match;selected=null;});});
 }
 
-function ledgerTitle(e){return ({transfer:"선수 맞교환",goal:"시즌 목표 보상",scout:"유소년 탐색",board:"이사회 과제 보상",cup:"컵대회 정산",europe:"챔피언스리그 정산",'staff-hire':'코치 계약','staff-renew':'코치 재계약','staff-release':'코치 계약 종료','staff-wages':'코치 주급'}[e.type]||"경기 정산");}
+function ledgerTitle(e){return ({transfer:"선수 맞교환",goal:"시즌 목표 보상",scout:"유소년 탐색",board:"이사회 과제 보상",'owner-investment':"구단주 투자",cup:"컵대회 정산",europe:"챔피언스리그 정산",'staff-hire':'코치 계약','staff-renew':'코치 재계약','staff-release':'코치 계약 종료','staff-wages':'코치 주급'}[e.type]||"경기 정산");}
 function ledgerDetail(e){
+ if(e.type==='owner-investment')return '면담 승인 · 시즌 한 번 · '+moneyLabel(e.amount);
  if(e.type==='europe')return Europe.stageNames[e.stage]+' · 경기 수입 '+moneyLabel(e.gate)+' / 경기 상금 '+moneyLabel(e.matchBonus)+' / 진출·우승 상금 '+moneyLabel(e.advanceBonus);
  if(e.type==='staff-wages')return '코치 '+e.contracts.length+'명 · 리그 주급 '+moneyLabel(-e.amount);
  if(['staff-hire','staff-renew','staff-release'].includes(e.type)){const person=typeof Staff==='undefined'?null:Staff.candidates(season).find(candidate=>candidate.id===e.candidate);return playerUiText(person?person.label+' · '+person.name:'코치')+' · '+(e.type==='staff-renew'?'리그 7경기 연장 / ':e.type==='staff-release'?'계약 종료 지급 / ':'계약 비용 / ')+moneyLabel(-e.amount);}

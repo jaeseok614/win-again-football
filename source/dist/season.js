@@ -4,6 +4,7 @@
  const Opposition=root.Opposition||(typeof require==='function'?require('./opposition.js'):null);
  const Staff=root.Staff||(typeof require==='function'?require('./staff.js'):null);
  const U=root.Europe||(typeof require==='function'?require('./europe.js'):null);
+ const Board=root.OwnerBoard||(typeof require==='function'?require('./owner-board.js'):null);
  const CL=root.ClubLife||(typeof require==='function'?require('./club-life.js'):null);
  const F=root.Football||(typeof require==='function'?require('./engine.js'):null),E=root.Economy||(typeof require==='function'?require('./economy.js'):null),C=root.Career||(typeof require==='function'?require('./career.js'):null),P=root.Cup||(typeof require==='function'?require('./cup.js'):null),H=root.Health||(typeof require==='function'?require('./health.js'):null),ST=root.Statistics||(typeof require==='function'?require('./statistics.js'):null);
  const clubs=[
@@ -113,7 +114,7 @@
    const cashflow=lastEntry||s.finance.ledger.find(e=>e.id==='match-'+s.year+'-'+s.round);
    const nonLeague=lastEurope||lastCup;s.lastReport={competition:lastEurope?'europe':lastCup?'cup':'league',round:nonLeague?nonLeague.week:s.round,fixturehome:last.home,opponent:last.home===own?last.away:last.home,score:orient(last,'goals'),penalties:nonLeague?.penalties?orient(nonLeague,'penalties'):null,kicks:nonLeague?orient(nonLeague,'kicks'):[[],[]],winner:nonLeague?nonLeague.winner:last.goals[0]===last.goals[1]?null:last.goals[0]>last.goals[1]?last.home:last.away,changes,rank:me.rank,points:me.points,cashflow:cashflow?copy(cashflow):null};if(nonLeague){s.lastReport.stage=nonLeague.stage;s.lastReport.title=(lastEurope?U:P).stageNames[nonLeague.stage];}
   }
-  try{CL?.restore(s,raw.clubLife);}catch{fail();}
+  try{CL?.restore(s,raw.clubLife);Board?.restore(s,raw.ownerBoard);}catch{fail();}
   return s;
  }
  function recruit(s,identity,slot){if(s.match?.decisions?.some(d=>d.type==='talk'&&d.lineup.includes(slot)))throw Error('팀 대화를 마친 선수의 영입 교체는 다음 경기 전에 할 수 있어요. 영입 뒤 팀 대화를 진행하세요.');const next=E.recruit(s,identity,slot);C.register(next,slot);return next;}
