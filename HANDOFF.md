@@ -1,9 +1,17 @@
 # 통합 개발 인수인계 — 2026-10-03
 
-집·회사·클라우드 개발본을 모은 브랜치: `codex/portable-development-20261003`.
+집·회사·클라우드 통합본과 후속 개발의 기준 브랜치: `main`.
 최신 소스는 Git에 추적된 `source/`입니다. ZIP은 최초 v22 복구용입니다.
 현재 통합 내역과 복구 한계는 [CLOUD_RECOVERY.md](docs/CLOUD_RECOVERY.md)를 읽으세요.
 이전 회사 인수인계 원문은 [별도 보관](docs/HANDOFF_2026-10-02.md)했습니다.
+
+## 최신 추가 — 감독 여정
+
+- 감독실에서 5개 이정표와 확정된 리그 진행, 다음 행동을 표시합니다.
+- source/dist/manager-journey.js는 기존 기록만 읽고 저장/RNG를 바꾸지 않습니다.
+- 참고 기사와 설계 기준은 docs/PRODUCT_DIRECTION.md에 있습니다.
+- 60개 테스트 파일 / 643개 검증, 공개 PWA 14개 검증 통과.
+- 360×640 / 1280×900 실제 브라우저에서 표시·탐색·가로 넘침을 확인했습니다.
 
 ## 포함한 기능
 
@@ -21,7 +29,7 @@
 처음에는:
 
 ```sh
-git clone --branch codex/portable-development-20261003 https://github.com/jaeseok614/win-again-football.git
+git clone --branch main https://github.com/jaeseok614/win-again-football.git
 cd win-again-football
 node source/run-tests.cjs
 python -m http.server 8765 --bind 127.0.0.1 --directory source/dist
