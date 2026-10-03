@@ -62,7 +62,7 @@
   let balance=f.opening,order=-1;const contracts=Object.fromEntries(F.roster.map(p=>[p.id,p.identity])),usedByYear={},scouts={};
   for(const e of f.ledger){
    if(!money(e.amount)||!Number.isInteger(e.year)||e.year<f.origin.year||e.year>s.year||!Number.isInteger(e.round)||e.round<1||e.round>14||e.year===f.origin.year&&e.round<=f.origin.round&&e.type!=='goal'&&!(e.round===f.origin.round&&['cup','europe','board'].includes(e.type)))fail();
-   const stamp=e.year*100+e.round*4+({scout:0,transfer:0,'staff-hire':0,'staff-renew':0,'staff-release':0,match:1,board:2,cup:2,europe:2,goal:2,'staff-wages':2}[e.type]??999);if(stamp<order)fail();order=stamp;
+   const stamp=e.year*100+e.round*4+({'owner-investment':0,scout:0,transfer:0,'staff-hire':0,'staff-renew':0,'staff-release':0,match:1,board:2,cup:2,europe:2,goal:2,'staff-wages':2}[e.type]??999);if(stamp<order)fail();order=stamp;
    if(e.type==='scout'){
     if(e.id!=='scout-'+e.year+'-'+e.cycle||![1,2].includes(e.cycle)||Math.floor((e.round-1)/7)+1!==e.cycle||!positions.includes(e.pos)||e.amount!==-12000||balance<12000||scouts[e.year+'-'+e.cycle]||e.year===s.year&&e.round>s.round+1)fail();scouts[e.year+'-'+e.cycle]=e;
    }else if(e.type==='transfer'){
@@ -81,6 +81,8 @@
    }else if(e.type==='europe'){
     const keys=['id','type','year','round','stage','index','home','away','goals','penalties','kicks','winner','gate','matchBonus','advanceBonus','income','amount'];if(Object.keys(e).length!==keys.length||keys.some(key=>!Object.hasOwn(e,key))||e.id!=='europe-'+e.year+'-'+e.stage||e.year===s.year&&e.round>s.round)fail();
     try{europeModule().validateReceipt(s,e);}catch{fail();}const income=europeIncome(e);if(Object.keys(income).some(key=>e[key]!==income[key]))fail();
+   }else if(e.type==='owner-investment'){
+    if(e.id!=='owner-investment-'+e.year||e.amount!==20000||e.year===s.year&&e.round>s.round+1)fail();
    }else if(e.type==='board'){
     const rule=boardTasks[e.task];if(!rule||e.id!=='board-'+e.year+'-'+e.task||!Number.isSafeInteger(e.progress)||e.progress<rule.threshold||e.progress>100000000||e.amount!==rule.amount||e.year===s.year&&e.round>s.round)fail();
    }else if(e.type==='goal'){
