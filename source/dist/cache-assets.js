@@ -1,4 +1,4 @@
-self.WIN_AGAIN_CACHE_REVISION = "c042841c3b6c";
+self.WIN_AGAIN_CACHE_REVISION = "f4e55faa2a26";
 self.WIN_AGAIN_ASSETS = [
   "./style.css?v=22",
   "./coach-guide.css?v=22",
@@ -26,6 +26,7 @@ self.WIN_AGAIN_ASSETS = [
   "./league-centre.css?v=22",
   "./opposition.css?v=22",
   "./match-popup.css?v=22",
+  "./manager-intro.css?v=23",
   "./app-icons.js?v=22",
   "./discipline.js?v=22",
   "./engine.js?v=22",
@@ -107,6 +108,8 @@ self.WIN_AGAIN_ASSETS = [
   "./app-shell.js?v=22",
   "./app.js?v=22",
   "./match-popup.js?v=22",
+  "./tactical-editor.js?v=23",
+  "./manager-intro.js?v=23",
   "./assets/player-faces-v12.png?v=12",
   "./assets/coach-faces-v1.webp?v=1",
   "./assets/launch-stadium.webp"

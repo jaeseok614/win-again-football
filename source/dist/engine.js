@@ -54,6 +54,31 @@
  function rememberAlias(before,after){if(!textAliases.has(before))textAliases.set(before,new Set());textAliases.get(before).add(after);}
  for(const p of [...roster,...market]){legacyNames[p.identity]=p.name;p.name=personalities[p.identity][0];rememberAlias(legacyNames[p.identity],p.name);}
  const identities=Object.fromEntries([...roster,...market].map(p=>[p.identity,p]));
+ // A fictional 2024/25-inspired starting squad; legacy identities remain intact.
+ const startingNames=[
+  ['g1','굴리엘모 비카리오우','장갑의 파수꾼',28],['g2','프레이저 포스털','노련한 장갑',36],
+  ['d1','크리스티안 로메로우','수비의 투사',26],['d2','미키 판더벤느','추격의 번개',23],['d3','페드로 포로우','측면 배달부',25],['d4','데스티니 우도기잉','왼쪽 질주',22],['d5','라두 드라구신느','수비의 새벽',22],['d6','벤 데이비쑤','조용한 버팀목',31],
+  ['m1','이브 비수마르','중원 청소부',28],['m2','제임스 매디쏜','찬스 설계자',28],['m3','데얀 쿨루셉스키','틈새 창조자',24],['m4','로드리고 벤탄쿠르르','중원 연결고리',27],['m5','파페 마타 사르르','중원의 엔진',22],['m6','루카스 베리발','새로운 박자',18],
+  ['f1','손헝민','우리의 주장',32],['f2','도미닉 솔랑케잉','박스의 해결사',27],['f3','브레넌 존쏜','침투의 화살',23],['f4','히샬리쏭','골문 사냥꾼',27]
+ ];
+ const startingSkills={g1:[30,62,65,50,70,76],g2:[25,58,52,40,68,68],d1:[42,78,65,68,78,0],d2:[38,75,63,87,76,0],d3:[58,69,76,77,77,0],d4:[52,70,65,82,79,0],d5:[35,68,54,66,74,0],d6:[37,70,64,59,75,0],m1:[55,70,74,70,80,0],m2:[72,43,83,68,71,0],m3:[73,48,77,74,80,0],m4:[54,65,76,65,75,0],m5:[58,65,70,78,83,0],m6:[57,50,68,74,74,0],f1:[82,32,73,83,76,0],f2:[76,36,63,73,80,0],f3:[70,30,62,88,77,0],f4:[73,39,57,76,74,0]};
+ const startingRoster=startingNames.map(([slot,name,nickname,age])=>{const p=roster.find(p=>p.id===slot),identity='sp_'+slot;personalities[identity]=[name,nickname,'강등된 토투넘을 다시 일으키기 위해 함께 뛰어요.'];return identities[identity]={...p,...Object.fromEntries(['attack','defense','passing','speed','endurance','keeping'].map((key,index)=>[key,startingSkills[slot][index]])),identity,name,age,energy:100,kind:'토투넘 선수'};});
+ function mentalProfile(value){
+  const identity=typeof value==='string'?value:value.identity||value.id;
+  let hash=2166136261;for(const ch of identity)hash=(Math.imul(hash,16777619)^ch.charCodeAt(0))>>>0;
+  const draw=()=>{hash=(Math.imul(hash,1664525)+1013904223)>>>0;return 6+hash%14;};
+  const profile={loyalty:draw(),professionalism:draw(),determination:draw(),pressure:draw(),teamwork:draw(),leadership:draw()};
+  if(identity==='sp_f1')Object.assign(profile,{loyalty:19,professionalism:18,determination:18,pressure:16,teamwork:18,leadership:19});
+  return profile;
+ }
+ function detailedAttributes(p){
+  const mental=mentalProfile(p),scale=value=>Math.max(1,Math.min(20,Math.round(value/5))),item=(key,label,value)=>({key,label,value});
+  return [
+   {label:'기술',items:[item('finishing','골 결정력',scale(p.attack)),item('firstTouch','퍼스트 터치',scale((p.attack+p.passing)/2)),item('passing','패스',scale(p.passing)),item('crossing','크로스',scale(p.passing*.7+p.speed*.3)),item('dribbling','드리블',scale(p.speed*.45+p.attack*.55)),item('tackling','태클',scale(p.defense)),item('marking','마크',scale(p.defense*.8+p.endurance*.2)),item('keeping','선방',p.pos==='GK'?scale(p.keeping):null)]},
+   {label:'정신 · 성격',items:[item('loyalty','충성도',mental.loyalty),item('professionalism','프로 의식',mental.professionalism),item('determination','승부욕',mental.determination),item('pressure','압박 대처',mental.pressure),item('teamwork','팀워크',mental.teamwork),item('leadership','리더십',mental.leadership)]},
+   {label:'신체',items:[item('pace','주력',scale(p.speed)),item('acceleration','순간 가속',scale(p.speed*.85+p.endurance*.15)),item('stamina','지구력',scale(p.endurance)),item('strength','몸싸움',scale(p.defense*.6+p.endurance*.4)),item('agility','민첩성',scale(p.speed*.7+p.passing*.3)),item('balance','균형 감각',scale(p.endurance*.6+p.passing*.4))]}
+  ];
+ }
  const youthNames=['엘리오','카이렌','레빈','니엘','아르노','율리안','시모','미렌','다니오','루엔','파비오','이세르','테빈','밀렌','오리안','렌토','바스티','라비오','카엘','노린','로미오','에릭스','세리오','마렌'];
  const youthSurnames=['델베르','하르벤','코르델','렌바흐','세르넬','베르켄','라스벨','펠데르','놀바크','드레빈','로셀','알텐','카렌스','베르릭','반델','모르넬','세베르','올렌','메르딘','카스펠','네르벨','헤르반','벨로크','오르덴'];
  const youthAliases={
@@ -112,20 +137,21 @@
  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
  const talkChoices=Object.freeze([{id:'encourage',label:'격려하기',description:'할 수 있다는 믿음을 전합니다.'},{id:'praise',label:'칭찬하기',description:'좋은 경기력을 인정합니다. 뒤지고 있다면 어색할 수 있어요.'},{id:'demand',label:'분발 요구',description:'더 집중하라고 요구합니다. 성격에 따라 반응이 달라요.'},{id:'calm',label:'침착하게',description:'부담을 덜고 차분한 판단을 부탁합니다.'}]);
  function temperament(identity){let hash=2166136261;for(const ch of identity)hash=(Math.imul(hash,16777619)^ch.charCodeAt(0))>>>0;return ['steady','ambitious','sensitive','team'][hash%4];}
- function talkReactions(s,choice,{minute=s.minute,lineup=s.lineup,score=s.score,energy=null,morale=s.morale||{}}={}){
+ function talkReactions(s,choice,{minute=s.minute,lineup=s.lineup,score=s.score,energy=null,morale=s.morale||{},rules=2}={}){
   if(!talkChoices.some(c=>c.id===choice))throw Error('팀 대화의 말을 선택하세요.');const difference=score[0]-score[1];
   return lineup.map(id=>{const p=s.players[id],type=temperament(p.identity),tired=minute>0&&(energy?energy[id]:p.energy)<60;let delta;
    if(choice==='encourage')delta=type==='ambitious'&&difference>=2?0:1;
    else if(choice==='praise')delta=difference<0?-1:difference>=2&&type==='team'?2:1;
    else if(choice==='demand')delta=type==='ambitious'?2:type==='sensitive'?-2:difference>=1?-1:1;
    else delta=type==='ambitious'&&difference<=-2?-1:tired?2:1;
+   if(rules===2){const traits=mentalProfile(p);if(choice==='encourage')delta+=traits.loyalty>=16?1:traits.loyalty<=8?-1:0;else if(choice==='demand')delta+=traits.professionalism>=16&&traits.determination>=14?1:traits.loyalty<=8?-1:0;else if(choice==='calm'&&traits.pressure<=8)delta++;}
    const before=morale[id]||0,after=clamp(before+delta,-3,3);return {id,identity:p.identity,delta:after-before,before,after};
   });
  }
  function teamTalk(s,choice){
   if(!['prep','half','late'].includes(s.phase)||s.minute!=={prep:0,half:45,late:65}[s.phase])throw Error('팀 대화는 경기 전·하프타임·65분에 할 수 있어요.');
   if(s.decisions.some(d=>d.type==='talk'&&d.minute===s.minute))throw Error('이 시간에는 이미 선수들에게 말했어요.');
-  const reactions=talkReactions(s,choice),decision={minute:s.minute,type:'talk',choice,lineup:[...s.lineup],score:[...s.score],reactions};
+  const reactions=talkReactions(s,choice),decision={minute:s.minute,type:'talk',choice,lineup:[...s.lineup],score:[...s.score],reactions,rules:2};
   if(!s.morale)s.morale=Object.fromEntries(roster.map(p=>[p.id,0]));for(const reaction of reactions)s.morale[reaction.id]=reaction.after;
   s.decisions.push(decision);s.logs.push({minute:s.minute,type:'talk',text:'감독의 팀 대화: '+talkChoices.find(c=>c.id===choice).label+'.'});return decision;
  }
@@ -213,7 +239,8 @@
   function applyTalk(d,lineup,energy){
    if(!Array.isArray(d.lineup)||d.lineup.length!==11||new Set(d.lineup).size!==11||d.lineup.some(id=>!isAvailable(s.players[id]))||!Object.values(formations).some(f=>Object.entries({GK:1,...f}).every(([pos,n])=>d.lineup.filter(id=>s.players[id].pos===pos).length===n)))fail();
    if(d.minute&& !equal(d.lineup,lineup))fail();const score=[0,0];for(const log of s.logs)if(log?.type==='goal'&&log.minute<=d.minute&&[0,1].includes(log.team))score[log.team]++;
-   const expected={minute:d.minute,type:'talk',choice:d.choice,lineup:[...d.lineup],score,reactions:talkReactions(s,d.choice,{minute:d.minute,lineup:d.lineup,score,energy,morale})};
+   if(Object.hasOwn(d,'rules')&&d.rules!==2)fail();
+   const expected={minute:d.minute,type:'talk',choice:d.choice,lineup:[...d.lineup],score,reactions:talkReactions(s,d.choice,{minute:d.minute,lineup:d.lineup,score,energy,morale,rules:d.rules||1}),...(d.rules?{rules:d.rules}:{})};
    if(!equal(d,expected))fail();const index=talks.indexOf(d),expectedLog={minute:d.minute,type:'talk',text:'감독의 팀 대화: '+talkChoices.find(c=>c.id===d.choice).label+'.'};if(!equal(talkLogs[index],expectedLog))fail();for(const reaction of expected.reactions)morale[reaction.id]=reaction.after;
   }
   function checkMorale(){if(talks.length&&!equal(s.morale,morale))fail();}
@@ -283,5 +310,5 @@
   let rng=s.seed>>>0;for(let draw=0;draw<s.minute*8;draw++)rng=(Math.imul(rng,1664525)+1013904223)>>>0;if(s.rng!==rng)fail();
   s.homeName=typeof s.homeName==='string'&&s.homeName.length<60?s.homeName:'브린웰 로버스';s.opponentName=typeof s.opponentName==='string'&&s.opponentName.length<60?s.opponentName:'팔켄루 04';s.version=5;s.paused=running(s);return s;
  }
- const api={roster,market,youthProfile,youthCandidates,identityProfile,profileForSlot,legacyName,personality,displayText,roleKey,formations,isAvailable,fitLineup,create,setFormation,swap,setTactic,begin,tick,finishSegment,ratings,restore,running,goalAttributions,teamTalk,talkChoices,talkReactions,temperament};root.Football=api;if(typeof module!=='undefined')module.exports=api;
+ const api={roster,startingRoster,mentalProfile,detailedAttributes,market,youthProfile,youthCandidates,identityProfile,profileForSlot,legacyName,personality,displayText,roleKey,formations,isAvailable,fitLineup,create,setFormation,swap,setTactic,begin,tick,finishSegment,ratings,restore,running,goalAttributions,teamTalk,talkChoices,talkReactions,temperament};root.Football=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

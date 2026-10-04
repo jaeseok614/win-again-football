@@ -29,6 +29,18 @@ Reuse existing controls and require an explicit candidate action for substitutio
 Preserve keyboard focus and Escape dismissal, allow scrolling inside popups, and
 verify small/short phone and desktop viewports. Apply this rule to future features.
 
+Owner refinement (2026-10-05): match controls occupy exactly two filled rows in
+prep, running, paused and full-time states. The live pitch is observation-only:
+no player selection or drag there. Position and role changes belong exclusively
+to the tactics popup; substitution selection lists every starter in its own popup.
+New UI campaigns use the Tottunham parody starter identities (sp_*) inspired by
+the 2024/25 Tottenham squad. Keep old squad identities and their contract history.
+The startingClub marker selects canonical starter contracts for finance/statistics
+validation. Mental attributes influence team talks; rules:2 receipts replay the new
+formula and missing rules retain the original formula. Never reinterpret old talks.
+Story/tutorial state is a device preference, separate from campaign data. Keep the
+guided practice optional, connect it to real controls, and never auto-kickoff.
+
 Consider performance in every change, especially on mobile. Avoid rebuilding
 hidden dashboards during live match ticks; defer expensive work and keep startup
 assets small. Verify the actual mobile UI, touch targets and responsiveness.
