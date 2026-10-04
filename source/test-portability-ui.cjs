@@ -55,6 +55,7 @@ function noGameActions(h){for(const key of ['tick','begin','swap','train','recru
 function unchanged(h,before){assert.equal(JSON.stringify(h.context.season),before);noGameActions(h);}
 async function test(name,fn){await fn();groups++;console.log('PASS '+name);}
 async function main(){
+ await test('title continuation is marked only after a campaign import is successfully stored',()=>{for(const fail of [false,true]){const h=harness(S.create(2288),fail?{failAt:2}:{});h.context.launchHasCampaign=false;const before=JSON.stringify(h.context.season),text=CampaignFile.stringify({season:campaign(2289)});h.context.renderPortability();h.context.previewCampaignText(text);assert.equal(h.context.applyCampaignImport(),!fail);assert.equal(h.context.launchHasCampaign,!fail);if(fail)assert.equal(JSON.stringify(h.context.season),before);assert.ok(!Object.hasOwn(h.payload(),'launchHasCampaign'));noGameActions(h);}});
  await test('rendering and previewing a valid campaign never advances or replaces the current squad',()=>{
   const h=harness(freeze(S.create(2223))),before=JSON.stringify(h.context.season),incoming=campaign(2224),text=CampaignFile.stringify({season:incoming,view:'academy'});
   h.context.renderPortability();assert.equal(h.writes.length,0);unchanged(h,before);
