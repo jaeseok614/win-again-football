@@ -27,11 +27,21 @@
   {id:'brackenfort',name:'브래컨포트 알비온',en:'Brackenfort Albion',short:'브래컨포트',code:'BFA',color:'#75bb9d',style:'조직적인 수비와 빠른 역습',attack:86,defense:90,middle:84,speed:87},
   {id:'monteluce',name:'몬테루체 SC',en:'Monteluce SC',short:'몬테루체',code:'MLS',color:'#d77c94',style:'균형 잡힌 전력의 1부 우승 후보',attack:93,defense:92,middle:91,speed:76}
  ];
- const own='brynwell',club=id=>clubs.find(c=>c.id===id)||U?.club(id),copy=x=>JSON.parse(JSON.stringify(x)),clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+ const brands=Object.freeze({
+  brynwell:['블랙본 로버스','블랙본','BR'],aldermere:['리즈턴 유나이티드','리즈턴','LU'],norhaven:['몬치스타 시티','몬치스타 시티','MC'],bellwick:['입스웰 타운','입스웰','IT'],redmere:['셰필턴 레즈','셰필턴','SR'],montevaro:['첼시온 FC','첼시온','CF'],selcanto:['브라이튼 앨비언스','브라이튼','BA'],falkenruh:['울버포드 원더스','울버포드','WW'],
+  calderwick:['아스널드 FC','아스널드','AF'],valedoro:['뉴캐슬턴 나이츠','뉴캐슬턴','NK'],estenford:['몬치스타 유나이티드','몬치스타 U','MU'],rosenholt:['토튼햄 핫스타','토튼햄','TH'],azurienne:['아스톤 빌라지','아스톤','AV'],brackenfort:['크리스털 팰리스톤','팰리스톤','CP'],monteluce:['웨스트햄머 유나이티드','웨스트햄머','WH']
+ });
+ const own='brynwell',rawClub=id=>clubs.find(c=>c.id===id)||U?.rawClub?.(id)||U?.club(id),presentClub=value=>{if(!value)return value;const brand=brands[value.id];return brand?{...value,name:brand[0],short:brand[1],code:brand[2]}:U?.presentClub?U.presentClub(value):{...value};},club=id=>presentClub(rawClub(id)),copy=x=>JSON.parse(JSON.stringify(x)),clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+ function displayText(value){
+  let text=String(value??'');
+  const aliases=[...clubs,...(U?.clubs||[])].flatMap(raw=>{const shown=presentClub(raw);return [[raw.name,shown.name],[raw.short,shown.short]];}).filter(([raw,shown])=>raw&&shown&&raw!==shown).sort((a,b)=>b[0].length-a[0].length);
+  for(const [raw,shown] of aliases)text=text.split(raw).join(shown);
+  return text;
+ }
  const primaryKey=p=>({GK:'keeping',DEF:'defense',MID:'passing',FW:'attack'}[p.pos]);
  const pools={2:clubs.slice(0,8),1:[clubs[0],...clubs.slice(8)]};
  function divisionInfo(value){const division=typeof value==='number'?value:value?.league?.division??value?.division??2;return division===1?{division:1,name:'하이랜드 프리미어',en:'HIGHLAND PREMIER',cupName:'하이랜드 컵',cupEn:'HIGHLAND CUP'}:{division:2,name:'로우랜드 리그',en:'LOWLAND LEAGUE',cupName:'로우랜드 컵',cupEn:'LOWLAND CUP'};}
- function leagueClubs(s){return pools[s?.league?.division===1?1:2];}
+ function leagueClubs(s){return pools[s?.league?.division===1?1:2].map(presentClub);}
  function leagueForYear(s,year=s.year){const league=year===s.year?s.league:s.history.find(h=>h.year===year);return {division:league?.division??2,rules:league?.rules??'legacy'};}
  function schedule(ids){const ring=[...ids],first=[];for(let r=0;r<7;r++){const games=[];for(let i=0;i<4;i++){const a=ring[i],b=ring[7-i];games.push((r+i)%2?{home:b,away:a}:{home:a,away:b});}first.push(games);ring.splice(1,0,ring.pop());}return first.concat(first.map(games=>games.map(g=>({home:g.away,away:g.home}))));}
  const schedules={1:schedule(pools[1].map(c=>c.id)),2:schedule(pools[2].map(c=>c.id))},fixtures=schedules[2];
@@ -42,7 +52,8 @@
  function leagueFixture(s){return s.round<14?fixturesFor(s)[s.round].find(g=>g.home===own||g.away===own):null;}
  function fixtureFor(s){return s.competition==='cup'?P.fixtureFor(s):s.competition==='europe'?U?.fixtureFor(s):leagueFixture(s);}
  function opponentFor(s){const f=fixtureFor(s);return f?club(f.home===own?f.away:f.home):null;}
- function makeMatch(s){const f=fixtureFor(s),opp=opponentFor(s);const matchSeed=s.competition==='cup'?P.seedFor(s,f):s.competition==='europe'?U.seedFor(s,f):seedFor(s,s.round,f);const m=F.create(matchSeed,{players:s.squad,homeName:club(own).name,opponentName:opp.name,opponent:Opposition.profile(opp),isHome:f.home===own});if(s.disciplineRules===1)Discipline.initialize(m);m.lineup=F.fitLineup(m.players,s.plan.formation,s.plan.lineup);m.formation=s.plan.formation;F.setTactic(m,s.plan.tactic);Suspensions?.apply(s,m);return m;}
+ function rawOpponentFor(s){const f=fixtureFor(s);return f?rawClub(f.home===own?f.away:f.home):null;}
+ function makeMatch(s){const f=fixtureFor(s),opp=rawOpponentFor(s);const matchSeed=s.competition==='cup'?P.seedFor(s,f):s.competition==='europe'?U.seedFor(s,f):seedFor(s,s.round,f);const m=F.create(matchSeed,{players:s.squad,homeName:rawClub(own).name,opponentName:opp.name,opponent:Opposition.profile(opp),isHome:f.home===own});if(s.disciplineRules===1)Discipline.initialize(m);m.lineup=F.fitLineup(m.players,s.plan.formation,s.plan.lineup);m.formation=s.plan.formation;F.setTactic(m,s.plan.tactic);Suspensions?.apply(s,m);return m;}
  function selectNextMatch(s){for(;;){if(P.due(s)){if(P.fixtureFor(s)){s.competition='cup';s.match=makeMatch(s);return s;}P.advanceAI(s);continue;}if(U?.due(s)){if(U.fixtureFor(s)){s.competition='europe';s.match=makeMatch(s);return s;}U.advanceAI(s);continue;}s.competition='league';s.match=s.round<14?makeMatch(s):null;return s;}}
  function ready(s){return s.round===14&&!s.match&&P.ready(s)&&(U?.ready(s)??true);}
  function create(seed=20260930,{suspensions=false}={}){const squad=Object.fromEntries(F.roster.map(p=>[p.id,{...p,xp:0}])),s={version:8,disciplineRules:1,league:{version:1,division:2,rules:'pyramid'},competition:'league',seed:seed>>>0,year:1,round:0,squad,results:[],history:[],trained:null,lastReport:null,plan:{formation:'442',tactic:'balanced',lineup:F.create().lineup},match:null};E.initialize(s);Staff?.initialize(s);C.initialize(s);P.initialize(s);U?.initialize(s);H.initialize(s);ST.initialize(s);CL?.initialize(s);selectNextMatch(s);return suspensions?Suspensions.enable(s):s;}
@@ -121,5 +132,5 @@
   return s;
  }
  function recruit(s,identity,slot){if(s.match?.decisions?.some(d=>d.type==='talk'&&d.lineup.includes(slot)))throw Error('팀 대화를 마친 선수의 영입 교체는 다음 경기 전에 할 수 있어요. 영입 뒤 팀 대화를 진행하세요.');const next=E.recruit(s,identity,slot);C.register(next,slot);if(next.suspensions){if(next.match.decisions.some(d=>d.type==='talk'))throw Error('출전 정지 적용 중에는 팀 대화 전에 영입을 마쳐 주세요.');Suspensions.apply(next);}return next;}
- const api={clubs,own,club,fixtures,leagueClubs,fixturesFor,divisionInfo,leagueForYear,movement,leagueFixture,fixtureFor,opponentFor,create,standings,train,settle,nextSeason,restore,primaryKey,recruit,scout:C.scout,rotate:H.rotate,selectNextMatch,ready};root.Season=api;if(typeof module!=='undefined')module.exports=api;
+ const api={clubs,own,club,rawClub,presentClub,displayText,fixtures,leagueClubs,fixturesFor,divisionInfo,leagueForYear,movement,leagueFixture,fixtureFor,opponentFor,create,standings,train,settle,nextSeason,restore,primaryKey,recruit,scout:C.scout,rotate:H.rotate,selectNextMatch,ready};root.Season=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

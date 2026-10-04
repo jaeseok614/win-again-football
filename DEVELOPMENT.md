@@ -13,6 +13,7 @@
 화면별 계산·갱신 경계는 [VISIBLE_RENDERING.md](docs/VISIBLE_RENDERING.md)를 참고하세요.
 리그 전체 순위·라운드 결과는 [LEAGUE_CENTRE.md](docs/LEAGUE_CENTRE.md)를 참고하세요.
 10월 4일 구현과 실제 저장 이동 검증은 [세션 검증 기록](docs/SESSION_VERIFICATION_2026-10-04.md)에 정리했습니다.
+패러디 구단·상대 선수 이름과 저장 호환 규칙은 [PARODY_FOOTBALL_WORLD.md](docs/PARODY_FOOTBALL_WORLD.md)를 참고하세요.
 
 최신 모듈 소스와 테스트는 `source/`에 직접 보관합니다. `football-source-v22.zip`은
 원래 v22의 140개 파일을 담은 복구용 스냅샷입니다. 개인 구단 저장은 포함하지 않습니다.
@@ -104,7 +105,7 @@ python3 -m http.server 8765 --bind 127.0.0.1 --directory source/dist
 node source/run-tests.cjs
 ```
 
-현재 85개 파일의 780개 검증 그룹을 통과했습니다. 구단 저장 키와 구버전 복원,
+현재 86개 파일의 784개 검증 그룹을 통과했습니다. 구단 저장 키와 구버전 복원,
 경기 일시정지 복원, 훈련·경제·컵 규칙을 유지하세요.
 
 ## 단일 실행 파일 만들기
