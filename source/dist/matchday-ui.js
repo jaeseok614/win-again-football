@@ -18,8 +18,9 @@ function matchdayMomentumMarkup(momentum,insight){
  return alert+'<details class="match-momentum '+momentum.leader+'" aria-label="15분 단위 경기 흐름"><summary class="momentum-heading"><span><b>경기 흐름</b><small>분석 그래프 보기</small></span><p>'+matchdayText(momentum.message)+'</p></summary><div class="momentum-detail"><span class="momentum-legend" aria-hidden="true"><i></i>우리 <i></i>상대 · 기회 · 슈팅 · 골 가중치</span><ol>'+bars+'</ol></div></details>';
 }
 function renderMatchday(){
+ if(typeof view!=='undefined'&&view!=='match')return;
  const host=document.getElementById('matchday-summary');if(!host)return;
- const d=Matchday.read(season,selected);host.hidden=!d.valid;if(!d.valid)return;
+ const d=Matchday.read(season,selected);host.hidden=!d.valid;if(!d.valid){const board=document.getElementById('tactics-board');if(board)board.hidden=true;return;}
  if(typeof Opposition!=='undefined'&&typeof opponentMatchContext!=='undefined'&&opponentMatchContext!==state.seed){opponentMatchContext=state.seed;if(d.liveMode==='prep')matchdayTab='opponent';}
  if(d.liveMode==='live'||d.liveMode==='full')matchdayTab='live';
  const stats=d.stats.map(s=>'<div class="matchday-stat"><span>'+s.label+'</span><strong>'+s.own+' <i>:</i> '+s.opponent+'</strong><small>우리 : 상대</small></div>').join('');

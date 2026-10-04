@@ -28,7 +28,7 @@ function chooseTrainingFocus(focus){
 }
 function renderIndividualTraining(){
  const panel=$('individual-training');if(!panel)return;
- if(typeof view!=='undefined'&&view!=='squad')return;
+ if(typeof view!=='undefined'&&view!=='squad'||typeof squadTab!=='undefined'&&squadTab!=='training')return;
  const all=TrainingCentre.read(season),players=Object.values(season.squad);
  if(!all.valid||!players.length){panel.innerHTML='<p>현재 구단의 선수를 확인하세요.</p>';return;}
  if(!season.squad[individualTrainingSlot])individualTrainingSlot=all.players[0].slot;

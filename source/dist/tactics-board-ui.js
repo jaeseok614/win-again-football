@@ -20,6 +20,8 @@ function tacticsBoardMarkup(d,previewTactic,open=true){
 function readTacticsPlan(){return TacticsBoard.read(season,{coachPause65:typeof playbackPrefs==='undefined'?true:playbackPrefs.coachPause65});}
 function renderTacticsBoard(){
  const host=document.getElementById('tactics-board');if(!host)return;
+ if(!state){host.hidden=true;host.innerHTML='';tacticsBoardFingerprint=null;tacticsPreviewContext=null;return;}
+ if(typeof view!=='undefined'&&view!=='match'||typeof matchdayTab!=='undefined'&&matchdayTab!=='analysis')return;
  const previous=host.querySelector('details');if(previous)tacticsBoardOpen=previous.open;
  const d=readTacticsPlan();host.hidden=!d.valid;
  if(!d.valid){host.innerHTML='';tacticsBoardFingerprint=null;tacticsPreviewContext=null;return;}
