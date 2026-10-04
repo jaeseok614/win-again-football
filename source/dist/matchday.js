@@ -37,11 +37,11 @@
   const status=liveMode==='paused'?'작전 타임':{prep:'경기 준비',first:'전반 진행',half:'하프타임',second:'후반 진행',late:'65분 작전 타임',third:'마지막 승부',full:'경기 종료'}[m.phase];
   const active=typeof Discipline!=='undefined'?Discipline.active(m):m.lineup,lineup=active.map(id=>m.players[id]);
   const selected=m.phase!=='full'&&typeof selectedId==='string'&&active.includes(selectedId)?m.players[selectedId]:null;
-  const candidates=selected?Object.values(m.players).filter(p=>p.pos===selected.pos&&!m.lineup.includes(p.id)&&!m.out.includes(p.id)&&!(p.injuryRemaining||p.injury?.remaining)).map(person):[];
+  const candidates=selected?Object.values(m.players).filter(p=>p.pos===selected.pos&&!m.lineup.includes(p.id)&&!m.out.includes(p.id)&&F.isAvailable(p)).map(person):[];
   const allowed=m.phase==='prep'||['half','late'].includes(m.phase)||running&&m.minute>0&&m.minute<90;
   let suggestion=null;
   if(m.phase!=='prep'&&m.phase!=='full'&&allowed&&m.subs<3){
-   const options=lineup.filter(p=>p.energy<55).map(out=>{const incoming=Object.values(m.players).filter(p=>p.pos===out.pos&&!m.lineup.includes(p.id)&&!m.out.includes(p.id)&&!(p.injuryRemaining||p.injury?.remaining)).sort((a,b)=>b.energy-a.energy||b[primaryKeys[b.pos]]-a[primaryKeys[a.pos]]||a.id.localeCompare(b.id,'en'))[0];return incoming?{out,incoming,energyGain:Math.round(incoming.energy-out.energy),primaryDelta:incoming[primaryKeys[incoming.pos]]-out[primaryKeys[out.pos]]}:null;}).filter(Boolean).filter(item=>item.energyGain>0).sort((a,b)=>b.energyGain-a.energyGain||b.primaryDelta-a.primaryDelta||a.out.id.localeCompare(b.out.id,'en'));
+   const options=lineup.filter(p=>p.energy<55).map(out=>{const incoming=Object.values(m.players).filter(p=>p.pos===out.pos&&!m.lineup.includes(p.id)&&!m.out.includes(p.id)&&F.isAvailable(p)).sort((a,b)=>b.energy-a.energy||b[primaryKeys[b.pos]]-a[primaryKeys[a.pos]]||a.id.localeCompare(b.id,'en'))[0];return incoming?{out,incoming,energyGain:Math.round(incoming.energy-out.energy),primaryDelta:incoming[primaryKeys[incoming.pos]]-out[primaryKeys[out.pos]]}:null;}).filter(Boolean).filter(item=>item.energyGain>0).sort((a,b)=>b.energyGain-a.energyGain||b.primaryDelta-a.primaryDelta||a.out.id.localeCompare(b.out.id,'en'));
    const best=options[0];if(best)suggestion={out:person(best.out),incoming:person(best.incoming),energyGain:best.energyGain,primaryDelta:best.primaryDelta,reason:best.out.name+'의 체력 '+Math.round(best.out.energy)+' · '+best.incoming.name+' 투입 시 체력 +'+best.energyGain};
   }
   const averageEnergy=lineup.reduce((sum,p)=>sum+p.energy,0)/lineup.length,tiredCount=lineup.filter(p=>p.energy<50).length,flow=momentum(m);

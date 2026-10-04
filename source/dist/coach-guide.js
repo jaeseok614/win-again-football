@@ -9,7 +9,7 @@
  }
  function readiness(s){
   const m=s.match;if(!m||m.phase!=='prep')return null;
-  const starters=(m.lineup||[]).map(id=>m.players?.[id]||s.squad?.[id]).filter(Boolean),available=starters.filter(p=>!p.injuryRemaining&&!p.injury).length;
+  const starters=(m.lineup||[]).map(id=>m.players?.[id]||s.squad?.[id]).filter(Boolean),available=starters.filter(p=>F.isAvailable(p)).length;
   const lowEnergy=starters.filter(p=>Number.isFinite(p.energy)&&p.energy<55).length;
   const trainingLabels={technique:'기술',pace:'스피드',fitness:'지구력',recovery:'회복'},board=B&&B.read(s),suggestion=board?.valid?board.recommendation:null;
   const checks=[

@@ -29,7 +29,7 @@
   if(!equal(match.logs.slice(0,start.logs.length),start.logs)||!equal(match.segments.slice(0,2),start.segments.slice(0,2)))return invalid('연습 이전 경기 기록과 일치하지 않아요.');
   const firstTail=match.segments[2],beforeTail=start.segments[2];
   if(!firstTail||firstTail.start!==beforeTail.start||(firstTail.end??match.minute)<scenario.startMinute||firstTail.tactic!==beforeTail.tactic||!equal(firstTail.lineup,beforeTail.lineup)||!equal(firstTail.rating,beforeTail.rating))return invalid('연습 이전 경기 흐름과 일치하지 않아요.');
-  const attributes=['identity','pos','attack','defense','passing','speed','endurance','keeping','potential','initialEnergy','injuryRemaining'];
+  const attributes=['identity','pos','attack','defense','passing','speed','endurance','keeping','potential','initialEnergy','injuryRemaining','suspended'];
   for(const player of Object.values(match.players)){const original=start.players[player.id];if(!original||attributes.some(key=>player[key]!==original[key])||player.minutes<original.minutes||player.energy>original.energy+1e-8)return invalid('연습 선수 정보와 일치하지 않아요.');}
   const deltas={};for(const key of ['score','chances','shots','xg']){deltas[key]=match[key].map((value,team)=>value-start[key][team]);if(deltas[key].some(value=>value<0))return invalid('연습 경기 기록을 확인할 수 없어요.');}
   const decisions=match.decisions.slice(session.startDecisionCount).map(decision=>{
