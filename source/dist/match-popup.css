@@ -1,0 +1,59 @@
+/* Persistent rule: live football occupies one viewport; details scroll in dialogs. */
+body.match-popup-ready.match-view:not(.launch-mode){height:100dvh;overflow:hidden;padding:0}
+.match-popup-ready.match-view .app{height:100%;max-width:1200px;margin:auto;padding:8px;display:flex;flex-direction:column;gap:5px;box-sizing:border-box}
+.match-popup-ready.match-view :is(.masthead,.app>footer,#pwa-preparation,#coach-next-action,.season-strip,.matchday-toolbar,.manager-panel){display:none!important}
+.match-popup-ready.match-view #notice{position:fixed;z-index:80;top:8px;left:8px;right:8px;margin:0;padding:12px;background:#442b24;color:#ffe5d9}
+#match-popup-error{margin:0 12px;padding:8px;color:#ffd5c5;background:#462b27;font-size:12px;flex-shrink:0}
+.match-popup-ready.match-view .view-nav{position:static;order:2;flex:0 0 48px;margin:0;padding:0;inset:auto;display:flex;justify-content:space-around;background:#10141b;z-index:auto;min-height:0}
+.match-popup-ready.match-view .view-nav button{min-height:44px;padding:3px 5px;font-size:11px;flex:1}
+.match-popup-ready.match-view #save-status{display:none}
+.match-popup-ready.match-view .app>main{order:1;flex:1;min-height:0;margin:0;padding:0;overflow:hidden}
+.match-popup-ready.match-view #match-pane{height:100%;display:flex;flex-direction:column;gap:5px;min-height:0}
+.match-popup-ready.match-view #match-pane>.chapter{margin:0;font-size:9px;min-height:14px;flex-shrink:0}
+.match-popup-ready.match-view #match-pane>.scoreboard{margin:0;padding:6px 10px;min-height:64px;flex-shrink:0}
+.match-popup-ready.match-view #match-pane .score-center>div{font-size:30px;line-height:1}
+.match-popup-ready.match-view #match-pane .team-name{font-size:11px}
+.match-popup-ready.match-view #match-pane .team-name small{display:none}
+.match-popup-ready.match-view #match-pane>.workspace{flex:1;min-height:0;display:block;margin:0}
+.match-popup-ready.match-view .matchday-main-area{height:100%;min-height:0;display:block}
+.match-popup-ready.match-view #matchday-live{height:100%;min-height:0;box-sizing:border-box;display:flex;flex-direction:column;padding:6px;gap:4px}
+.match-popup-ready.match-view #matchday-live>.broadcast-strip{flex:0 0 22px;box-sizing:border-box;padding:4px 7px;font-size:9px}
+.match-popup-ready.match-view #matchday-live>.pitch{flex:1;min-height:0;height:auto;max-height:none;margin:0;aspect-ratio:auto}
+.match-popup-ready.match-view #matchday-live>.pitch-footer{display:none}
+.match-popup-ready.match-view #matchday-live>.commentary{flex:0 0 44px;min-height:0;max-height:44px;padding:4px 0;margin:0;overflow:hidden;box-sizing:border-box;align-items:center}
+.match-popup-ready.match-view #matchday-live>.commentary p{font-size:11px;line-height:1.4;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#match-live-actions{flex-shrink:0;display:grid;gap:5px}
+.match-popup-ready.match-view #match-live-actions .main-action{position:static;inset:auto;display:grid;grid-template-columns:minmax(0,1fr) 72px 84px;padding:0;margin:0;gap:5px;z-index:auto}
+.match-popup-ready.match-view #match-live-actions .main-action:has(#pause[hidden]){grid-template-columns:minmax(0,1fr) 90px}
+.match-popup-ready.match-view #match-live-actions :is(button.primary,button.secondary){min-height:44px;grid-row:auto;grid-column:auto;margin:0;padding:5px;font-size:12px}
+.match-popup-ready.match-view #match-live-actions .main-action #pause{grid-row:auto;grid-column:auto}
+#match-live-actions :is(#action-note,#open-match-review){display:none!important}
+.match-quick-menu{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.match-quick-menu button{min-height:44px;font-size:11px;padding:4px}
+:is(.match-quick-menu,#match-popup) button{background:#202834;color:#e9eff6;border:1px solid #394759;border-radius:6px}
+#match-popup button:disabled{opacity:.45;cursor:default}
+#match-popup{width:min(760px,calc(100vw - 20px));max-width:none;max-height:calc(100dvh - 24px);padding:0;border:1px solid #3d4b5a;border-radius:12px;background:#11171f;color:#edf1f6;overflow:hidden;box-sizing:border-box}
+#match-popup[open]{display:flex;flex-direction:column}
+#match-popup::backdrop{background:#000b;backdrop-filter:blur(3px)}
+.match-popup-header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;flex-shrink:0;border-bottom:1px solid #303947}
+.match-popup-header h2{margin:0;font-size:19px}.match-popup-header p{font-size:11px;color:#aebaca;margin:5px 0 0}
+.match-popup-header button,.match-popup-footer button{min-height:44px;padding:8px 14px;font-size:12px}
+.match-popup-nav{display:flex;flex-wrap:wrap;gap:5px;padding:8px 12px;flex-shrink:0}
+.match-popup-nav button{min-height:44px;flex:1 0 22%;font-size:11px;padding:5px}#match-popup .match-popup-nav button[aria-pressed=true]{border-color:#c8f36e;background:#233421;color:#d7f79a}
+.match-popup-body{min-height:0;overflow:auto;overscroll-behavior:contain;padding:12px;flex:1}
+.match-popup-footer{display:flex;justify-content:flex-end;padding:8px 12px;border-top:1px solid #303947;flex-shrink:0}
+#match-popup .bench{max-height:none;overflow:visible;grid-template-columns:repeat(2,minmax(0,1fr))}
+#match-popup :is(.tactics,.field-toolbar,#mobile-tactics-dock,#pitch-player-tools,#pitch-swap-options){display:block}
+#match-popup #mobile-tactics-dock{margin:10px 0}
+#match-popup .tactic-options button{min-height:64px}
+#match-popup .field-toolbar{margin:12px 0}
+#match-popup #matchday-controls>summary{display:none}
+#match-popup [data-match-planning]{display:none}
+#match-talk-unavailable{font-size:13px;line-height:1.7;color:#b8c6d5}
+#match-popup .timeline{display:block;max-height:none;overflow:visible}
+#match-popup .match-momentum{margin:10px 0}
+#match-popup .results{margin:12px 0;padding:10px}
+#match-popup .pitch-player-tools,#match-popup .pitch-swap-options{margin:12px 0}
+#match-popup #pitch-swap-options{display:none!important}
+@media(max-height:650px){.match-popup-ready.match-view #match-pane>.chapter{display:none}.match-popup-ready.match-view .app{padding:4px;gap:3px}.match-popup-ready.match-view #match-pane>.scoreboard{min-height:54px;padding:3px 8px}.match-popup-ready.match-view #matchday-live>.commentary{flex-basis:36px;max-height:36px}.match-popup-nav{padding:4px 8px}.match-popup-header{padding:7px 10px}}
+@media(max-height:450px) and (min-width:600px){#match-live-actions{grid-template-columns:1fr 1fr}.match-popup-ready.match-view .view-nav{flex-basis:44px}.match-popup-ready.match-view #match-pane>.scoreboard{min-height:48px}.match-popup-ready.match-view #matchday-live>.commentary{flex-basis:32px;max-height:32px}}

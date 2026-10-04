@@ -20,6 +20,7 @@ function enterManagerHome(){
  },0));
 }
 function returnToTitle(){
+ if(typeof closeMatchPopup==='function')closeMatchPopup();
  pauseForPlanning();cancelMovementPreview();save();appSessionStarted=false;launchBusy=false;renderAppShell();$('launch-continue')?.focus({preventScroll:true});
 }
 document.getElementById('launch-continue').onclick=enterManagerHome;
