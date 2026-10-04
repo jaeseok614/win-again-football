@@ -30,6 +30,7 @@ function renderMatchPopup(){
  $('tactics-board').hidden=matchPopupActive!=='analysis';
  matchdayTab=matchPopupActive==='analysis'?'analysis':matchPopupActive==='opponent'?'opponent':'live';
  if(matchPopupActive==='opponent')renderOpponentReport();
+ if(matchPopupActive==='tactics'&&typeof renderTacticalEditor==='function')renderTacticalEditor();
  if(matchPopupActive==='analysis'){tacticsBoardOpen=true;renderTacticsBoard();}
  $('matchday-roster').textContent='선수 교체';
  $('primary').textContent={prep:'킥오프',half:'후반 시작',late:'마지막 25분 시작',full:'결과 확정'}[state.phase]||(state.paused?'경기 이어가기':'5분 진행');
@@ -51,5 +52,6 @@ function initMatchPopup(){
  dialog.addEventListener('click',event=>{if(event.target===dialog){const rect=dialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)closeMatchPopup();}});
  dialog.addEventListener('close',finishMatchPopupClose);
  document.body.classList.add('match-popup-ready');
+ const pause=$('pause');quick.prepend(pause);
 }
 initMatchPopup();

@@ -11,7 +11,7 @@ function renderAppShell(){
  const error=$('launch-error');if(error){error.hidden=!launchError;error.textContent=launchError;}
 }
 function enterManagerHome(){
- if(launchBusy||appSessionStarted)return;launchBusy=true;launchError='';renderAppShell();
+ if(launchBusy||appSessionStarted)return;if(typeof offerManagerIntro==='function'&&offerManagerIntro())return;launchBusy=true;launchError='';renderAppShell();
  // Let the loading state paint before rendering the management screens.
  requestAnimationFrame(()=>setTimeout(()=>{
   try{appSessionStarted=true;view='club';pauseForPlanning();save();render();launchHasCampaign=true;window.scrollTo({top:0,behavior:'instant'});$('mobile-match-action')?.focus({preventScroll:true});}

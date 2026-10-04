@@ -4,8 +4,9 @@ function lifeChoiceLabel(choices,id){return choices.find(choice=>choice.id===id)
 function lifeKeepDetails(panel){for(const details of panel.querySelectorAll('[data-life-detail]')){if(details.open)lifeExpanded.add(details.dataset.lifeDetail);else lifeExpanded.delete(details.dataset.lifeDetail);}}
 function lifeDelta(delta){return delta>0?'+'+delta:String(delta);}
 function lifeReactionSummary(reactions){const positive=reactions.filter(person=>person.delta>0).length,negative=reactions.filter(person=>person.delta<0).length,neutral=reactions.length-positive-negative;return '긍정 '+positive+'명 · 긴장 '+negative+'명'+(neutral?' · 변화 없음 '+neutral+'명':'');}
-function lifeReactionMarkup(reactions){return '<ul class="life-reactions">'+reactions.map(person=>'<li><span><strong>'+lifeText(person.name)+'</strong><small>'+lifeText(person.text||person.feeling)+'</small></span><b class="'+(person.delta>0?'life-positive':person.delta<0?'life-negative':'life-neutral')+'">'+lifeDelta(person.delta)+'<small>자신감 '+person.before+' → '+person.after+'</small></b></li>').join('')+'</ul>';}
+function lifeReactionMarkup(reactions){return '<ul class="life-reactions">'+reactions.map(person=>'<li><span><strong>'+lifeText(person.name)+'</strong><small>'+lifeText(person.text||person.feeling)+(person.traits?' · 충성 '+person.traits.loyalty+' / 프로 '+person.traits.professionalism+' / 압박 '+person.traits.pressure:'')+'</small></span><b class="'+(person.delta>0?'life-positive':person.delta<0?'life-negative':'life-neutral')+'">'+lifeDelta(person.delta)+'<small>자신감 '+person.before+' → '+person.after+'</small></b></li>').join('')+'</ul>';}
 function renderTeamTalk(){
+ if(typeof matchPopupActive!=='undefined'&&matchPopupActive!=='talk')return;
  if(view!=='match'||typeof ClubLife==='undefined')return;const panel=$('team-talk-panel');if(!panel)return;
  if(!state||!['prep','half','late'].includes(state.phase)){if(!panel.hidden)panel.hidden=true;lifeTalkKey='';return;}
  const key=[season.year,season.round,season.competition,state.phase,state.minute,state.decisions?.length||0,state.score?.join(':'),lifeTalkBusy].join('|');if(lifeTalkMatch===state&&lifeTalkKey===key)return;

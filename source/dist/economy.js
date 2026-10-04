@@ -59,7 +59,7 @@
  function validate(s,table){
   const fail=()=>{throw Error('저장한 구단 재정을 읽을 수 없어요.');},f=s.finance;
   if(!f||f.opening!==160000||!money(f.balance)||!f.origin||!Number.isInteger(f.origin.year)||f.origin.year<1||f.origin.year>s.year||!Number.isInteger(f.origin.round)||f.origin.round<0||f.origin.round>14||f.origin.year===s.year&&f.origin.round>s.round||!Array.isArray(f.ledger)||f.ledger.length>150000||f.ledger.some(e=>!e||typeof e.id!=='string')||new Set(f.ledger.map(e=>e.id)).size!==f.ledger.length||!Array.isArray(f.marketUsed)||new Set(f.marketUsed).size!==f.marketUsed.length||f.marketUsed.some(id=>!marketPerson(id)&&!F.identityProfile(id)?.academy))fail();
-  let balance=f.opening,order=-1;const contracts=Object.fromEntries(F.roster.map(p=>[p.id,p.identity])),usedByYear={},scouts={};
+  let balance=f.opening,order=-1;const contracts=Object.fromEntries((s.startingClub==='tottunham'?F.startingRoster:F.roster).map(p=>[p.id,p.identity])),usedByYear={},scouts={};
   for(const e of f.ledger){
    if(!money(e.amount)||!Number.isInteger(e.year)||e.year<f.origin.year||e.year>s.year||!Number.isInteger(e.round)||e.round<1||e.round>14||e.year===f.origin.year&&e.round<=f.origin.round&&e.type!=='goal'&&!(e.round===f.origin.round&&['cup','europe','board'].includes(e.type)))fail();
    const stamp=e.year*100+e.round*4+({'owner-investment':0,scout:0,transfer:0,'staff-hire':0,'staff-renew':0,'staff-release':0,match:1,board:2,cup:2,europe:2,goal:2,'staff-wages':2}[e.type]??999);if(stamp<order)fail();order=stamp;

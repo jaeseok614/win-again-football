@@ -245,12 +245,18 @@ public final class GameSmokeTest {
             String before = evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})");
             screenshot(scenario, "android-title-menu.png");
             tapWebElement(scenario, "#launch-continue");
+            awaitTrue(scenario, "appSessionStarted||document.getElementById('manager-guide').open");
+            if ("true".equals(evaluate(scenario, "document.getElementById('manager-guide').open"))) {
+                assertEquals("true", evaluate(scenario, "document.getElementById('manager-guide-copy').textContent.includes('토투넘')"));
+                tapWebElement(scenario, "#manager-guide-skip");
+            }
             awaitTrue(scenario, "appSessionStarted&&view==='club'&&document.getElementById('launch-screen').hidden");
             assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
             assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display!=='none'&&document.querySelectorAll('.media-review').length===3"));
             screenshot(scenario, "android-home-media.png");
             tapWebElement(scenario, "#mobile-match-action");
             awaitTrue(scenario, "view==='match'&&!document.getElementById('match-pane').hidden");
+            assertEquals("true", evaluate(scenario, "document.querySelectorAll('#players button:disabled').length===11"));
             assertEquals("true", evaluate(scenario, "!document.getElementById('match-popup').open&&document.getElementById('matchday-live').hidden===false"));
             tapWebElement(scenario, "#matchday-roster");
             awaitTrue(scenario, "document.getElementById('match-popup').open");
