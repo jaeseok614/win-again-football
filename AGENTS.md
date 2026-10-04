@@ -20,6 +20,15 @@ Commit edited modular source files so subsequent tasks can continue from them.
 
 ## Persistent development requirements from the owner (2026-10-02)
 
+Match screen requirement (2026-10-05): keep the scoreboard, clock, live pitch,
+commentary and essential match buttons in one viewport without page scrolling.
+Substitution, tactics, player tools, reports, statistics, team talks, settings and
+results belong in accessible popups, not inline panels pushing the pitch away.
+Opening a planning popup pauses the match; closing must never silently resume it.
+Reuse existing controls and require an explicit candidate action for substitutions.
+Preserve keyboard focus and Escape dismissal, allow scrolling inside popups, and
+verify small/short phone and desktop viewports. Apply this rule to future features.
+
 Consider performance in every change, especially on mobile. Avoid rebuilding
 hidden dashboards during live match ticks; defer expensive work and keep startup
 assets small. Verify the actual mobile UI, touch targets and responsiveness.

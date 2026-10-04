@@ -250,12 +250,18 @@ public final class GameSmokeTest {
             screenshot(scenario, "android-home-media.png");
             tapWebElement(scenario, "#mobile-match-action");
             awaitTrue(scenario, "view==='match'&&!document.getElementById('match-pane').hidden");
+            assertEquals("true", evaluate(scenario, "!document.getElementById('match-popup').open&&document.getElementById('matchday-live').hidden===false"));
+            tapWebElement(scenario, "#matchday-roster");
+            awaitTrue(scenario, "document.getElementById('match-popup').open");
+            tapWebElement(scenario, "#match-popup [data-match-popup='opponent']");
             awaitTrue(scenario, "!document.getElementById('opposition-report').hidden&&document.querySelectorAll('.opposition-roster tbody tr').length===11");
             assertEquals("true", evaluate(scenario, "document.getElementById('opposition-report').textContent.includes('전술 성향')&&document.getElementById('opposition-report').textContent.includes('체력')"));
             screenshot(scenario, "android-opposition-report.png");
-            tapWebElement(scenario, "#matchday-tab-live");
+            tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
+            awaitTrue(scenario, "!document.getElementById('match-popup').open");
+            assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
             assertEquals("Score, pitch and main action must share the phone viewport", "true", evaluate(scenario,
-                "(()=>{const p=document.getElementById('pitch').getBoundingClientRect(),b=document.getElementById('primary').getBoundingClientRect(),s=document.querySelector('.scoreboard').getBoundingClientRect();return s.top>=0&&p.top>=0&&p.bottom<=b.top&&b.bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth;})()"));
+                "(()=>{const p=document.getElementById('pitch').getBoundingClientRect(),b=document.getElementById('primary').getBoundingClientRect(),s=document.querySelector('.scoreboard').getBoundingClientRect();return s.top>=0&&p.top>=0&&p.bottom<=b.top&&b.bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1;})()"));
             screenshot(scenario, "android-compact-match.png");
             scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
         }

@@ -50,12 +50,14 @@ function renderMatchday(){
 }
 function setMatchdayTab(tab){
  if(!['live','opponent','analysis'].includes(tab)||!state||tab==='analysis'&&state.phase==='full')return;
+ if(typeof openMatchPopup==='function'){if(tab==='live')closeMatchPopup();else openMatchPopup(tab);return;}
  if(tab==='opponent')pauseForPlanning();
  if(tab==='analysis'){pauseForPlanning();tacticsBoardOpen=true;const details=document.getElementById('tactics-board')?.querySelector('details');if(details)details.open=true;}
  matchdayTab=tab;save();render();
  document.getElementById('matchday-tab-'+tab)?.focus({preventScroll:true});
 }
 function focusMatchdaySelection(){
+ if(typeof openMatchPopup==='function'){openMatchPopup('roster');return;}
  const host=document.getElementById('matchday-selection');if(!host||view!=='match')return;
  host.scrollIntoView({block:'center',behavior:'instant'});
  (document.getElementById('matchday-selected-name')||host.querySelector('[data-matchday-player]'))?.focus({preventScroll:true});
@@ -63,7 +65,7 @@ function focusMatchdaySelection(){
 function selectMatchdayPlayer(id){
  if(!state||!editable()||!Matchday.read(season,id).selected)return;
  pauseForPlanning();collapseTacticsBoard();matchdayTab='live';selected=id;save();render();
- if(innerWidth<730)focusMatchdaySelection();
+ if(typeof openMatchPopup==='function'||innerWidth<730)focusMatchdaySelection();
 }
 document.getElementById('matchday-tabs')?.addEventListener('click',event=>{const button=event.target.closest('[data-matchday-tab]');if(button&&!button.disabled)setMatchdayTab(button.dataset.matchdayTab);});
 document.getElementById('matchday-tabs')?.addEventListener('keydown',event=>{

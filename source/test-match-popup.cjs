@@ -1,0 +1,29 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),F=require('./dist/engine.js'),S=require('./dist/season.js');
+let checks=0;const test=(name,fn)=>{fn();checks++;console.log('PASS '+name);};
+function harness(){
+ const season=S.create(125),nodes=new Map(),calls={save:0,opponent:0,analysis:0};F.begin(season.match);
+ const document={activeElement:null,body:{classList:{toggle(){}}}};
+ const node=id=>{const n={id,hidden:false,textContent:'',isConnected:true,focus(){document.activeElement=n;},closest(){return null;},setAttribute(){},querySelector(){return null;}};nodes.set(id,n);return n;};
+ for(const id of ['notice','match-popup-error','match-popup-title','match-popup-status','matchday-live','opposition-report','tactics-board','matchday-roster','primary','match-open-details',...['roster','tactics','opponent','analysis','stats','talk','settings'].map(k=>'match-popup-'+k)])node(id);
+ nodes.get('notice').hidden=true;const dialog=node('match-popup');dialog.open=false;dialog.showModal=()=>{dialog.open=true;};dialog.close=()=>{dialog.open=false;ctx.finishMatchPopupClose();};
+ const ctx=vm.createContext({document,season,state:season.match,view:'match',appSessionStarted:true,F,$:id=>nodes.get(id),matchdayTab:'live',tacticsBoardOpen:false,pauseForPlanning(){if(F.running(season.match))season.match.paused=true;},save(){calls.save++;},render(){ctx.renderMatchPopup();},renderOpponentReport(){calls.opponent++;},renderTacticsBoard(){calls.analysis++;}});
+ const source=fs.readFileSync(__dirname+'/dist/match-popup.js','utf8').replace(/initMatchPopup\(\);\s*$/,'');vm.runInContext(source,ctx);
+ return {ctx,nodes,calls,season,document,node};
+}
+test('all popup sections pause without swapping, advancing RNG or changing statistics',()=>{
+ for(const kind of ['roster','tactics','opponent','analysis','stats','talk','settings']){const h=harness(),before=JSON.parse(JSON.stringify(h.season));h.ctx.openMatchPopup(kind);before.match.paused=true;assert.equal(JSON.stringify(h.season),JSON.stringify(before));assert.equal(h.nodes.get('match-popup').open,true);assert.equal(h.nodes.get('match-popup-'+kind).hidden,false);assert.equal(h.nodes.get('matchday-live').hidden,false);assert.equal(h.document.activeElement.id,'match-popup-title');assert.equal(h.calls.save,1);}
+});
+test('closing restores the original opener and keeps the match paused',()=>{
+ const h=harness(),opener=h.node('opener');h.ctx.openMatchPopup('roster',opener);const before=JSON.stringify(h.season);h.ctx.closeMatchPopup();assert.equal(h.document.activeElement,opener);assert.equal(h.season.match.paused,true);assert.equal(JSON.stringify(h.season),before);assert.equal(h.ctx.matchPopupActive,null);
+});
+test('switching sections preserves the opener and renders only the requested report',()=>{
+ const h=harness(),opener=h.node('opener');h.ctx.openMatchPopup('stats',opener);assert.equal(h.calls.opponent+h.calls.analysis,0);h.ctx.openMatchPopup('opponent',h.node('inside-popup'));assert.equal(h.calls.opponent,1);assert.equal(h.calls.analysis,0);h.ctx.openMatchPopup('analysis');assert.equal(h.calls.analysis,1);h.ctx.closeMatchPopup();assert.equal(h.document.activeElement,opener);
+});
+test('invalid menus and other views never change a campaign; leaving match closes the dialog',()=>{
+ const h=harness(),before=JSON.stringify(h.season);h.ctx.openMatchPopup('unknown');h.ctx.view='club';h.ctx.openMatchPopup('roster');assert.equal(JSON.stringify(h.season),before);assert.equal(h.calls.save,0);h.ctx.view='match';h.ctx.openMatchPopup('stats');h.ctx.view='club';h.ctx.syncMatchScreenMode();assert.equal(h.nodes.get('match-popup').open,false);
+});
+test('modal errors remain visible and successful rendering clears them',()=>{
+ const h=harness();h.ctx.openMatchPopup('roster');h.ctx.showMatchPopupError('교체 후보를 확인하세요.');assert.equal(h.nodes.get('match-popup-error').hidden,false);assert.equal(h.document.activeElement.id,'match-popup-error');h.ctx.renderMatchPopup();assert.equal(h.nodes.get('match-popup-error').hidden,true);
+});
+console.log('Match popup checks passed: '+checks+' groups.');
