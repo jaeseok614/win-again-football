@@ -31,4 +31,8 @@ test('saved talks keep the same market restriction and the following match clear
 test('existing budget and weekly restrictions still disable offers when bench transfers are unavailable',()=>{
  const low=S.create(121);Life.talk(low,'encourage');low.finance.balance=0;const poor=harness(low);poor.render();poor.select('t_f2','f3');assert.equal(poor.button('t_f2').disabled,true);assert.ok(poor.html.includes('구단 자금 부족'));const s=S.recruit(S.create(121),'t_f2','f3');Life.talk(s,'calm');const done=harness(s);done.render();assert.ok(done.html.includes('이번 주 영입 완료'));assert.equal(done.button('t_m2').disabled,true);const before=JSON.stringify(s);done.click('t_m2');assert.equal(done.calls.action,0);assert.equal(JSON.stringify(s),before);
 });
+test('suspension rules block all post-talk transfers, including the bench, without a misleading suggestion',()=>{
+ const s=S.create(121,{suspensions:true});Life.talk(s,'encourage');const before=JSON.stringify(s),h=harness(s);h.render();h.select('t_f2','f3');assert.equal(h.button('t_f2').disabled,true);assert.ok(h.html.includes('출전 정지 규칙이 적용된 구단은 팀 대화 전에 영입'));assert.ok(!h.html.includes('벤치를 선택하세요'));assert.ok(!h.html.includes('이번 주 벤치 선수 영입 가능'));h.click('t_f2');assert.equal(h.calls.action,0);assert.equal(JSON.stringify(s),before);assert.throws(()=>S.recruit(s,'t_f2','f3'),/팀 대화 전에/);
+});
+test('hidden market skips candidate markup and regenerates when opened',()=>{const h=harness(S.create(121));h.context.view='club';h.render();assert.equal(h.html,'');h.context.view='market';h.render();assert.ok(h.html.includes('data-finance-compare'));});
 console.log('Validated '+groups+' market UI groups for actual team-talk restrictions, bench transfers, identity-safe restores and the next match.');

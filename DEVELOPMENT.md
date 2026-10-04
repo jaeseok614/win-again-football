@@ -6,6 +6,9 @@
 
 게임: https://jaeseok614.github.io/win-again-football/
 
+최근 확장: 과거 경기 기록과 영입 후 자금 계획은
+[MATCH_ARCHIVE_AND_BUDGET.md](docs/MATCH_ARCHIVE_AND_BUDGET.md)를 참고하세요.
+
 최신 모듈 소스와 테스트는 `source/`에 직접 보관합니다. `football-source-v22.zip`은
 원래 v22의 140개 파일을 담은 복구용 스냅샷입니다. 개인 구단 저장은 포함하지 않습니다.
 공개 게임 파일은 저장소 최상위, 수정할 소스는 `source/dist/`입니다.

@@ -9,8 +9,9 @@ function renderSeasonReview(){
  if(view!=='cup')return;const host=$('season-review-panel');if(!host)return;
  const years=SeasonReview.years(season);if(!years.includes(seasonReviewYear))seasonReviewYear=season.year;
  const m=SeasonReview.read(season,seasonReviewYear);
- host.innerHTML=`<section class="season-review-card" aria-labelledby="season-review-title"><div class="season-review-heading"><h2 id="season-review-title">우리 구단 시즌 결산</h2><label>시즌 <select id="season-review-year" aria-label="결산 시즌 선택">${years.map(y=>`<option value="${y}"${y===m.year?' selected':''}>${y}시즌${y===season.year?' · 현재':''}</option>`).join('')}</select></label></div>${seasonReviewMarkup(m)}${m.next?'<button type="button" id="review-next-season" class="primary">다음 시즌 계획 확인</button>':''}</section>`;
+ host.innerHTML=`<section class="season-review-card" aria-labelledby="season-review-title"><div class="season-review-heading"><h2 id="season-review-title">우리 구단 시즌 결산</h2><label>시즌 <select id="season-review-year" aria-label="결산 시즌 선택">${years.map(y=>`<option value="${y}"${y===m.year?' selected':''}>${y}시즌${y===season.year?' · 현재':''}</option>`).join('')}</select></label></div>${seasonReviewMarkup(m)}<button type="button" id="review-match-history" class="secondary">${m.year}시즌 경기 기록 보기</button>${m.next?'<button type="button" id="review-next-season" class="primary">다음 시즌 계획 확인</button>':''}</section>`;
  $('season-review-year').onchange=e=>{seasonReviewYear=Number(e.target.value);renderSeasonReview();$('season-review-year').focus({preventScroll:true});};
+ $('review-match-history').onclick=()=>openMatchArchive(null,m.year);
  const next=$('review-next-season');if(next)next.onclick=()=>openSeasonReview(next);
 }
 function openSeasonReview(trigger){
