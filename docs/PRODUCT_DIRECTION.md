@@ -27,6 +27,8 @@
 - 과거 경기 조회·영입 후 자금 계획: 구현. MATCH_ARCHIVE_AND_BUDGET.md 참고.
 - 영입 후보 검색·관심 목록·계약 최종 검토: 구현. TRANSFER_PLANNING.md 참고.
 - 통산 선수/개인 기록: 구현. CAREER_RECORDS.md 참고.
+- 리그 전체 순위·과거 라운드 결과·최근 흐름: 구현. LEAGUE_CENTRE.md 참고.
+- 화면/탭별 갱신과 숨은 분석 생략: 구현. VISIBLE_RENDERING.md 참고.
 - 여러 시즌 훈련·영입·계약·대화 통합 검증: 62경기 / 1,052회 복원을 CI에 포함.
 
 코드는 최신 main을 기준으로 이어간다. 개인 구단 저장과 코드 동기화는 별도다.

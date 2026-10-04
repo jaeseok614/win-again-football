@@ -11,6 +11,7 @@
 영입 필터·관심 목록·거래 확정은 [TRANSFER_PLANNING.md](docs/TRANSFER_PLANNING.md)에 기록했습니다.
 통산 선수 기록과 장기 연속 플레이 검증은 [CAREER_RECORDS.md](docs/CAREER_RECORDS.md)를 참고하세요.
 화면별 계산·갱신 경계는 [VISIBLE_RENDERING.md](docs/VISIBLE_RENDERING.md)를 참고하세요.
+리그 전체 순위·라운드 결과는 [LEAGUE_CENTRE.md](docs/LEAGUE_CENTRE.md)를 참고하세요.
 
 최신 모듈 소스와 테스트는 `source/`에 직접 보관합니다. `football-source-v22.zip`은
 원래 v22의 140개 파일을 담은 복구용 스냅샷입니다. 개인 구단 저장은 포함하지 않습니다.
@@ -102,7 +103,7 @@ python3 -m http.server 8765 --bind 127.0.0.1 --directory source/dist
 node source/run-tests.cjs
 ```
 
-현재 70개 파일의 696개 검증 그룹을 통과했습니다. 구단 저장 키와 구버전 복원,
+현재 84개 파일의 774개 검증 그룹을 통과했습니다. 구단 저장 키와 구버전 복원,
 경기 일시정지 복원, 훈련·경제·컵 규칙을 유지하세요.
 
 ## 단일 실행 파일 만들기
