@@ -6,7 +6,7 @@ function motionFrame(now=performance.now()){
  if(!state)return null;if(movementSeed!==state.seed){movementSeed=state.seed;movementElapsed=0;movementStamp=now;movementEvent=null;movementEventAge=Infinity;movementDemo=false;movementDemoElapsed=0;movementOpponentRoster=[];movementCommentaryKey='';movementOpponentFormation=typeof Opposition!=='undefined'?Opposition.plan(S.opponentFor(season)).formation:'442';}
  if(typeof Opposition!=='undefined'&&!movementOpponentRoster.length)movementOpponentRoster=Opposition.roster(S.opponentFor(season));
  const rawDelta=Math.max(0,now-movementStamp),visualDelta=Math.min(80,rawDelta);movementStamp=now;
- const eventChanged=movementEvent!==lastEvent;if(eventChanged){movementEvent=lastEvent;movementEventElapsed=movementElapsed;movementEventAge=lastEvent?0:Infinity;}
+ const eventChanged=movementEvent!==lastEvent;if(eventChanged){movementEvent=lastEvent;movementEventElapsed=movementElapsed;movementEventAge=lastEvent?(typeof lastEventFast!=='undefined'&&lastEventFast?1450:0):Infinity;}
  const visible=view==='match'&&!document.hidden,enabled=motionEnabled();if(movementDemo&&(!enabled||state.phase!=='prep'))cancelMovementPreview();
  const playing=visible&&enabled&&!state.paused&&(F.running(state)||movementEventAge<2200),demo=visible&&enabled&&movementDemo;
  if(playing||demo){movementElapsed+=visualDelta;if(Number.isFinite(movementEventAge)&&!eventChanged)movementEventAge+=rawDelta;if(demo){movementDemoElapsed+=rawDelta;if(movementDemoElapsed>=12000)cancelMovementPreview();}}

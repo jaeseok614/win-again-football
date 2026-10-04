@@ -1,4 +1,4 @@
-var mediaPrefs={effects:true,haptics:false},matchFeedback=null,momentTimer=0,impactTimer=0,lastMoment=null,pendingMatchMoment=null;
+var mediaPrefs={effects:true,haptics:false},matchFeedback=null,momentTimer=0,impactTimer=0,lastMoment=null,pendingMatchMoment=null,lastEventFast=false;
 function motionEnabled(){return mediaPrefs.effects&&!matchMedia('(prefers-reduced-motion: reduce)').matches;}
 function matchMomentFor(events,match,fast=false){
  const event=[...events].reverse().find(e=>e.type==='goal')||[...events].reverse().find(e=>e.type==='shot'&&e.team===1)||[...events].reverse().find(e=>e.type==='sub');if(!event)return null;
@@ -17,6 +17,7 @@ function presentMoment(moment){
  playMatchFeedback(moment.kind);if(soundOn)tone(moment.kind);momentTimer=setTimeout(()=>{card.hidden=true;},4200);
 }
 function presentMatchEvents(events,fast=false){
+ lastEventFast=fast;
  if(!state)return;const reversed=[...events].reverse(),latest=reversed.find(e=>e.type==='goal')||reversed.find(e=>e.type==='shot'&&e.team===1)||reversed.find(e=>['shot','chance'].includes(e.type));if(latest){lastEvent=latest;lastEventAt=performance.now();}
  const moment=matchMomentFor(events,state,fast);if(moment){if(!fast&&motionEnabled()&&latest){clearTimeout(momentTimer);$('match-moment').hidden=true;pendingMatchMoment={event:latest,moment};}else{pendingMatchMoment=null;presentMoment(moment);}}else if(events.some(e=>e.type==='start'))playMatchFeedback('kickoff');else if(state.phase==='full')playMatchFeedback('fulltime');
 }

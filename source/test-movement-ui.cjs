@@ -83,4 +83,10 @@ test('live commentary survives tick rendering and only announces a goal after ar
  h.context.lastEvent={type:'goal',team:1,minute:9};h.context.lastEventAt=240;h.frame(240);assert.ok(paragraph.textContent.includes('슈팅'));assert.ok(!paragraph.textContent.includes('골입니다'));
  h.frame(1000);h.frame(1700);assert.ok(paragraph.textContent.includes('골망'));assert.ok(paragraph.textContent.includes(h.snapshot().frame.performerName));
 });
+test('paused five-minute highlights show the ball at its actual outcome instead of its shot origin',()=>{
+ const h=harness();F.begin(h.context.state);h.context.state.paused=true;h.context.lastEventFast=true;
+ h.context.lastEvent={type:'goal',team:1,minute:9};const goal=h.frame(80);assert.equal(goal.phase,'goal');assert.equal(goal.ball.y,96);
+ h.context.lastEvent={type:'shot',team:1,minute:10};const save=h.frame(160);assert.equal(save.phase,'save');assert.equal(save.ball.y,86);assert.equal(save.carrierId,save.keeperId);
+ assert.equal(h.context.state.paused,true);
+});
 console.log('Movement UI checks passed: '+groups+' groups.');

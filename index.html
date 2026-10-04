@@ -1374,7 +1374,7 @@ body.launch-mode{padding:0;background:#06130f}
 
 .opposition-dismissed{opacity:.65}.opposition-dismissed td:last-child small{color:#ef8c86;font-weight:700}
 </style><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" data-app-icon>
-<meta name="win-again-inline-shell" content="v22:97e4caec605ed32fde333e5f00615514b7e63f6310bf194a0a13ca7b83a1e063"></head>
+<meta name="win-again-inline-shell" content="v22:6c39f5bc9e27540b92b25dbadf857f52fea4ef24811ceffc1d8c1c4afe20e2e5"></head>
 <body class="launch-mode">
 <section id="launch-screen" class="launch-screen" aria-labelledby="launch-title"><div class="launch-shade"></div><div class="launch-top"><span>이번생 게임즈</span><span>FOOTBALL MANAGER</span></div><div class="launch-content"><span class="launch-kicker">YOUR NEXT CHAPTER</span><img class="launch-ball" data-app-icon width="64" height="64" alt=""><h1 id="launch-title">눈 떠보니<br>2부 리그 감독이었다!<em>이번 생엔 우승한다</em></h1><p class="launch-copy">경기는 90분.<br>당신의 이야기는 이제 시작입니다.</p><div class="launch-actions"><button id="launch-continue" type="button" class="primary">감독 생활 시작하기</button><button id="launch-import" type="button" class="secondary">저장 불러오기 · 설정</button></div><div id="launch-progress" role="status" hidden><progress aria-label="감독실 준비 중"></progress><span>감독실 준비 중…</span></div><p id="launch-error" role="alert" hidden></p><p id="launch-campaign" class="launch-campaign"></p></div><p class="launch-footer">오프라인 플레이 · 기기에 자동 저장</p></section>
 <div class="app" hidden>
@@ -3378,7 +3378,7 @@ function motionFrame(now=performance.now()){
  if(!state)return null;if(movementSeed!==state.seed){movementSeed=state.seed;movementElapsed=0;movementStamp=now;movementEvent=null;movementEventAge=Infinity;movementDemo=false;movementDemoElapsed=0;movementOpponentRoster=[];movementCommentaryKey='';movementOpponentFormation=typeof Opposition!=='undefined'?Opposition.plan(S.opponentFor(season)).formation:'442';}
  if(typeof Opposition!=='undefined'&&!movementOpponentRoster.length)movementOpponentRoster=Opposition.roster(S.opponentFor(season));
  const rawDelta=Math.max(0,now-movementStamp),visualDelta=Math.min(80,rawDelta);movementStamp=now;
- const eventChanged=movementEvent!==lastEvent;if(eventChanged){movementEvent=lastEvent;movementEventElapsed=movementElapsed;movementEventAge=lastEvent?0:Infinity;}
+ const eventChanged=movementEvent!==lastEvent;if(eventChanged){movementEvent=lastEvent;movementEventElapsed=movementElapsed;movementEventAge=lastEvent?(typeof lastEventFast!=='undefined'&&lastEventFast?1450:0):Infinity;}
  const visible=view==='match'&&!document.hidden,enabled=motionEnabled();if(movementDemo&&(!enabled||state.phase!=='prep'))cancelMovementPreview();
  const playing=visible&&enabled&&!state.paused&&(F.running(state)||movementEventAge<2200),demo=visible&&enabled&&movementDemo;
  if(playing||demo){movementElapsed+=visualDelta;if(Number.isFinite(movementEventAge)&&!eventChanged)movementEventAge+=rawDelta;if(demo){movementDemoElapsed+=rawDelta;if(movementDemoElapsed>=12000)cancelMovementPreview();}}
@@ -3712,7 +3712,7 @@ function matchContributionsMarkup(){
  // The former stadium hero is intentionally retired. Keeping the hidden image out
  // of the startup bundle saves mobile users from downloading it without seeing it.
 }
-</script><script>var mediaPrefs={effects:true,haptics:false},matchFeedback=null,momentTimer=0,impactTimer=0,lastMoment=null,pendingMatchMoment=null;
+</script><script>var mediaPrefs={effects:true,haptics:false},matchFeedback=null,momentTimer=0,impactTimer=0,lastMoment=null,pendingMatchMoment=null,lastEventFast=false;
 function motionEnabled(){return mediaPrefs.effects&&!matchMedia('(prefers-reduced-motion: reduce)').matches;}
 function matchMomentFor(events,match,fast=false){
  const event=[...events].reverse().find(e=>e.type==='goal')||[...events].reverse().find(e=>e.type==='shot'&&e.team===1)||[...events].reverse().find(e=>e.type==='sub');if(!event)return null;
@@ -3731,6 +3731,7 @@ function presentMoment(moment){
  playMatchFeedback(moment.kind);if(soundOn)tone(moment.kind);momentTimer=setTimeout(()=>{card.hidden=true;},4200);
 }
 function presentMatchEvents(events,fast=false){
+ lastEventFast=fast;
  if(!state)return;const reversed=[...events].reverse(),latest=reversed.find(e=>e.type==='goal')||reversed.find(e=>e.type==='shot'&&e.team===1)||reversed.find(e=>['shot','chance'].includes(e.type));if(latest){lastEvent=latest;lastEventAt=performance.now();}
  const moment=matchMomentFor(events,state,fast);if(moment){if(!fast&&motionEnabled()&&latest){clearTimeout(momentTimer);$('match-moment').hidden=true;pendingMatchMoment={event:latest,moment};}else{pendingMatchMoment=null;presentMoment(moment);}}else if(events.some(e=>e.type==='start'))playMatchFeedback('kickoff');else if(state.phase==='full')playMatchFeedback('fulltime');
 }
