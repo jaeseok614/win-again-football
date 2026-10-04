@@ -13,7 +13,7 @@
   if(!t||t.year!==s.year||!receipt||receipt.type!==(competition==='league'?'match':competition)||t.records.some(r=>r.id===id))throw Error('이 경기의 선수 기록을 이미 확정했거나 결과가 준비되지 않았어요.');
   const fixture=competition!=='league'?{home:receipt.home,away:receipt.away}:root.Season.fixturesFor(s)[round-1].find(f=>f.home===own||f.away===own),events=F.goalAttributions(m).map(e=>({minute:e.minute,scorerId:e.scorerId,scorerIdentity:e.scorerIdentity,assistId:e.assistId,assistIdentity:e.assistIdentity}));
   const players=F.roster.map(slot=>{const p=m.players[slot.id];return {id:slot.id,identity:p.identity,minutes:p.minutes,started:m.segments[0].lineup.includes(slot.id),goals:events.filter(e=>e.scorerIdentity===p.identity).length,assists:events.filter(e=>e.assistIdentity===p.identity).length,cleanSheets:p.pos==='GK'&&p.minutes===90&&m.score[1]===0?1:0};});
-  const record={...(m.discipline?{cards:copy(m.discipline.events)}:{}),id,year:s.year,division:s.league.division,competition,round,stage:competition!=='league'?stage:null,home:fixture.home,away:fixture.away,score:[...m.score],statisticsOriginMinute:m.statisticsOriginMinute,unassignedGoals:m.score[0]-events.length,players,events,segments:m.segments.map(seg=>({start:seg.start,end:seg.end,lineup:[...seg.lineup]}))};
+  const record={...(m.suspensionRules?{suspended:Object.values(m.players).filter(p=>p.suspended).map(p=>p.identity)}:{}),...(m.discipline?{cards:copy(m.discipline.events)}:{}),id,year:s.year,division:s.league.division,competition,round,stage:competition!=='league'?stage:null,home:fixture.home,away:fixture.away,score:[...m.score],statisticsOriginMinute:m.statisticsOriginMinute,unassignedGoals:m.score[0]-events.length,players,events,segments:m.segments.map(seg=>({start:seg.start,end:seg.end,lineup:[...seg.lineup]}))};
   validateRecord(record);t.records.push(record);return s;
  }
  function nextYear(s){const t=s.statistics;if(!t||t.year!==s.year-1)throw Error('이전 시즌의 선수 기록을 확인하세요.');t.archive.push({year:t.year,records:t.records});t.year=s.year;t.records=[];return s;}
@@ -34,6 +34,7 @@
   const bySlot=new Map();for(let i=0;i<F.roster.length;i++){const slot=F.roster[i],p=r.players[i],profile=F.identityProfile(p?.identity);if(!p||p.id!==slot.id||!profile||profile.pos!==slot.pos||!integer(p.minutes,0,90)||typeof p.started!=='boolean'||!integer(p.goals,0,r.score[0])||!integer(p.assists,0,r.score[0])||!integer(p.cleanSheets,0,1))failure();bySlot.set(p.id,p);}
   if(new Set(r.players.map(p=>p.identity)).size!==18)failure();
   if(Object.hasOwn(r,'cards'))Discipline.validateRecord(r);
+  if(Object.hasOwn(r,'suspended')&&(!Array.isArray(r.suspended)||new Set(r.suspended).size!==r.suspended.length||r.suspended.some(id=>!r.players.some(p=>p.identity===id&&p.minutes===0))))failure();
   const played=Object.fromEntries(F.roster.map(p=>[p.id,0])),ended=new Set();let changes=0,formationCounts=null,end=0;
   for(let i=0;i<r.segments.length;i++){
    const seg=r.segments[i];if(!seg||seg.start!==end||!integer(seg.end,seg.start+1,90)||[45,65].some(boundary=>seg.start<boundary&&seg.end>boundary)||!Array.isArray(seg.lineup)||seg.lineup.length!==11||new Set(seg.lineup).size!==11||seg.lineup.some(id=>!bySlot.has(id)))failure();

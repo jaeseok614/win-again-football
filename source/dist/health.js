@@ -45,7 +45,7 @@
   const lineup=m?.lineup||s.plan.lineup,removed=new Set(m?.out||[]),dismissed=new Set(m?.discipline?.events.filter(e=>e.team===0&&e.card==='red').map(e=>e.id)||[]);
   const positions=Object.entries({GK:1,...counts}).map(([position,required])=>{
    const registered=Object.values(s.squad).filter(p=>p.pos===position);
-   const available=registered.filter(p=>!p.injury&&!m?.players[p.id]?.injuryRemaining&&!removed.has(p.id)&&!dismissed.has(p.id));
+   const available=registered.filter(p=>!p.injury&&F.isAvailable(m?.players[p.id]||p)&&!removed.has(p.id)&&!dismissed.has(p.id));
    const starters=available.filter(p=>lineup.includes(p.id)),bench=available.filter(p=>!lineup.includes(p.id));
    const energy=p=>m?.players[p.id]?.energy??p.energy,tired=starters.filter(p=>energy(p)<65).length,fresh=bench.filter(p=>energy(p)>=65).length;
    const status=available.length<required?'shortage':!bench.length?'thin':tired?(fresh?'rotate':'recover'):'covered';
@@ -63,7 +63,7 @@
    if(fit.length<count)throw Error('이 포메이션에 필요한 출전 가능 선수가 부족해요.');after.push(...fit.slice(0,count).map(p=>p.id));
   }
   const outgoing=before.filter(id=>!after.includes(id)),incoming=after.filter(id=>!before.includes(id)),changes=outgoing.map(out=>{const inside=incoming.splice(incoming.findIndex(id=>m.players[id].pos===m.players[out].pos),1)[0];return {out,in:inside,outName:m.players[out].name,inName:m.players[inside].name,pos:m.players[out].pos,energyGain:Math.round(m.players[inside].energy-m.players[out].energy)};});
-  const fingerprint=JSON.stringify([m.seed,s.year,s.round,s.competition,m.formation,m.lineup,m.phase,m.minute,Object.values(m.players).map(p=>[p.id,p.identity,p.energy,p.injuryRemaining,p[F.roleKey(p)],s.squad[p.id].injury])]);
+  const fingerprint=JSON.stringify([m.seed,s.year,s.round,s.competition,m.formation,m.lineup,m.phase,m.minute,Object.values(m.players).map(p=>[p.id,p.identity,p.energy,p.injuryRemaining,p.suspended,p[F.roleKey(p)],s.squad[p.id].injury])]);
   return {fingerprint,before,after:[...after],changes};
  }
  function applyRotation(s,fingerprint){
