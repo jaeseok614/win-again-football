@@ -34,7 +34,7 @@
  }
  function presentation(context){
   const opponent=S.club(context.opponentId),isHome=context.home===own;
-  return {...context,opponent:{id:opponent.id,name:opponent.name,short:opponent.short,code:opponent.code},venue:{isHome,label:isHome?'브린웰 파크':opponent.short+' 스타디움'}};
+  return {...context,opponent:{id:opponent.id,name:opponent.name,short:opponent.short,code:opponent.code},venue:{isHome,label:isHome?S.club(own).short+' 파크':opponent.short+' 스타디움'}};
  }
  function growthFor(s,report,players,legacy){
   return (Array.isArray(report.changes)?report.changes:[]).filter(change=>{
@@ -52,7 +52,7 @@
   const source='pending',m=s.match;if(!m||m.phase!=='full'||m.minute!==90)return invalid(source,'현재 경기를 90분까지 마친 뒤 리포트를 볼 수 있어요.');
   try{
    const match=F.restore(m),fixture=S.fixtureFor(s);if(!fixture||match.isHome!==(fixture.home===own))return invalid(source,'현재 경기와 대진이 맞지 않아 리포트를 표시할 수 없어요.');
-   const opponentId=fixture.home===own?fixture.away:fixture.home;if(match.opponentName!==S.club(opponentId)?.name)return invalid(source,'현재 경기와 상대 구단이 맞지 않아요.');
+   const opponentId=fixture.home===own?fixture.away:fixture.home,rawOpponent=S.rawClub?.(opponentId)||S.club(opponentId);if(match.opponentName!==rawOpponent?.name)return invalid(source,'현재 경기와 상대 구단이 맞지 않아요.');
    const competition=s.competition,round=competition!=='league'?s.round:s.round+1,stage=competition!=='league'?fixture.stage:null,result=competition==='cup'?P.preview(s,match):competition==='europe'?europeModule().preview(s,match):null;
    const context={id:resultId(s.year,competition,round,stage),year:s.year,competition,round,stage,home:fixture.home,away:fixture.away,opponentId,score:[...match.score],penalties:result?.penalties?oriented(result,result.penalties):null,winner:result?result.winner:match.score[0]===match.score[1]?null:match.score[0]>match.score[1]?own:opponentId};
    const events=eventsFor(F.goalAttributions(match)),players=Object.values(match.players).map(p=>player(s,{id:p.id,identity:p.identity,minutes:p.minutes,started:match.segments[0].lineup.includes(p.id),goals:events.filter(e=>e.scorerIdentity===p.identity).length,assists:events.filter(e=>e.assistIdentity===p.identity).length,cleanSheets:p.pos==='GK'&&p.minutes===90&&match.score[1]===0?1:0})),unassignedGoals=match.score[0]-events.length;

@@ -33,14 +33,14 @@
  function afterMatch(s){if(!s.clubLife)initialize(s);s.clubLife.news=expectedNews(s);return s;}
  function nextYear(s){initialize(s);return s;}
  function news(s){
-  if(!s.clubLife)return [];const life=s.clubLife,ledger=s.finance.ledger.slice(life.originLedger),list=[];
+  if(!s.clubLife)return [];const life=s.clubLife,ledger=s.finance.ledger.slice(life.originLedger),list=[],clubShort=root.Season.club(own)?.short||'블랙본';
   for(let index=0;index<ledger.length;index++){
    const entry=ledger[index];if(entry.year!==s.year)continue;
    if(['match','cup','europe'].includes(entry.type)){
     const spec=settledSpec(s,entry),win=spec.winner===own,draw=!spec.winner,record=s.statistics?.records?.find(record=>record.id===entry.id),scorers=[...new Set((record?.events||[]).map(event=>F.identityProfile(event.scorerIdentity)?.name).filter(Boolean))],names=scorers.length?' 득점 기록: '+scorers.join(', ')+'.':'',penalties=spec.penalties?' 승부차기 '+spec.penalties.join('–')+'로 '+(win?'승리했습니다.':'패배했습니다.'):'';
-    list.push({id:'article-'+entry.id,kind:'match',year:s.year,competition:spec.competition,tag:competitions[spec.competition]+' 경기 기사',headline:'브린웰, '+opponent(spec)+'전 '+spec.score.join('–')+' '+(spec.penalties?'승부차기 ':'')+(win?'승리':draw?'무승부':'패배'),body:competitions[spec.competition]+'에서 브린웰은 '+(spec.home===own?'홈':'원정')+' 경기를 '+spec.score.join('–')+'로 마쳤습니다.'+penalties+names+(win?' 선수단은 다음 경기를 향해 다시 준비합니다.':draw?' 접전의 경험을 다음 경기 준비에 이어갑니다.':' 선수단은 경기를 돌아보고 다시 집중합니다.'),order:index*3+1});
+    list.push({id:'article-'+entry.id,kind:'match',year:s.year,competition:spec.competition,tag:competitions[spec.competition]+' 경기 기사',headline:clubShort+', '+opponent(spec)+'전 '+spec.score.join('–')+' '+(spec.penalties?'승부차기 ':'')+(win?'승리':draw?'무승부':'패배'),body:competitions[spec.competition]+'에서 '+clubShort+'은 '+(spec.home===own?'홈':'원정')+' 경기를 '+spec.score.join('–')+'로 마쳤습니다.'+penalties+names+(win?' 선수단은 다음 경기를 향해 다시 준비합니다.':draw?' 접전의 경험을 다음 경기 준비에 이어갑니다.':' 선수단은 경기를 돌아보고 다시 집중합니다.'),order:index*3+1});
    }else if(entry.type==='staff-hire'){
-    const person=root.Staff?.candidates(s).find(person=>person.id===entry.candidate);if(person)list.push({id:'article-'+entry.id,kind:'staff',year:s.year,competition:'club',tag:'코치 계약',headline:person.name+', 브린웰 '+person.label+' 부임',body:'구단은 리그 '+person.term+'경기 계약으로 '+person.name+' 코치를 영입했습니다. 훈련과 선수 관리를 도울 새 목소리가 합류했습니다.',order:index*3+1});
+    const person=root.Staff?.candidates(s).find(person=>person.id===entry.candidate);if(person)list.push({id:'article-'+entry.id,kind:'staff',year:s.year,competition:'club',tag:'코치 계약',headline:person.name+', '+clubShort+' '+person.label+' 부임',body:'구단은 리그 '+person.term+'경기 계약으로 '+person.name+' 코치를 영입했습니다. 훈련과 선수 관리를 도울 새 목소리가 합류했습니다.',order:index*3+1});
    }
   }
   for(const record of life.press){const index=ledger.findIndex(entry=>entry.id===record.id),label=pressChoices.find(option=>option.id===record.choice).label,statement=record.choice==='modest'?'상대를 존중하며 한 경기씩 준비하겠다.':record.choice==='confident'?'우리 선수들을 믿고 감독으로서 결과에 책임지겠다.':'선수들은 최선을 다했다. 결과의 책임은 감독에게 있다.';list.push({id:'article-'+record.id+'-'+record.phase,kind:'press',year:s.year,competition:record.competition,tag:record.phase==='before'?'경기 전 인터뷰':'경기 후 인터뷰',headline:opponent(record)+'전, 감독의 '+label,body:statement+' '+(record.choice==='protect'?'선수단은 감독의 보호 메시지를 들었습니다.':record.choice==='confident'?'팬들은 자신 있는 답변과 실제 경기 결과를 함께 지켜봅니다.':'구단은 준비 과정과 침착함을 강조했습니다.'),order:(index<0?ledger.length:index)*3+(record.phase==='before'?0:2)});}

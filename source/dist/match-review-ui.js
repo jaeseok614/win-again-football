@@ -19,7 +19,7 @@ function matchReviewMarkup(d,{compact=false}={}){
  const events=d.events.map(e=>'<li><b>'+e.minute+'′</b><span>'+playerUiText(e.scorerName)+'<small>'+(e.assistName?'도움 '+playerUiText(e.assistName):'도움 기록 없음')+'</small></span></li>').join('');
  return `<section class="match-review ${compact?'review-compact':''} ${d.pending?'review-pending':''}" aria-label="${d.pending?'경기 종료 후 확정 전 리뷰':'최근 확정 경기 리뷰'}" data-review-id="${playerUiText(d.id)}">
   <div class="review-heading"><div><div class="eyebrow">${d.pending?'FULL TIME / NOT CONFIRMED':'전체 대회 최근 확정 경기'} / ${d.year} SEASON</div><h3>${header}</h3></div><span class="review-state">${d.pending?'결과 확정 전':'확정 완료'}</span></div>
-  <div class="review-score"><div><span>${playerUiText(label)} · ${d.venue.label}</span><strong>브린웰 <b>${d.score[0]} : ${d.score[1]}</b> ${playerUiText(d.opponent.short)}</strong></div><span class="review-outcome ${d.winner===S.own?'review-win':''}">${outcome}</span></div>
+  <div class="review-score"><div><span>${playerUiText(label)} · ${d.venue.label}</span><strong>${playerUiText(S.club(S.own).short)} <b>${d.score[0]} : ${d.score[1]}</b> ${playerUiText(d.opponent.short)}</strong></div><span class="review-outcome ${d.winner===S.own?'review-win':''}">${outcome}</span></div>
   ${d.penalties?'<p class="review-penalties">90분 무승부 · 승부차기 '+d.penalties[0]+' : '+d.penalties[1]+' · '+outcome+'</p>':''}
   <p class="review-status-note">${d.pending?'출전·득점은 이번 경기 내용입니다. 결과를 확정해야 경험·성장·부상·재정에 반영됩니다.':'출전 경험과 구단 결과를 반영했습니다. 아래 수치는 이 경기의 확정 기록입니다.'}</p>
   ${partial?'<p class="review-limited">'+partial+(d.coverage.unassignedGoals?' 선수 미지정 '+d.coverage.unassignedGoals+'골.':'')+'</p>':''}

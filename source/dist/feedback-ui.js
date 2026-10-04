@@ -4,8 +4,8 @@ function matchMomentFor(events,match,fast=false){
  const event=[...events].reverse().find(e=>e.type==='goal')||[...events].reverse().find(e=>e.type==='shot'&&e.team===1)||[...events].reverse().find(e=>e.type==='sub');if(!event)return null;
  const kind=event.type==='goal'?(event.team===0?'goal':'concede'):event.type==='shot'?'save':'sub';
  const keeper=match.lineup.map(id=>match.players[id]).find(p=>p.pos==='GK'),scorer=match.players[event.scorerId]||(event.scorerIdentity?F.identityProfile(event.scorerIdentity):null);
- const player=kind==='goal'?scorer?.name||'브린웰 로버스':kind==='save'?keeper?.name||'브린웰 골키퍼':kind==='concede'?S.opponentFor(season).name:F.displayText(event.text,match.players);
- return {kind,minute:event.minute,title:{goal:'GOAL!',concede:'다시 집중!',save:'SUPER SAVE',sub:'새로운 승부수'}[kind],player,detail:F.displayText(event.text,scorer?[scorer]:match.players),label:(fast?'하이라이트 · ':'')+event.minute+'′'};
+ const player=kind==='goal'?scorer?.name||S.club(S.own).name:kind==='save'?keeper?.name||S.club(S.own).short+' 골키퍼':kind==='concede'?S.opponentFor(season).name:F.displayText(event.text,match.players);
+ return {kind,minute:event.minute,title:{goal:'GOAL!',concede:'다시 집중!',save:'SUPER SAVE',sub:'새로운 승부수'}[kind],player,detail:S.displayText(F.displayText(event.text,scorer?[scorer]:match.players)),label:(fast?'하이라이트 · ':'')+event.minute+'′'};
 }
 function clearMatchFeedback(){if(typeof cancelMovementPreview==='function')cancelMovementPreview();clearTimeout(momentTimer);clearTimeout(impactTimer);momentTimer=impactTimer=0;const card=$('match-moment');if(card)card.hidden=true;const pitch=$('pitch');if(pitch)delete pitch.dataset.moment;matchFeedback?.cancel();}
 function playMatchFeedback(kind){const result=matchFeedback?.play(kind);renderFeedbackControls();return result;}
@@ -20,7 +20,7 @@ function presentMatchEvents(events,fast=false){
  const moment=matchMomentFor(events,state,fast);if(moment)presentMoment(moment);else if(events.some(e=>e.type==='start'))playMatchFeedback('kickoff');else if(state.phase==='full')playMatchFeedback('fulltime');
 }
 function presentSubstitution(change){if(!change||state.phase==='prep')return;presentMoment({kind:'sub',minute:state.minute,title:'새로운 승부수',player:change.in.name,label:state.minute+'′ · 선수 교체',detail:change.out.name+' OUT · '+change.in.name+' IN'});}
-function previewMatchMoment(){if(!state)return;const star=state.players.f2||state.lineup.map(id=>state.players[id]).find(p=>p.pos==='FW');presentMoment({kind:'preview',minute:null,title:'GOAL!',player:star?.name||'브린웰 로버스',label:'연출 미리보기',detail:'경기 기록은 바뀌지 않아요.'});if(innerWidth<730)$('pitch').scrollIntoView({behavior:'instant',block:'center'});}
+function previewMatchMoment(){if(!state)return;const star=state.players.f2||state.lineup.map(id=>state.players[id]).find(p=>p.pos==='FW');presentMoment({kind:'preview',minute:null,title:'GOAL!',player:star?.name||S.club(S.own).name,label:'연출 미리보기',detail:'경기 기록은 바뀌지 않아요.'});if(innerWidth<730)$('pitch').scrollIntoView({behavior:'instant',block:'center'});}
 function renderFeedbackControls(){
  const host=$('experience-controls');if(!host||!matchFeedback)return;document.querySelector('.app').classList.toggle('matchday-effects-off',!mediaPrefs.effects);
  const device=matchFeedback.snapshot(),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;

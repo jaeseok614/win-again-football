@@ -11,10 +11,12 @@
   {id:'northhaven',name:'노스헤이븐 로열',en:'Northhaven Royal',short:'노스헤이븐',code:'NR',color:'#e0a271',country:'네덜란드',style:'중원의 패스로 공격을 이어가는 팀',attack:89,defense:85,middle:94,speed:85},
   {id:'bramwich',name:'브램위치 유나이티드',en:'Bramwich United',short:'브램위치',code:'BU',color:'#d5a9ab',country:'잉글랜드',style:'균형 잡힌 전력과 빠른 경기 전환',attack:93,defense:91,middle:93,speed:88}
  ].map(club=>Object.freeze(club)));
- const overseas=Object.fromEntries(clubs.map(c=>[c.id,c])),clubIds=[own,...clubs.map(c=>c.id)],ownProfile={id:own,name:'브린웰 로버스',en:'Brynwell Rovers',short:'브린웰',code:'BR',color:'#c8f36e',attack:70,defense:70,middle:71,speed:68};
+ const brands=Object.freeze({meridian:['레알 마드리온','레알 마드리온','RM'],steinbruck:['바이에른 뮌센','바이에른','BM'],argento:['파리 생제르몽드','파리 SG','PG'],caldera:['스포르팅 리스본느','리스본느','SL'],portovalente:['인테르 밀랑','인테르','IM'],northhaven:['아약센 암스텔','아약센','AA'],bramwich:['리버포울 FC','리버포울','LF']});
+ const overseas=Object.fromEntries(clubs.map(c=>[c.id,c])),clubIds=[own,...clubs.map(c=>c.id)],ownProfile={id:own,name:'브린웰 로버스',en:'Brynwell Rovers',short:'브린웰',code:'BR',color:'#c8f36e',attack:70,defense:70,middle:71,speed:68},presentClub=value=>{if(!value)return value;const brand=brands[value.id];return brand?{...value,name:brand[0],short:brand[1],code:brand[2]}:{...value};};
  const fail=()=>{throw Error('저장한 챔피언스리그 대회를 읽을 수 없어요.');},integer=(n,min,max)=>Number.isInteger(n)&&n>=min&&n<=max;
  const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b),exact=(value,keys)=>!!value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length===keys.length&&keys.every(key=>Object.hasOwn(value,key));
- function club(id){return overseas[id];}
+ function rawClub(id){return overseas[id];}
+ function club(id){return presentClub(rawClub(id));}
  function profile(id){return overseas[id]||(id===own?(root.Season?.club(own)||ownProfile):null);}
  function qualification(s){const previous=s.history?.find(h=>h.year===s.year-1);return previous?.division===1&&integer(previous.rank,1,2)?{year:previous.year,division:1,rank:previous.rank}:null;}
  function shuffled(s){let rng=(s.seed^Math.imul(s.year,2654435761)^1163219535)>>>0,ids=[...clubIds];for(let i=ids.length-1;i>0;i--){rng=step(rng);const j=Math.floor(rng/4294967296*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]];}return [ids.slice(0,4),ids.slice(4)];}
@@ -25,7 +27,7 @@
  function schedule(ids){const ring=[...ids],first=[];for(let r=0;r<3;r++){const games=[];for(let i=0;i<2;i++){const a=ring[i],b=ring[3-i];games.push((r+i)%2?{home:b,away:a}:{home:a,away:b});}first.push(games);ring.splice(1,0,ring.pop());}return first.concat(first.map(games=>games.map(f=>({home:f.away,away:f.home}))));}
  function standings(s,group=0){
   const index=group==='A'?0:group==='B'?1:group;if(!integer(index,0,1)||!Array.isArray(s.europe?.groups?.[index]))throw Error('챔피언스리그 A조 또는 B조를 선택하세요.');
-  const rows=s.europe.groups[index].map(id=>({...profile(id),played:0,won:0,drawn:0,lost:0,gf:0,ga:0,points:0}));
+  const rows=s.europe.groups[index].map(id=>({...presentClub(profile(id)),played:0,won:0,drawn:0,lost:0,gf:0,ga:0,points:0}));
   for(const r of s.europe.results){if(r.stage>=6||!rows.some(row=>row.id===r.home))continue;const a=rows.find(row=>row.id===r.home),b=rows.find(row=>row.id===r.away),[x,y]=r.goals;a.played++;b.played++;a.gf+=x;a.ga+=y;b.gf+=y;b.ga+=x;if(x>y){a.won++;a.points+=3;b.lost++;}else if(x<y){b.won++;b.points+=3;a.lost++;}else{a.drawn++;b.drawn++;a.points++;b.points++;}}
   return rows.map(c=>({...c,gd:c.gf-c.ga})).sort((a,b)=>b.points-a.points||b.gd-a.gd||b.gf-a.gf||a.en.localeCompare(b.en,'en')).map((c,i)=>({...c,rank:i+1}));
  }
@@ -72,5 +74,5 @@
   for(const h of s.history||[])if((h.europeChampion??null)!==historicalChampion(s,h.year,years.get(h.year)||[]))fail();
   const current=years.get(s.year)||[],ownResults=(s.europe?.results||[]).filter(r=>r.home===own||r.away===own);if(current.length!==ownResults.length)fail();for(const e of current)validateReceipt(s,e);return s;
  }
- const api={own,clubs,club,qualification,initialize,restore,due,ready,fixtureFor,fixturesFor,seedFor,rngFor,preview,settle,advanceAI,validate,validateHistory,validateReceipt,standings,stageNames,gates,gateFor};root.Europe=api;if(typeof module!=='undefined')module.exports=api;
+ const api={own,clubs,club,rawClub,presentClub,qualification,initialize,restore,due,ready,fixtureFor,fixturesFor,seedFor,rngFor,preview,settle,advanceAI,validate,validateHistory,validateReceipt,standings,stageNames,gates,gateFor};root.Europe=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
