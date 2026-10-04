@@ -198,3 +198,7 @@
 
 .match-momentum{display:block}.momentum-heading{cursor:pointer;min-height:44px}.momentum-heading>span:first-child{justify-content:space-between}.momentum-detail{padding-top:8px}.match-momentum:not([open])>.momentum-detail{display:none}.match-momentum summary:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
 @media(max-width:730px) and (max-height:680px){#match-pane .match-momentum{padding-block:4px;margin-top:4px}}
+.pitch .match-moment{top:38%;left:20%;right:20%;padding:8px 10px;gap:2px;pointer-events:none}
+.pitch .match-moment .moment-title{font-size:22px}
+.pitch .match-moment .moment-player{font-size:12px}
+.pitch .match-moment .moment-detail{display:none}

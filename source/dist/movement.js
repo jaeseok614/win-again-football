@@ -22,12 +22,13 @@
   const ids=rows||((match?.lineup||[]).map(id=>({id,p:match.players?.[id]})));
   return ids.filter(row=>row&&row.id).map(row=>{
    const p=row.p||match?.players?.[row.id]||{},pos=p.pos||row.pos||'MID',fallback=pos==='GK'?[50,88]:(layout[pos]?.[counts[pos]++]||[50,50]);
-   return {id:row.id,no:p.no||row.no||0,pos,x:clamp(finite(row.x,fallback[0]),10,90),y:clamp(finite(row.y,fallback[1]),10,90)};
+   return {id:row.id,name:p.name||row.name||'',no:p.no||row.no||0,pos,x:clamp(finite(row.x,fallback[0]),10,90),y:clamp(finite(row.y,fallback[1]),10,90)};
   });
  }
  const role=(team,pos,index=0)=>{const people=team.filter(p=>p.pos===pos);return people[index%people.length]||team.find(p=>p.pos!=='GK')||team[0]||{id:null,x:50,y:50};};
  function frame(input={}){
   const match=input.match||{},own=ownBase(match,input.positions),layout=bases[input.opponentFormation],shape=layout?[[50,12,'GK'],...Object.entries(layout).flatMap(([pos,points])=>points.map(([x,y])=>[x,100-y,pos]))]:oppBase,opponent=shape.map(([x,y,pos],i)=>({id:'opp'+i,no:i+1,pos,x,y})).filter(p=>!input.dismissedOpponent?.includes(p.id));
+  for(const player of opponent)player.name=input.opponentRoster?.find(p=>p.id===player.id)?.name||'';
   const result={own,opponent,ball:{x:50,y:50},trail:[],carrierId:null,receiverId:null,ownerTeam:null,phase:'static',label:{prep:'경기 준비',half:'하프타임',late:'65분 작전 시간',full:'경기 종료'}[match.phase]||'경기 준비',attributed:false};
   if(input.motion===false)return result;
   const running=['first','second','third'].includes(match.phase),time=Math.max(0,finite(input.elapsedMs)),event=input.event,age=Math.max(0,finite(input.eventAgeMs,Infinity));
@@ -67,18 +68,19 @@
    result.label=turnover?'수비 전환':result.ownerTeam===0?(match.tactic==='counter'&&stage>=2?'역습 전개':stage>=2?'측면 침투':'중원 전개'):(match.tactic==='press'?'전방 압박':'수비 대응');
    if(local>.17&&local<.83)result.trail=[.08,.16,.24].map(lag=>mixPoint(a,b,smooth((local-.17-lag)/.66)));
   }
-  if(cinematic)applyEvent(result,match,event,age);
+  if(cinematic){const frozen=frame({...input,event:null,elapsedMs:input.eventElapsedMs??Math.max(0,time-age)});applyEvent(result,match,event,age,frozen);}
   return result;
  }
- function applyEvent(result,match,event,age){
-  const baseBall={...result.ball},baseOwn=result.own.map(p=>({...p})),baseOpp=result.opponent.map(p=>({...p})),team=event.team===0?result.own:result.opponent,defenders=event.team===0?result.opponent:result.own;
+ function applyEvent(result,match,event,age,frozen){
+  const baseBall={...result.ball},baseOwn=result.own.map(p=>({...p})),baseOpp=result.opponent.map(p=>({...p})),team=event.team===0?frozen.own:frozen.opponent,defenders=event.team===0?frozen.opponent:frozen.own;
+  for(const [visible,held] of [[result.own,frozen.own],[result.opponent,frozen.opponent]])for(const player of visible){const anchor=held.find(p=>p.id===player.id);if(anchor)Object.assign(player,{x:anchor.x,y:anchor.y});}
   const exact=event.team===0&&event.scorerId?team.find(p=>p.id===event.scorerId):null;
   // Older shot logs lack a shooter id. Text can identify a player, otherwise use
   // a generic forward animation and leave attributed=false for UI consumers.
   const named=event.team===0?team.find(p=>match.players?.[p.id]?.name&&String(event.text||'').includes(match.players[p.id].name)):null;
   const shooter=exact||named||role(team,'FW',finite(event.minute)%2),keeper=role(defenders,'GK');
   const progress=smooth(age/1450),blend=smooth((age-1900)/300),targetX=event.type==='goal'?46+(finite(event.minute)%3)*4:clamp(keeper.x,42,58);
-  const goalY=event.team===0?6:94,targetY=event.type==='goal'?goalY:event.team===0?14:86;
+  const goalY=event.team===0?4:96,targetY=event.type==='goal'?goalY:event.team===0?14:86;
   const start={x:shooter.x,y:shooter.y},end={x:targetX,y:targetY};
   if(event.type==='chance'){
    const blocker=role(defenders,'DEF',1),endChance={x:blocker.x,y:blocker.y};
@@ -88,16 +90,36 @@
    result.ball=mixPoint(start,end,progress);
    result.trail=[.14,.28,.42].map(lag=>mixPoint(start,end,smooth((age/1450)-lag)));
    result.carrierId=progress<.07?shooter.id:event.type==='shot'&&progress>.97?keeper.id:null;result.receiverId=event.type==='shot'?keeper.id:null;
-   result.phase=age<1050?'shot':event.type==='goal'?'goal':event.team===1?'save':'saved';
+   result.phase=age<1450?'shot':event.type==='goal'?'goal':event.team===1?'save':'saved';
    result.label=result.phase==='shot'?'슈팅':result.phase==='goal'?'골!':result.phase==='save'?'선방!':'상대 선방';
-   if(keeper.id){keeper.x=clamp(lerp(keeper.x,targetX,smooth(age/900)),40,60);keeper.y=clamp(lerp(keeper.y,targetY,smooth(age/900)),event.team===0?10:82,event.team===0?18:90);}
+   if(keeper.id){const visibleKeeper=(event.team===0?result.opponent:result.own).find(p=>p.id===keeper.id);visibleKeeper.x=clamp(lerp(keeper.x,targetX,smooth(age/900)),40,60);visibleKeeper.y=clamp(lerp(keeper.y,targetY,smooth(age/900)),event.team===0?10:82,event.team===0?18:90);}
   }
-  result.ownerTeam=event.team;result.attributed=!!(exact||named);result.scorerId=exact?.id||named?.id||null;result.keeperId=keeper.id;result.eventType=event.type;
+  result.ownerTeam=event.type==='shot'&&progress>.97||event.type==='chance'&&progress>.85?1-event.team:event.team;result.attributed=!!(exact||named);result.scorerId=exact?.id||named?.id||null;result.keeperId=keeper.id;result.eventType=event.type;
+  result.performerName=shooter.name;
   if(blend>0){
    result.ball=mixPoint(result.ball,baseBall,blend);result.trail=[];result.carrierId=null;
    for(let i=0;i<result.own.length;i++)Object.assign(result.own[i],mixPoint(result.own[i],baseOwn[i],blend));
    for(let i=0;i<result.opponent.length;i++)Object.assign(result.opponent[i],mixPoint(result.opponent[i],baseOpp[i],blend));
   }
  }
- return {frame};
+ // Opponent events are aggregate engine events; choose a consistent visual forward,
+ // without adding a scorer to saved statistics or drawing from the match RNG.
+ function commentary(event,match,roster=[]){
+  if(!event||!['goal','shot','chance'].includes(event.type)||![0,1].includes(event.team))return null;
+  const active=(people,team)=>people.filter(p=>!match.discipline?.events?.some(e=>e.team===team&&e.id===p.id&&e.card==='red'&&e.minute<=event.minute));
+  const own=active(ownBase(match),0);roster=active(roster,1);const people=event.team===0?own:roster;
+  const scorer=people.find(p=>p.id===event.scorerId)||people.find(p=>p.name&&String(event.text||'').includes(p.name))||role(people,'FW',finite(event.minute)%2);
+  const name=scorer.name|| (event.team===0?'우리 공격수':'상대 공격수');
+  const keeper=role(event.team===0?roster:own,'GK').name||'골키퍼';
+  const variant=Math.abs(finite(event.minute))%3;
+  if(event.type==='goal')return [name+'의 슈팅이 골망을 흔듭니다! '+(event.team===0?'멋진 마무리입니다.':'수비 간격을 다시 정비해야 합니다.'),name+'의 결정적인 한 방, 골입니다! '+(event.team===0?'기회를 놓치지 않았습니다.':'고개를 들고 다음 공격을 준비합니다.'),name+'이 골문을 열었습니다! '+(event.team===0?'벤치도 환호합니다.':'다시 집중해야 할 순간입니다.')][variant];
+  if(event.type==='shot')return [name+'의 슈팅! '+keeper+'이 공을 잡아냅니다.',name+'이 골문을 노립니다. '+keeper+'의 선방!',name+'이 슈팅을 시도하지만 '+keeper+'이 막아냅니다.'][variant];
+  return [name+'의 침투, 수비가 길목을 차단합니다.',name+'을 향한 공격 전개가 수비에 끊깁니다.',name+'이 기회를 노렸지만 수비가 먼저 대응합니다.'][variant];
+ }
+ function liveCommentary(value){
+  const people=[...value.own,...value.opponent],from=people.find(p=>p.id===value.carrierId),to=people.find(p=>p.id===value.receiverId),name=from?.name||to?.name;
+  if(!name)return value.label;
+  return value.phase==='transition'?name+' 쪽으로 공이 넘어갑니다. 수비와 공격이 빠르게 전환됩니다.':value.ownerTeam===0?name+' 중심으로 공격을 전개합니다. '+value.label+'.':name+' 쪽으로 상대가 공을 연결합니다. '+value.label+'.';
+ }
+ return {frame,commentary,liveCommentary};
 });
