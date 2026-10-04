@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
-const F=require('./dist/engine.js'),S=require('./dist/season.js'),Movement=require('./dist/movement.js');
+const F=require('./dist/engine.js'),S=require('./dist/season.js'),Movement=require('./dist/movement.js'),Opposition=require('./dist/opposition.js');
 const copy=x=>JSON.parse(JSON.stringify(x));let groups=0;
 function test(name,fn){fn();groups++;console.log('PASS '+name);}
 function harness(){
@@ -10,7 +10,7 @@ function harness(){
  Object.defineProperty(nodes.get('movement-controls'),'innerHTML',{get(){return this.markup||'';},set(value){this.markup=value;nodes.get('movement-label').textContent='';}});
  for(const id of season.match.lineup)node('player-'+id);
  nodes.get('players').querySelector=selector=>nodes.get('player-'+(/data-player="([^"]+)"/.exec(selector)?.[1]))||null;
- const context=vm.createContext({F,Movement,season,state:season.match,lastEvent:null,lastEventAt:0,view:'match',innerWidth:1000,document:{hidden:false,addEventListener:(name,fn)=>listeners.set(name,fn)},performance:{now:()=>env.time},$:id=>nodes.get(id)||null,motionEnabled:()=>env.effects&&!env.reduced,positions:()=>Movement.frame({match:context.state,motion:false}).own.map(p=>({...p,p:context.state.players[p.id]}))});
+ const context=vm.createContext({F,S,Movement,Opposition,season,state:season.match,lastEvent:null,lastEventAt:0,view:'match',innerWidth:1000,document:{hidden:false,addEventListener:(name,fn)=>listeners.set(name,fn)},performance:{now:()=>env.time},$:id=>nodes.get(id)||null,motionEnabled:()=>env.effects&&!env.reduced,positions:()=>Movement.frame({match:context.state,motion:false}).own.map(p=>({...p,p:context.state.players[p.id]}))});
  vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/movement-ui.js'),'utf8'),context,{filename:'movement-ui.js'});
  const frame=ms=>{env.time=ms;return copy(context.motionFrame(ms));},snapshot=()=>copy(context.movementSnapshot());
  frame(0);context.renderMovementControls();
@@ -54,7 +54,7 @@ test('preview stops after twelve display seconds and effects off cancels preview
 });
 test('drawMotionActors places active own players and draws eleven opposing jerseys and a ball',()=>{
  const h=harness();F.begin(h.context.state);let numbers=0,arcs=0;const noop=()=>{},canvas=new Proxy({fillText(){numbers++;},arc(){arcs++;}},{get(target,key){return key in target?target[key]:noop;},set(target,key,value){target[key]=value;return true;}});
- h.env.time=80;h.context.drawMotionActors(canvas,500,600);assert.equal(numbers,11);assert.ok(arcs>=2);
+ h.env.time=80;h.context.drawMotionActors(canvas,500,600);assert.equal(numbers,22);assert.ok(arcs>=2);
  for(const player of h.snapshot().frame.own){const style=h.nodes.get('player-'+player.id).style;assert.equal(style.left,'0px');assert.equal(style.top,'0px');assert.equal(style.transform,'translate('+500*player.x/100+'px,'+600*player.y/100+'px) translate(-50%,-50%)');assert.equal(style.marginLeft,'');assert.equal(style.marginTop,'');}
 });
 test('a different match seed resets the display clock and removes an old preview',()=>{
@@ -71,5 +71,16 @@ test('slow 900ms frames expire a real event after 2.2 seconds without aging a ne
 test('slow 900ms preview frames still stop after twelve wall-clock seconds and preserve the season',()=>{
  const h=harness(),before=copy(h.context.season);h.preview();for(let i=1;i<=13;i++)h.frame(i*900);assert.equal(h.snapshot().preview,true);
  h.frame(12600);assert.equal(h.snapshot().preview,false);assert.equal(h.snapshot().frame.phase,'static');assert.equal(h.context.movementShouldAnimate(),false);assert.deepEqual(copy(h.context.season),before);
+});
+test('moment cards wait for ball arrival and pause preserves the pending result',()=>{
+ const h=harness();F.begin(h.context.state);const event={type:'goal',team:1,minute:7};h.context.lastEvent=event;let presented=0;h.context.pendingMatchMoment={event,moment:{kind:'concede'}};h.context.presentMoment=()=>presented++;
+ h.frame(80);h.frame(780);assert.equal(presented,0);h.context.state.paused=true;h.frame(4000);assert.equal(presented,0);
+ h.context.state.paused=false;h.frame(4016);h.frame(4800);assert.equal(presented,1);assert.equal(h.context.pendingMatchMoment,null);h.frame(4880);assert.equal(presented,1);
+});
+test('live commentary survives tick rendering and only announces a goal after arrival',()=>{
+ const h=harness(),paragraph={textContent:''},minute={textContent:''};h.nodes.set('commentary',{querySelector:selector=>selector==='p'?paragraph:minute});F.begin(h.context.state);
+ h.frame(80);assert.ok(paragraph.textContent.includes('전개'));paragraph.textContent='킥오프';h.frame(160);assert.notEqual(paragraph.textContent,'킥오프');
+ h.context.lastEvent={type:'goal',team:1,minute:9};h.context.lastEventAt=240;h.frame(240);assert.ok(paragraph.textContent.includes('슈팅'));assert.ok(!paragraph.textContent.includes('골입니다'));
+ h.frame(1000);h.frame(1700);assert.ok(paragraph.textContent.includes('골망'));assert.ok(paragraph.textContent.includes(h.snapshot().frame.performerName));
 });
 console.log('Movement UI checks passed: '+groups+' groups.');

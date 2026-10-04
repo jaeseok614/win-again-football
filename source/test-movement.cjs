@@ -6,7 +6,7 @@ function active(formation='442',tactic='balanced'){const match=F.create(20260930
 function bounds(value){
  assert.equal(value.own.length,11);assert.equal(value.opponent.length,11);
  for(const p of [...value.own,...value.opponent])for(const key of ['x','y'])assert.ok(Number.isFinite(p[key])&&p[key]>=10&&p[key]<=90,JSON.stringify(p));
- for(const p of [value.ball,...value.trail])for(const key of ['x','y'])assert.ok(Number.isFinite(p[key])&&p[key]>=6&&p[key]<=94,JSON.stringify(p));
+ for(const p of [value.ball,...value.trail])for(const key of ['x','y'])assert.ok(Number.isFinite(p[key])&&p[key]>=4&&p[key]<=96,JSON.stringify(p));
  for(const team of [value.own,value.opponent])assert.equal(new Set(team.map(p=>p.id)).size,11);
 }
 test('all formations and tactics remain within pitch bounds over connected passing cycles',()=>{
@@ -41,7 +41,7 @@ test('actual goal scorers and a substituted starting goalkeeper guide real event
  const match=F.create(20260930);F.swap(match,'g1','g2');F.begin(match);
  const actualScorer=match.lineup.find(id=>match.players[id].pos==='FW'),goal={type:'goal',team:0,minute:42,scorerId:actualScorer,scorerIdentity:match.players[actualScorer].identity};
  const start=Movement.frame({match,elapsedMs:3500,event:goal,eventAgeMs:0,motion:true});assert.equal(start.carrierId,actualScorer);assert.equal(start.scorerId,actualScorer);assert.equal(start.attributed,true);
- const end=Movement.frame({match,elapsedMs:3500,event:goal,eventAgeMs:1500,motion:true});assert.equal(end.phase,'goal');assert.equal(end.ball.y,6);
+ const end=Movement.frame({match,elapsedMs:3500,event:goal,eventAgeMs:1500,motion:true});assert.equal(end.phase,'goal');assert.equal(end.ball.y,4);
  const save=Movement.frame({match,elapsedMs:3500,event:{type:'shot',team:1,minute:19},eventAgeMs:1500,motion:true});assert.equal(save.phase,'save');assert.equal(save.keeperId,'g2');assert.equal(save.carrierId,'g2');assert.equal(save.ball.y,86);
 });
 test('all actual engine event types are bounded for both teams and every animation age',()=>{
@@ -52,7 +52,7 @@ test('all actual engine event types are bounded for both teams and every animati
 });
 test('an actual stoppage-time goal still animates after the engine reaches its break',()=>{
  const match=active();match.phase='full';const event={type:'goal',team:0,minute:90,scorerId:match.lineup.find(id=>match.players[id].pos==='FW')};
- const shown=Movement.frame({match,event,eventAgeMs:1500,motion:true});assert.equal(shown.phase,'goal');assert.equal(shown.ball.y,6);
+ const shown=Movement.frame({match,event,eventAgeMs:1500,motion:true});assert.equal(shown.phase,'goal');assert.equal(shown.ball.y,4);
  const ended=Movement.frame({match,event,eventAgeMs:2200,motion:true});assert.equal(ended.phase,'static');assert.equal(ended.label,'경기 종료');
 });
 test('passing labels never invent a goal, save or shot and visible players move meaningfully',()=>{
