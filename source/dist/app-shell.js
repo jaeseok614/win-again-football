@@ -5,7 +5,7 @@ function renderAppShell(){
  menu.hidden=appSessionStarted;document.querySelector('.app').hidden=!appSessionStarted;
  document.body.classList.toggle('launch-mode',!appSessionStarted);
  const info=$('launch-campaign');
- if(info)info.textContent=saveRecovery.isBlocked()?'이전 저장 원본을 보호 중입니다. 저장 불러오기에서 확인하세요.':season.year+'시즌 · '+S.divisionInfo(season).name+' · '+(season.round+1)+'라운드'+(state?.minute?' · '+state.minute+'분에서 이어서':'');
+ if(info)info.textContent=saveRecovery.isBlocked()?'이전 저장 원본을 보호 중입니다. 저장 불러오기에서 확인하세요.':season.year+'시즌 · '+S.divisionInfo(season).name+' · '+(S.ready(season)?'시즌 종료':season.competition==='cup'?'국내컵':season.competition==='europe'?'챔피언스리그':(season.round+1)+'라운드')+(state?.minute?' · '+state.minute+'분에서 이어서':'');
  const button=$('launch-continue');if(button){button.disabled=launchBusy;button.textContent=launchBusy?'감독실 준비 중…':restoredSave.payload?'내 구단 이어서 하기':'감독 생활 시작하기';}
  const progress=$('launch-progress');if(progress)progress.hidden=!launchBusy;
  const error=$('launch-error');if(error){error.hidden=!launchError;error.textContent=launchError;}
