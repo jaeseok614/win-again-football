@@ -133,10 +133,11 @@ public final class GameSmokeTest {
         return state;
     }
     private void tapWebElement(ActivityScenario<MainActivity> scenario, String selector) throws Exception {
-        evaluate(scenario, "document.querySelector('" + selector + "').scrollIntoView({block:'center',behavior:'instant'});true");
+        String quotedSelector = JSONObject.quote(selector);
+        evaluate(scenario, "document.querySelector(" + quotedSelector + ").scrollIntoView({block:'center',behavior:'instant'});true");
         awaitWebViewFrame(scenario); awaitAppWindowFocus(scenario);
         String pointJson = evaluate(scenario,
-            "(()=>{const r=document.querySelector('" + selector + "').getBoundingClientRect();return JSON.stringify([r.x+r.width/2,r.y+r.height/2,devicePixelRatio])})()");
+            "(()=>{const r=document.querySelector(" + quotedSelector + ").getBoundingClientRect();return JSON.stringify([r.x+r.width/2,r.y+r.height/2,devicePixelRatio])})()");
         JSONArray point = new JSONArray(new JSONTokener(pointJson).nextValue().toString());
         int[] origin = new int[2]; int[] size = new int[2];
         scenario.onActivity(activity -> {
