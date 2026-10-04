@@ -1368,7 +1368,7 @@ body.launch-mode{padding:0;background:#06130f}
 
 .opposition-dismissed{opacity:.65}.opposition-dismissed td:last-child small{color:#ef8c86;font-weight:700}
 </style><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" data-app-icon>
-<meta name="win-again-inline-shell" content="v22:d7c31a5ffc1b79b5fdc032b563bb6183ca6c09995de9eda617685b4c934be000"></head>
+<meta name="win-again-inline-shell" content="v22:39ad0e8c7690da3e82fa71d1ff8f71d0b2493fbd62f78cfd178dec59c80f39ff"></head>
 <body class="launch-mode">
 <section id="launch-screen" class="launch-screen" aria-labelledby="launch-title"><div class="launch-shade"></div><div class="launch-top"><span>이번생 게임즈</span><span>FOOTBALL MANAGER</span></div><div class="launch-content"><span class="launch-kicker">YOUR NEXT CHAPTER</span><img class="launch-ball" data-app-icon width="64" height="64" alt=""><h1 id="launch-title">눈 떠보니<br>2부 리그 감독이었다!<em>이번 생엔 우승한다</em></h1><p class="launch-copy">경기는 90분.<br>당신의 이야기는 이제 시작입니다.</p><div class="launch-actions"><button id="launch-continue" type="button" class="primary">감독 생활 시작하기</button><button id="launch-import" type="button" class="secondary">저장 불러오기 · 설정</button></div><div id="launch-progress" role="status" hidden><progress aria-label="감독실 준비 중"></progress><span>감독실 준비 중…</span></div><p id="launch-error" role="alert" hidden></p><p id="launch-campaign" class="launch-campaign"></p></div><p class="launch-footer">오프라인 플레이 · 기기에 자동 저장</p></section>
 <div class="app" hidden>
@@ -3575,11 +3575,16 @@ function renderDivision(table,me){
 const recordCompetitionNames={all:'전체 대회',league:'리그',cup:'컵',europe:'챔피언스리그'};
 function recordYears(){return [season.year,...(season.statistics?.archive||[]).map(h=>h.year)].sort((a,b)=>b-a);}
 function recordLeader(players,key){return [...players].filter(p=>p[key]>0).sort((a,b)=>b[key]-a[key]||b.minutes-a.minutes||a.name.localeCompare(b.name,'ko'))[0]||null;}
+function selectSquadTab(tab){
+ if(!['health','training','records'].includes(tab))return;
+ if(squadTab!==tab){squadTab=tab;save();render();}
+ $('squad-tab-'+tab)?.focus?.({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});
+}
 function renderRecords(){
  if(typeof view!=='undefined'&&view!=='squad')return;
  $('squad-tabs').innerHTML='<div class="squad-tabs" role="tablist" aria-label="선수단 보기"><button id="squad-tab-health" role="tab" aria-controls="squad-management" aria-selected="'+(squadTab==='health')+'" data-squad-tab="health">선수 관리</button><button id="squad-tab-training" role="tab" aria-controls="individual-training" aria-selected="'+(squadTab==='training')+'" data-squad-tab="training">훈련 센터</button><button id="squad-tab-records" role="tab" aria-controls="player-records" aria-selected="'+(squadTab==='records')+'" data-squad-tab="records">시즌 기록</button></div>';
  $('squad-management').hidden=squadTab!=='health';$('individual-training').hidden=squadTab!=='training';$('player-records').hidden=squadTab!=='records';
- document.querySelectorAll('[data-squad-tab]').forEach(b=>b.onclick=()=>{squadTab=b.dataset.squadTab;save();render();window.scrollTo({top:0,behavior:'instant'});});
+ document.querySelectorAll('[data-squad-tab]').forEach(b=>{b.tabIndex=b.dataset.squadTab===squadTab?0:-1;b.onclick=()=>selectSquadTab(b.dataset.squadTab);b.onkeydown=event=>{if(event.altKey||event.ctrlKey||event.metaKey)return;const tabs=['health','training','records'],index=tabs.indexOf(b.dataset.squadTab),next=event.key==='ArrowRight'?tabs[(index+1)%tabs.length]:event.key==='ArrowLeft'?tabs[(index+tabs.length-1)%tabs.length]:event.key==='Home'?tabs[0]:event.key==='End'?tabs.at(-1):null;if(next){event.preventDefault();selectSquadTab(next);}};});
  if(squadTab!=='records')return;
  const years=recordYears();if(!years.includes(recordYear))recordYear=season.year;
  const summary=ST.summary(season,recordFilter,recordYear),tier=S.divisionInfo(S.leagueForYear(season,recordYear).division),current=recordYear===season.year,currentIds=new Set(Object.values(season.squad).map(p=>p.identity));
@@ -3589,8 +3594,8 @@ function renderRecords(){
  const note=summary.partial?'업데이트 이후 확정한 경기부터 집계합니다. 이전에 진행한 경기의 득점은 선수 미지정으로 남을 수 있습니다.':'경기 결과를 확정하면 기록합니다. 승부차기 득점은 시즌 득점·도움에 포함하지 않습니다.';
  $('player-records').innerHTML=`<button type="button" id="open-career-records" class="secondary">모든 시즌 통산 기록 보기</button><div class="records-hero"><div><div class="eyebrow">PLAYER RECORDS / ${recordYear} SEASON / DIVISION ${tier.division}</div><h1>선수의 이름으로 남는 시즌.</h1><p>${tier.name} · ${recordCompetitionNames[recordFilter]} ${summary.matches}경기 집계<br>누가 골을 만들고, 누가 긴 시즌을 지탱했는지 살펴보세요.</p></div><div class="records-total"><span>우리 구단 득점</span><strong>${summary.goals}<small>골</small></strong><span>${summary.unassignedGoals?'선수 미지정 '+summary.unassignedGoals+'골':'출전 기록 '+summary.minutes.toLocaleString('ko-KR')+'분'}</span></div></div><div class="record-controls"><div class="record-filters" role="group" aria-label="기록 대회 선택">${Object.entries(recordCompetitionNames).map(([key,name])=>'<button data-record-filter="'+key+'" aria-pressed="'+(recordFilter===key)+'">'+name+'</button>').join('')}</div><label>시즌 <select id="record-year">${years.map(year=>'<option value="'+year+'" '+(year===recordYear?'selected':'')+'>'+year+'시즌'+(year===season.year?' · 현재 시즌':'')+'</option>').join('')}</select></label><label>정렬 <select id="record-sort">${[['goals','득점순'],['assists','도움순'],['minutes','출전 시간순'],['cleanSheets','무실점순']].map(([key,name])=>'<option value="'+key+'" '+(recordSort===key?'selected':'')+'>'+name+'</option>').join('')}</select></label></div><div class="record-leaders">${leaderCard('득점 선두',goalLeader,'goals','골','첫 골을 기다립니다.')}${leaderCard('도움 선두',assistLeader,'assists','도움','첫 도움을 기다립니다.')}${leaderCard('가장 오래 뛴 선수',minuteLeader,'minutes','분','첫 출전을 기다립니다.')}${leaderCard('골키퍼 무실점',keeperLeader,'cleanSheets','경기','첫 무실점을 기다립니다.')}</div><div class="panel-heading record-table-heading"><h2>${recordYear}시즌 선수 기록</h2><span>${summary.matches}경기 · ${current?'현재 선수와 이적 선수':'시즌 당시 출전 선수'}</span></div><div class="table-wrap"><table class="records-table"><thead><tr><th>선수</th><th>역할</th><th>출전</th><th>선발</th><th>득점</th><th>도움</th><th>출전 시간</th><th>무실점</th></tr></thead><tbody>${sorted.map(p=>`<tr class="${current&&!currentIds.has(p.identity)?'record-departed':''}"><th scope="row">${playerUiText(p.name)}${current&&!currentIds.has(p.identity)?'<small>이적한 선수 · 기록 보존</small>':F.identityProfile(p.identity)?.academy?'<small>유소년 센터 출신</small>':''}</th><td>${p.pos}</td><td>${p.apps}</td><td>${p.starts}</td><td class="${recordSort==='goals'?'record-focus':''}">${p.goals}</td><td class="${recordSort==='assists'?'record-focus':''}">${p.assists}</td><td class="${recordSort==='minutes'?'record-focus':''}">${p.minutes.toLocaleString('ko-KR')}<small>분</small></td><td class="${recordSort==='cleanSheets'?'record-focus':''}">${p.pos==='GK'?p.cleanSheets:'—'}</td></tr>`).join('')}</tbody></table></div>${!summary.matches?'<p class="records-empty">'+(current&&season.match?'선택한 대회의 경기 결과를 확정하면 첫 기록이 쌓입니다.':'이 시즌에는 선택한 대회의 집계 기록이 없습니다.')+'</p>':''}<p class="records-note">${note}<br>선발은 킥오프 때의 명단, 출전 시간은 실제 뛴 분을 셉니다. 무실점은 골키퍼가 90분을 뛰고 실점하지 않은 경기입니다.</p><div id="record-last-match"></div>`;
  $('open-career-records').onclick=()=>openCareerRecords();
- document.querySelectorAll('[data-record-filter]').forEach(b=>b.onclick=()=>{recordFilter=b.dataset.recordFilter;save();render();});
- $('record-year').onchange=e=>{recordYear=Number(e.target.value);save();render();};$('record-sort').onchange=e=>{recordSort=e.target.value;save();render();};
+ document.querySelectorAll('[data-record-filter]').forEach(b=>b.onclick=()=>{recordFilter=b.dataset.recordFilter;save();render();document.querySelector('[data-record-filter="'+recordFilter+'"]')?.focus?.({preventScroll:true});});
+ $('record-year').onchange=e=>{recordYear=Number(e.target.value);save();render();$('record-year')?.focus?.({preventScroll:true});};$('record-sort').onchange=e=>{recordSort=e.target.value;save();render();$('record-sort')?.focus?.({preventScroll:true});};
  if(current)$('record-last-match').innerHTML=matchReviewMarkup(MatchReview.read(season),{compact:true});
 }
 function matchContributionsMarkup(){
@@ -4239,6 +4244,7 @@ function storeImportedCampaign(next){
 function applyCampaignImport(){
  if(!pendingImport||practiceSession){if(practiceSession){portabilityError='전술 연습을 마친 뒤 구단을 불러오세요.';updateImportPreview();}return false;}
  let next;try{next=CampaignFile.read(pendingImportText).payload;storeImportedCampaign(next);}catch(error){portabilityError='불러오지 못했어요. 현재 구단은 유지됩니다. '+error.message;updateImportPreview();return false;}
+ if(typeof launchHasCampaign!=='undefined')launchHasCampaign=true;
  season=next.season;state=season.match;view=next.view;playbackPrefs=MatchFlow.normalize(next.playback);mediaPrefs={...next.media};individualTrainingSlot=next.individual.slot;individualTrainingFocus=next.individual.focus;individualTrainingNote='';individualTrainingNoteContext=null;trainingCentreFilters={position:'all',query:'',sort:'recommended'};squadTab=next.records.tab;recordFilter=next.records.filter;recordSort=next.records.sort;recordYear=next.records.year;tacticalRoles={...(next.lineupPlan?.roles||{})};customPositions={...(next.lineupPlan?.positions||{})};selected=null;lastEvent=null;lastEventAt=0;rotationNote='';canSave=true;
  matchClock.reset();clearMatchFeedback();cancelMovementPreview();movementElapsed=0;movementStamp=performance.now();movementSeed=null;movementEvent=null;movementEventAge=Infinity;lastMotionFrame=null;if(typeof collapseTacticsBoard==='function')collapseTacticsBoard();else tacticsBoardOpen=false;matchdayTab='live';if(typeof closePlayerDetails==='function')closePlayerDetails();pendingImport=null;pendingImportText='';closePortability();render();notify('구단을 불러왔습니다. '+(!state?'시즌 종료 기록에서 이어갑니다.':F.running(state)?'경기는 저장한 순간에서 일시 정지되어 있습니다.':state.phase==='full'?'저장한 경기 결과를 확인해 주세요.':'저장한 경기 준비에서 이어갑니다.'));return true;
 }
@@ -4663,14 +4669,14 @@ function renderCareerRecords(){
 }
 function openCareerRecords(identity=null){const dialog=$('career-record-dialog');if(!dialog)return;pauseForPlanning();careerRecordIdentity=identity;careerRecordExpanded=false;careerRecordReturn=document.activeElement;if(!dialog.open)dialog.showModal();renderCareerRecords();dialog.scrollTop=0;$('close-career-record').focus({preventScroll:true});}
 </script><script>// The title menu is presentation state only. Keep it out of campaign exports.
-var appSessionStarted=false,launchBusy=false,launchError='';
+var appSessionStarted=false,launchBusy=false,launchError='',launchHasCampaign=false;
 function renderAppShell(){
  const menu=$('launch-screen');if(!menu)return;
  menu.hidden=appSessionStarted;document.querySelector('.app').hidden=!appSessionStarted;
  document.body.classList.toggle('launch-mode',!appSessionStarted);
  const info=$('launch-campaign');
  if(info)info.textContent=saveRecovery.isBlocked()?'이전 저장 원본을 보호 중입니다. 저장 불러오기에서 확인하세요.':season.year+'시즌 · '+S.divisionInfo(season).name+' · '+(S.ready(season)?'시즌 종료':season.competition==='cup'?'국내컵':season.competition==='europe'?'챔피언스리그':(season.round+1)+'라운드')+(state?.minute?' · '+state.minute+'분에서 이어서':'');
- const button=$('launch-continue');if(button){button.disabled=launchBusy;button.textContent=launchBusy?'감독실 준비 중…':restoredSave.payload?'내 구단 이어서 하기':'감독 생활 시작하기';}
+ const button=$('launch-continue');if(button){button.disabled=launchBusy;button.textContent=launchBusy?'감독실 준비 중…':restoredSave.payload||launchHasCampaign?'내 구단 이어서 하기':'감독 생활 시작하기';}
  const progress=$('launch-progress');if(progress)progress.hidden=!launchBusy;
  const error=$('launch-error');if(error){error.hidden=!launchError;error.textContent=launchError;}
 }
@@ -4678,7 +4684,7 @@ function enterManagerHome(){
  if(launchBusy||appSessionStarted)return;launchBusy=true;launchError='';renderAppShell();
  // Let the loading state paint before rendering the management screens.
  requestAnimationFrame(()=>setTimeout(()=>{
-  try{appSessionStarted=true;view='club';pauseForPlanning();save();render();window.scrollTo({top:0,behavior:'instant'});$('mobile-match-action')?.focus({preventScroll:true});}
+  try{appSessionStarted=true;view='club';pauseForPlanning();save();render();launchHasCampaign=true;window.scrollTo({top:0,behavior:'instant'});$('mobile-match-action')?.focus({preventScroll:true});}
   catch(error){appSessionStarted=false;launchError='감독실을 열지 못했습니다. '+error.message+' 다시 시도해 주세요.';}
   finally{launchBusy=false;renderAppShell();}
  },0));
