@@ -78,7 +78,7 @@
   // a generic forward animation and leave attributed=false for UI consumers.
   const named=event.team===0?team.find(p=>match.players?.[p.id]?.name&&String(event.text||'').includes(match.players[p.id].name)):null;
   const shooter=exact||named||role(team,'FW',finite(event.minute)%2),keeper=role(defenders,'GK');
-  const progress=smooth((age-700)/750),blend=smooth((age-1900)/300),targetX=event.type==='goal'?46+(finite(event.minute)%3)*4:clamp(keeper.x,42,58);
+  const progress=smooth((age-700)/750),blend=smooth((age-1900)/300),nearPost=shooter.x<45?43:shooter.x>55?57:50,targetX=event.type==='goal'?clamp(nearPost+(finite(event.minute)%3-1)*2,42,58):nearPost;
   const goalY=event.team===0?4:96,targetY=event.type==='goal'?goalY:event.team===0?14:86;
   const start={x:shooter.x,y:clamp(shooter.y+(event.team===0?-4:4),10,90)},end={x:targetX,y:targetY};
   const visibleShooter=(event.team===0?result.own:result.opponent).find(p=>p.id===shooter.id);if(visibleShooter)Object.assign(visibleShooter,mixPoint(shooter,start,smooth(age/700)));
@@ -92,7 +92,7 @@
    result.carrierId=progress<.07?shooter.id:event.type==='shot'&&progress>.97?keeper.id:null;result.receiverId=event.type==='shot'?keeper.id:null;
    result.phase=age<1450?'shot':event.type==='goal'?'goal':event.team===1?'save':'saved';
    result.label=result.phase==='shot'?'슈팅':result.phase==='goal'?'골!':result.phase==='save'?'선방!':'상대 선방';
-   if(keeper.id){const visibleKeeper=(event.team===0?result.opponent:result.own).find(p=>p.id===keeper.id);visibleKeeper.x=clamp(lerp(keeper.x,targetX,smooth((age-700)/650)),40,60);visibleKeeper.y=clamp(lerp(keeper.y,targetY,smooth((age-700)/650)),event.team===0?10:82,event.team===0?18:90);}
+   if(keeper.id){const visibleKeeper=(event.team===0?result.opponent:result.own).find(p=>p.id===keeper.id);const preparedX=lerp(keeper.x,nearPost,smooth(age/700)*.6);visibleKeeper.x=clamp(lerp(preparedX,targetX,smooth((age-700)/650)),40,60);visibleKeeper.y=clamp(lerp(keeper.y,targetY,smooth((age-700)/650)),event.team===0?10:82,event.team===0?18:90);}
   }
   if(age<700){
    const origin=inputOrigin(frozen),lost=frozen.ownerTeam!==event.team,recoverer=lost?team.filter(p=>p.pos!=='GK'&&p.id!==shooter.id).sort((a,b)=>Math.hypot(a.x-origin.x,a.y-origin.y)-Math.hypot(b.x-origin.x,b.y-origin.y))[0]||role(team,'DEF',1):(team.find(p=>p.id===frozen.carrierId)||role(team,'MID',1)),win={x:origin.x,y:origin.y},move=smooth(age/350),pass=smooth((age-350)/350);
