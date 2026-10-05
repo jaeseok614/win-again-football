@@ -5,9 +5,9 @@ let groups=0;
 function test(name,fn){fn();groups++;console.log('PASS '+name);}
 const ratings=club=>({attack:club.attack,defense:club.defense,middle:club.middle,speed:club.speed,energy:94});
 
-test('twenty-two clubs have unique presentation names without changing their raw identities or ratings',()=>{
+test('league and European clubs have unique presentation names without changing their raw identities or ratings',()=>{
  const rawClubs=[...S.clubs,...U.clubs],names=[];
- assert.equal(rawClubs.length,22);
+ assert.equal(rawClubs.length,47);
  for(const raw of rawClubs){
   const before=JSON.stringify(raw),presented=S.presentClub(raw);
   assert.equal(S.rawClub(raw.id),raw);
@@ -19,7 +19,7 @@ test('twenty-two clubs have unique presentation names without changing their raw
   assert.deepEqual(O.profile(presented),ratings(raw));
   names.push(presented.name);
  }
- assert.equal(new Set(names).size,22);
+ assert.equal(new Set(names).size,47);
  assert.equal(S.rawClub('norhaven').name,'노르헤이븐 시티');
  assert.equal(S.club('norhaven').name,'몬치스타 시티');
  assert.equal(S.leagueClubs({league:{division:2}}).find(club=>club.id==='norhaven').name,'몬치스타 시티');

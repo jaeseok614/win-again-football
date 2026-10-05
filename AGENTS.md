@@ -77,7 +77,7 @@ with `node source/build-android.cjs` and android/gradlew. Keep local.properties,
 signing keys, generated assets and build outputs out of Git. Release bundles are
 unsigned until the owner creates a Play account and provides an upload key.
 
-The public game title is now "눈 떠보니 2부 리그 감독이었다! 이번 생엔 우승한다"
+The public game title is now "눈 떠보니 5부 리그 감독이었다! 이번 생엔 우승한다"
 (29 characters). The owner wants a long anime/light-novel-style title and football
 imagery in the app icon and startup loading screen. Keep the title readable on
 small screens; keep win-again protocol identifiers, save keys and package IDs
@@ -117,3 +117,10 @@ with wrapping, never ellipsis, plus overall skill and live energy. Support links
 show a derived coach chemistry score and color with named component explanations.
 Use actual passing, deterministic teamwork, current role suitability and energy;
 keep this analysis separate from engine bonuses or invented shared-match records.
+Owner refinement (2026-10-05, career length and finances): fresh Tottunham UI
+careers start in division five and pursue four promotions through a 40-club,
+five-division pyramid. Each tier has eight clubs and 14 home/away matches; top
+two promote and seventh/eighth relegate where a neighboring tier exists. Keep
+league, cup, and economy receipts tier-aware. New division-five scouting costs
+£8,000 against the £160,000 opening balance. Preserve two-tier and legacy save
+rules and receipts. Details: docs/FIVE_TIER_PYRAMID_AND_FINANCE.md.

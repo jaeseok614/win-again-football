@@ -14,7 +14,7 @@ function renderRecords(){
  document.querySelectorAll('[data-squad-tab]').forEach(b=>{b.tabIndex=b.dataset.squadTab===squadTab?0:-1;b.onclick=()=>selectSquadTab(b.dataset.squadTab);b.onkeydown=event=>{if(event.altKey||event.ctrlKey||event.metaKey)return;const tabs=['health','training','records'],index=tabs.indexOf(b.dataset.squadTab),next=event.key==='ArrowRight'?tabs[(index+1)%tabs.length]:event.key==='ArrowLeft'?tabs[(index+tabs.length-1)%tabs.length]:event.key==='Home'?tabs[0]:event.key==='End'?tabs.at(-1):null;if(next){event.preventDefault();selectSquadTab(next);}};});
  if(squadTab!=='records')return;
  const years=recordYears();if(!years.includes(recordYear))recordYear=season.year;
- const summary=ST.summary(season,recordFilter,recordYear),tier=S.divisionInfo(S.leagueForYear(season,recordYear).division),current=recordYear===season.year,currentIds=new Set(Object.values(season.squad).map(p=>p.identity));
+ const summary=ST.summary(season,recordFilter,recordYear),tier=S.divisionInfo(S.leagueForYear(season,recordYear)),current=recordYear===season.year,currentIds=new Set(Object.values(season.squad).map(p=>p.identity));
  const goalLeader=recordLeader(summary.players,'goals'),assistLeader=recordLeader(summary.players,'assists'),minuteLeader=recordLeader(summary.players,'minutes'),keeperLeader=recordLeader(summary.players.filter(p=>p.pos==='GK'),'cleanSheets');
  const sorted=[...summary.players].sort((a,b)=>b[recordSort]-a[recordSort]||b.goals-a.goals||b.assists-a.assists||b.minutes-a.minutes||a.name.localeCompare(b.name,'ko'));
  const leaderCard=(label,p,key,unit,empty)=>'<article class="record-leader"><span>'+label+'</span><strong>'+(p?playerUiText(p.name):empty)+'</strong><div><b>'+(p?p[key]:0)+'</b><small>'+unit+'</small></div></article>';

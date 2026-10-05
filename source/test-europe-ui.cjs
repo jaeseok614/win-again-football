@@ -26,7 +26,7 @@ function harness(season,{view='cup'}={}){
 }
 
 test('inactive and legacy campaigns explain qualification without changing existing matches or finances',()=>{
- const fresh=S.create(7201),before=JSON.stringify(fresh),h=harness(fresh);h.render();assert.ok(h.text.includes('1부 1~2위'));assert.ok(h.text.includes('2부 승격'));assert.ok(h.text.includes('다음 시즌'));assert.equal(h.panel.querySelectorAll('.europe-table').length,0);assert.equal(h.calls.standings,0);assert.equal(h.calls.fixtures,0);assert.equal(JSON.stringify(fresh),before);
+ const fresh=S.create(7201,{startingClub:true}),before=JSON.stringify(fresh),h=harness(fresh);h.render();assert.ok(h.text.includes('1부 1~2위'));assert.ok(h.text.includes('5부에서 출발'));assert.ok(h.text.includes('다음 시즌'));assert.equal(h.panel.querySelectorAll('.europe-table').length,0);assert.equal(h.calls.standings,0);assert.equal(h.calls.fixtures,0);assert.equal(JSON.stringify(fresh),before);
  const raw=qualified();delete raw.europe;delete raw.health.originEuropeGames;const legacy=S.restore(raw),old=JSON.stringify(legacy),l=harness(legacy);l.render();assert.ok(l.text.includes('기존 시즌은 그대로'));assert.ok(l.text.includes('현재 일정과 경기 상태를 유지'));assert.equal(l.panel.querySelectorAll('.europe-table').length,0);assert.equal(JSON.stringify(legacy),old);
 });
 test('active European preparation shows the real foreign opponent and routes to the existing match',()=>{

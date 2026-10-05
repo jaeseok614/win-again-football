@@ -46,7 +46,7 @@
   if(scouts.length!==c.reports.length||new Set(c.reports.map(r=>r?.cycle)).size!==c.reports.length)fail();
   for(const report of c.reports){
    if(!report||![1,2].includes(report.cycle)||!Number.isInteger(report.round)||report.round<c.originRound+1||report.round>Math.min(14,s.round+1)||Math.floor((report.round-1)/7)+1!==report.cycle||!positions.includes(report.pos)||!Array.isArray(report.candidates)||report.candidates.length!==3||JSON.stringify(report.candidates)!==JSON.stringify(candidates(s,report.cycle,report.pos)))fail();
-   const entry=scouts.find(e=>e.id==='scout-'+s.year+'-'+report.cycle);if(!entry||entry.round!==report.round||entry.pos!==report.pos||entry.cycle!==report.cycle||entry.amount!==-12000)fail();
+   const entry=scouts.find(e=>e.id==='scout-'+s.year+'-'+report.cycle);if(!entry||entry.round!==report.round||entry.pos!==report.pos||entry.cycle!==report.cycle||entry.amount!==-(E.scoutCost?.(s,report.year)||12000))fail();
   }
   const identities=new Set(Object.values(s.squad).map(p=>p.identity));for(const e of entries)if(e.type==='transfer'){identities.add(e.incoming);identities.add(e.outgoing);}
   const baselineIds=Object.keys(c.baselines),minuteIds=Object.keys(c.minutes);if(baselineIds.length!==identities.size||minuteIds.length!==identities.size||baselineIds.some(id=>!identities.has(id))||minuteIds.some(id=>!identities.has(id)))fail();

@@ -8,7 +8,7 @@ function plainSettle(s){finish(s.match);return S.settle(s);}
 function canonical(value){if(Array.isArray(value))return value.map(canonical);if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])]));return value;}
 const digest=value=>crypto.createHash('sha256').update(JSON.stringify(canonical(value))).digest('hex');
 // Project optional migration metadata out of the shipped campaign golden only.
-function shippedCampaignFields(value){const out=copy(value);delete out.staff;delete out.europe;delete out.clubLife;for(const row of out.history||[])delete row.europeChampion;return out;}
+function shippedCampaignFields(value){const out=copy(value);out.version=8;delete out.staff;delete out.europe;delete out.clubLife;for(const row of out.history||[])delete row.europeChampion;return out;}
 function replacement(m,pos,protectedId){const outgoing=m.lineup.find(id=>m.players[id].pos===pos&&id!==protectedId),incoming=Object.keys(m.players).find(id=>m.players[id].pos===pos&&!m.lineup.includes(id)&&!m.out.includes(id)&&F.isAvailable(m.players[id]));return outgoing&&incoming?{outgoing,incoming}:null;}
 function possible(m,protectedId){return ['FW','MID','GK'].every(pos=>replacement(m,pos,protectedId));}
 function assertCoverage(m){

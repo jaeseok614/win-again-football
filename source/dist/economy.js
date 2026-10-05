@@ -7,16 +7,18 @@
  const europeRates=Object.freeze({home:26000,away:9000,win:20000,draw:8000,bonuses:Object.freeze([0,0,0,0,0,0,60000,150000])});
  const europeModule=()=>root.Europe||(typeof require==='function'?require('./europe.js'):null);
  function leagueForYear(s,year=s.year){return root.Season?.leagueForYear?root.Season.leagueForYear(s,year):year===s.year&&s.league?s.league:s.history?.find(h=>h.year===year)||{division:2,rules:'legacy'};}
- function rates(s,year=s.year){const upper=leagueForYear(s,year).division===1;return upper?{gateHome:40000,gateAway:18000,sponsor:12000,winBonus:5000,drawBonus:2000,cupHome:28000,cupAway:12000,cupBonuses:[24000,44000,100000]}:{gateHome:25000,gateAway:10000,sponsor:7500,winBonus:2500,drawBonus:1000,cupHome:18000,cupAway:8000,cupBonuses:[12000,22000,50000]};}
+ const fiveTierRates={5:{gateHome:24000,gateAway:10000,sponsor:8000,winBonus:2500,drawBonus:1000,cupHome:18000,cupAway:8000,cupBonuses:[10000,20000,40000]},4:{gateHome:28000,gateAway:12000,sponsor:9000,winBonus:3000,drawBonus:1250,cupHome:20000,cupAway:9000,cupBonuses:[12000,24000,48000]},3:{gateHome:33000,gateAway:14000,sponsor:10500,winBonus:3500,drawBonus:1500,cupHome:23000,cupAway:10000,cupBonuses:[15000,30000,60000]},2:{gateHome:39000,gateAway:17000,sponsor:12500,winBonus:4250,drawBonus:1750,cupHome:27000,cupAway:12000,cupBonuses:[20000,38000,80000]},1:{gateHome:46000,gateAway:21000,sponsor:15000,winBonus:5500,drawBonus:2250,cupHome:32000,cupAway:14000,cupBonuses:[28000,52000,115000]}};
+ function rates(s,year=s.year){const league=leagueForYear(s,year);if(league.rules==='five-tier')return {...fiveTierRates[league.division],cupBonuses:[...fiveTierRates[league.division].cupBonuses]};const upper=league.division===1;return upper?{gateHome:40000,gateAway:18000,sponsor:12000,winBonus:5000,drawBonus:2000,cupHome:28000,cupAway:12000,cupBonuses:[24000,44000,100000]}:{gateHome:25000,gateAway:10000,sponsor:7500,winBonus:2500,drawBonus:1000,cupHome:18000,cupAway:8000,cupBonuses:[12000,22000,50000]};}
  function target(s,year=s.year){const league=leagueForYear(s,year);return league.rules==='legacy'?(year===1?6:year===2?4:1):league.division===1?6:2;}
- function outcomeFor(s,rank,year=s.year){const league=leagueForYear(s,year),wanted=target(s,year),achieved=rank<=wanted;let bonus=0;if(achieved)bonus=league.rules==='legacy'?(rank===1?100000:rank<=4?60000:30000):league.division===1?(rank===1?180000:rank<=3?90000:50000):(rank===1?100000:60000);return {target:wanted,rank,achieved,bonus};}
+ function outcomeFor(s,rank,year=s.year){const league=leagueForYear(s,year),wanted=target(s,year),achieved=rank<=wanted;let bonus=0;if(achieved){if(league.rules==='legacy')bonus=rank===1?100000:rank<=4?60000:30000;else if(league.rules==='five-tier')bonus=league.division===1?(rank===1?180000:rank<=3?90000:50000):({5:rank===1?80000:50000,4:rank===1?100000:65000,3:rank===1?120000:75000,2:rank===1?150000:90000}[league.division]);else bonus=league.division===1?(rank===1?180000:rank<=3?90000:50000):(rank===1?100000:60000);}return {target:wanted,rank,achieved,bonus};}
+ function scoutCost(s,year=s.year){return leagueForYear(s,year).rules==='five-tier'?8000:12000;}
  function clubIdsForYear(s,year=s.year){const league=leagueForYear(s,year);return root.Season?.leagueClubs?root.Season.leagueClubs({league}).map(c=>c.id):originalClubIds;}
  const marketPerson=id=>F.market.find(p=>p.identity===id);
  function youthIds(seed,year,cycle,pos){return typeof F.youthCandidates==='function'?F.youthCandidates(seed,year,cycle,pos).map(p=>typeof p==='string'?p:p.identity):[];}
  function offeredPerson(s,identity){
   const market=marketPerson(identity);if(market)return market;
   const person=F.identityProfile(identity);if(!person?.academy||person.academySeed!==s.seed||person.academyYear!==s.year)return null;
-  const report=s.career?.reports?.find(r=>r.cycle===person.academyCycle&&r.pos===person.pos&&r.candidates?.includes(identity)),paid=s.finance.ledger.some(e=>e.type==='scout'&&e.year===s.year&&e.cycle===person.academyCycle&&e.pos===person.pos&&e.amount===-12000);
+  const report=s.career?.reports?.find(r=>r.cycle===person.academyCycle&&r.pos===person.pos&&r.candidates?.includes(identity)),paid=s.finance.ledger.some(e=>e.type==='scout'&&e.year===s.year&&e.cycle===person.academyCycle&&e.pos===person.pos&&e.amount===-scoutCost(s,e.year));
   return report&&paid&&youthIds(s.seed,s.year,person.academyCycle,person.pos).includes(identity)?person:null;
  }
  function initialize(s){s.finance={opening:160000,balance:160000,origin:{year:s.year,round:s.round},ledger:[],marketUsed:[],transferWeek:null,outcome:null};return s;}
@@ -28,8 +30,8 @@
   if(s.competition!=='league'||!s.match||s.match.phase!=='prep'||s.match.minute!==0||s.round>=14)throw Error('유소년 탐색은 리그 경기를 시작하기 전에 할 수 있어요.');
   if(!positions.includes(pos)||cycle!==Math.floor(s.round/7)+1)throw Error('이번 탐색 기간과 포지션을 선택하세요.');
   if(s.finance.ledger.some(e=>e.id==='scout-'+s.year+'-'+cycle)||s.career?.reports?.some(r=>r.cycle===cycle))throw Error('이번 기간의 유소년 보고서를 이미 받았어요.');
-  if(!money(s.finance.balance)||s.finance.balance<12000)throw Error('탐색 비용을 지불할 구단 자금이 부족합니다.');
-  const entry={id:'scout-'+s.year+'-'+cycle,type:'scout',year:s.year,round:s.round+1,cycle,pos,amount:-12000};s.finance.balance-=12000;s.finance.ledger.push(entry);return entry;
+  const cost=scoutCost(s);if(!money(s.finance.balance)||s.finance.balance<cost)throw Error('탐색 비용을 지불할 구단 자금이 부족합니다.');
+  const entry={id:'scout-'+s.year+'-'+cycle,type:'scout',year:s.year,round:s.round+1,cycle,pos,amount:-cost};s.finance.balance-=cost;s.finance.ledger.push(entry);return entry;
  }
  function awardBoard(s,task,progress){
   const rule=boardTasks[task];if(!rule||!Number.isInteger(s.round)||s.round<1||s.round>14||!Number.isSafeInteger(progress)||progress<rule.threshold||progress>100000000)throw Error('완료한 구단 과제의 보상만 받을 수 있어요.');
@@ -64,7 +66,7 @@
    if(!money(e.amount)||!Number.isInteger(e.year)||e.year<f.origin.year||e.year>s.year||!Number.isInteger(e.round)||e.round<1||e.round>14||e.year===f.origin.year&&e.round<=f.origin.round&&e.type!=='goal'&&!(e.round===f.origin.round&&['cup','europe','board'].includes(e.type)))fail();
    const stamp=e.year*100+e.round*4+({'owner-investment':0,scout:0,transfer:0,'staff-hire':0,'staff-renew':0,'staff-release':0,match:1,board:2,cup:2,europe:2,goal:2,'staff-wages':2}[e.type]??999);if(stamp<order)fail();order=stamp;
    if(e.type==='scout'){
-    if(e.id!=='scout-'+e.year+'-'+e.cycle||![1,2].includes(e.cycle)||Math.floor((e.round-1)/7)+1!==e.cycle||!positions.includes(e.pos)||e.amount!==-12000||balance<12000||scouts[e.year+'-'+e.cycle]||e.year===s.year&&e.round>s.round+1)fail();scouts[e.year+'-'+e.cycle]=e;
+    const cost=scoutCost(s,e.year);if(e.id!=='scout-'+e.year+'-'+e.cycle||![1,2].includes(e.cycle)||Math.floor((e.round-1)/7)+1!==e.cycle||!positions.includes(e.pos)||e.amount!==-cost||balance<cost||scouts[e.year+'-'+e.cycle]||e.year===s.year&&e.round>s.round+1)fail();scouts[e.year+'-'+e.cycle]=e;
    }else if(e.type==='transfer'){
     const incoming=F.identityProfile(e.incoming),outgoing=F.identityProfile(e.outgoing),slot=F.roster.find(p=>p.id===e.slot);
     if(e.id!=='transfer-'+e.year+'-'+e.round||!incoming||!outgoing||!slot||incoming.pos!==slot.pos||outgoing.pos!==slot.pos||contracts[e.slot]!==e.outgoing||Object.values(contracts).includes(e.incoming)||usedByYear[e.year]?.includes(e.incoming)||e.fee!==incoming.fee||e.commission!==5000||!Number.isInteger(e.outgoingPrimary)||e.outgoingPrimary<outgoing[F.roleKey(outgoing)]||e.outgoingPrimary>99)fail();
@@ -101,5 +103,5 @@
   const used=usedByYear[s.year]||[];if(used.length!==f.marketUsed.length||used.some(id=>!f.marketUsed.includes(id)))fail();
   const thisWeek=f.ledger.some(e=>e.type==='transfer'&&e.year===s.year&&e.round===s.round+1);if(f.transferWeek!==(thisWeek?s.year+'-'+s.round:null))fail();const expected=s.round===14?goal(s,table):null;if(JSON.stringify(f.outcome)!==JSON.stringify(expected))fail();return s;
  }
- const api={initialize,wages,resale,quote,recruit,payScout,awardBoard,rates,europeRates,target,applyRound,applyCup,applyEurope,goal,finishSeason,nextYear,validate};root.Economy=api;if(typeof module!=='undefined')module.exports=api;
+ const api={initialize,wages,resale,quote,recruit,payScout,scoutCost,awardBoard,rates,europeRates,target,applyRound,applyCup,applyEurope,goal,finishSeason,nextYear,validate};root.Economy=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

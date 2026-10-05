@@ -136,6 +136,9 @@ button:disabled { opacity: .52; color: #a4adb9; }
 .division-step small { font-size: 10px; }
 .division-step.active { border-color: #5d3340; background: #25191f; color: #e9e9ef; }
 .division-link { color: #6b7a8f; font-size: 23px; }
+.division-route.five-tier-route { display: flex; align-items: stretch; gap: 7px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; }
+.five-tier-route .division-step { flex: 1 0 138px; }
+.five-tier-route .division-link { flex: 0 0 14px; }
 .division-status { padding: 15px 17px; align-items: start; gap: 16px; }
 .division-status .eyebrow { font-size: 8px; }
 .division-status h2 { font-size: 17px; margin: 5px 0 7px; letter-spacing: -.5px; }
@@ -476,6 +479,10 @@ footer { margin-top: 24px; padding-top: 13px; color: #7f8a99; font-size: 10px; }
   .division-step { padding: 10px; }
   .division-step strong { font-size: 14px; }
   .division-step small { font-size: 10px; }
+  .division-route.five-tier-route { display: flex; gap: 5px; padding: 11px; }
+  .five-tier-route .division-step { flex: 1 0 120px; padding: 9px; }
+  .five-tier-route .division-step strong { font-size: 11px; }
+  .five-tier-route .division-link { flex-basis: 11px; font-size: 18px; }
   .division-status { padding: 14px; }
   .division-status h2 { font-size: 18px; }
   .division-recap,.division-footnote,.division-legacy { margin-inline: 14px; font-size: 9px; }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">눈 떠보니 2부 리그 감독이었다! 이번 생엔 우승한다</string>
-    <string name="loading_title">눈 떠보니 2부 리그 감독이었다!\n이번 생엔 우승한다</string>
+    <string name="app_name">눈 떠보니 5부 리그 감독이었다! 이번 생엔 우승한다</string>
+    <string name="loading_title">눈 떠보니 5부 리그 감독이었다!\n이번 생엔 우승한다</string>
     <string name="loading_subtitle">나만의 구단으로 다시 쓰는 우승 이야기</string>
     <string name="retry">다시 시도</string>
     <string name="loading_progress">게임을 불러오는 중… %1$d%%</string>

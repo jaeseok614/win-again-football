@@ -34,7 +34,7 @@
  }
  function normalize(raw){
   if(!plain(raw)||!plain(raw.season))throw Error('구단 시즌 정보가 없는 파일이에요.');
-  if(![2,3,4,5,6,7,8].includes(raw.season.version))throw Error('현재 게임에서 지원하지 않는 시즌 버전이에요.');
+  if(![2,3,4,5,6,7,8,9].includes(raw.season.version))throw Error('현재 게임에서 지원하지 않는 시즌 버전이에요.');
   let season;try{season=S.restore(raw.season);}catch(error){throw Error('구단 데이터가 손상되어 불러올 수 없어요. '+(error?.message||'시즌 상태를 확인하세요.'));}
   let view=views.includes(raw.view)?raw.view:'club';if(season.match&&F.running(season.match))view='match';if(!season.match&&view==='match')view='club';
   const individual=plain(raw.individual)?raw.individual:{},media=plain(raw.media)?raw.media:{},records=plain(raw.records)?raw.records:{};

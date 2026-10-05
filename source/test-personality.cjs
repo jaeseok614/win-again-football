@@ -8,13 +8,13 @@ function finish(m,engine=F){while(m.phase!=='full'){if(!engine.running(m))engine
 function play(s,season=S,engine=F){finish(s.match,engine);return season.settle(s);}
 function withoutNames(value){const out=copy(value);delete out.staff;delete out.europe;delete out.clubLife;for(const row of out.history||[])delete row.europeChampion;const visit=o=>{if(!o||typeof o!=='object')return;delete o.name;delete o.scorerName;delete o.assistName;for(const v of Object.values(o))visit(v);};visit(out);return out;}
 function canonPlayers(s){for(const p of Object.values(s.squad))assert.equal(p.name,F.identityProfile(p.identity).name);if(s.match)for(const p of Object.values(s.match.players))assert.equal(p.name,F.identityProfile(p.identity).name);}
-function sameState(a,b){const expected=copy(b);if(expected.match)expected.match.paused=F.running(expected.match);assert.deepEqual(withoutNames(a),withoutNames(expected));}
+function sameState(a,b){const expected=copy(b);expected.version=a.version;if(expected.match)expected.match.paused=F.running(expected.match);assert.deepEqual(withoutNames(a),withoutNames(expected));}
 function displayedLogs(m){return m.logs.map(e=>({...e,text:F.displayText(e.text,m.players)}));}
 function tune(s){for(const p of Object.values(s.squad)){for(const key of ['attack','defense','passing','speed','endurance','keeping']){p[key]=99;s.match.players[p.id][key]=99;}p.potential=99;s.match.players[p.id].potential=99;s.career.baselines[p.identity]=99;}return s;}
 const old=oldV8();
 
 test('all fixed and market aliases change only names while identities and all numeric profiles remain exact',()=>{
- const before=[...old.F.roster,...old.F.market],after=[...F.roster,...F.market];assert.equal(after.length,26);assert.equal(new Set(after.map(p=>p.name)).size,26);for(const p of before){const current=after.find(n=>n.identity===p.identity);assert.ok(current);assert.notEqual(current.name,p.name);assert.equal(F.legacyName(p.identity),p.name);assert.deepEqual(withoutNames(current),withoutNames(p));assert.equal(F.displayText(p.name),current.name);}assert.equal(F.create().version,5);assert.equal(S.create().version,8);
+ const before=[...old.F.roster,...old.F.market],after=[...F.roster,...F.market];assert.equal(after.length,26);assert.equal(new Set(after.map(p=>p.name)).size,26);for(const p of before){const current=after.find(n=>n.identity===p.identity);assert.ok(current);assert.notEqual(current.name,p.name);assert.equal(F.legacyName(p.identity),p.name);assert.deepEqual(withoutNames(current),withoutNames(p));assert.equal(F.displayText(p.name),current.name);}assert.equal(F.create().version,5);assert.equal(S.create().version,9);
 });
 
 test('personality labels are deterministic display metadata and do not mutate a person or a match',()=>{

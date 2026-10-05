@@ -42,13 +42,13 @@ test('real injuries remain identical and unavailable to the restored line-up',()
 });
 
 test('supported legacy saves migrate through Season.restore without losing real old finance or participants',()=>{
- const old=oldV4();let s=old.S.create(8304);old.F.begin(s.match);old.F.finishSegment(s.match);old.F.swap(s.match,'f1','f3');const before=copy(s),result=Files.read(exportText(payload(s))).payload.season,expected=S.restore(copy(s));assert.equal(result.version,8);assert.equal(result.match.version,5);assert.deepEqual(result,expected);assert.deepEqual(result.finance,copy(s.finance));assert.equal(result.match.players.f3.minutes,s.match.players.f3.minutes);assert.deepEqual(copy(s),before);
+ const old=oldV4();let s=old.S.create(8304);old.F.begin(s.match);old.F.finishSegment(s.match);old.F.swap(s.match,'f1','f3');const before=copy(s),result=Files.read(exportText(payload(s))).payload.season,expected=S.restore(copy(s));assert.equal(result.version,9);assert.equal(result.match.version,5);assert.deepEqual(result,expected);assert.deepEqual(result.finance,copy(s.finance));assert.equal(result.match.players.f3.minutes,s.match.players.f3.minutes);assert.deepEqual(copy(s),before);
 });
 
 test('format, envelope versions and unsupported season versions reject clearly instead of becoming a new game',()=>{
  const base=Files.create(payload(),{createdAt});for(const text of ['{}','[]','null',JSON.stringify(payload()),JSON.stringify({...base,format:'another-game'})])assert.throws(()=>Files.read(text),/구단 백업|시즌 정보/);
  for(const value of [0,2,'1',null])rejectedChange(base,x=>x.version=value,/백업 버전/);
- for(const value of [1,9,99,'8',null])rejectedChange(base,x=>x.payload.season.version=value,/시즌 버전/);
+ for(const value of [1,10,99,'8',null])rejectedChange(base,x=>x.payload.season.version=value,/시즌 버전/);
  rejectedChange(base,x=>delete x.payload.season,/시즌 정보/);rejectedChange(base,x=>x.extra='unknown',/형식/);
 });
 

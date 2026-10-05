@@ -4,7 +4,7 @@
  const pending = new Map();
  let sequence = 0, exportBusy = false;
  const maxBytes = 2 * 1024 * 1024;
- const appTitle = '눈 떠보니 2부 리그 감독이었다! 이번 생엔 우승한다';
+ const appTitle = '눈 떠보니 5부 리그 감독이었다! 이번 생엔 우승한다';
  const api = {
   version: '1.0.0',
   get available() { return !!(window.WinAgainNative && typeof WinAgainNative.postMessage === 'function'); },
