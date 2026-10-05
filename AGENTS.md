@@ -38,7 +38,7 @@ the 2024/25 Tottenham squad. Keep old squad identities and their contract histor
 The startingClub marker selects canonical starter contracts for finance/statistics
 validation. Mental attributes influence team talks; rules:2 receipts replay the new
 formula and missing rules retain the original formula. Never reinterpret old talks.
-Story/tutorial state is a device preference, separate from campaign data. Keep the
+Onboarding/tutorial completion is a device preference, separate from campaign data. Keep the
 guided practice optional, connect it to real controls, and never auto-kickoff.
 
 Consider performance in every change, especially on mobile. Avoid rebuilding
@@ -99,3 +99,8 @@ at the last visible ball, shows recovery/pass before shooting, and preserves RNG
 New UI campaigns default to Tottunham with no separate Tottunham-start button.
 Onboarding appears on first play with visible skip; replay belongs in settings.
 Continue fictional story chapters on the home screen from confirmed season progress.
+Interactive ClubStory choices are optional campaign receipts, unlike onboarding.
+Keep their two-turn dialogue, identity, season and round validation on restore;
+derive rookie promises from confirmed league minutes, never invented appearances.
+Dialogue choices affect fictional relationships and later replies, not engine RNG
+or finance. Show dialogue in an accessible popup and keep hidden story views cheap.

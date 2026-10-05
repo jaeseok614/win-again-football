@@ -80,7 +80,8 @@
   const shooter=exact||named||role(team,'FW',finite(event.minute)%2),keeper=role(defenders,'GK');
   const progress=smooth((age-700)/750),blend=smooth((age-1900)/300),targetX=event.type==='goal'?46+(finite(event.minute)%3)*4:clamp(keeper.x,42,58);
   const goalY=event.team===0?4:96,targetY=event.type==='goal'?goalY:event.team===0?14:86;
-  const start={x:shooter.x,y:shooter.y},end={x:targetX,y:targetY};
+  const start={x:shooter.x,y:clamp(shooter.y+(event.team===0?-4:4),10,90)},end={x:targetX,y:targetY};
+  const visibleShooter=(event.team===0?result.own:result.opponent).find(p=>p.id===shooter.id);if(visibleShooter)Object.assign(visibleShooter,mixPoint(shooter,start,smooth(age/700)));
   if(event.type==='chance'){
    const blocker=role(defenders,'DEF',1),endChance={x:blocker.x,y:blocker.y};
    result.ball=mixPoint(start,endChance,progress);result.phase='intercept';result.label='공격 차단';result.carrierId=progress>.85?blocker.id:progress<.1?shooter.id:null;result.receiverId=blocker.id;
@@ -94,7 +95,7 @@
    if(keeper.id){const visibleKeeper=(event.team===0?result.opponent:result.own).find(p=>p.id===keeper.id);visibleKeeper.x=clamp(lerp(keeper.x,targetX,smooth((age-700)/650)),40,60);visibleKeeper.y=clamp(lerp(keeper.y,targetY,smooth((age-700)/650)),event.team===0?10:82,event.team===0?18:90);}
   }
   if(age<700){
-   const origin=inputOrigin(frozen),lost=frozen.ownerTeam!==event.team,recoverer=lost?role(team,'DEF',1):(team.find(p=>p.id===frozen.carrierId)||role(team,'MID',1)),win={x:origin.x,y:origin.y},move=smooth(age/350),pass=smooth((age-350)/350);
+   const origin=inputOrigin(frozen),lost=frozen.ownerTeam!==event.team,recoverer=lost?team.filter(p=>p.pos!=='GK'&&p.id!==shooter.id).sort((a,b)=>Math.hypot(a.x-origin.x,a.y-origin.y)-Math.hypot(b.x-origin.x,b.y-origin.y))[0]||role(team,'DEF',1):(team.find(p=>p.id===frozen.carrierId)||role(team,'MID',1)),win={x:origin.x,y:origin.y},move=smooth(age/350),pass=smooth((age-350)/350);
    const visible=team===frozen.own?result.own:result.opponent,actor=visible.find(p=>p.id===recoverer.id);if(actor){const point=mixPoint(recoverer,win,age<350?move:1-pass);Object.assign(actor,{x:clamp(point.x,10,90),y:clamp(point.y,10,90)});}
    result.ball=age<350?origin:mixPoint(win,start,pass);result.trail=[];result.carrierId=age===0?frozen.carrierId:age<350?(lost?null:recoverer.id):pass===1?shooter.id:pass===0?recoverer.id:null;result.receiverId=age<350?recoverer.id:shooter.id;result.ownerTeam=age<350?frozen.ownerTeam:event.team;result.phase=lost&&age<350?'turnover':'assist';result.label=lost&&age<350?'공 탈취 · 수비 전환':'전진 패스 · 슈팅 준비';
   }
