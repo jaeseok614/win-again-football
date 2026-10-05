@@ -104,3 +104,9 @@ Keep their two-turn dialogue, identity, season and round validation on restore;
 derive rookie promises from confirmed league minutes, never invented appearances.
 Dialogue choices affect fictional relationships and later replies, not engine RNG
 or finance. Show dialogue in an accessible popup and keep hidden story views cheap.
+
+Owner refinement (2026-10-05, player labels): tactics player cards show full names
+with wrapping, never ellipsis, plus overall skill and live energy. Support links
+show a derived coach chemistry score and color with named component explanations.
+Use actual passing, deterministic teamwork, current role suitability and energy;
+keep this analysis separate from engine bonuses or invented shared-match records.
