@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-const F=require('./dist/engine.js'),S=require('./dist/season.js'),P=require('./dist/cup.js'),E=require('./dist/economy.js'),H=require('./dist/health.js'),B=require('./dist/tactics-board.js');
+const F=require('./dist/engine.js'),S=require('./dist/season.js'),P=require('./dist/cup.js'),E=require('./dist/economy.js'),H=require('./dist/health.js'),B=require('./dist/tactics-board.js'),Portraits=require('./dist/portraits.js'),PlayerTraits=require('./dist/player-traits.js');
 const app=fs.readFileSync(__dirname+'/dist/app.js','utf8');let groups=0;
 function test(name,run){run();groups++;console.log('PASS '+name);}
 function section(name,next){const start=app.indexOf('function '+name+'('),end=app.indexOf('function '+next+'(',start);assert.ok(start>=0&&end>start);return app.slice(start,end);}
@@ -26,6 +26,11 @@ test('entering the match draws fresh headers and score, while repeated live tick
  F.begin(h.ctx.state);for(let i=0;i<10;i++){F.tick(h.ctx.state);h.clear();const before=JSON.stringify(h.ctx.season);h.ctx.render();for(const id of ['club-overview','league-table','season-fixtures','squad-overview'])assert.ok(!h.writes.includes(id));for(const n of ['renderDivision','renderFinance','renderMarket','renderCareer','renderCup','renderTacticsBoard'])assert.ok(!h.calls.includes(n),n);assert.equal(h.node('clock').textContent,h.ctx.state.minute+'′');assert.equal(JSON.stringify(h.ctx.season),before);}
  h.ctx.state.paused=true;h.ctx.matchdayTab='analysis';h.clear();h.ctx.render();assert.ok(h.calls.includes('renderTacticsBoard'));assert.ok(h.calls.indexOf('renderTacticsBoard')>h.calls.indexOf('renderMatchday'));
  h.ctx.state.paused=false;h.clear();h.ctx.render();assert.ok(!h.calls.includes('renderTacticsBoard'));assert.equal(h.ctx.matchdayTab,'live');
+});
+test('the actual live pitch renders a unique portrait face for every fictional starting player',()=>{
+ const season=S.create(8821,{startingClub:true}),state=season.match,players={classList:{toggle(){}},innerHTML:''},nodes=new Map([['players',players]]),context=vm.createContext({F,PlayerTraits,Portraits,season,state,selected:null,editable:()=>true,Discipline:{dismissed:()=>[]},escapeText:String,metric:p=>p.pos,positions(){const counts={GK:0,DEF:0,MID:0,FW:0};return state.lineup.map(id=>{const p=state.players[id],base=p.pos==='GK'?[50,88]:F.formationPositions[state.formation][p.pos][counts[p.pos]++];return {id,p,x:base[0],y:base[1]};});},$:id=>nodes.get(id)||{},renderMobileTacticsDock(){},renderPitchPlayerTools(){},drawField(){}});
+ vm.runInContext(section('renderPitch','renderBench'),context);context.renderPitch();const faces=[...players.innerHTML.matchAll(/data-portrait-index="(\d+)"/g)].map(match=>Number(match[1]));
+ assert.equal(faces.length,11);assert.equal(new Set(faces).size,11);assert.equal((players.innerHTML.match(/class="player-face-marker"/g)||[]).length,11);assert.match(players.innerHTML,/class="player-portrait portrait-small"/);
 });
 test('returning home after settlement refreshes the next fixture and standings rather than reusing stale markup',()=>{
  const h=harness();h.ctx.render();const old=h.node('season-fixtures').innerHTML;while(h.ctx.state.phase!=='full'){if(!F.running(h.ctx.state))F.begin(h.ctx.state);F.finishSegment(h.ctx.state);}h.ctx.season=S.settle(h.ctx.season);h.ctx.state=h.ctx.season.match;h.clear();const before=JSON.stringify(h.ctx.season);h.ctx.render();assert.notEqual(h.node('season-fixtures').innerHTML,old);assert.match(h.node('dashboard-context').textContent,/2R/);assert.ok(h.calls.includes('renderLatestMatchReview'));assert.equal(JSON.stringify(h.ctx.season),before);

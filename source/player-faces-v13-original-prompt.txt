@@ -1,0 +1,11 @@
+Use case: stylized concept art for the fictional football manager game.
+Asset type: original footballer portrait sprite atlas.
+Primary request: create exactly 28 distinct invented adult male footballer faces arranged in a perfectly aligned 7-column by 4-row grid. Each tile is square and edge-to-edge, with a 7:4 overall aspect ratio, no gaps, and one centered head-and-shoulders portrait.
+Style: premium hand-painted, semi-realistic comic character art with refined ink contours, expressive eyes and brows, and soft textured shading. Clearly illustrated rather than photorealistic.
+Characters: 28 different fictional adults with memorable personalities and expressions: determined captain, shy playmaker, playful winger, stern defender, joyful prospect, quiet goalkeeper, and thoughtful veteran. Diverse skin tones, face shapes, ages, hair, and facial hair; no repeated faces or silhouettes.
+Composition: close, consistent portrait crop and eye line. Deep navy background with a subtle teal halo. Plain fictional teal/navy shirts with small lime or orange trim.
+Constraints: no real-person likeness, real club badge, sponsor, lettering, number, flag, caption, watermark, hands, stadium, or extra person. No gutters, dividers, frames, or empty cells.
+Generation mode: built-in image_gen, new image without a reference image.
+Outcome: generated original fictional faces and adopted as the shared player atlas.
+Saved asset: source/dist/assets/player-faces-v13.png
+Dimensions: 1660 x 948 pixels; 7 by 4 square-cell contact sheet.

@@ -21,11 +21,36 @@ test('league and European clubs have unique presentation names without changing 
  }
  assert.equal(new Set(names).size,47);
  assert.equal(S.rawClub('norhaven').name,'노르헤이븐 시티');
- assert.equal(S.club('norhaven').name,'몬치스타 시티');
- assert.equal(S.leagueClubs({league:{division:2}}).find(club=>club.id==='norhaven').name,'몬치스타 시티');
+ assert.equal(S.club('norhaven').name,'게이츠힐 FC');
+ assert.equal(S.club('rosenholt').name,'몬치스타 시티');
+ assert.equal(S.leagueClubs({league:{division:2}}).find(club=>club.id==='norhaven').name,'게이츠힐 FC');
  assert.equal(U.rawClub('meridian').name,'메리디안 FC');
  assert.equal(U.club('meridian').name,'레알 마드리온');
  assert.equal(S.club('meridian').name,'레알 마드리온');
+});
+
+test('five divisions use representative 2026/27 English clubs and keep the Tottenham story exception',()=>{
+ const expected={
+  1:['Manchester City','Chelsea','Arsenal','Newcastle United','Manchester United','Aston Villa','Crystal Palace','Liverpool'],
+  2:['Wolverhampton Wanderers','Sheffield United','Burnley','West Ham United','Southampton','Norwich City','Middlesbrough','Wrexham'],
+  3:['Leicester City','Stockport County','Wigan Athletic','Wycombe Wanderers','Barnsley','Blackpool','Bradford City','Notts County'],
+  4:['York City','Bristol Rovers','Oldham Athletic','Rochdale','Port Vale','Swindon Town','Shrewsbury Town','Walsall'],
+  5:['Tottenham Hotspur','Carlisle United','Scunthorpe United','Hartlepool United','Forest Green Rovers','Southend United','Gateshead','Boreham Wood']
+ };
+ assert.equal(Object.keys(S.clubReferences).length,40);
+ assert.equal(new Set(Object.values(S.clubReferences).map(reference=>reference.reference)).size,40);
+ for(const division of [1,2,3,4,5]){
+  const pool=S.fiveTierPools[division],references=pool.map(club=>S.clubReferences[club.id]);
+  assert.equal(pool.length,8,'division '+division+' has eight clubs');
+  assert.equal(new Set(pool.map(club=>club.id)).size,8);
+  assert.deepEqual(references.map(reference=>reference.reference).sort(),expected[division].sort());
+  for(const reference of references)assert.equal(reference.division,division);
+  assert.equal(S.divisionInfo({division,rules:'five-tier'}).name,{1:'프리미어 리그',2:'챔피언십',3:'리그 원',4:'리그 투',5:'내셔널 리그'}[division]);
+ }
+ assert.equal(S.clubReferences.brynwell.competition,'Premier League');
+ assert.equal(S.clubReferences.brynwell.division,5);
+ assert.equal(S.create(800,{startingClub:true}).league.clubIds.includes(S.own),true);
+ assert.equal(new Set(S.clubs.map(club=>S.club(club.id).code)).size,40,'parody crests use distinct short codes');
 });
 
 test('club presentation and opposition reports leave the campaign JSON, RNG and engine profile unchanged',()=>{

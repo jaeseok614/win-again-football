@@ -7,7 +7,7 @@ function context(sources,{style=true,document=true}={}){const calls=[],styles=[]
 function scripts(html){return [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match=>match[1]);}
 
 test('portrait modules remain safe in CommonJS and browser fixtures without a DOM or CSS style API',()=>{
- assert.equal(Portraits.asset,'assets/player-faces-v12.png?v=12');assert.equal(StaffFaces.asset,'assets/coach-faces-v1.webp?v=1');
+ assert.equal(Portraits.asset,'assets/player-faces-v13.png?v=13');assert.equal(StaffFaces.asset,'assets/coach-faces-v1.webp?v=1');
  for(const options of [{document:false},{style:false}]){const h=context([playerSource,staffSource],options);assert.equal(h.calls.length,0);assert.equal(h.styles.length,0);assert.equal(h.ctx.Portraits.index('g1'),0);assert.equal(h.ctx.StaffPortraits.index('이든 브룩스'),0);assert.ok(h.ctx.Portraits.html('f2').includes('data-portrait-index="15"'));}
 });
 
@@ -21,6 +21,11 @@ test('portrait spans keep identity and tile coordinates while omitting atlas URL
  for(const name of ['이든 브룩스','노아 리드','오스카 그린']){const markup=StaffFaces.html(name);assert.ok(markup.includes('--staff-face-x:'));assert.ok(!markup.includes('background-image'));assert.ok(!markup.includes(StaffFaces.asset));}assert.equal(JSON.stringify(match),before);
 });
 
+test('new Tottunham campaigns and transfer targets receive distinct, stable original faces',()=>{
+ const players=[...F.startingRoster,...F.market],indices=players.map(player=>Portraits.index(player.identity));assert.equal(F.startingRoster.length,18);assert.equal(F.market.length,8);assert.equal(new Set(indices).size,players.length);
+ for(const player of players){const markup=Portraits.html(player);assert.ok(markup.includes('data-portrait-index="'+Portraits.index(player.identity)+'"'));assert.ok(markup.includes('assets/player-faces-v13.png')===false);}
+});
+
 test('the existing atlas sizing and masks use one shared rule without placing the large atlas in a custom property',()=>{
  const css=fs.readFileSync(path.join(__dirname,'dist/style.css'),'utf8'),staffCss=fs.readFileSync(path.join(__dirname,'dist/staff-portraits.css'),'utf8');
  assert.ok(!css.includes('--player-portrait-atlas'));assert.ok(!playerSource.includes('setProperty'));assert.ok(playerSource.includes("createElement('style')"));assert.ok(playerSource.includes('root.document.head.appendChild(stylesheet)'));assert.ok(css.includes('background-position:var(--portrait-x) var(--portrait-y)'));assert.ok(staffCss.includes('background-image:var(--staff-portrait-atlas)'));assert.ok(staffCss.includes('background-size:500% 200%'));assert.ok(!css.includes(Portraits.asset));assert.ok(!staffCss.includes(StaffFaces.asset));
@@ -29,7 +34,7 @@ test('the existing atlas sizing and masks use one shared rule without placing th
 const temporary=fs.mkdtempSync(path.join(os.tmpdir(),'football-portrait-performance-'));try{
  const output=path.join(temporary,'index.html');cp.execFileSync(process.execPath,[path.join(__dirname,'build.cjs'),output,'--pwa'],{encoding:'utf8'});const html=fs.readFileSync(output,'utf8'),all=scripts(html),compiledPlayers=all.find(source=>source.includes('// This atlas contains original fictional faces.')),compiledStaff=all.find(source=>source.includes('root.StaffPortraits=api')),h=context([compiledPlayers,compiledStaff]);
  test('the actual compiled PWA installs a shared ordinary stylesheet for the atlas larger than one MiB',()=>{
-  const playerAsset=h.ctx.Portraits.asset,staffAsset=h.ctx.StaffPortraits.asset;assert.ok(playerAsset.startsWith('data:image/png;base64,'));assert.ok(staffAsset.startsWith('data:image/webp;base64,'));assert.ok(playerAsset.length>1048576);assert.equal(html.split(playerAsset).length-1,1);assert.equal(html.split(staffAsset).length-1,1);assert.equal(h.calls.length,1);assert.equal(h.styles.length,1);assert.equal(h.styles[0].id,'player-portrait-atlas');assert.equal(h.styles[0].textContent,'.player-portrait{background-image:url("'+playerAsset+'")}');assert.equal(h.calls[0][1],"url('"+staffAsset+"')");assert.ok(Buffer.byteLength(html)<4550000);
+  const playerAsset=h.ctx.Portraits.asset,staffAsset=h.ctx.StaffPortraits.asset;assert.ok(playerAsset.startsWith('data:image/png;base64,'));assert.ok(staffAsset.startsWith('data:image/webp;base64,'));assert.ok(playerAsset.length>1048576);assert.equal(html.split(playerAsset).length-1,1);assert.equal(html.split(staffAsset).length-1,1);assert.equal(h.calls.length,1);assert.equal(h.styles.length,1);assert.equal(h.styles[0].id,'player-portrait-atlas');assert.equal(h.styles[0].textContent,'.player-portrait{background-image:url("'+playerAsset+'")}');assert.equal(h.calls[0][1],"url('"+staffAsset+"')");assert.ok(Buffer.byteLength(html)<4750000);console.log('Compiled PWA bytes with shared portraits: '+Buffer.byteLength(html));
  });
  test('compiled app icons share one exact original image across four elements without changing layout attributes',()=>{
   const compiled=all.find(source=>source.includes('One shared original icon')),nodes=[{tagName:'LINK'},{tagName:'LINK'},{tagName:'IMG',width:64,height:64},{tagName:'IMG',width:38,height:38},{tagName:'DIV'}];assert.ok(compiled);vm.runInNewContext(compiled,{document:{querySelectorAll:selector=>{assert.equal(selector,'[data-app-icon]');return nodes;}}});const asset=nodes[0].href;assert.equal(nodes[1].href,asset);assert.equal(nodes[2].src,asset);assert.equal(nodes[3].src,asset);assert.equal(nodes[4].src,undefined);assert.equal(nodes[2].width,64);assert.equal(html.split(asset).length-1,1);assert.deepEqual(Buffer.from(asset.split(',')[1],'base64'),fs.readFileSync(path.join(__dirname,'dist/assets/app-icon-192.png')));vm.runInNewContext(compiled,{});

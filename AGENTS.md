@@ -124,3 +124,15 @@ two promote and seventh/eighth relegate where a neighboring tier exists. Keep
 league, cup, and economy receipts tier-aware. New division-five scouting costs
 £8,000 against the £160,000 opening balance. Preserve two-tier and legacy save
 rules and receipts. Details: docs/FIVE_TIER_PYRAMID_AND_FINANCE.md.
+
+Owner refinement (2026-10-05, English club references and player faces): use
+representative clubs from the 2026/27 Premier League, Championship, League One,
+League Two and National League in the five game tiers. Keep the eight-club
+fixture pools, the Tottunham-to-National-League story exception, club IDs, raw
+ratings, match fixtures and old saves stable. Display the fictional parody names;
+keep exact reference clubs in source metadata and docs/ENGLISH_PYRAMID_REFERENCES_2026-27.md.
+Use the shared original fictional portrait atlas rather than real-player photos
+or runtime downloads. Keep fixed starters and initial transfer targets on
+distinct deterministic faces, show portraits on the live pitch and in squad and
+tactics screens, and register the large atlas once for both bundled and offline
+builds. Preserve the generation prompt beside the asset.

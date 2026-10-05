@@ -32,8 +32,8 @@ test('confirmed growth remains the exact earned +1 after later training and next
 });
 
 test('league-to-cup preparation still renders the last confirmed league receipt rather than the next Cup opponent',()=>{
- const s=copy(base.cupPrep),h=harness(s),before=JSON.stringify(s);assert.equal(s.competition,'cup');h.context.renderLatestMatchReview();const html=h.target.innerHTML;
- assert.match(html,/data-review-id="match-1-4"/);assert.match(html,/리그 4R/);assert.match(html,/0 : 1/);assert.match(html,/셰필턴/);assert.doesNotMatch(html,/컵 8강|data-review-id="cup-/);assert.match(html,/새 부상·복귀 선수가 없습니다/);same(h,before);
+ const s=copy(base.cupPrep),h=harness(s),before=JSON.stringify(s);assert.equal(s.competition,'cup');h.context.renderLatestMatchReview();const html=h.target.innerHTML,last=s.results.find(result=>result.round===s.round-1&&(result.home===S.own||result.away===S.own)),opponent=last.home===S.own?last.away:last.home;
+ assert.match(html,/data-review-id="match-1-4"/);assert.match(html,/리그 4R/);assert.match(html,/0 : 1/);assert.ok(html.includes(S.club(opponent).short));assert.doesNotMatch(html,/컵 8강|data-review-id="cup-/);assert.match(html,/새 부상·복귀 선수가 없습니다/);same(h,before);
 });
 
 test('Cup settlement shows actual goals and the matching new injury even after returning to a league fixture',()=>{

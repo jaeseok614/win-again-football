@@ -53,10 +53,49 @@
   {id:'brookchester',name:'브룩체스터 FC',en:'Brookchester FC',short:'브룩체스터',code:'BC',color:'#d2b966',style:'정교한 패스와 노련한 경기 운영',attack:83,defense:87,middle:90,speed:71},
   {id:'kingsbridge',name:'킹스브리지 1887',en:'Kingsbridge 1887',short:'킹스브리지',code:'K88',color:'#c4a05f',style:'압박과 창의성을 겸비한 최상위 강호',attack:94,defense:91,middle:95,speed:88}
  ];
- const brands=Object.freeze({
-  brynwell:['토투넘 핫스퍼','토투넘','TT'],aldermere:['리즈턴 유나이티드','리즈턴','LU'],norhaven:['몬치스타 시티','몬치스타 시티','MC'],bellwick:['입스웰 타운','입스웰','IT'],redmere:['셰필턴 레즈','셰필턴','SR'],montevaro:['첼시온 FC','첼시온','CF'],selcanto:['브라이튼 앨비언스','브라이튼','BA'],falkenruh:['울버포드 원더스','울버포드','WW'],
-  calderwick:['아스널드 FC','아스널드','AF'],valedoro:['뉴캐슬턴 나이츠','뉴캐슬턴','NK'],estenford:['몬치스타 유나이티드','몬치스타 U','MU'],rosenholt:['블랙본 로버스','블랙본','BR'],azurienne:['아스톤 빌라지','아스톤','AV'],brackenfort:['크리스털 팰리스톤','팰리스톤','CP'],monteluce:['웨스트햄머 유나이티드','웨스트햄머','WH']
+ const clubReferences=Object.freeze({
+  brynwell:{division:5,competition:'Premier League',reference:'Tottenham Hotspur',display:['토투넘 핫스퍼','토투넘','TT']},
+  aldermere:{division:5,competition:'National League',reference:'Carlisle United',display:['칼스턴 유나이티드','칼스턴','CU']},
+  norhaven:{division:5,competition:'National League',reference:'Gateshead',display:['게이츠힐 FC','게이츠힐','GH']},
+  bellwick:{division:5,competition:'National League',reference:'Scunthorpe United',display:['스컨손 아이언','스컨손','SI']},
+  redmere:{division:5,competition:'National League',reference:'Southend United',display:['사우스엔더스 FC','사우스엔더스','SE']},
+  montevaro:{division:5,competition:'National League',reference:'Forest Green Rovers',display:['포리스트 그린 로버스','포리스트 그린','FGR']},
+  selcanto:{division:5,competition:'National League',reference:'Hartlepool United',display:['하트풀 유나이티드','하트풀','HU']},
+  falkenruh:{division:5,competition:'National League',reference:'Boreham Wood',display:['보러햄 우드 FC','보러햄 우드','BW']},
+  calderwick:{division:1,competition:'Premier League',reference:'Arsenal',display:['아스널드 FC','아스널드','AF']},
+  valedoro:{division:1,competition:'Premier League',reference:'Newcastle United',display:['뉴캐슬턴 나이츠','뉴캐슬턴','NK']},
+  estenford:{division:1,competition:'Premier League',reference:'Manchester United',display:['몬치스타 유나이티드','몬치스타 U','MU']},
+  rosenholt:{division:1,competition:'Premier League',reference:'Manchester City',display:['몬치스타 시티','몬치스타 시티','MC']},
+  azurienne:{division:1,competition:'Premier League',reference:'Aston Villa',display:['아스톤 빌라지','아스톤','AV']},
+  brackenfort:{division:1,competition:'Premier League',reference:'Crystal Palace',display:['크리스털 팰리스톤','팰리스톤','CP']},
+  monteluce:{division:1,competition:'Premier League',reference:'Chelsea',display:['첼시온 FC','첼시온','CF']},
+  eastwick:{division:4,competition:'League Two',reference:'York City',display:['요크스타 시티','요크스타','YC']},
+  galdon:{division:4,competition:'League Two',reference:'Bristol Rovers',display:['브리스톨 로버','브리스톨','BR']},
+  kingsmoor:{division:4,competition:'League Two',reference:'Oldham Athletic',display:['올덤 타운','올덤','OA']},
+  wexford:{division:4,competition:'League Two',reference:'Rochdale',display:['로치데일 AFC','로치데일','RD']},
+  castermere:{division:4,competition:'League Two',reference:'Port Vale',display:['포트베일 유나이티드','포트베일','PV']},
+  alderwich:{division:4,competition:'League Two',reference:'Swindon Town',display:['스윈던 시티','스윈던','SW']},
+  fenwick:{division:4,competition:'League Two',reference:'Shrewsbury Town',display:['슈루즈베리 FC','슈루즈베리','SB']},
+  dunmarsh:{division:4,competition:'League Two',reference:'Walsall',display:['월솔 FC','월솔','WS']},
+  redcliff:{division:3,competition:'League One',reference:'Leicester City',display:['레스터 시티온','레스터','LC']},
+  westmere:{division:3,competition:'League One',reference:'Stockport County',display:['스톡필드 카운티','스톡필드','SK']},
+  ainsley:{division:3,competition:'League One',reference:'Barnsley',display:['반슬리 타운','반슬리','BA']},
+  kingsford:{division:3,competition:'League One',reference:'Blackpool',display:['블랙풀 파도 FC','블랙풀 파도','BP']},
+  moorhaven:{division:3,competition:'League One',reference:'Bradford City',display:['브래드포드 시티온','브래드포드','BD']},
+  elmswick:{division:3,competition:'League One',reference:'Wigan Athletic',display:['위건 애슬레틱스','위건','WG']},
+  southport:{division:3,competition:'League One',reference:'Wycombe Wanderers',display:['와이컴 원더스','와이컴','WY']},
+  newcombe:{division:3,competition:'League One',reference:'Notts County',display:['노츠 카운티','노츠','NO']},
+  ashford:{division:2,competition:'Championship',reference:'Wolverhampton Wanderers',display:['울버포드 원더스','울버포드','WW']},
+  highgate:{division:2,competition:'Championship',reference:'Sheffield United',display:['셰필턴 레즈','셰필턴','SU']},
+  stonemill:{division:2,competition:'Championship',reference:'Burnley',display:['번리 타운','번리','BU']},
+  northcastle:{division:2,competition:'Championship',reference:'West Ham United',display:['웨스트햄머 유나이티드','웨스트햄머','WH']},
+  ravenhurst:{division:2,competition:'Championship',reference:'Southampton',display:['사우스햄턴 FC','사우스햄턴','SH']},
+  fairbridge:{division:2,competition:'Championship',reference:'Norwich City',display:['노리치 타운','노리치','NC']},
+  wyndale:{division:2,competition:'Championship',reference:'Middlesbrough',display:['미들즈브러 타이즈','미들즈브러','MB']},
+  brookchester:{division:2,competition:'Championship',reference:'Wrexham',display:['웩스턴 AFC','웩스턴','WX']},
+  kingsbridge:{division:1,competition:'Premier League',reference:'Liverpool',display:['리버포든 FC','리버포든','LF']}
  });
+ const brands=Object.freeze(Object.fromEntries(Object.entries(clubReferences).map(([id,reference])=>[id,reference.display])));
  const own='brynwell',rawClub=id=>clubs.find(c=>c.id===id)||U?.rawClub?.(id)||U?.club(id),presentClub=value=>{if(!value)return value;const brand=brands[value.id];return brand?{...value,name:brand[0],short:brand[1],code:brand[2]}:U?.presentClub?U.presentClub(value):{...value};},club=id=>presentClub(rawClub(id)),copy=x=>JSON.parse(JSON.stringify(x)),clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  function displayText(value){
   let text=String(value??'');
@@ -67,7 +106,7 @@
  const primaryKey=p=>({GK:'keeping',DEF:'defense',MID:'passing',FW:'attack'}[p.pos]);
  const pools={2:clubs.slice(0,8),1:[clubs[0],...clubs.slice(8,15)]};
  const fiveTierPools={5:clubs.slice(0,8),4:clubs.slice(15,23),3:clubs.slice(23,31),2:clubs.slice(31,39),1:[...clubs.slice(8,15),clubs[39]]};
- const divisionNames={1:['하이랜드 프리미어','HIGHLAND PREMIER','하이랜드 컵','HIGHLAND CUP'],2:['크라운 챔피언십','CROWN CHAMPIONSHIP','크라운 컵','CROWN CUP'],3:['머천트 리그','MERCHANT LEAGUE','머천트 컵','MERCHANT CUP'],4:['리저널 리그','REGIONAL LEAGUE','리저널 컵','REGIONAL CUP'],5:['파운데이션 리그','FOUNDATION LEAGUE','파운데이션 컵','FOUNDATION CUP']};
+ const divisionNames={1:['프리미어 리그','PREMIER LEAGUE','프리미어 컵','PREMIER CUP'],2:['챔피언십','CHAMPIONSHIP','챔피언십 컵','CHAMPIONSHIP CUP'],3:['리그 원','LEAGUE ONE','리그 원 컵','LEAGUE ONE CUP'],4:['리그 투','LEAGUE TWO','리그 투 컵','LEAGUE TWO CUP'],5:['내셔널 리그','NATIONAL LEAGUE','내셔널 컵','NATIONAL CUP']};
  const leagueOf=s=>s?.league||s||{},rulesOf=s=>leagueOf(s).rules||'legacy',clubById=id=>clubs.find(c=>c.id===id),allClubIds=new Set(clubs.map(c=>c.id)),scheduleCache=new Map();
  function poolFor(rules,division){return rules==='five-tier'?fiveTierPools[division]:pools[division];}
  function divisionInfo(value){const league=typeof value==='number'?{division:value}:leagueOf(value),division=Number.isInteger(league.division)?league.division:2,rules=league.rules||(division>2?'five-tier':'legacy'),names=divisionNames[division]||divisionNames[2];return {division,rules,name:rules==='five-tier'?names[0]:division===1?'하이랜드 프리미어':'로우랜드 리그',en:rules==='five-tier'?names[1]:division===1?'HIGHLAND PREMIER':'LOWLAND LEAGUE',cupName:rules==='five-tier'?names[2]:division===1?'하이랜드 컵':'로우랜드 컵',cupEn:rules==='five-tier'?names[3]:division===1?'HIGHLAND CUP':'LOWLAND CUP'};}
@@ -165,5 +204,5 @@
   return s;
  }
  function recruit(s,identity,slot){if(s.match?.decisions?.some(d=>d.type==='talk'&&d.lineup.includes(slot)))throw Error('팀 대화를 마친 선수의 영입 교체는 다음 경기 전에 할 수 있어요. 영입 뒤 팀 대화를 진행하세요.');const next=E.recruit(s,identity,slot);C.register(next,slot);if(next.suspensions){if(next.match.decisions.some(d=>d.type==='talk'))throw Error('출전 정지 적용 중에는 팀 대화 전에 영입을 마쳐 주세요.');Suspensions.apply(next);}return next;}
- const api={clubs,own,club,rawClub,presentClub,displayText,fixtures,leagueClubs,fixturesFor,divisionInfo,leagueForYear,movement,leagueFixture,fixtureFor,opponentFor,create,standings,train,settle,nextSeason,restore,primaryKey,recruit,scout:C.scout,rotate:H.rotate,selectNextMatch,ready};root.Season=api;if(typeof module!=='undefined')module.exports=api;
+ const api={clubs,clubReferences,fiveTierPools,own,club,rawClub,presentClub,displayText,fixtures,leagueClubs,fixturesFor,divisionInfo,leagueForYear,movement,leagueFixture,fixtureFor,opponentFor,create,standings,train,settle,nextSeason,restore,primaryKey,recruit,scout:C.scout,rotate:H.rotate,selectNextMatch,ready};root.Season=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
