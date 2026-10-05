@@ -1,5 +1,6 @@
 (function(root){
  'use strict';
+ const Story=root.ClubStory||(typeof require==='function'?require('./club-story.js'):null);
  const Discipline=root.Discipline||(typeof require==='function'?require('./discipline.js'):null);
  const Opposition=root.Opposition||(typeof require==='function'?require('./opposition.js'):null);
  const Staff=root.Staff||(typeof require==='function'?require('./staff.js'):null);
@@ -129,7 +130,7 @@
    const cashflow=lastEntry||s.finance.ledger.find(e=>e.id==='match-'+s.year+'-'+s.round);
    const nonLeague=lastEurope||lastCup;s.lastReport={competition:lastEurope?'europe':lastCup?'cup':'league',round:nonLeague?nonLeague.week:s.round,fixturehome:last.home,opponent:last.home===own?last.away:last.home,score:orient(last,'goals'),penalties:nonLeague?.penalties?orient(nonLeague,'penalties'):null,kicks:nonLeague?orient(nonLeague,'kicks'):[[],[]],winner:nonLeague?nonLeague.winner:last.goals[0]===last.goals[1]?null:last.goals[0]>last.goals[1]?last.home:last.away,changes,rank:me.rank,points:me.points,cashflow:cashflow?copy(cashflow):null};if(nonLeague){s.lastReport.stage=nonLeague.stage;s.lastReport.title=(lastEurope?U:P).stageNames[nonLeague.stage];}
   }
-  try{CL?.restore(s,raw.clubLife);Board?.restore(s,raw.ownerBoard);Suspensions?.validate(s);SquadPlans?.validate(s);TransferPlans?.validate(s);}catch{fail();}
+  try{CL?.restore(s,raw.clubLife);Board?.restore(s,raw.ownerBoard);Suspensions?.validate(s);SquadPlans?.validate(s);TransferPlans?.validate(s);Story?.validate(s);}catch{fail();}
   return s;
  }
  function recruit(s,identity,slot){if(s.match?.decisions?.some(d=>d.type==='talk'&&d.lineup.includes(slot)))throw Error('팀 대화를 마친 선수의 영입 교체는 다음 경기 전에 할 수 있어요. 영입 뒤 팀 대화를 진행하세요.');const next=E.recruit(s,identity,slot);C.register(next,slot);if(next.suspensions){if(next.match.decisions.some(d=>d.type==='talk'))throw Error('출전 정지 적용 중에는 팀 대화 전에 영입을 마쳐 주세요.');Suspensions.apply(next);}return next;}

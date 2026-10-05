@@ -1,0 +1,60 @@
+(function(root){
+ 'use strict';
+ const F=root.Football||(typeof require==='function'?require('./engine.js'):null),copy=x=>JSON.parse(JSON.stringify(x)),own='brynwell';
+ const catalog=[
+  ['arrival',0,'구단주','감독실의 계약서','책상 위의 계약서에는 아직 잉크가 마르지 않았다. 구단주가 의자를 권한다.','이 구단이 어떤 팀으로 기억되면 좋겠습니까?',['선수와 팬의 이야기를 먼저 듣겠습니다','승격이라는 결과로 증명하겠습니다','재정과 선수 성장을 함께 지키겠습니다'],['듣는 감독이라… 오래 기다린 말입니다.','결과를 말하는 건 쉽습니다. 어려운 날에도 책임질 수 있겠습니까?','크게 약속하지 않는군요. 대신 오래 함께할 수 있겠습니다.'],'board'],
+  ['shape',0,'수석 코치','새벽의 전술 회의','훈련장 불이 켜지기도 전에 코치가 전술판을 펼친다.','빠른 공격진을 어떻게 살리실 생각입니까?',['공을 가진 선수에게 패스 선택지를 만들죠','앞에서 압박하고 빠르게 공격하죠','상대가 올라오면 뒤의 공간을 노리죠'],['동료가 가까이 도와주면 무리한 패스가 줄어들죠.','공을 뺏은 뒤에도 첫 패스를 침착하게 해야 합니다.','빠른 선수를 살리되 수비 간격이 벌어지지 않게 합시다.'],'coach'],
+  ['captain',1,'주장','주장이 남긴 훈련복','다른 선수들이 떠난 뒤, 주장은 훈련복 한 벌을 더 개어 놓는다.','결과가 어땠든, 선수들이 감독님 말을 기다리고 있습니다.',['각자 어떤 마음인지 듣고 싶어요','우리는 더 높은 곳까지 갈 수 있어요','이번 경기에서 바꿀 한 가지부터 찾죠'],['말을 아끼던 선수들도 얘기할 수 있겠네요.','큰 꿈을 말하면 누군가는 힘을 얻고 누군가는 부담을 느낍니다.','다음 훈련에서 무엇을 바꿀지 분명해졌네요.'],'captain'],
+  ['rookie',2,'유망주','벤치 끝의 작은 노트','어린 선수가 훈련 때 적은 움직임을 조심스럽게 내민다.','경기에 나가고 싶습니다. 제가 준비할 수 있는 걸 알려주세요.',['어떤 역할이 자신 있는지 먼저 듣자','기회를 받으면 팀을 바꿀 수 있겠니?','먼저 체력과 현재 능력을 함께 보자'],['긴장했는데, 제 말을 들어 주셔서 감사합니다.','믿어 주시면 좋지만… 기대를 감당할 준비도 하겠습니다.','보고서만 보지 않고 직접 훈련에서도 확인해 주세요.'],'rookie'],
+  ['fans',3,'팬 대표','비 오는 날의 사인회','훈련장 문 앞에 어린 팬들이 비닐로 감싼 유니폼을 들고 서 있다.','팬들이 선수들을 가까이 만나고 싶어 합니다. 어떤 행사를 할까요?',['작은 사인회에서 팬들의 말을 듣죠','공개 훈련으로 우리가 준비한 축구를 보여주죠','짧게 만나고 선수들의 회복 시간을 지키죠'],['한 장의 사인보다 대화 한마디를 오래 기억할 겁니다.','팬들도 이 팀이 향하는 방향을 직접 볼 수 있겠네요.','응원도 선수들의 건강 위에서 이어져야겠죠.'],'fans'],
+  ['medical',5,'수석 코치','의무실 옆의 커피','코치는 두 개의 종이컵과 선수 컨디션 보고서를 가져온다.','일정이 쌓입니다. 피곤한 선수와 기회를 기다리는 선수가 함께 있습니다.',['선수들에게 몸 상태를 솔직히 말하게 하죠','핵심 선수를 믿고 중요한 순간을 맡기죠','교체와 훈련 계획을 다시 나눠 봅시다'],['말할 수 있는 분위기가 있으면 무리하는 선수를 먼저 발견하죠.','믿음과 무리한 출전은 다릅니다. 체력부터 확인합시다.','후보의 주 포지션과 컨디션까지 같이 보겠습니다.'],'coach'],
+  ['window',6,'구단주','영입 명단과 계산기','책상 한쪽에는 스카우트 보고서, 다른 쪽에는 주급 명세서가 놓였다.','새 선수가 필요한 자리와 이미 가진 선수의 가능성 중 무엇부터 볼까요?',['현재 선수들의 요구부터 듣겠습니다','당장 부족한 자리에 즉시 전력을 찾겠습니다','이적료보다 계약 후 주급까지 비교하겠습니다'],['기존 선수를 지나치지 않는다는 메시지가 되겠군요.','결과를 위해 움직이되 거래는 직접 확인해야 합니다.','계산기까지 쓰는 감독이라… 적어도 급한 결정은 줄겠군요.'],'board'],
+  ['halfway',7,'주장','일정표의 절반','주장은 끝난 경기의 날짜를 하나씩 지운다. 아직 절반이 남아 있다.','선수들은 지금 우리가 어디쯤 왔는지 알고 싶어 합니다.',['좋았던 점과 힘들었던 점을 함께 듣죠','목표를 잊지 말고 더 힘을 내자고 하죠','남은 경기마다 작은 목표를 잡읍시다'],['숫자로 보이지 않던 고민도 꺼낼 수 있겠네요.','누구에게는 힘이 되겠지만 어린 선수에겐 부담일 수 있어요.','다음 경기부터 무엇을 준비할지 설명하기 좋겠습니다.'],'captain'],
+  ['community',9,'팬 대표','동네 축구장의 초대','지역 어린이 팀이 낡은 공 하나와 초대장을 보냈다.','선수들과 잠깐이라도 같은 공을 차 보고 싶답니다.',['선수와 아이들이 서로 질문하는 자리를 만들죠','구단의 도전을 이야기해 꿈을 나눠 주죠','일정에 맞는 작은 만남으로 준비하죠'],['아이들도 선수들이 왜 축구를 좋아하는지 듣고 싶어 했어요.','우리 동네에서도 누군가는 그 이야기를 시작할 겁니다.','한 번의 큰 행사보다 이어지는 만남도 좋겠습니다.'],'fans'],
+  ['runin',10,'수석 코치','남은 네 경기','전술판 구석에 남은 리그 경기가 적힌다. 코치는 잠시 펜을 멈춘다.','막판에는 선수들이 숫자보다 감독의 태도를 먼저 봅니다.',['불안해하는 선수부터 만나겠습니다','우리가 준비한 축구를 끝까지 믿겠습니다','순위와 체력, 상대를 하나씩 점검하겠습니다'],['목소리를 낮춰야 들리는 고민도 있죠.','자신감은 좋습니다. 수비 전환도 끝까지 함께 준비합시다.','승격 레이스에서도 한 경기는 한 경기니까요.'],'coach'],
+  ['farewell',14,'구단주','마지막 휘슬 뒤의 면담','마지막 리그 결과표가 감독실에 도착한다. 구단주가 잠시 창밖을 본다.','이번 시즌을 선수들과 팬들에게 어떻게 기억시켜 드릴까요?',['함께 버텨 준 사람들에게 감사하겠습니다','이 결과를 다음 도전의 출발점으로 삼겠습니다','잘한 선택과 놓친 선택을 모두 돌아보겠습니다'],['결과표 바깥에도 이 시즌을 만든 사람들이 있죠.','다음 시즌도 지금과 같은 말로 시작할 수 있겠습니까?','복도에 걸린 사진보다 기록을 오래 들여다보는군요.'],'board']
+ ];
+ function played(s,year){return year===s.year?s.round:s.history.find(h=>h.year===year)?14:0;}
+ function results(s,year){
+  if(year===s.year)return s.results.filter(r=>r.home===own||r.away===own).map(r=>({round:r.round+1,score:r.home===own?r.goals:[r.goals[1],r.goals[0]]}));
+  return (s.statistics?.archive?.find(a=>a.year===year)?.records||[]).filter(r=>r.competition==='league').map(r=>({round:r.round,score:r.score}));
+ }
+ function events(s,year=s.year){
+  const list=catalog.map(([key,round,speaker,title,scene,question,options,replies,relation])=>({key,round,speaker,title,scene,question,options,replies,relation}));
+  for(const [key,win] of [['firstwin',true],['setback',false]]){const game=results(s,year).find(r=>win?r.score[0]>r.score[1]:r.score[0]<r.score[1]);if(game)list.push({key,round:game.round,speaker:'주장',title:win?'첫 승 뒤의 버스':'패배 뒤에도 켜진 불',scene:win?'버스 창에 선수들의 웃음이 비친다. 주장은 박수를 멈추고 감독을 바라본다.':'구장이 조용해진 뒤에도 라커룸의 불이 켜져 있다. 주장은 마지막까지 남았다.',question:win?'첫 리그 승리를 어떻게 다음 경기로 이어갈까요?':'오늘 패배를 선수들에게 어떻게 이야기할까요?',options:win?['선수들이 무엇을 잘했는지 직접 듣죠','이제 더 큰 목표를 말해도 되겠죠','들뜨기 전에 회복과 다음 준비를 챙기죠']:['아쉬웠던 순간과 마음을 함께 듣죠','우리 기준을 다시 분명하게 말하죠','다음 훈련에서 바꿀 한 가지를 찾죠'],replies:win?['결과보다 노력도 알아줬다는 걸 기억할 겁니다.','기대가 커지는 만큼 부담도 살펴봐 주세요.','축하는 오늘, 준비는 차분하게 이어가죠.']:['침묵하던 선수도 말을 꺼낼 수 있겠습니다.','책임을 느끼는 선수와 겁먹는 선수가 다를 겁니다.','패배를 다음 준비로 바꾸는 답이네요.'],relation:'captain'});}
+  return list.filter(e=>e.round<=played(s,year)).map(e=>({...e,year,id:year+':'+e.key})).sort((a,b)=>a.round-b.round||a.key.localeCompare(b.key));
+ }
+ function records(s){return s.clubStory?.records||[];}
+ function actorFor(s,e){
+  if(!['captain','rookie'].includes(e.relation))return e.relation;
+  const players=Object.values(s.squad),sorted=[...players].sort(e.relation==='rookie'?(a,b)=>a.age-b.age||a.identity.localeCompare(b.identity):(a,b)=>F.mentalProfile(b).leadership-F.mentalProfile(a).leadership||F.mentalProfile(b).loyalty-F.mentalProfile(a).loyalty||a.identity.localeCompare(b.identity));return sorted[0].identity;
+ }
+ function change(r,e){let delta=r.step===1?(r.choice==='commit'?2:1):{listen:2,bold:0,practical:1}[r.choice];if(r.step===0&&F.identityProfile(r.actor)){const m=F.mentalProfile(F.identityProfile(r.actor));if(r.choice==='bold')delta+=(m.professionalism>=16?1:0)-(m.pressure<=8?1:0);if(r.choice==='listen'&&m.loyalty>=16)delta++;}return {relation:e.relation,delta};}
+ function relationships(s){const value={board:0,coach:0,captain:0,rookie:0,fans:0};for(const r of records(s)){const e=events(s,Number(r.event.split(':')[0])).find(e=>e.id===r.event);if(e){const c=change(r,e);value[c.relation]=Math.max(-5,Math.min(20,value[c.relation]+c.delta));}}for(const r of records(s).filter(r=>r.step===1)){const e=events(s,Number(r.event.split(':')[0])).find(e=>e.id===r.event),m=mission(s,e,records(s).filter(x=>x.event===r.event));if(m&&m.status!=='active')value.rookie=Math.max(-5,Math.min(20,value.rookie+(m.status==='fulfilled'?2:-3)));}return value;}
+ function mission(s,e,answered){
+  const last=answered.find(r=>r.step===1);if(e.key!=='rookie'||!last||last.choice!=='commit')return null;
+  const end=Math.min(14,last.atRound+2),stats=e.year===s.year?s.statistics?.records:s.statistics?.archive?.find(a=>a.year===e.year)?.records,minutes=(stats||[]).filter(r=>r.competition==='league'&&r.round>last.atRound&&r.round<=end).reduce((n,r)=>n+r.players.filter(p=>p.identity===last.actor).reduce((a,p)=>a+p.minutes,0),0),due=played(s,e.year)>=end;
+  return {identity:last.actor,minutes,target:30,end,year:e.year,status:minutes>=30?'fulfilled':due?'missed':'active'};
+ }
+ function scene(s,event){
+  const e=events(s).find(e=>e.id===event);if(!e)return null;const answered=records(s).filter(r=>r.event===event),step=answered.length,actor=answered[0]?.actor||actorFor(s,e),profile=F.identityProfile(actor),name=profile?.name||e.speaker,relation=relationships(s)[e.relation],first=answered[0],index=first?['listen','bold','practical'].indexOf(first.choice):-1;
+  const reaction=first?e.replies[index]+(profile?(F.mentalProfile(profile).loyalty>=16?' “감독님과 오래 함께하고 싶습니다.”':F.mentalProfile(profile).pressure<=8&&first.choice==='bold'?' “솔직히 그 기대는 조금 무섭습니다.”':''):''):null;
+  const final=answered[1],promise=mission(s,e,answered),reply=final?(final.choice==='commit'?'“그 말을 기억하겠습니다. 다음 행동을 기다릴게요.”':'“조건까지 솔직하게 말해 주셔서 감사합니다. 함께 확인하죠.”'):null;
+  return {...e,step,actor,name,relationScore:relation,answered:copy(answered),reaction,reply,mission:promise,question:step===0?e.question:e.key==='rookie'?'다음 리그 두 경기에서 제가 30분 이상 뛸 기회를 주실 수 있나요?':'감독님, 오늘의 답을 다음 행동에서도 이어갈 수 있을까요?',choices:step===0?['listen','bold','practical'].map((id,i)=>({id,label:e.options[i]})):step===1?[{id:'commit',disabled:e.key==='rookie'&&(s.competition!=='league'||s.match?.phase!=='prep'),label:e.key==='rookie'?'두 경기 안에 30분 출전을 약속한다':'이 방향을 지켜 나가겠다고 약속한다'},{id:'honest',label:e.key==='rookie'?'출전은 보장하지 않고 준비 기준을 설명한다':'결과를 보장하지 않고 함께 점검하자고 한다'}]:[],memory:relation>=6?'이전 대화에서 쌓은 신뢰가 느껴집니다.':relation<0?'이전의 부담스러운 말을 아직 기억하고 있습니다.':'서로의 생각을 알아가는 중입니다.'};
+ }
+ function fingerprint(s){return JSON.stringify([s.seed,s.year,s.round,s.competition,s.match?.seed,s.match?.minute,s.match?.paused,Object.values(s.squad).map(p=>p.identity),records(s)]);}
+ function choose(s,event,step,choice,expected){
+  if(expected!==fingerprint(s))throw Error('구단 상황이 바뀌었습니다. 대화를 다시 확인하세요.');
+  if(s.match&&['first','second','third'].includes(s.match.phase)&&!s.match.paused)throw Error('경기를 잠시 멈춘 뒤 대화하세요.');
+  const e=scene(s,event);if(!e||e.step!==step||!e.choices.some(c=>c.id===choice&&!c.disabled)||e.key==='rookie'&&s.round>=13)throw Error('지금 선택할 수 없는 대화입니다.');
+  const record={event,step,choice,actor:e.actor,atRound:s.round};if(!s.clubStory)s.clubStory={version:1,records:[]};s.clubStory.records.push(record);return scene(s,event);
+ }
+ function validate(s){
+  if(!Object.hasOwn(s,'clubStory'))return;
+  const fail=()=>{throw Error('저장한 구단 대화 기록을 읽을 수 없어요.');},story=s.clubStory;if(!story||story.version!==1||Object.keys(story).length!==2||!Array.isArray(story.records)||story.records.length>s.year*26)fail();
+  const seen=new Map();let previous=0;
+  for(const r of story.records){if(!r||Object.keys(r).length!==5||!['event','step','choice','actor','atRound'].every(k=>Object.hasOwn(r,k))||typeof r.event!=='string'||typeof r.actor!=='string'||![0,1].includes(r.step)||!Number.isInteger(r.atRound))fail();const year=Number(r.event.split(':')[0]),e=events(s,year).find(e=>e.id===r.event),parent=seen.get(r.event);if(!e||year<1||year>s.year||r.atRound<e.round||r.atRound>played(s,year)||e.key==='rookie'&&r.atRound>=13||year*100+r.atRound<previous||r.step!==(parent?1:0)||parent?.step===1||r.step===0&&!['listen','bold','practical'].includes(r.choice)||r.step===1&&!['commit','honest'].includes(r.choice)||parent&&parent.actor!==r.actor)fail();if(['captain','rookie'].includes(e.relation)?!F.identityProfile(r.actor):r.actor!==e.relation)fail();previous=year*100+r.atRound;seen.set(r.event,r);}
+ }
+ function read(s){const available=events(s).filter(e=>!(e.key==='rookie'&&s.round>=13)),pending=available.filter(e=>records(s).filter(r=>r.event===e.id).length<2),history=records(s).filter(r=>r.step===1).map(r=>{const e=events(s,Number(r.event.split(':')[0])).find(e=>e.id===r.event);return {id:r.event,title:e.title,year:e.year,round:r.atRound,actor:F.identityProfile(r.actor)?.name||e.speaker,choice:r.choice,mission:mission(s,e,records(s).filter(row=>row.event===e.id))};});return {pending:pending.map(e=>({id:e.id,title:e.title,speaker:e.speaker,round:e.round})),relationships:relationships(s),history:copy(history),fingerprint:fingerprint(s)};}
+ const api={read,scene,choose,validate,events,fingerprint};root.ClubStory=api;if(typeof module!=='undefined')module.exports=api;
+})(typeof window!=='undefined'?window:globalThis);
