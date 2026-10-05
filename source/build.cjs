@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto');
 const dist=path.join(__dirname,'dist');
 let html=fs.readFileSync(path.join(dist,'index.html'),'utf8');
-html=html.replace(/<link rel="stylesheet" href="([^?]+)\?v=[^"]+">/g,(_,file)=>'<style>'+fs.readFileSync(path.join(dist,file),'utf8')+'</style>');
+html=html.replace(/<link rel="stylesheet" href="([^?]+)\?v=[^"]+">/g,(_,file)=>'<style>'+require('./compact-css.cjs')(fs.readFileSync(path.join(dist,file),'utf8'))+'</style>');
 for(const tag of [...html.matchAll(/<script src="([^?]+)\?v=[^"]+"><\/script>/g)]){const file=tag[1];
  const source=fs.readFileSync(path.join(dist,file),'utf8');new vm.Script(source,{filename:file});
  html=html.replace(tag[0],'<script>'+source.replaceAll('</script','<\\/script')+'</script>');
