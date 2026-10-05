@@ -1,9 +1,8 @@
 let tacticsPreview=null,tacticsPreviewContext=null,tacticsBoardFingerprint=null,tacticsBoardOpen=true;
 const tacticsNumber=value=>value>0&&value<.05?'<0.1':Number(value.toFixed(1)).toLocaleString('ko-KR');
 function tacticsDiagram(d,tactic){
- const formation=d.context.formation,own={GK:[[22,115]],DEF:formation==='352'?[[79,60],[79,115],[79,170]]:[[79,40],[79,90],[79,140],[79,190]]},mid=formation==='433'?[[147,65],[132,115],[147,165]]:formation==='352'?[[150,35],[130,75],[150,115],[130,155],[150,195]]:[[148,40],[130,90],[130,140],[148,190]],fw=formation==='433'?[[216,45],[235,115],[216,185]]:[[218,85],[218,145]];
- own.MID=mid;own.FW=fw;let dots='',counters={GK:0,DEF:0,MID:0,FW:0};
- for(const p of d.lineup){const [x,y]=own[p.pos][counters[p.pos]++];dots+=`<circle cx="${x}" cy="${y}" r="10" fill="#e74755"/><text x="${x}" y="${y+3}" text-anchor="middle" fill="#ffffff" font-size="8" font-weight="700">${p.no}</text>`;}
+ const layout=F.formationPositions[d.context.formation],own={GK:[[50,88]],...layout};let dots='',counters={GK:0,DEF:0,MID:0,FW:0};
+ for(const p of d.lineup){const [px,py]=own[p.pos][counters[p.pos]++],x=12+(100-py)*2.4,y=12+px*2.06;dots+=`<circle cx="${x}" cy="${y}" r="10" fill="#e74755"/><text x="${x}" y="${y+3}" text-anchor="middle" fill="#ffffff" font-size="8" font-weight="700">${p.no}</text>`;}
  const opp=[[355,115],[307,40],[307,90],[307,140],[307,190],[266,42],[275,90],[275,140],[266,188],[200,65],[200,165]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="7" fill="#cbd3de" fill-opacity=".65"/>`).join('');
  const paths={balanced:['M130 90Q164 75 201 90','M130 140Q164 155 201 140'],press:['M148 40L258 40','M130 90L265 90','M130 140L265 140','M148 190L258 190'],counter:['M79 40Q170 4 300 55','M79 190Q170 228 300 175']}[tactic];
  const caption={balanced:'중원에서 간격을 유지하며 기회를 기다립니다.',press:'앞으로 압박합니다. 양 팀의 찬스 지표가 늘어납니다.',counter:'빠른 공격진의 침투를 노립니다. 전체 찬스는 줄어듭니다.'}[tactic];

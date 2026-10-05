@@ -90,3 +90,12 @@ behind the title menu. Main score, pitch and match actions must fit a phone view
 MediaRoom derives opinions from confirmed statistics without touching RNG or saves.
 Use clearly labelled original fictional outlets, never credit simulated quotes to
 actual journalists or newsrooms. Keep articles visible on the home dashboard.
+
+Owner refinement (2026-10-05, APK feedback): tactics uses pointer/touch drag/drop,
+never position sliders. Derive assigned pitch position from coordinates while
+preserving natural registration and saved contracts. Live pitch remains read-only.
+Keep a shared layout source for all twelve formations. A shot highlight starts
+at the last visible ball, shows recovery/pass before shooting, and preserves RNG.
+New UI campaigns default to Tottunham with no separate Tottunham-start button.
+Onboarding appears on first play with visible skip; replay belongs in settings.
+Continue fictional story chapters on the home screen from confirmed season progress.
