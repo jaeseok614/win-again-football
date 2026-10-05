@@ -98,6 +98,13 @@ Keep a shared layout source for all twelve formations. A shot highlight starts
 at the last visible ball, shows recovery/pass before shooting, and preserves RNG.
 New UI campaigns default to Tottunham with no separate Tottunham-start button.
 Onboarding appears on first play with visible skip; replay belongs in settings.
+
+Owner refinement (2026-10-05, player traits): display player-specific left/right foot
+strength and detailed positional suitability in reports and the tactics popup.
+Separate match condition from stamina. On the live pitch, show stamina as a vertical
+green/yellow/red fill gauge and condition as a separate dot; keep names legible and
+the entire match UI in one phone viewport. Preserve the identity-derived traits and
+old campaign saves. See docs/PLAYER_TRAITS_AND_CONDITION.md.
 Continue fictional story chapters on the home screen from confirmed season progress.
 Interactive ClubStory choices are optional campaign receipts, unlike onboarding.
 Keep their two-turn dialogue, identity, season and round validation on restore;
