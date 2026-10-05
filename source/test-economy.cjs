@@ -91,6 +91,10 @@ test('pyramid goals reward promotion and upper-division survival without stackin
  const s=S.create(),table=rank=>[{id:S.own,rank}];for(const [division,rank,bonus,target] of [[2,1,100000,2],[2,2,60000,2],[2,3,0,2],[2,8,0,2],[1,1,180000,6],[1,3,90000,6],[1,4,50000,6],[1,6,50000,6],[1,7,0,6]]){s.league={version:1,division,rules:'pyramid'};assert.equal(E.target(s),target);assert.deepEqual(E.goal(s,table(rank)),{target,rank,achieved:rank<=target,bonus});}
 });
 
+test('goal reward preview accepts a rank and remains pure for all five tiers',()=>{
+ const s=S.create(121,{startingClub:true});for(const [division,first,second] of [[5,80000,50000],[4,100000,65000],[3,120000,75000],[2,150000,90000],[1,180000,90000]]){s.league.division=division;const before=JSON.stringify(s);assert.equal(E.goalReward(s,1),first);assert.equal(E.goalReward(s,2),second);assert.equal(JSON.stringify(s),before);}
+});
+
 test('upper-division league and Cup receipts use their tier while payroll stays unchanged',()=>{
  const s=S.create();s.league={version:1,division:1,rules:'pyramid'};const r=E.rates(s),payroll=E.wages(s);assert.deepEqual(r,{gateHome:40000,gateAway:18000,sponsor:12000,winBonus:5000,drawBonus:2000,cupHome:28000,cupAway:12000,cupBonuses:[24000,44000,100000]});
  for(const [home,score,gate,bonus] of [[true,[2,0],40000,5000],[false,[1,1],18000,2000],[true,[0,1],40000,0]]){const state=copy(s),fixture={home:home?S.own:'calderwick',away:home?'calderwick':S.own},entry=E.applyRound(state,fixture,score);assert.equal(entry.gate,gate);assert.equal(entry.bonus,bonus);assert.equal(entry.payroll,payroll);assert.equal(entry.amount,gate+12000+bonus-payroll);}

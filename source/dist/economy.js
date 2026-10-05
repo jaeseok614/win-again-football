@@ -55,6 +55,7 @@
   const income=europeIncome(result);if(!money(s.finance.balance+income.amount))throw Error('구단 재정을 반영할 수 없어요.');
   const entry={id,type:'europe',year:s.year,round:s.round,stage:result.stage,index:result.index,home:result.home,away:result.away,goals:[...result.goals],penalties:copy(result.penalties),kicks:copy(result.kicks),winner:result.winner,...income};s.finance.balance+=entry.amount;s.finance.ledger.push(entry);return entry;
  }
+ function goalReward(s,rank){return outcomeFor(s,rank).bonus;}
  function goal(s,table){return outcomeFor(s,table.find(c=>c.id==='brynwell').rank);}
  function finishSeason(s,table){const id='goal-'+s.year;if(s.finance.ledger.some(e=>e.id===id))throw Error('이 시즌 보상을 이미 반영했습니다.');const outcome=goal(s,table);s.finance.outcome=outcome;s.finance.balance+=outcome.bonus;s.finance.ledger.push({id,type:'goal',year:s.year,round:14,amount:outcome.bonus,...outcome});}
  function nextYear(s){s.finance.marketUsed=[];s.finance.transferWeek=null;s.finance.outcome=null;}
@@ -103,5 +104,5 @@
   const used=usedByYear[s.year]||[];if(used.length!==f.marketUsed.length||used.some(id=>!f.marketUsed.includes(id)))fail();
   const thisWeek=f.ledger.some(e=>e.type==='transfer'&&e.year===s.year&&e.round===s.round+1);if(f.transferWeek!==(thisWeek?s.year+'-'+s.round:null))fail();const expected=s.round===14?goal(s,table):null;if(JSON.stringify(f.outcome)!==JSON.stringify(expected))fail();return s;
  }
- const api={initialize,wages,resale,quote,recruit,payScout,scoutCost,awardBoard,rates,europeRates,target,applyRound,applyCup,applyEurope,goal,finishSeason,nextYear,validate};root.Economy=api;if(typeof module!=='undefined')module.exports=api;
+ const api={initialize,wages,resale,quote,recruit,payScout,scoutCost,awardBoard,rates,europeRates,target,applyRound,applyCup,applyEurope,goalReward,goal,finishSeason,nextYear,validate};root.Economy=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
