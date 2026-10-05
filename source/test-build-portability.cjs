@@ -3,7 +3,7 @@ const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),cp=r
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'football-build-')),source=path.join(dir,'source');
 try{
  fs.mkdirSync(source);fs.cpSync(path.join(__dirname,'dist'),path.join(source,'dist'),{recursive:true});
- for(const file of ['build.cjs','build-pwa.cjs'])fs.copyFileSync(path.join(__dirname,file),path.join(source,file));
+ for(const file of ['build.cjs','build-pwa.cjs','compact-css.cjs'])fs.copyFileSync(path.join(__dirname,file),path.join(source,file));
  const build=()=>cp.execFileSync(process.execPath,[path.join(source,'build-pwa.cjs')],{stdio:'pipe'});
  const names=['index.html','cache-assets.js','sw.js','manifest.webmanifest','source/dist/cache-assets.js'];
  build();const before=names.map(file=>fs.readFileSync(path.join(dir,file),'utf8'));
