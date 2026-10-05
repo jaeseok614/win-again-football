@@ -202,3 +202,4 @@
 .pitch .match-moment .moment-title{font-size:22px}
 .pitch .match-moment .moment-player{font-size:12px}
 .pitch .match-moment .moment-detail{display:none}
+.matchday-card-badge{display:block;width:max-content;max-width:100%;margin-top:3px;padding:2px 5px;border:1px solid #806a35;border-radius:999px;background:#3b321f;color:#ffe29b;font:800 8px/1.3 system-ui;white-space:normal}.matchday-card-badge.sent-off{border-color:#8e4845;background:#482729;color:#ffd0c9}.matchday-tired-list button:disabled{opacity:.48;cursor:not-allowed;border-color:#754442}

@@ -3,3 +3,4 @@
 @media(max-width:730px) and (max-height:680px){#match-pane .pitch{height:130px}}
 
 .opposition-dismissed{opacity:.65}.opposition-dismissed td:last-child small{color:#ef8c86;font-weight:700}
+.opposition-player-name .matchday-card-badge{margin-top:4px;font-size:8px}.opposition-dismissed .opposition-player-name{text-decoration:line-through;text-decoration-color:#d56b61}

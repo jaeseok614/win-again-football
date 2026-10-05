@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
-const F=require('./dist/engine.js'),S=require('./dist/season.js'),Matchday=require('./dist/matchday.js'),MatchFlow=require('./dist/match-flow.js'),TacticsBoard=require('./dist/tactics-board.js'),Portraits=require('./dist/portraits.js');
+const F=require('./dist/engine.js'),S=require('./dist/season.js'),Matchday=require('./dist/matchday.js'),MatchFlow=require('./dist/match-flow.js'),TacticsBoard=require('./dist/tactics-board.js'),Portraits=require('./dist/portraits.js'),Opposition=require('./dist/opposition.js');
 const copy=value=>JSON.parse(JSON.stringify(value));let groups=0;
 function test(name,fn){fn();groups++;console.log('PASS '+name);}
 function at(minute,seed=2011){const s=S.create(seed);while(s.match.minute<minute){if(!F.running(s.match))F.begin(s.match);s.match.paused=false;F.tick(s.match);}return s;}
@@ -138,5 +138,21 @@ test('a real analyst alert opens decision tools but never applies a suggested ta
 test('suggested substitution opens the existing review flow and never swaps players on first tap',()=>{
  const s=at(23);for(const id of s.match.lineup)s.match.players[id].energy=80;s.match.players.f1.energy=25;s.match.players.f3.energy=95;const q=Matchday.read(s).substitution.suggestion,h=harness(s,{width:390}),before=copy(s);h.render();const suggestion=h.get('matchday-selection').querySelector('[data-matchday-player="'+q.out.id+'"]');assert.ok(suggestion);assert.match(h.get('matchday-selection').innerHTML,/코치 추천 교체/);assert.match(h.get('matchday-selection').innerHTML,new RegExp(escapeText(q.incoming.name)));h.dispatch('match-pane','click',suggestion);
  onlyPaused(h,before);assert.equal(h.context.selected,q.out.id);assert.equal(s.match.subs,0);assert.ok(s.match.lineup.includes(q.out.id));assert.ok(!s.match.lineup.includes(q.incoming.id));assert.match(h.get('matchday-selection').innerHTML,/교체 후보를 고르세요/);
+});
+test('yellow cards and dismissals identify players in substitution choices and the opponent report',()=>{
+ const s=at(23),opponents=Opposition.read(s).lineup;s.match.discipline={version:1,events:[
+  {minute:8,team:0,id:'f1',card:'yellow',reason:'foul'},
+  {minute:17,team:0,id:'d1',card:'red',reason:'direct-red'},
+  {minute:14,team:1,id:opponents[0].id,card:'yellow',reason:'foul'},
+  {minute:21,team:1,id:opponents[1].id,card:'red',reason:'direct-red'}
+ ]};
+ const h=harness(s);h.render();let html=h.get('matchday-selection').innerHTML;
+ assert.match(html,/🟨 경고 1/);assert.match(html,/퇴장한 선수는 교체할 수 없습니다/);
+ const dismissed=h.get('matchday-selection').querySelector('[data-matchday-player="d1"]');assert.ok(dismissed);assert.equal(dismissed.disabled,true);
+ h.context.selected='f1';h.render();assert.match(h.get('matchday-selection').innerHTML,new RegExp(escapeText(s.match.players.f1.name)));assert.match(h.get('matchday-selection').innerHTML,/🟨 경고 1/);
+ const host=h.element('opposition-report');host.hidden=false;h.context.Opposition=Opposition;
+ vm.runInContext(fs.readFileSync(path.join(__dirname,'dist','opposition-ui.js'),'utf8'),h.context,{filename:'opposition-ui.js'});
+ h.context.renderOpponentReport();const report=host.innerHTML;
+ assert.match(report,/🟨 경고 1/);assert.match(report,/🟥 퇴장/);assert.match(report,/opposition-dismissed/);
 });
 console.log('Validated '+groups+' matchday UI groups with actual campaign and football models.');
