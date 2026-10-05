@@ -36,7 +36,10 @@ to the tactics popup; substitution selection lists every starter in its own popu
 New UI campaigns use the Tottunham parody starter identities (sp_*) inspired by
 the 2024/25 Tottenham squad. Keep old squad identities and their contract history.
 The startingClub marker selects canonical starter contracts for finance/statistics
-validation. Mental attributes influence team talks; rules:2 receipts replay the new
+validation. When an unmarked legacy campaign is already saved, make the title
+screen's primary action start the canonical Tottunham campaign and keep the previous
+campaign recoverable as the prior-save backup; do not resume its old superstar roster
+by default. Mental attributes influence team talks; rules:2 receipts replay the new
 formula and missing rules retain the original formula. Never reinterpret old talks.
 Onboarding/tutorial completion is a device preference, separate from campaign data. Keep the
 guided practice optional, connect it to real controls, and never auto-kickoff.
