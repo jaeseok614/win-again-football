@@ -38,3 +38,5 @@ function drawMotionActors(ctx,w,h){
 function movementShouldAnimate(){return (typeof appSessionStarted==='undefined'||appSessionStarted)&&!!state&&view==='match'&&!document.hidden&&motionEnabled()&&(movementDemo||!state.paused&&(F.running(state)||movementEventAge<2200));}
 function movementSnapshot(){return {preview:movementDemo,elapsedMs:movementElapsed,eventAgeMs:Number.isFinite(movementEventAge)?movementEventAge:null,frame:lastMotionFrame};}
 document.addEventListener('visibilitychange',()=>{movementStamp=performance.now();if(document.hidden)cancelMovementPreview();});
+
+function movementHighlightPending(){return !!lastEvent&&(movementEvent!==lastEvent||movementEventAge<2200);}

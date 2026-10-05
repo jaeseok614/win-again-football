@@ -34,7 +34,7 @@
   if(running){
    // Ten connected passes, with each turnover returning possession to the other side.
    // The display invents no additional shots or goals: those require real engine events.
-   const routeTime=event&&['goal','shot','chance'].includes(event.type)&&[0,1].includes(event.team)&&age>=1900?((1-event.team)*7000+age-1900):time;
+   const routeTime=event&&['goal','shot','chance'].includes(event.type)&&[0,1].includes(event.team)&&Number.isFinite(age)&&age>=1900?((1-event.team)*7000+age-1900):time;
    const cycle=(routeTime%14000)/14000,stage=Math.floor(cycle*10),local=cycle*10-stage,attack=Math.sin(cycle*Math.PI*2),press=match.tactic==='press'?3:match.tactic==='counter'?-2:0;
    for(let i=0;i<own.length;i++){
     const p=own[i],amplitude={GK:1.5,DEF:7,MID:12,FW:8}[p.pos]||8,side=p.pos==='GK'?2:5;

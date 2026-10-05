@@ -89,4 +89,8 @@ test('paused five-minute highlights show the ball at its actual outcome instead 
  h.context.lastEvent={type:'shot',team:1,minute:10};const save=h.frame(160);assert.equal(save.phase,'save');assert.equal(save.ball.y,86);assert.equal(save.carrierId,save.keeperId);
  assert.equal(h.context.state.paused,true);
 });
+test('automatic match clock waits for a paused highlight to finish instead of using elapsed wall time',()=>{
+ const h=harness();F.begin(h.context.state);h.frame(80);h.context.lastEvent={type:'shot',team:1,minute:7};assert.equal(h.context.movementHighlightPending(),true);h.frame(160);h.frame(460);h.context.state.paused=true;h.frame(20000);assert.equal(h.context.movementHighlightPending(),true);h.context.state.paused=false;h.frame(20016);assert.equal(h.context.movementHighlightPending(),true);h.frame(22500);assert.equal(h.context.movementHighlightPending(),false);
+ const app=fs.readFileSync(path.join(__dirname,'dist/app.js'),'utf8');assert.ok(app.includes('active&&motionEnabled()&&movementHighlightPending()'));
+});
 console.log('Movement UI checks passed: '+groups+' groups.');

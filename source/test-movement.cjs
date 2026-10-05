@@ -71,6 +71,7 @@ test('continuous normal frames avoid teleports at pass and cycle boundaries',()=
 });
 test('missing or unrelated event metadata safely falls back to normal movement',()=>{
  const match=active(),normal=Movement.frame({match,elapsedMs:3700,motion:true});
+ assert.deepEqual(Movement.frame({match,elapsedMs:3700,event:{type:'shot',team:1},eventAgeMs:Infinity,motion:true}),normal);
  for(const event of [null,{type:'sub',team:0},{type:'goal',team:9},{type:'break'},{type:'start'}])assert.deepEqual(Movement.frame({match,elapsedMs:3700,event,eventAgeMs:500,motion:true}),normal);
  const oldShot=Movement.frame({match,elapsedMs:3700,event:{type:'shot',team:0,minute:21,text:'알 수 없는 선수의 슈팅'},eventAgeMs:500,motion:true});assert.equal(oldShot.attributed,false);assert.equal(oldShot.scorerId,null);bounds(oldShot);
  assert.doesNotThrow(()=>Movement.frame());assert.doesNotThrow(()=>Movement.frame({match:{},elapsedMs:NaN,eventAgeMs:NaN}));
