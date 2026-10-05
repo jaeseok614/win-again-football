@@ -19,7 +19,7 @@ function motionFrame(now=performance.now()){
  const commentary=$('commentary');
  if(commentary&&visible&&enabled&&!movementDemo&&F.running(state)&&!state.paused){
   const key=movementEventAge<2200?'event:'+lastEventAt+':'+lastMotionFrame.phase:'pass:'+Math.floor(movementElapsed/2800);
-  if(key!==movementCommentaryKey){movementCommentaryKey=key;movementCommentaryText=movementEventAge<700?Movement.liveCommentary(lastMotionFrame):movementEventAge<1450&&lastMotionFrame.phase==='shot'?(lastMotionFrame.performerName||'공격수')+'의 슈팅! 공이 골문을 향해 날아갑니다.':movementEventAge<2200?Movement.commentary(movementEvent,state,movementOpponentRoster):Movement.liveCommentary(lastMotionFrame);}
+  if(key!==movementCommentaryKey){movementCommentaryKey=key;movementCommentaryText=movementEventAge<700?Movement.liveCommentary(lastMotionFrame):movementEventAge<1450&&lastMotionFrame.phase==='shot'?(lastMotionFrame.performerName||'공격수')+'의 슈팅! 공이 골문을 향해 날아갑니다.':movementEventAge<2200?Movement.commentary(movementEvent,state,movementOpponentRoster,lastMotionFrame):Movement.liveCommentary(lastMotionFrame);}
   if(movementCommentaryText){const paragraph=commentary.querySelector('p');if(paragraph.textContent!==movementCommentaryText)paragraph.textContent=movementCommentaryText;const minute=commentary.querySelector('.minute-label');if(minute.textContent!==state.minute+'′')minute.textContent=state.minute+'′';}
  }
  return lastMotionFrame;

@@ -41,6 +41,26 @@ fixtures, financial receipts, and campaign history; an old save is never silentl
 converted into the five-tier game. The device save key stays
 `win-again-season-v17`, and campaign backup format remains version 1.
 
+Each promoted season replaces all seven opponents with the destination tier's
+club pool. Opponent names and eleven-player rosters are generated from those club
+IDs. Match profiles apply tier floors so league-wide attack, defense, midfield,
+and speed averages rise from division five through division one; generated player
+attack, defense, passing, and speed averages rise too. Historic raw club ratings
+and non-pyramid profiles remain available for legacy seasons. The opponent report
+and live pitch read the same adjusted match profile.
+
+New Tottunham matches use engine version 6. One minute can produce one attacking
+event at most, actions are recorded as crosses, cutbacks, through balls, dribbles,
+or combinations, and each event still uses the established eight RNG draws.
+Version 5 saved matches continue with their old outcomes. The live pitch keeps a
+side in possession through a longer build-up, routes the ball through a wide
+player before entering the box, and animates a recorded cross from its named
+passer to the receiving striker before the shot. Reduced-motion mode stays static.
+
+The match presentation follows Football Manager's published possession and
+out-of-possession approach and risk-based pass decisions, adapted to the game's
+existing three instructions and fictional squad data.
+
 Useful checks after editing this feature:
 
 ```sh

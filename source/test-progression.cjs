@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
-const F=require('./dist/engine.js'),E=require('./dist/economy.js'),S=require('./dist/season.js');
+const F=require('./dist/engine.js'),E=require('./dist/economy.js'),S=require('./dist/season.js'),O=require('./dist/opposition.js');
 const P=globalThis.Cup||require('./dist/cup.js');
 const copy=x=>JSON.parse(JSON.stringify(x));let checks=0;
 function test(name,fn){fn();checks++;console.log('PASS '+name);}
@@ -22,8 +22,12 @@ test('the legacy rules fixture remains an eight-club two-leg second division',()
 test('fresh Tottunham careers use five balanced tiers and climb one level per promoted season',()=>{
  let s=S.create(1208,{startingClub:true});assert.equal(s.version,9);assert.deepEqual(s.league,{version:1,division:5,rules:'five-tier',clubIds:S.leagueClubs({league:{division:5,rules:'five-tier'}}).map(c=>c.id)});assert.equal(S.clubs.length,40);assert.deepEqual([5,4,3,2,1].map(d=>S.leagueClubs({league:{division:d,rules:'five-tier'}}).length),[8,8,8,8,8]);assert.equal(new Set([5,4,3,2,1].flatMap(d=>S.leagueClubs({league:{division:d,rules:'five-tier'}}).map(c=>c.id))).size,40);assert.equal(S.divisionInfo(5).name,S.divisionInfo({division:5,rules:'five-tier'}).name);assert.equal(E.scoutCost(s),8000);assert.equal(E.scoutCost(S.create(1209)),12000);assertSchedule(s);
  s=S.scout(s,'FW');assert.equal(s.finance.balance,152000);assert.equal(s.finance.ledger.find(e=>e.type==='scout').amount,-8000);assert.deepEqual(S.restore(copy(s)),s);
- s=S.create(1210,{startingClub:true});for(const division of [4,3,2,1]){s=complete(tune(s,99));assert.ok(S.standings(s).find(c=>c.id===S.own).rank<=2);assert.equal(S.movement(s).to,division);s=S.nextSeason(s);assert.equal(s.league.rules,'five-tier');assert.equal(s.league.division,division);assert.deepEqual(S.restore(copy(s)),s);}
+ s=S.create(1210,{startingClub:true});for(const division of [4,3,2,1]){const previousOpponents=S.leagueClubs(s).filter(c=>c.id!==S.own).map(c=>c.id).sort();s=complete(tune(s,99));assert.ok(S.standings(s).find(c=>c.id===S.own).rank<=2);assert.equal(S.movement(s).to,division);s=S.nextSeason(s);assert.equal(s.league.rules,'five-tier');assert.equal(s.league.division,division);const nextOpponents=S.leagueClubs(s).filter(c=>c.id!==S.own).map(c=>c.id).sort();assert.ok(nextOpponents.every(id=>!previousOpponents.includes(id)),'promotion refreshes every opponent club');const opponent=S.opponentFor(s),reference=S.clubReferences[opponent.id];assert.equal(reference.division,division);assert.equal(s.match.version,6);assert.deepEqual(s.match.opponent,O.competitionProfile(S.rawClub(opponent.id),division,'five-tier'));const roster=O.roster(opponent,s.match.opponent);assert.equal(roster.length,11);assert.equal(new Set(roster.map(p=>p.identity)).size,11);assert.deepEqual(S.restore(copy(s)),s);}
  assert.equal(s.history.length,4);assert.deepEqual(s.history.map(h=>h.division),[5,4,3,2]);assert.ok(s.history.every(h=>h.rules==='five-tier'&&h.nextDivision===h.division-1));
+});
+
+test('modern Tottenham match receipts resume identically through all decision points',()=>{
+ const initial=S.create(1213,{startingClub:true});for(const minute of [0,17,45,65,90]){const raw=stop(copy(initial),minute),resumed=S.restore(copy(raw));assert.equal(raw.match.version,6);assert.equal(resumed.match.version,6);assert.deepEqual(resumed.match.opponent,raw.match.opponent);const uninterrupted=settle(raw),restored=settle(resumed);assert.deepEqual(restored,uninterrupted);}
 });
 
 const old=legacy();
