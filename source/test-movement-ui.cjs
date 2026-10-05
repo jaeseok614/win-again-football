@@ -64,7 +64,7 @@ test('a different match seed resets the display clock and removes an old preview
 test('slow 900ms frames expire a real event after 2.2 seconds without aging a newly found event early',()=>{
  const h=harness();F.begin(h.context.state);while(h.context.state.phase!=='full'){if(!F.running(h.context.state))F.begin(h.context.state);F.finishSegment(h.context.state);}
  const before=copy(h.context.season),scorer=h.context.state.lineup.find(id=>h.context.state.players[id].pos==='FW');h.context.lastEvent={type:'goal',team:0,minute:90,scorerId:scorer};h.frame(900);
- assert.equal(h.snapshot().eventAgeMs,0);assert.equal(h.snapshot().frame.phase,'shot');
+ assert.equal(h.snapshot().eventAgeMs,0);assert.equal(h.snapshot().frame.phase,'turnover');
  h.frame(1800);assert.equal(h.snapshot().eventAgeMs,900);h.frame(2700);assert.equal(h.snapshot().eventAgeMs,1800);assert.equal(h.snapshot().frame.phase,'goal');
  h.frame(3600);assert.equal(h.snapshot().eventAgeMs,2700);assert.equal(h.snapshot().frame.phase,'static');assert.equal(h.context.movementShouldAnimate(),false);assert.deepEqual(copy(h.context.season),before);
 });
@@ -80,7 +80,7 @@ test('moment cards wait for ball arrival and pause preserves the pending result'
 test('live commentary survives tick rendering and only announces a goal after arrival',()=>{
  const h=harness(),paragraph={textContent:''},minute={textContent:''};h.nodes.set('commentary',{querySelector:selector=>selector==='p'?paragraph:minute});F.begin(h.context.state);
  h.frame(80);assert.ok(paragraph.textContent.includes('전개'));paragraph.textContent='킥오프';h.frame(160);assert.notEqual(paragraph.textContent,'킥오프');
- h.context.lastEvent={type:'goal',team:1,minute:9};h.context.lastEventAt=240;h.frame(240);assert.ok(paragraph.textContent.includes('슈팅'));assert.ok(!paragraph.textContent.includes('골입니다'));
+ h.context.lastEvent={type:'goal',team:1,minute:9};h.context.lastEventAt=240;h.frame(240);assert.ok(paragraph.textContent.includes('공을 회수'));assert.ok(!paragraph.textContent.includes('골입니다'));
  h.frame(1000);h.frame(1700);assert.ok(paragraph.textContent.includes('골망'));assert.ok(paragraph.textContent.includes(h.snapshot().frame.performerName));
 });
 test('paused five-minute highlights show the ball at its actual outcome instead of its shot origin',()=>{

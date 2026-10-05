@@ -107,6 +107,21 @@ public final class GameSmokeTest {
             "(()=>{const element=document.querySelector('" + selector + "');if(!element)return false;const r=element.getBoundingClientRect();" +
             "return element.textContent.includes('" + text + "')&&r.width>0&&r.height>0&&r.top>=0&&r.bottom<=innerHeight;})()"));
     }
+    private void dragTacticalForward(ActivityScenario<MainActivity> scenario) throws Exception {
+        evaluate(scenario, "document.querySelector('.tactical-pitch').scrollIntoView({block:'center',behavior:'instant'});true");
+        awaitWebViewFrame(scenario); awaitAppWindowFocus(scenario);
+        String encoded = evaluate(scenario, "(()=>{const a=document.querySelector('[data-tactical-player=f1]').getBoundingClientRect(),p=document.querySelector('.tactical-pitch').getBoundingClientRect();return JSON.stringify([a.x+a.width/2,a.y+a.height/2,p.x+p.width*.5,p.y+p.height*.34,devicePixelRatio]);})()");
+        JSONArray points = new JSONArray(new JSONTokener(encoded).nextValue().toString());
+        int[] origin = new int[2];scenario.onActivity(activity -> activity.gameViewForTest().getLocationOnScreen(origin));
+        float sx=origin[0]+(float)(points.getDouble(0)*points.getDouble(4)),sy=origin[1]+(float)(points.getDouble(1)*points.getDouble(4));
+        float tx=origin[0]+(float)(points.getDouble(2)*points.getDouble(4)),ty=origin[1]+(float)(points.getDouble(3)*points.getDouble(4));
+        Instrumentation instrumentation=InstrumentationRegistry.getInstrumentation();long start=SystemClock.uptimeMillis();
+        MotionEvent down=MotionEvent.obtain(start,start,MotionEvent.ACTION_DOWN,sx,sy,0);instrumentation.sendPointerSync(down);down.recycle();
+        for(int step=1;step<=10;step++){SystemClock.sleep(20);MotionEvent move=MotionEvent.obtain(start,SystemClock.uptimeMillis(),MotionEvent.ACTION_MOVE,sx+(tx-sx)*step/10,sy+(ty-sy)*step/10,0);instrumentation.sendPointerSync(move);move.recycle();}
+        MotionEvent up=MotionEvent.obtain(start,SystemClock.uptimeMillis(),MotionEvent.ACTION_UP,tx,ty,0);instrumentation.sendPointerSync(up);up.recycle();
+        awaitTrue(scenario,"document.querySelector('[data-tactical-player=f1] em').textContent==='AM'&&customPositions[state.players.f1.identity][1]===34");
+    }
+
     private File verificationFolder() {
         String additional = InstrumentationRegistry.getArguments().getString("additionalTestOutputDir");
         File folder = additional != null && !additional.isEmpty() ? new File(additional)
@@ -270,6 +285,15 @@ public final class GameSmokeTest {
             assertEquals("Score, pitch and main action must share the phone viewport", "true", evaluate(scenario,
                 "(()=>{const p=document.getElementById('pitch').getBoundingClientRect(),b=document.getElementById('primary').getBoundingClientRect(),s=document.querySelector('.scoreboard').getBoundingClientRect();return s.top>=0&&p.top>=0&&p.bottom<=b.top&&b.bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1;})()"));
             screenshot(scenario, "android-compact-match.png");
+            if ("true".equals(evaluate(scenario, "state.phase!=='full'"))) {
+                tapWebElement(scenario, ".match-quick-menu [data-match-popup='tactics']");
+                awaitTrue(scenario, "document.querySelectorAll('#tactical-editor input[type=range]').length===0&&document.querySelectorAll('[data-mobile-formation]').length===12");
+                dragTacticalForward(scenario);
+                screenshot(scenario, "android-drag-position.png");
+                assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
+                tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
+            }
+
             scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
         }
     }

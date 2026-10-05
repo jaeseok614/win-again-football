@@ -40,7 +40,7 @@ test('static match phases preserve their own labels without a real event',()=>{
 test('actual goal scorers and a substituted starting goalkeeper guide real event animation',()=>{
  const match=F.create(20260930);F.swap(match,'g1','g2');F.begin(match);
  const actualScorer=match.lineup.find(id=>match.players[id].pos==='FW'),goal={type:'goal',team:0,minute:42,scorerId:actualScorer,scorerIdentity:match.players[actualScorer].identity};
- const start=Movement.frame({match,elapsedMs:3500,event:goal,eventAgeMs:0,motion:true});assert.equal(start.carrierId,actualScorer);assert.equal(start.scorerId,actualScorer);assert.equal(start.attributed,true);
+ const start=Movement.frame({match,elapsedMs:3500,event:goal,eventAgeMs:700,motion:true});assert.equal(start.carrierId,actualScorer);assert.equal(start.scorerId,actualScorer);assert.equal(start.attributed,true);
  const end=Movement.frame({match,elapsedMs:3500,event:goal,eventAgeMs:1500,motion:true});assert.equal(end.phase,'goal');assert.equal(end.ball.y,4);
  const save=Movement.frame({match,elapsedMs:3500,event:{type:'shot',team:1,minute:19},eventAgeMs:1500,motion:true});assert.equal(save.phase,'save');assert.equal(save.keeperId,'g2');assert.equal(save.carrierId,'g2');assert.equal(save.ball.y,86);
 });
@@ -77,7 +77,21 @@ test('missing or unrelated event metadata safely falls back to normal movement',
 });
 test('named legacy shots only attribute a shooter present in the active eleven',()=>{
  const match=active(),shooter=match.lineup.find(id=>match.players[id].pos==='FW'),event={type:'shot',team:0,minute:17,text:match.players[shooter].name+'의 슈팅!'};
- const shown=Movement.frame({match,event,eventAgeMs:0,motion:true});assert.equal(shown.scorerId,shooter);assert.equal(shown.carrierId,shooter);assert.equal(shown.attributed,true);
+ const shown=Movement.frame({match,event,eventAgeMs:700,motion:true});assert.equal(shown.scorerId,shooter);assert.equal(shown.carrierId,shooter);assert.equal(shown.attributed,true);
  const bench=Object.values(match.players).find(p=>p.pos==='FW'&&!match.lineup.includes(p.id));event.text=bench.name+'의 슈팅!';assert.equal(Movement.frame({match,event,eventAgeMs:0,motion:true}).attributed,false);
+});
+test('event entry retains the visible ball and ownership, wins possession before the shot and returns continuously',()=>{
+ const match=active(),before=copy(match);
+ for(const team of [0,1])for(const type of ['goal','shot','chance'])for(const elapsedMs of [0,2000,6000,9000,13000]){
+  const origin=Movement.frame({match,elapsedMs,motion:true}),event={team,type,minute:12,scorerId:team===0?'f1':undefined};
+  const input={match,event,eventOrigin:origin,eventElapsedMs:elapsedMs,motion:true};
+  const entry=Movement.frame({...input,elapsedMs,eventAgeMs:0});assert.deepEqual(entry.ball,origin.ball);assert.equal(entry.ownerTeam,origin.ownerTeam);assert.equal(entry.carrierId,origin.carrierId);
+  const ready=Movement.frame({...input,elapsedMs:elapsedMs+700,eventAgeMs:700});assert.equal(ready.ownerTeam,team);assert.equal(ready.phase,type==='chance'?'intercept':'shot');
+  for(const boundary of [350,700,1450,1900,2200]){
+   const a=Movement.frame({...input,elapsedMs:elapsedMs+boundary-.01,eventAgeMs:boundary-.01}),b=Movement.frame({...input,elapsedMs:elapsedMs+boundary+.01,eventAgeMs:boundary+.01});
+   assert.ok(Math.hypot(a.ball.x-b.ball.x,a.ball.y-b.ball.y)<.05,JSON.stringify({boundary,team,type,a:a.ball,b:b.ball}));
+  }
+ }
+ assert.deepEqual(match,before);
 });
 console.log('Movement checks passed: '+groups+' groups.');

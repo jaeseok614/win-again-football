@@ -128,7 +128,31 @@
   let text=String(value??'');for(const [before,after] of [...replacements].sort((a,b)=>b[0].length-a[0].length))text=text.split(before).join(after);return text;
  }
  function profileForSlot(slotId,identity=slotId){const slot=roster.find(p=>p.id===slotId),person=identityProfile(identity);if(!slot||!person||slot.pos!==person.pos)throw Error('같은 포지션의 등록 선수를 선택하세요.');return {...person,id:slotId,identity,no:slot.no,energy:100};}
- const formations={'442':{DEF:4,MID:4,FW:2},'433':{DEF:4,MID:3,FW:3},'352':{DEF:3,MID:5,FW:2}};
+ // One layout source for selection, the editor, broadcast and analysis diagram.
+ const formationPositions={
+  '442':{DEF:[[15,69],[38,73],[62,73],[85,69]],MID:[[15,44],[38,49],[62,49],[85,44]],FW:[[35,23],[65,23]]},
+  '433':{DEF:[[15,69],[38,73],[62,73],[85,69]],MID:[[25,48],[50,52],[75,48]],FW:[[18,24],[50,18],[82,24]]},
+  '352':{DEF:[[25,74],[50,76],[75,74]],MID:[[12,46],[31,52],[50,48],[69,52],[88,46]],FW:[[35,23],[65,23]]},
+  '4231':{DEF:[[15,69],[38,73],[62,73],[85,69]],MID:[[35,59],[65,59],[18,32],[50,32],[82,32]],FW:[[50,16]]},
+  '4141':{DEF:[[15,69],[38,73],[62,73],[85,69]],MID:[[50,59],[15,40],[38,43],[62,43],[85,40]],FW:[[50,19]]},
+  '451':{DEF:[[15,69],[38,73],[62,73],[85,69]],MID:[[13,43],[32,48],[50,48],[68,48],[87,43]],FW:[[50,19]]},
+  '4411':{DEF:[[15,69],[38,73],[62,73],[85,69]],MID:[[15,47],[38,51],[62,51],[85,47],[50,32]],FW:[[50,17]]},
+  '343':{DEF:[[25,74],[50,76],[75,74]],MID:[[12,48],[38,53],[62,53],[88,48]],FW:[[18,24],[50,18],[82,24]]},
+  '532':{DEF:[[12,64],[30,74],[50,76],[70,74],[88,64]],MID:[[28,49],[50,53],[72,49]],FW:[[35,23],[65,23]]},
+  '541':{DEF:[[12,64],[30,74],[50,76],[70,74],[88,64]],MID:[[15,43],[38,49],[62,49],[85,43]],FW:[[50,19]]},
+  '41212':{DEF:[[15,69],[38,73],[62,73],[85,69]],MID:[[50,59],[30,44],[70,44],[50,31]],FW:[[35,18],[65,18]]},
+  '4312':{DEF:[[15,69],[38,73],[62,73],[85,69]],MID:[[28,51],[50,55],[72,51],[50,32]],FW:[[35,18],[65,18]]}
+ };
+ const formations=Object.fromEntries(Object.entries(formationPositions).map(([key,layout])=>[key,Object.fromEntries(Object.entries(layout).map(([pos,points])=>[pos,points.length]))]));
+ function assignedPosition(x,y,natural){
+  if(natural==='GK')return {code:'GK',label:'골키퍼',line:'GK'};
+  const left=x<30,right=x>70,side=left?'L':right?'R':'';
+  if(y>=66)return {code:side?side+'B':'CB',label:side?(left?'왼쪽':'오른쪽')+' 풀백':'중앙 수비수',line:'DEF'};
+  if(y>=55)return {code:side?side+'WB':'DM',label:side?(left?'왼쪽':'오른쪽')+' 윙백':'수비형 미드필더',line:side?'DEF':'MID'};
+  if(y>=38)return {code:side?side+'M':'CM',label:side?(left?'왼쪽':'오른쪽')+' 미드필더':'중앙 미드필더',line:'MID'};
+  if(y>=27)return {code:side?side+'W':'AM',label:side?(left?'왼쪽':'오른쪽')+' 윙어':'공격형 미드필더',line:side?'FW':'MID'};
+  return {code:side?side+'W':'ST',label:side?(left?'왼쪽':'오른쪽')+' 윙어':'스트라이커',line:'FW'};
+ }
  const isAvailable=p=>!!p&&!(p.injuryRemaining||p.injury?.remaining||p.suspended);
  function fitLineup(players,formation,preferred=[]){if(!formations[formation])throw Error('올바른 포메이션을 선택하세요.');const counts={GK:1,...formations[formation]},lineup=[];for(const [pos,n] of Object.entries(counts)){const fit=Object.values(players).filter(p=>p.pos===pos&&isAvailable(p));if(fit.length<n)throw Error('이 포메이션에 출전할 건강한 선수가 부족합니다.');fit.sort((a,b)=>{const ai=preferred.indexOf(a.id),bi=preferred.indexOf(b.id);if(ai>=0&&bi>=0)return ai-bi;if(ai>=0)return -1;if(bi>=0)return 1;return b.energy-a.energy||b[roleKey(b)]-a[roleKey(a)]||a.id.localeCompare(b.id);});lineup.push(...fit.slice(0,n).map(p=>p.id));}return lineup;}
  function create(seed=20260132,options={}){let players=Object.fromEntries(roster.map(slot=>{const p=profileForSlot(slot.id,options.players?.[slot.id]?.identity||slot.id),injuryRemaining=options.players?.[slot.id]?.injury?.remaining??options.players?.[slot.id]?.injuryRemaining??0;if(!Number.isInteger(injuryRemaining)||injuryRemaining<0||injuryRemaining>2)throw Error('선수의 부상 정보를 확인할 수 없어요.');return [p.id,{...p,...Object.fromEntries(["attack","defense","passing","speed","endurance","keeping","energy"].map(key=>[key,options.players?.[p.id]?.[key]??p[key]])),id:p.id,name:p.name,pos:p.pos,no:p.no,potential:options.players?.[p.id]?.potential??p.potential,initialEnergy:options.players?.[p.id]?.energy??(options.players?p.energy:slot.energy),energy:options.players?.[p.id]?.energy??(options.players?p.energy:slot.energy),injuryRemaining,minutes:0}];}));return {version:5,statisticsOriginMinute:0,homeName:options.homeName||'브린웰 로버스',opponentName:options.opponentName||'팔켄루 04',opponent:options.opponent||{attack:79,defense:75,middle:80,speed:48,energy:94},isHome:options.isHome!==false,seed,rng:seed>>>0,formation:'442',tactic:'balanced',phase:'prep',minute:0,lineup:fitLineup(players,'442',['g1','d1','d2','d3','d4','m1','m2','m3','m4','f1','f2']),players,out:[],subs:0,score:[0,0],shots:[0,0],chances:[0,0],xg:[0,0],logs:[],segments:[],decisions:[],paused:false};}
@@ -310,5 +334,5 @@
   let rng=s.seed>>>0;for(let draw=0;draw<s.minute*8;draw++)rng=(Math.imul(rng,1664525)+1013904223)>>>0;if(s.rng!==rng)fail();
   s.homeName=typeof s.homeName==='string'&&s.homeName.length<60?s.homeName:'브린웰 로버스';s.opponentName=typeof s.opponentName==='string'&&s.opponentName.length<60?s.opponentName:'팔켄루 04';s.version=5;s.paused=running(s);return s;
  }
- const api={roster,startingRoster,mentalProfile,detailedAttributes,market,youthProfile,youthCandidates,identityProfile,profileForSlot,legacyName,personality,displayText,roleKey,formations,isAvailable,fitLineup,create,setFormation,swap,setTactic,begin,tick,finishSegment,ratings,restore,running,goalAttributions,teamTalk,talkChoices,talkReactions,temperament};root.Football=api;if(typeof module!=='undefined')module.exports=api;
+ const api={roster,startingRoster,mentalProfile,detailedAttributes,market,youthProfile,youthCandidates,identityProfile,profileForSlot,legacyName,personality,displayText,roleKey,formations,formationPositions,assignedPosition,isAvailable,fitLineup,create,setFormation,swap,setTactic,begin,tick,finishSegment,ratings,restore,running,goalAttributions,teamTalk,talkChoices,talkReactions,temperament};root.Football=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
