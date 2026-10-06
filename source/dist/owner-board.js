@@ -21,6 +21,7 @@
   resolve(s.year,s.round);if(active)active.progress=progress(ctx,active,s.year===active.year?s.round:rounds(s,active.year),s);
   return {trust,active,rows,invested};
  }
+ function confidence(s,trust){const table=root.Season?.standings?.(s)||[],me=table.find(c=>c.id==='brynwell'),target=root.Economy?.target?.(s)??Math.min(2,table.length||2),played=me?.played||0,gap=played&&me?.rank?target-me.rank:0,pressure=played?Math.round(Math.max(-30,Math.min(15,gap*3))*Math.min(1,played/5)):0,score=clamp(Math.round(50+(trust-50)*.5+pressure)),status=score>=82?'전폭적 신임':score>=65?'든든한 지지':score>=42?'관망':score>=26?'성과 개선 요구':'강한 압박';return {score,status,rank:played?me.rank:null,target,played};}
  function read(s){
   const r=replay(s),meetings=s.ownerBoard?.meetings||[],done=meetings.some(m=>m.year===s.year&&m.round===s.round+1),prep=s.competition==='league'&&s.round<rounds(s)&&s.match?.phase==='prep'&&s.match.minute===0;
   const reason=done?'이번 리그 주간의 면담을 마쳤습니다.':!prep?'리그 경기 시작 전에 면담할 수 있습니다.':null;
@@ -33,7 +34,7 @@
    const descriptions={results:'다음 리그 '+rules.games+'경기에서 '+rules.target+'점 · 달성 신뢰 +8 / 미달성 −5',youth:'선택한 유소년에게 다음 리그 '+minutes.games+'경기 합계 '+minutes.target+'분 · 달성 +10 / 미달성 −5',protect:'무리한 약속 대신 선수 보호 방침을 보고합니다. 신뢰 변화 없음.',investment:'신뢰 60 이상 · £20,000 즉시 투자 · 신뢰 −10 · 시즌당 한 번'};
    return {id,label,description:s.round===rounds(s)&&['results','youth'].includes(id)?'다음 시즌의 리그 준비 때 새 약속을 시작할 수 있습니다.':descriptions[id],available:!blocked,reason:blocked};
   });
-  return {trust:r.trust,relationship:r.trust>=60?'신뢰를 쌓고 있습니다':r.trust<40?'성과로 답할 때입니다':'서로를 알아가는 중',active:r.active?copy(r.active):null,recent:copy(r.rows.slice(-5).reverse()),youth,options,reason,available:!reason};
+  return {trust:r.trust,confidence:confidence(s,r.trust),relationship:r.trust>=60?'신뢰를 쌓고 있습니다':r.trust<40?'성과로 답할 때입니다':'서로를 알아가는 중',active:r.active?copy(r.active):null,recent:copy(r.rows.slice(-5).reverse()),youth,options,reason,available:!reason};
  }
  function meet(s,choice,identity=null){
   const status=read(s),option=status.options.find(o=>o.id===choice);if(!option?.available)throw Error(option?.reason||'면담 주제를 선택하세요.');
@@ -60,5 +61,5 @@
   if(grants.length!==b.meetings.filter(m=>m.choice==='investment').length)fail();replay(s);return s;
  }
  function restore(s,raw){if(raw!==undefined)s.ownerBoard=copy(raw);validate(s);return s;}
- const api={read,meet,validate,restore};root.OwnerBoard=api;if(typeof module!=='undefined')module.exports=api;
+ const api={read,confidence,meet,validate,restore};root.OwnerBoard=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
