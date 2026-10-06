@@ -1,7 +1,7 @@
 (function(root){
  'use strict';
  const F=root.Football||(typeof require==='function'?require('./engine.js'):null);
- const tacticLabels={press:'몰아붙이기',balanced:'균형 유지',counter:'내려서 역습'},roleLabels={GK:'골키퍼',DEF:'수비수',MID:'미드필더',FW:'공격수'},primaryKeys={GK:'keeping',DEF:'defense',MID:'passing',FW:'attack'},primaryLabels={keeping:'선방',defense:'수비',passing:'패스',attack:'결정력'};
+ const tacticLabels={press:'몰아붙이기',balanced:'균형 유지',counter:'내려서 역습',lowBlock:'로우 블록'},roleLabels={GK:'골키퍼',DEF:'수비수',MID:'미드필더',FW:'공격수'},primaryKeys={GK:'keeping',DEF:'defense',MID:'passing',FW:'attack'},primaryLabels={keeping:'선방',defense:'수비',passing:'패스',attack:'결정력'};
  const phases=['prep','first','half','second','late','third','full'];
  function person(p){
   const key=primaryKeys[p.pos];

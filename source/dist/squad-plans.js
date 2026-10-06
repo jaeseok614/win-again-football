@@ -6,13 +6,13 @@
  function validate(s){
   if(s.squadPlans===undefined)return s;const book=s.squadPlans;
   if(!exact(book,['version','slots'])||book.version!==1||!Array.isArray(book.slots)||book.slots.length>3||new Set(book.slots.map(p=>p?.id)).size!==book.slots.length)fail();
-  for(const p of book.slots){if(!exact(p,['id','name','formation','tactic','identities'])||!ids.includes(p.id)||typeof p.name!=='string'||!p.name.trim()||p.name!==p.name.trim()||p.name.length>24||/[\u0000-\u001f\u007f]/.test(p.name)||!Object.hasOwn(F.formations,p.formation)||!tactics.includes(p.tactic)||!Array.isArray(p.identities)||p.identities.length!==11||new Set(p.identities).size!==11||p.identities.some(id=>typeof id!=='string'||!F.identityProfile(id)))fail();for(const [pos,n] of Object.entries({GK:1,...F.formations[p.formation]}))if(p.identities.filter(id=>F.identityProfile(id).pos===pos).length!==n)fail();}
+  for(const p of book.slots){if(!exact(p,['id','name','formation','tactic','identities'])||!ids.includes(p.id)||typeof p.name!=='string'||!p.name.trim()||p.name!==p.name.trim()||p.name.length>24||/[\u0000-\u001f\u007f]/.test(p.name)||!Object.hasOwn(F.formations,p.formation)||!(tactics.includes(p.tactic)||p.tactic==='lowBlock'&&s.startingClub==='tottunham'&&s.league?.rules==='five-tier'&&(!s.match||s.match.version>=7))||!Array.isArray(p.identities)||p.identities.length!==11||new Set(p.identities).size!==11||p.identities.some(id=>typeof id!=='string'||!F.identityProfile(id)))fail();for(const [pos,n] of Object.entries({GK:1,...F.formations[p.formation]}))if(p.identities.filter(id=>F.identityProfile(id).pos===pos).length!==n)fail();}
   return s;
  }
  function canEdit(s){return !!s.match&&s.match.phase==='prep'&&s.match.minute===0&&!s.match.decisions.length;}
  function requirePrep(s){if(!canEdit(s))throw Error('선발 계획은 새 경기 준비에서 팀 대화 전에 저장하거나 적용할 수 있어요.');}
  function save(s,id,name){
-  requirePrep(s);validate(s);if(!ids.includes(id))fail();const m=s.match,plan={id,name:typeof name==='string'?name.trim():'',formation:m.formation,tactic:m.tactic,identities:m.lineup.map(slot=>m.players[slot].identity)},next=copy(s);next.squadPlans=next.squadPlans||{version:1,slots:[]};next.squadPlans.slots=next.squadPlans.slots.filter(p=>p.id!==id).concat(plan).sort((a,b)=>a.id.localeCompare(b.id));validate(next);return next;
+  requirePrep(s);validate(s);if(!ids.includes(id))fail();const m=s.match;if(m.tactic==='lowBlock'&&m.version<7)throw Error('로우 블록은 최신 전술 엔진 경기에서 저장할 수 있어요.');const plan={id,name:typeof name==='string'?name.trim():'',formation:m.formation,tactic:m.tactic,identities:m.lineup.map(slot=>m.players[slot].identity)},next=copy(s);next.squadPlans=next.squadPlans||{version:1,slots:[]};next.squadPlans.slots=next.squadPlans.slots.filter(p=>p.id!==id).concat(plan).sort((a,b)=>a.id.localeCompare(b.id));validate(next);return next;
  }
  function remove(s,id){validate(s);if(!ids.includes(id)||!s.squadPlans?.slots.some(p=>p.id===id))throw Error('삭제할 선발 계획이 없습니다.');const next=copy(s);next.squadPlans.slots=next.squadPlans.slots.filter(p=>p.id!==id);if(!next.squadPlans.slots.length)delete next.squadPlans;return next;}
  function preview(s,id){
