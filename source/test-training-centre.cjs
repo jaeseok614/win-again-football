@@ -1,5 +1,5 @@
 'use strict';
-const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),F=require('./dist/engine.js'),S=require('./dist/season.js'),T=require('./dist/training.js'),D=require('./dist/development.js'),Centre=require('./dist/training-centre.js');
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),F=require('./dist/engine.js'),S=require('./dist/season.js'),T=require('./dist/training.js'),D=require('./dist/development.js'),PlayerForm=require('./dist/player-form.js'),Centre=require('./dist/training-centre.js');
 const copy=value=>JSON.parse(JSON.stringify(value));let groups=0;
 function test(label,fn){fn();groups++;console.log('PASS '+label);}
 function readPure(s,filters){const before=JSON.stringify(s),d=Centre.read(s,filters);assert.equal(JSON.stringify(s),before);return d;}
@@ -77,7 +77,7 @@ test('DTOs are detached and frozen input keeps every model, finance and RNG valu
 
 test('restored games, completed seasons and browser UMD retain the actual availability contract',()=>{
  let s=S.create(4202);T.train(s,'f3','technique');s=play(s);assert.deepEqual(readPure(S.restore(copy(s))),readPure(s));while(s.match)s=play(s);assert(S.ready(s));let d=readPure(s);assert.equal(d.context.trainingOpen,false);assert.equal(d.context.phase,'season-complete');assert.equal(d.players.length,18);assert(d.players.every(p=>!p.recommendation.available));s=S.nextSeason(s);d=readPure(s);assert.equal(d.context.year,2);assert.equal(d.context.trainingOpen,true);
- const context=vm.createContext({Football:F,Season:S,Training:T,PlayerDevelopment:D});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/training-centre.js'),'utf8'),context);assert(context.TrainingCentre);assert.deepEqual(copy(context.TrainingCentre.read(s,{position:'FW'})),Centre.read(s,{position:'FW'}));
+ const context=vm.createContext({Football:F,Season:S,Training:T,PlayerDevelopment:D,PlayerForm});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/training-centre.js'),'utf8'),context);assert(context.TrainingCentre);assert.deepEqual(copy(context.TrainingCentre.read(s,{position:'FW'})),Centre.read(s,{position:'FW'}));
 });
 
 console.log('Validated '+groups+' actual training-centre groups.');

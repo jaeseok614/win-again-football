@@ -28,6 +28,16 @@
 .training-player-copy small{display:block;color:#929eaf;font-size:9px;line-height:1.6;overflow-wrap:anywhere}
 .training-player-metrics{display:flex;flex-wrap:wrap;justify-content:space-between;gap:5px 12px;margin-top:8px;color:#a1b0c4;font-size:10px;line-height:1.6}
 .training-player-metrics b,.training-player-metrics strong{font-size:12px;color:#e7edf6;font-variant-numeric:tabular-nums}
+.training-player-form{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px;color:#929eaf;font-size:9px;line-height:1.5}
+.training-player-form>span:last-child{display:flex;gap:4px}
+.training-player-form i,.training-form-report li>span:first-child{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 4px;border-radius:50%;font-style:normal;font-weight:700;font-size:9px}
+.form-win{background:#163c2d;color:#7de0ad!important}.form-draw{background:#383522;color:#edcf7c!important}.form-loss{background:#45262c;color:#f09aa1!important}.form-none{background:#272d36;color:#a6b2c0!important}
+.training-form-report{margin:14px 0 18px;padding:12px;border:1px solid #303844;border-radius:7px;background:#171c24}
+.training-form-report>header{display:flex;align-items:center;justify-content:space-between;gap:8px}.training-form-report>header strong{font-size:12px}.training-form-report>header small,.training-form-report>small{color:#98a5b6;font-size:9px;line-height:1.6}
+.training-form-report ul{display:grid;gap:5px;margin:10px 0;padding:0;list-style:none}
+.training-form-report li{display:grid;grid-template-columns:24px minmax(0,1fr) auto auto;align-items:center;gap:7px;padding:6px 7px;border-radius:5px;background:#1e242e;font-size:10px;min-width:0}
+.training-form-report li>span:nth-child(2){overflow-wrap:anywhere;color:#c4cedb}.training-form-report li strong{font-size:11px;font-variant-numeric:tabular-nums}.training-form-report li small{color:#9aa7b8;font-size:9px;white-space:nowrap}.training-form-report li.training-form-empty{display:block;color:#a5b1c2;line-height:1.6}
+.training-form-report>p{margin:8px 0 4px;color:#d9e3ef;font-size:11px;font-weight:600;line-height:1.6}
 .training-player-growth{display:block;height:3px;position:relative;background:#303c4b;margin:8px 0 6px;border-radius:3px;overflow:hidden}
 .training-player-growth:before{content:'';display:block;width:var(--growth,0%);height:100%;background:#cf3e4b}
 .training-player-footnotes{display:flex;justify-content:space-between;flex-wrap:wrap;gap:3px 10px;color:#939fb0;font-size:9px;line-height:1.6}
