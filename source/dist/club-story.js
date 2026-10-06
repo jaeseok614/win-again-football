@@ -26,6 +26,17 @@
    beat('final-push',.87,'구단주','마지막 질주의 약속','구단주가 남은 일정표를 책상 위에 놓는다. 처음 계약서에 적힌 5부의 이름과 승격 목표가 함께 보인다.','시즌 마지막 고비에서 팀이 서로에게 해 줄 약속은 무엇일까요?',['선수들이 감당한 여정을 함께 돌아보죠','끝까지 승격을 향해 밀어붙이겠습니다','결과와 별개로 다음 세대도 준비하죠'],['여기까지 온 선수들의 이야기를 결과만으로 지우지 말아 주세요.','마지막까지 함께 뛰겠습니다. 한 경기씩 집중하죠.','지금의 도전이 다음 시즌의 기반이 될 수 있겠군요.'],'board')
   ];
  }
+ function scheduleLongSeasonEvents(list,s,year){
+  const league=year===s.year?s.league:s.history?.find(h=>h.year===year),total=root.Season?.roundCountForYear?.(s,year)||14;
+  if(league?.rules!=='five-tier'||total<=14)return list;
+  const round={medical:Math.ceil(total*.24),window:Math.ceil(total*.28),halfway:Math.ceil(total/2),community:Math.ceil(total*.64),runin:total-4};
+  for(const event of list){if(!Object.hasOwn(round,event.key))continue;
+   // Receipts store the event key and round, not a text snapshot. Keep the
+   // original schedule for any conversation already started in an older save.
+   const receipt=records(s).find(r=>r.event===year+':'+event.key);event.round=receipt?receipt.atRound:round[event.key];
+  }
+  return list;
+ }
  function played(s,year){return year===s.year?s.round:s.history.find(h=>h.year===year)?root.Season?.roundCountForYear?.(s,year)||14:0;}
  function tierArrival(s,year){
   if(!Number.isInteger(year)||year<2)return null;
@@ -41,7 +52,7 @@
   return (s.statistics?.archive?.find(a=>a.year===year)?.records||[]).filter(r=>r.competition==='league').map(r=>({round:r.round,score:r.score}));
  }
  function events(s,year=s.year){
-  const list=catalog.map(([key,round,speaker,title,scene,question,options,replies,relation])=>({key,round,speaker,title,scene,question,options,replies,relation})),transition=tierArrival(s,year);if(transition)list.push(transition);list.push(...longSeasonBeats(s,year));if(!records(s).some(r=>r.event===year+':farewell'))list.find(e=>e.key==='farewell').round=root.Season?.roundCountForYear?.(s,year)||14;
+  const list=catalog.map(([key,round,speaker,title,scene,question,options,replies,relation])=>({key,round,speaker,title,scene,question,options,replies,relation})),transition=tierArrival(s,year);if(transition)list.push(transition);list.push(...longSeasonBeats(s,year));scheduleLongSeasonEvents(list,s,year);if(!records(s).some(r=>r.event===year+':farewell'))list.find(e=>e.key==='farewell').round=root.Season?.roundCountForYear?.(s,year)||14;
   for(const [key,win] of [['firstwin',true],['setback',false]]){const game=results(s,year).find(r=>win?r.score[0]>r.score[1]:r.score[0]<r.score[1]);if(game)list.push({key,round:game.round,speaker:'주장',title:win?'첫 승 뒤의 버스':'패배 뒤에도 켜진 불',scene:win?'버스 창에 선수들의 웃음이 비친다. 주장은 박수를 멈추고 감독을 바라본다.':'구장이 조용해진 뒤에도 라커룸의 불이 켜져 있다. 주장은 마지막까지 남았다.',question:win?'첫 리그 승리를 어떻게 다음 경기로 이어갈까요?':'오늘 패배를 선수들에게 어떻게 이야기할까요?',options:win?['선수들이 무엇을 잘했는지 직접 듣죠','이제 더 큰 목표를 말해도 되겠죠','들뜨기 전에 회복과 다음 준비를 챙기죠']:['아쉬웠던 순간과 마음을 함께 듣죠','우리 기준을 다시 분명하게 말하죠','다음 훈련에서 바꿀 한 가지를 찾죠'],replies:win?['결과보다 노력도 알아줬다는 걸 기억할 겁니다.','기대가 커지는 만큼 부담도 살펴봐 주세요.','축하는 오늘, 준비는 차분하게 이어가죠.']:['침묵하던 선수도 말을 꺼낼 수 있겠습니다.','책임을 느끼는 선수와 겁먹는 선수가 다를 겁니다.','패배를 다음 준비로 바꾸는 답이네요.'],relation:'captain'});}
   const answered=records(s).filter(r=>r.event===year+':rookie'),promise=mission(s,{key:'rookie',year},answered);
   if(promise&&played(s,year)>=promise.end){const kept=promise.status==='fulfilled';list.push({key:kept?'promise-kept':'promise-missed',round:promise.end,actor:promise.identity,speaker:'유망주',title:kept?'노트에 적힌 첫 출전':'지워지지 않은 약속',scene:'유망주가 출전 기록을 펼칩니다. 약속한 두 리그 경기에서 '+promise.minutes+'분을 뛰었습니다.',question:kept?'감독님, 약속을 기억해 주셨네요. 다음에는 무엇을 준비할까요?':'감독님, 약속한 30분을 뛰지 못했어요. 제 준비가 부족했던 건가요?',options:kept?['뛰면서 느낀 점부터 함께 이야기하자','다음에도 기회가 오면 자신 있게 도전하자','출전 기록과 몸 상태를 함께 돌아보자']:['기다리게 해서 미안하다. 네 이야기를 듣고 싶다','지금 경쟁 상황을 솔직하게 설명하겠다','몸 상태와 준비 기준부터 함께 확인하자'],replies:kept?['벤치에서 보던 것과 경기장에서 느낀 건 달랐어요.','자신감은 생겼지만 아직 배울 것이 많아요.','제 몸 상태까지 챙겨 주시는군요.']:['잊으신 줄 알았어요. 이유를 듣고 싶었습니다.','경쟁하는 건 알아요. 무엇을 준비하면 되는지도 알려 주세요.','다시 막연하게 기다리기보다 기준을 알고 싶어요.'],relation:'rookie'});}
