@@ -11,7 +11,7 @@
   const previews=Object.fromEntries(Object.keys(T.choices).map(focus=>[focus,T.preview(s,slot,focus,p.identity)]));
   let focus=null,label='',reason='';
   if(p.injury||m?.injuryRemaining){label='지금은 휴식부터';reason='부상 선수는 훈련을 쉬어야 합니다. 경기 휴식으로 복귀한 뒤 다시 추천을 확인하세요.';}
-  else if(!m||m.identity!==p.identity||s.competition!=='league'||s.match.phase!=='prep'||s.match.minute!==0||s.round>=14||s.trained){label=s.trained?'이번 주 훈련 완료':'훈련을 기다리는 중';reason=previews.recovery.reason||'다음 리그 경기 준비 때 추천 훈련을 선택할 수 있어요.';}
+  else if(!m||m.identity!==p.identity||s.competition!=='league'||s.match.phase!=='prep'||s.match.minute!==0||s.round>=(root.Season?.roundCount?.(s)||14)||s.trained){label=s.trained?'이번 주 훈련 완료':'훈련을 기다리는 중';reason=previews.recovery.reason||'다음 리그 경기 준비 때 추천 훈련을 선택할 수 있어요.';}
   else if(currentEnergy<70){focus='recovery';reason='현재 체력이 70 미만입니다. 능력을 올리기 전에 피로부터 회복하세요.';}
   else if(remaining>0){focus='technique';reason='주요 능력 '+labels[key]+'의 성장 여유가 '+remaining+' 남았습니다. 포지션 기술을 집중해서 키워보세요.';}
   else if(p.speed<99||p.endurance<99){

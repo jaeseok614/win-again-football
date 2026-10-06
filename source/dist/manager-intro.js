@@ -12,7 +12,7 @@ const managerGuideSteps=[
 function guideSeen(){try{return localStorage.getItem(managerGuideKey)==='done';}catch{return false;}}
 function rememberGuide(){try{localStorage.setItem(managerGuideKey,'done');}catch{}}
 function offerManagerIntro(){if(managerIntroBypass||restoredSave.payload||launchHasCampaign||guideSeen())return false;openManagerGuide(0);return true;}
-function renderManagerGuide(){const [title,text,label]=managerGuideSteps[managerGuideStep];$('manager-guide-title').textContent=title;$('manager-guide-copy').textContent=text;$('manager-guide-next').textContent=label;$('manager-guide-progress').textContent=(managerGuideStep+1)+' / '+managerGuideSteps.length;$('manager-guide-title').focus({preventScroll:true});}
+function renderManagerGuide(){const [title,copy,label]=managerGuideSteps[managerGuideStep],text=copy.replaceAll('14경기',(typeof S!=='undefined'?S.roundCount(season):14)+'경기');$('manager-guide-title').textContent=title;$('manager-guide-copy').textContent=text;$('manager-guide-next').textContent=label;$('manager-guide-progress').textContent=(managerGuideStep+1)+' / '+managerGuideSteps.length;$('manager-guide-title').focus({preventScroll:true});}
 function openManagerGuide(step=2){pauseForPlanning();managerGuideStep=step;managerGuideWaiting=null;managerGuideActive=true;renderManagerGuide();if(!$('manager-guide').open)$('manager-guide').showModal();}
 function finishManagerGuide(){managerGuideActive=false;managerGuideWaiting=null;managerIntroBypass=true;rememberGuide();$('manager-guide').close();if(!appSessionStarted)enterManagerHome();else $('primary')?.focus({preventScroll:true});}
 function nextManagerGuide(){
@@ -35,11 +35,12 @@ const originalShellRender=renderAppShell;renderAppShell=function(){originalShell
 
 // Fictional chapter prose follows confirmed season progress, never adds receipts.
 function managerStoryChapter(s){
+ const rounds=S.roundCountForYear(s,s.year);
  if(s.final)return ['마지막 휘슬 뒤의 감독실',s.rank&&s.rank<=2?'구단주가 최종 순위표를 펼칩니다. “여기까지 왔군요.” 선수들의 다음 계약과 새 시즌을 준비할 시간입니다.':'시즌 일정표의 마지막 칸이 채워졌습니다. 수석 코치는 결과를 함께 되짚자고 합니다. 전술과 선수 성장 기록을 살펴보고 다음 시즌의 답을 찾아보세요.'];
  if(s.division===1)return ['다시 만난 큰 무대','터널 밖의 함성이 전보다 커졌습니다. 토투넘은 이제 1부의 일정표를 받아 들었습니다. “우리를 올려 보낸 축구를 잊지 맙시다.” 코치가 다음 상대 보고서를 책상에 놓습니다.'];
  if(s.rules==='five-tier'&&s.division<5)return [S.divisionInfo({division:s.division,rules:s.rules}).name+'의 두 번째 장',s.played===0?'지난 시즌의 승격 축하가 아직 라커룸에 남아 있습니다. 이제 '+S.divisionInfo({division:s.division,rules:s.rules}).name+'에서 새 경쟁이 시작됩니다. 상위 두 팀만 다음 단계로 올라갑니다.':'지난 단계에서 통했던 방식이 여기서도 답일까요? '+S.divisionInfo({division:s.division,rules:s.rules}).name+'의 상대 분석과 선수 컨디션을 다시 살펴보세요.'];
  if(s.played>=10)return ['끝이 보이는 승격 레이스','훈련장 게시판에서 남은 일정이 손에 꼽히기 시작합니다. 구단주는 순위표를, 의무 코치는 선수들의 체력을 바라봅니다. 지금의 한 번의 교체와 한마디가 남은 경기에 이어집니다.'];
  if(s.played>=5)return ['감독의 말에 무게가 생겼다','처음에는 당신을 낯설게 바라보던 선수들이 이제 전술판 앞에 먼저 모입니다. 하지만 모든 선수가 같은 표정은 아닙니다. 선수 보고서와 최근 경기 기록을 확인하고, 지금 필요한 말을 골라보세요.'];
  if(s.played>0)return ['첫 휘슬 이후','결과표가 감독실 벽에 붙었습니다. 수석 코치는 다음 경기의 준비를 묻습니다. “한 경기로 우리의 이야기가 끝나진 않습니다.” 출전 기록과 회복 상태를 살펴보고 다음 선발을 결정하세요.'];
- return [s.rules==='five-tier'?'첫 장 · 다섯 단계의 여정':'첫 장 · 강등된 명문에 도착하다',s.rules==='five-tier'?'비 내리는 훈련장에서 손헝민이 공을 내려놓습니다. “감독님, 다시 올라갈 수 있겠죠?” 토투넘은 5부 파운데이션 리그에서 출발합니다. 해마다 14경기를 치르고 네 번 승격해야 1부와 유럽 무대가 열립니다. 선수단을 살펴보고 전술과 첫 팀 대화로 당신의 답을 들려주세요.':'비 내리는 훈련장에서 손헝민이 공을 내려놓습니다. “감독님, 다시 올라갈 수 있겠죠?” 선수단을 살펴보고 전술과 첫 팀 대화로 당신의 답을 들려주세요.'];
+ return [s.rules==='five-tier'?'첫 장 · 다섯 단계의 여정':'첫 장 · 강등된 명문에 도착하다',s.rules==='five-tier'?'비 내리는 훈련장에서 손헝민이 공을 내려놓습니다. “감독님, 다시 올라갈 수 있겠죠?” 토투넘은 5부 파운데이션 리그에서 출발합니다. 해마다 '+rounds+'경기를 치르고 네 번 승격해야 1부와 유럽 무대가 열립니다. 선수단을 살펴보고 전술과 첫 팀 대화로 당신의 답을 들려주세요.':'비 내리는 훈련장에서 손헝민이 공을 내려놓습니다. “감독님, 다시 올라갈 수 있겠죠?” 선수단을 살펴보고 전술과 첫 팀 대화로 당신의 답을 들려주세요.'];
 }

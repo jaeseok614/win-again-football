@@ -59,14 +59,16 @@ QA fixtures or browser saves. The v22 ZIP is the original fallback, not the newe
 source; setup-source.py only fills missing files and preserves current edits.
 
 Champions League is implemented in europe.js with the shared Football engine.
-Prior-season division 1 ranks 1 and 2 qualify for the following season. Preserve
-the 14 league rounds and 56 league result rows; international matches use their
-own results, receipts and statistics. Domestic Cup takes priority at a shared
-calendar gate. Only league matches consume salaries and staff contract weeks.
-Legacy saves keep their current match and season without adding European games;
-qualification applies after the next season transition. Keep strict deterministic
-fixture, RNG, receipt and historical champion validation. National-team matches
-remain future work. The Europe panel renders only when the tournament view opens.
+Prior-season division 1 ranks 1 and 2 qualify for the following season. Existing
+compact campaigns retain their saved fixtures and results. New full-size campaign
+work must not advance, replace, or discard a restored campaign: keep its year,
+round, confirmed records, and in-progress match. A season transition happens only
+after the player explicitly chooses it from the season review. International
+matches use their own results, receipts and statistics. Domestic Cup takes
+priority at a shared calendar gate. Only league matches consume salaries and staff
+contract weeks. Keep strict deterministic fixture, RNG, receipt and historical
+champion validation. National-team matches remain future work. The Europe panel
+renders only when the tournament view opens.
 
 ClubLife provides optional pre-match, halftime and 65-minute team talks, canonical
 pre/post-match interviews and recent articles derived from real game receipts.
@@ -120,20 +122,33 @@ with wrapping, never ellipsis, plus overall skill and live energy. Support links
 show a derived coach chemistry score and color with named component explanations.
 Use actual passing, deterministic teamwork, current role suitability and energy;
 keep this analysis separate from engine bonuses or invented shared-match records.
-Owner refinement (2026-10-05, career length and finances): fresh Tottunham UI
-careers start in division five and pursue four promotions through a 40-club,
-five-division pyramid. Each tier has eight clubs and 14 home/away matches; top
-two promote and seventh/eighth relegate where a neighboring tier exists. Keep
-league, cup, and economy receipts tier-aware. New division-five scouting costs
-£8,000 against the £160,000 opening balance. Preserve two-tier and legacy save
-rules and receipts. Details: docs/FIVE_TIER_PYRAMID_AND_FINANCE.md.
+Earlier compact-pyramid rules (superseded 2026-10-06): the five-tier prototype
+used 40 clubs, eight per tier, and 14 rounds. Preserve those rules when restoring
+their historic campaign data, but fresh five-tier careers and in-place-upgraded
+five-tier saves now use 116 referenced clubs, 38/46 rounds, and season schema 10.
+Top two promote and seventh/eighth relegate where a neighboring tier exists.
+New division-five scouting costs £8,000 against the £160,000 opening balance.
+Preserve all recorded receipts. Details: docs/FIVE_TIER_PYRAMID_AND_FINANCE.md.
+
+Owner refinement (2026-10-06, realistic English pyramid; implemented): use 20
+Premier League clubs/38 matches and 24 clubs in each of the four divisions
+below/46 matches. New five-tier seasons include the manager's club in the
+eight-team domestic cup, spaced across the season. Upgrade compact five-tier
+saves in place, retaining year, played progress, original receipts, and current
+match; deterministically fill completed AI fixtures and resume at round 15 if
+the old 14 rounds were complete. Never advance a save during restore. Only an
+explicit player action starts the next season. Finance, staff clocks,
+statistics, cups, calendars and UI follow the active season length, while
+historic non-five-tier schedules and receipts remain intact. See HANDOFF.md,
+docs/FIVE_TIER_PYRAMID_AND_FINANCE.md and
+docs/ENGLISH_PYRAMID_REFERENCES_2026-27.md.
 
 Owner refinement (2026-10-05, English club references and player faces): use
-representative clubs from the 2026/27 Premier League, Championship, League One,
-League Two and National League in the five game tiers. Keep the eight-club
-fixture pools, the Tottunham-to-National-League story exception, club IDs, raw
-ratings, match fixtures and old saves stable. Display the fictional parody names;
-keep exact reference clubs in source metadata and docs/ENGLISH_PYRAMID_REFERENCES_2026-27.md.
+2026/27 Premier League, Championship, League One, League Two and National League
+clubs as references for full tier pools. Keep the Tottunham-to-National-League
+story exception, original club IDs, raw ratings, compact schedules and old saves
+stable. Display fictional parody names; keep exact reference clubs in source
+metadata and docs/ENGLISH_PYRAMID_REFERENCES_2026-27.md.
 Use the shared original fictional portrait atlas rather than real-player photos
 or runtime downloads. Keep fixed starters and initial transfer targets on
 distinct deterministic faces, show portraits on the live pitch and in squad and

@@ -13,7 +13,7 @@ function oldV7(){const c=vm.createContext({});for(const name of ['engine','econo
 function boosted(seed){const s=S.create(seed);for(const p of Object.values(s.squad)){for(const k of ['attack','defense','passing','speed','endurance','keeping']){p[k]=99;s.match.players[p.id][k]=99;}p.potential=99;s.match.players[p.id].potential=99;p.energy=100;s.match.players[p.id].energy=100;s.match.players[p.id].initialEnergy=100;s.career.baselines[p.identity]=99;}return s;}
 
 test('fresh records show the current squad without invented appearances or old goals',()=>{
- const s=S.create(),sum=ST.summary(s);assert.equal(s.version,9);assert.equal(sum.players.length,18);assert.equal(sum.matches,0);assert.equal(sum.goals,0);assert.equal(sum.assists,0);assert.equal(sum.minutes,0);assert.equal(sum.partial,false);assert.ok(sum.players.every(p=>p.apps===0&&p.starts===0&&p.goals===0));assert.equal(ST.lastMatch(s),null);assert.deepEqual(ST.history(s),[]);assert.throws(()=>ST.summary(s,'friendly'));assert.throws(()=>ST.summary(s,'all',2));assert.deepEqual(S.restore(copy(s)).statistics,s.statistics);
+ const s=S.create(),sum=ST.summary(s);assert.equal(s.version,10);assert.equal(sum.players.length,18);assert.equal(sum.matches,0);assert.equal(sum.goals,0);assert.equal(sum.assists,0);assert.equal(sum.minutes,0);assert.equal(sum.partial,false);assert.ok(sum.players.every(p=>p.apps===0&&p.starts===0&&p.goals===0));assert.equal(ST.lastMatch(s),null);assert.deepEqual(ST.history(s),[]);assert.throws(()=>ST.summary(s,'friendly'));assert.throws(()=>ST.summary(s,'all',2));assert.deepEqual(S.restore(copy(s)).statistics,s.statistics);
 });
 
 test('only confirmation records a completed match and duplicate statistics cannot be settled',()=>{

@@ -237,7 +237,7 @@
   for(const id of active){const p=s.players[id];p.energy=clamp(p.energy-(35*(1+(50-p.endurance)/250)+(s.tactic==='press'?8:0))/90,0,100);p.minutes++;}
   const events=[],segment=s.segments[s.segments.length-1],combined=r.ourRate+r.oppRate;
   if(combined>0&&rolls[0]<combined){
-   const team=rolls[1]<r.ourRate/combined?0:1,attackers=active.map(id=>s.players[id]).filter(p=>p.pos==='FW'),scorer=attackers[Math.min(attackers.length-1,Math.floor(rolls[6]*attackers.length))],action=eventAction(rolls[2],s.tactic),side=rolls[3]<.5?'left':'right',source=wideSource(s,active,side,scorer.id),stopRate={cross:.24,cutback:.19,through_ball:.22,dribble:.3,combination:.16}[action],modifiers={cross:.9,cutback:1.1,through_ball:1,dribble:1.06,combination:1.04},shooter=team===0?scorer.name:s.opponentName;
+   const team=rolls[1]<r.ourRate/combined?0:1,attackers=active.map(id=>s.players[id]).filter(p=>p.pos==='FW'),scorers=attackers.length?attackers:active.map(id=>s.players[id]).filter(p=>p.pos!=='GK'),scorerPool=scorers.length?scorers:active.map(id=>s.players[id]),scorer=scorerPool[Math.min(scorerPool.length-1,Math.floor(rolls[6]*scorerPool.length))],action=eventAction(rolls[2],s.tactic),side=rolls[3]<.5?'left':'right',source=wideSource(s,active,side,scorer.id),stopRate={cross:.24,cutback:.19,through_ball:.22,dribble:.3,combination:.16}[action],modifiers={cross:.9,cutback:1.1,through_ball:1,dribble:1.06,combination:1.04},shooter=team===0?scorer.name:s.opponentName;
    s.chances[team]++;segment.chances[team]++;
    let type='chance',prob=0,text;
    if(rolls[4]>=stopRate){s.shots[team]++;segment.shots[team]++;prob=clamp((team===0?r.ourGoal:r.oppGoal)*modifiers[action],.04,.48);s.xg[team]+=prob;segment.xg[team]+=prob;
@@ -318,7 +318,7 @@
    for(const key of ['attack','defense','middle','pace','paceBonus','ourRate','oppRate','ourGoal','oppGoal'])if(!Number.isFinite(seg.rating?.[key])||seg.rating[key]<0||seg.rating[key]>200)fail();
    for(const key of ['attack','defense','middle','speed'])if(!Number.isFinite(seg.rating?.opponent?.[key])||seg.rating.opponent[key]<0||seg.rating.opponent[key]>200)fail();
    for(const key of ['chances','shots','xg','goals'])if(!Array.isArray(seg[key])||seg[key].length!==2||seg[key].some(n=>!Number.isFinite(n)||n<0))fail();
-   for(let team=0;team<2;team++)if(!Number.isInteger(seg.chances[team])||!Number.isInteger(seg.shots[team])||!Number.isInteger(seg.goals[team])||seg.goals[team]>seg.shots[team]||seg.shots[team]>seg.chances[team]||seg.chances[team]>end-seg.start||seg.xg[team]>seg.shots[team]*.4+1e-8)fail();
+   for(let team=0;team<2;team++)if(!Number.isInteger(seg.chances[team])||!Number.isInteger(seg.shots[team])||!Number.isInteger(seg.goals[team])||seg.goals[team]>seg.shots[team]||seg.shots[team]>seg.chances[team]||seg.chances[team]>end-seg.start||seg.xg[team]>seg.shots[team]*.48+1e-8)fail();
   }
   for(const boundary of [45,65])if(s.minute>=boundary&&!s.segments.some(seg=>seg.end===boundary))fail();
   const energy=Object.fromEntries(Object.values(s.players).map(p=>[p.id,p.initialEnergy])),played=Object.fromEntries(Object.values(s.players).map(p=>[p.id,0])),departed=new Set(),handled=new Set();

@@ -20,7 +20,7 @@ function firstEurope(staff=false){let s=copy(qualified);if(staff)for(const role 
 
 test('qualification follows a real upper-division season and keeps old campaigns intact',()=>{
  assert.equal(qualified.history[0].division,2);assert.equal(qualified.history[1].division,1);assert.ok(qualified.history[1].rank<=2);assert.deepEqual(qualified.europe.qualification,{year:2,division:1,rank:qualified.history[1].rank});
- const raw=copy(qualified);delete raw.europe;delete raw.health.originEuropeGames;const s=S.restore(raw);assert.equal(s.europe.enabled,false);assert.equal(s.europe.legacy,true);for(const key of ['match','cup','finance','career','health','statistics','squad'])assert.deepEqual(s[key],raw[key]);assert.equal(s.version,9);
+ const raw=copy(qualified);delete raw.europe;delete raw.health.originEuropeGames;const s=S.restore(raw);assert.equal(s.europe.enabled,false);assert.equal(s.europe.legacy,true);for(const key of ['match','cup','finance','career','health','statistics','squad'])assert.deepEqual(s[key],raw[key]);assert.equal(s.version,10);
 });
 
 test('European preparation blocks weekly training, scouting, transfers and staff actions atomically',()=>{

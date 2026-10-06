@@ -1,9 +1,10 @@
 휴대폰 최신 개발 안내 (2026-10-02)
 
-정적 HTML/JS/CSS. node build.cjs standalone.html 또는 node build.cjs index.html --pwa
+정적 HTML/JS/CSS. node source/build.cjs standalone.html 또는 node source/build.cjs index.html --pwa
 python -m http.server 8765 --bind 127.0.0.1 --directory dist
-저장소 루트에서 node source/run-tests.cjs · 46파일/549검증그룹.
-공개 전체 빌드: node source/build-pwa.cjs. Football5/Season8/Statistics1.
+저장소 루트에서 node source/run-tests.cjs로 전체 테스트.
+공개 전체 빌드: node source/build-pwa.cjs 후 node source/test-pwa.cjs index.html.
+Football5/Season10/Statistics1. 새 5부 커리어는 116팀, 38/46경기.
 시즌 저장 win-again-season-v17, 연습 저장 win-again-touchline-v17. 구버전 복원 유지.
 CampaignFile은 원본 모델을 바꾸지 않고 안전한 버전 백업과 S.restore 검증을 제공합니다.
 portability-ui는 native file→preview→명시적 import, 이전 저장 보관, storage 실패 시 현재 모델 보존을 처리합니다.
@@ -14,7 +15,7 @@ cache-assets.js는 해당 빌드의 실제 정적 자산 whitelist로 생성하�
 공개 폴더에는 개인 저장 파일·QA·인증파일을 넣지 않습니다.
 Staff는 포지션·의무 코치의 실제 훈련·의료 효과, 리그7경기 계약과 장부를 관리합니다.
 Europe는 전년도1부1~2위의 다음시즌8팀대회, 조별6경기와준결승·결승을 관리합니다.
-유럽경기진행은 F엔진사용, 리그round/results14/56유지. 컵과같은주에는국내컵우선.
+유럽경기진행은 F엔진사용, 리그 round/results는 현재 시즌 길이로만 유지. 컵과같은주에는국내컵우선.
 Europe시드·대진·상금영수증·과거우승검증을 유지하세요. 구저장에는legacy현재시즌미참가.
 EuropeUI는view=cup일때만계산하며 경기틱의숨긴대회화면을다시그리지않습니다.
 유럽경기는출전·성장·부상·회복에반영하지만 주급·코치7경기계약은리그경기만소모합니다.

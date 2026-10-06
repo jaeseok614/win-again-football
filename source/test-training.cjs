@@ -64,6 +64,6 @@ test('new seasons retain trained player skills while resetting the common weekly
 });
 
 test('the training model works as a browser script without CommonJS and leaves the season schema intact',()=>{
- const context=vm.createContext({Football:F});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/training.js'),'utf8'),context);assert.ok(context.Training);const s=S.create(1119),keys=Object.keys(s);context.Training.train(s,'f3','technique');assert.deepEqual(Object.keys(s),keys);assert.equal(s.version,9);assert.equal(s.match.version,5);assert.equal(s.squad.f3.attack,F.roster.find(p=>p.id==='f3').attack+2);assert.doesNotThrow(()=>S.restore(copy(s)));
+ const context=vm.createContext({Football:F});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/training.js'),'utf8'),context);assert.ok(context.Training);const s=S.create(1119),keys=Object.keys(s);context.Training.train(s,'f3','technique');assert.deepEqual(Object.keys(s),keys);assert.equal(s.version,10);assert.equal(s.match.version,5);assert.equal(s.squad.f3.attack,F.roster.find(p=>p.id==='f3').attack+2);assert.doesNotThrow(()=>S.restore(copy(s)));
 });
 console.log('Validated '+groups+' individual training groups, including shared weekly actions, identity growth and persistence.');

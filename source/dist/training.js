@@ -15,7 +15,7 @@
   if(expectedIdentity!==undefined&&p.identity!==expectedIdentity)return '선수가 바뀌었습니다. 현재 선수를 다시 선택하세요.';
   if(s.match.players[p.id].identity!==p.identity)return '경기 명단과 선수 등록을 확인하세요.';
   if(s.competition==='cup')return '컵 경기에서는 훈련을 쉽니다. 다음 리그 경기 전에 다시 열려요.';
-  if(s.competition!=='league'||!s.match||s.match.phase!=='prep'||s.match.minute!==0||s.round>=14)return '리그 경기 시작 전에 집중 훈련할 수 있어요.';
+  if(s.competition!=='league'||!s.match||s.match.phase!=='prep'||s.match.minute!==0||s.round>=(root.Season?.roundCount?.(s)||14))return '리그 경기 시작 전에 집중 훈련할 수 있어요.';
   if(s.trained)return '이번 주 훈련을 마쳤습니다. 전체 훈련과 집중 훈련 중 하나를 선택할 수 있어요.';
   if(p.injury||s.match.players[p.id].injuryRemaining)return '부상 선수는 쉬어야 합니다. 경기 휴식으로 복귀한 뒤 훈련하세요.';
   return null;

@@ -3,9 +3,10 @@
  const own='brynwell',clubIds=['brynwell','aldermere','norhaven','bellwick','redmere','montevaro','selcanto','falkenruh'],stageNames=['8강','준결승','결승'],gates=[4,8,12];
  const profiles={brynwell:[70,70],aldermere:[78,84],norhaven:[84,78],bellwick:[75,68],redmere:[79,74],montevaro:[87,81],selcanto:[77,70],falkenruh:[79,75]},copy=x=>JSON.parse(JSON.stringify(x));
  const step=n=>(Math.imul(n,1664525)+1013904223)>>>0;
- function shuffled(s){let rng=(s.seed^Math.imul(s.year,2654435761)^12648430)>>>0,ids=root.Season?root.Season.leagueClubs(s).map(c=>c.id):[...clubIds];for(let i=7;i>0;i--){rng=step(rng);const j=Math.floor(rng/4294967296*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]];}return ids;}
- function initialize(s,{legacy=false}={}){s.cup={version:1,originRound:legacy?s.round:0,enabled:!legacy||s.round<14,bracket:shuffled(s),stage:0,results:[],champion:null};return s;}
- function gateFor(s,stage=s.cup.stage){return Math.min(14,Math.max(gates[stage],s.cup.originRound+1));}
+ function shuffled(s,includeOwn=false){let rng=(s.seed^Math.imul(s.year,2654435761)^12648430)>>>0,clubs=root.Season?root.Season.leagueClubs(s).map(c=>c.id):[...clubIds],ids=clubs.slice(0,8);if(includeOwn&&!ids.includes(own))ids=[...clubs.slice(0,7),own];for(let i=7;i>0;i--){rng=step(rng);const j=Math.floor(rng/4294967296*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]];}return ids;}
+ function calendarFor(s){const rounds=root.Season?.roundCount?.(s)||14;return rounds>14?[Math.round(rounds/4),Math.round(rounds/2),Math.round(rounds*3/4)]:null;}
+ function initialize(s,{legacy=false}={}){const calendarRounds=legacy?null:calendarFor(s),clubField=!legacy&&s.league?.rules==='five-tier';s.cup={version:1,originRound:legacy?s.round:0,enabled:!legacy||s.round<14,bracket:shuffled(s,clubField),stage:0,results:[],champion:null,...(calendarRounds?{calendarRounds}:{}),...(clubField?{clubField:true}:{})};return s;}
+ function gateFor(s,stage=s.cup.stage){const total=root.Season?.roundCount?.(s)||14,calendar=s.cup?.calendarRounds||gates;return Math.min(total,Math.max(calendar[stage],s.cup.originRound+1));}
  function due(s){return !!s.cup?.enabled&&s.cup.stage<3&&s.round>=gateFor(s);}
  function fixturesFor(s,stage=s.cup.stage){if(stage<0||stage>2)return [];const ids=stage===0?s.cup.bracket:s.cup.results.filter(r=>r.stage===stage-1).sort((a,b)=>a.index-b.index).map(r=>r.winner);return Array.from({length:ids.length/2},(_,index)=>({stage,index,home:ids[index*2],away:ids[index*2+1]}));}
  function fixtureFor(s){return due(s)?fixturesFor(s).find(f=>f.home===own||f.away===own)||null:null;}
@@ -21,14 +22,14 @@
  function advanceAI(s){if(!due(s)||fixtureFor(s))throw Error('감독의 컵 경기를 먼저 진행하세요.');const results=fixturesFor(s).map(f=>aiResult(s,f));return completeStage(s,results);}
  function ready(s){return !s.cup.enabled||s.cup.stage===3;}
  function historicalChampion(s,year,entries){
-  if(!entries.length)return null;const past={seed:s.seed,year,round:14,league:root.Season?.leagueForYear(s,year)};initialize(past);let played=0;
+  if(!entries.length){const history=s.history.find(h=>h.year===year),league=root.Season?.leagueForYear(s,year),ids=league&&root.Season?.leagueClubs({league}).map(c=>c.id);if(history?.cupChampion!==null&&history?.cupChampion!==undefined&&!ids?.includes(history.cupChampion))throw Error('저장한 컵 우승 기록을 읽을 수 없어요.');return history?.cupChampion??null;}const past={seed:s.seed,year,round:root.Season?.roundCountForYear?.(s,year)||14,league:root.Season?.leagueForYear(s,year)};initialize(past);const firstReceipt=entries.find(e=>e.stage===0),expandedCalendar=calendarFor(past);if(firstReceipt){if(firstReceipt.round===gates[0])delete past.cup.calendarRounds;else if(!expandedCalendar||firstReceipt.round!==expandedCalendar[0])throw Error('저장한 컵 우승 기록을 읽을 수 없어요.');}let played=0;
   while(past.cup.stage<3){const results=fixturesFor(past).map(f=>{if(f.home!==own&&f.away!==own)return aiResult(past,f);const entry=entries.find(e=>e.stage===f.stage);if(!entry||entry.home!==f.home||entry.away!==f.away||![f.home,f.away].includes(entry.winner))throw Error('저장한 컵 우승 기록을 읽을 수 없어요.');played++;return resultFor(past,f,entry.winner===f.home?[1,0]:[0,1]);});completeStage(past,results);}
   if(played!==entries.length)throw Error('저장한 컵 우승 기록을 읽을 수 없어요.');return past.cup.champion;
  }
  function validateHistory(s){const years={};for(const entry of s.finance.ledger)if(entry.type==='cup')(years[entry.year]??=[]).push(entry);for(const h of s.history)if(h.cupChampion!==historicalChampion(s,h.year,years[h.year]||[]))throw Error('저장한 컵 우승 기록을 읽을 수 없어요.');return s;}
  function validate(s){
   const fail=()=>{throw Error('저장한 컵 대회를 읽을 수 없어요.');},c=s.cup;
-  if(!c||c.version!==1||!Number.isInteger(c.originRound)||c.originRound<0||c.originRound>14||typeof c.enabled!=='boolean'||!Number.isInteger(c.stage)||c.stage<0||c.stage>3||!Array.isArray(c.bracket)||JSON.stringify(c.bracket)!==JSON.stringify(shuffled(s))||!Array.isArray(c.results)||c.results.length!==[0,4,6,7][c.stage]||c.originRound>s.round)fail();
+  const expectedCalendar=calendarFor(s);if(!c||c.version!==1||Object.hasOwn(c,'calendarRounds')&&(!expectedCalendar||JSON.stringify(c.calendarRounds)!==JSON.stringify(expectedCalendar))||Object.hasOwn(c,'clubField')&&(c.clubField!==true||s.league?.rules!=='five-tier')||!Number.isInteger(c.originRound)||c.originRound<0||c.originRound>14||typeof c.enabled!=='boolean'||!Number.isInteger(c.stage)||c.stage<0||c.stage>3||!Array.isArray(c.bracket)||JSON.stringify(c.bracket)!==JSON.stringify(shuffled(s,c.clubField===true))||!Array.isArray(c.results)||c.results.length!==[0,4,6,7][c.stage]||c.originRound>s.round)fail();
   if(!c.enabled&&(c.originRound!==14||c.stage!==0||c.results.length||c.champion!==null)||c.enabled&&c.originRound===14)fail();
   if(due(s)&&s.round!==gateFor(s))fail();
   let offset=0;for(let stage=0;stage<c.stage;stage++)for(const fixture of fixturesFor(s,stage)){

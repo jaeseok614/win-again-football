@@ -1,4 +1,4 @@
-self.WIN_AGAIN_CACHE_REVISION = "459543871e10";
+self.WIN_AGAIN_CACHE_REVISION = "df3766d1796c";
 self.WIN_AGAIN_ASSETS = [
   "./style.css?v=22",
   "./coach-guide.css?v=22",
@@ -52,7 +52,9 @@ self.WIN_AGAIN_ASSETS = [
   "./squad-plans.js?v=22",
   "./transfer-plans.js?v=22",
   "./club-story.js?v=24",
-  "./season.js?v=22",
+  "./english-pyramid.js?v=1",
+  "./pyramid-schedule.js?v=1",
+  "./season.js?v=23",
   "./training.js?v=22",
   "./portraits.js?v=22",
   "./character.js?v=22",
