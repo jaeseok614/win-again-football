@@ -124,8 +124,9 @@ function readPNG(file) {
 
 (async () => {
   await test('manifest preserves relative installation and the long Korean title with recognizable mask-safe football icons', async () => {
-    assert.equal(manifest.name, '눈 떠보니 5부 리그 감독이었다! 이번 생엔 우승한다'); assert.equal(manifest.short_name, '이번 생엔 우승한다');
-    assert.equal(Array.from(manifest.name).length, 29);
+    assert.equal(manifest.name, '눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기'); assert.ok([...manifest.name].length<=30); assert.equal(manifest.short_name, '5부 감독 귀환기');
+    assert.equal(Array.from(manifest.name).length, 26);
+    const appHtml=fs.readFileSync(path.join(dir,'index.html'),'utf8');assert.match(appHtml,/<title>눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기<\/title>/);assert.match(appHtml,/강등된 토투넘, 출발선은 잉글랜드 5부/);assert.match(appHtml,/네 번의 승격/);
     for (const key of ['id', 'scope', 'start_url']) assert.equal(manifest[key], './');
     assert.equal(manifest.display, 'standalone'); assert.equal(manifest.theme_color, '#0c0e12');
     assert.equal(manifest.background_color, '#0c0e12');

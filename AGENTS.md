@@ -82,11 +82,12 @@ with `node source/build-android.cjs` and android/gradlew. Keep local.properties,
 signing keys, generated assets and build outputs out of Git. Release bundles are
 unsigned until the owner creates a Play account and provides an upload key.
 
-The public game title is now "눈 떠보니 5부 리그 감독이었다! 이번 생엔 우승한다"
-(29 characters). The owner wants a long anime/light-novel-style title and football
-imagery in the app icon and startup loading screen. Keep the title readable on
+The public game title is now "눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기"
+(26 characters). The story begins with the relegated parody club in the fifth tier
+and follows four promotions back to the Premier League. Keep the title readable on
 small screens; keep win-again protocol identifiers, save keys and package IDs
-stable when changing branding. Preserve original-art provenance in docs/.
+stable when changing branding. Google Play titles must remain within 30 characters.
+Preserve original-art provenance in docs/.
 
 The owner tested the APK and wants an app title menu before the management home,
 visible articles without expansion buttons, and manager/player media assessments.

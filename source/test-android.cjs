@@ -18,7 +18,7 @@ test('official Gradle wrapper and distribution SHA256 are pinned',()=>{
 test('Android title, stadium loader, football bitmap and adaptive safe icon are bundled',()=>{
  const manifest=read('app/src/main/AndroidManifest.xml'),strings=read('app/src/main/res/values/strings.xml');
  assert.match(manifest,/android:label="@string\/app_name"/);assert.match(manifest,/@mipmap\/ic_launcher_round/);
- assert.ok(strings.includes('눈 떠보니 5부 리그 감독이었다! 이번 생엔 우승한다'));
+ assert.ok(strings.includes('눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기'));
  const png=fs.readFileSync(path.join(android,'app/src/main/res/drawable-nodpi/football_icon.png'));
  assert.equal(png.subarray(1,4).toString(),'PNG');assert.equal(png.readUInt32BE(16),512);assert.equal(png.readUInt32BE(20),512);
  const stadium=fs.readFileSync(path.join(android,'app/src/main/res/drawable-nodpi/launch_stadium.webp'));
