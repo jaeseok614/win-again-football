@@ -61,6 +61,31 @@ The match presentation follows Football Manager's published possession and
 out-of-possession approach and risk-based pass decisions, adapted to the game's
 existing three instructions and fictional squad data.
 
+## Matchday scouting ratings (2026-10-06)
+
+The opponent report now displays the source club used as a real-world reference
+and a positional 1–99 overall for each fictional player. Overall weights the
+existing attributes differently for goalkeepers, defenders, midfielders and
+forwards. It is a display/scouting aid only; it does not alter match simulation,
+and it does not claim to reproduce a real player's FotMob rating. The five tier
+floors now rise at every step for attack, defense, midfield and speed. Regression
+tests also check average generated player attributes and positional overall rise
+from the fifth division to the first.
+
+The owner has since requested full-size future divisions: 20 clubs/38 rounds in
+the Premier League and 24 clubs/46 rounds in each of the next four divisions.
+The current 40-club, 8-team/14-round format remains the active implementation for
+now. Replacing it safely requires a dedicated full-season schema and UI migration;
+never reinterpret a saved compact season as a 38- or 46-round campaign.
+
+Reference schedule facts: [Premier League 2026/27 fixture format](https://www.premierleague.com/en/news/4324541/how-the-premier-league-fixture-list-is-compiled),
+[EFL regular-season schedule](https://www.efl.com/news/2026/march/24/sky-bet-efl-end-of-season-schedule--now-confirmed/),
+[EFL regulations](https://www.efl.com/documents/efl-handbook.pdf). Player/club form
+reference: [FotMob Championship stats](https://www.fotmob.com/leagues/48/stats/championship/players),
+[FotMob League One](https://www.fotmob.com/leagues/108/overview/league-1),
+[FotMob League Two](https://www.fotmob.com/leagues/109/overview/league-two),
+[FotMob National League](https://www.fotmob.com/leagues/117/overview).
+
 Useful checks after editing this feature:
 
 ```sh

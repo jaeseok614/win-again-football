@@ -95,7 +95,7 @@ test('the reported key player is the actual featured lineup member and read rema
  assert.deepEqual(report.keyPlayer,{
   id:featured[0].id,identity:featured[0].identity,name:featured[0].name,pos:featured[0].pos,
   role:{GK:'골문 장벽',DEF:'수비 리더',MID:'플레이메이커',FW:'에이스 공격수'}[featured[0].pos],
-  threat:report.keyPlayer.threat,primary:featured[0].primary,speed:featured[0].speed
+  threat:report.keyPlayer.threat,primary:featured[0].primary,overall:featured[0].overall,speed:featured[0].speed
  });
  assert.ok(report.keyPlayer.threat.includes(String(featured[0].primary))||report.keyPlayer.threat.includes(String(featured[0].speed)));
  assert.equal(JSON.stringify(s),before);
