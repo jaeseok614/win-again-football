@@ -26,9 +26,12 @@
  function read(s){
   const fixture=S.fixtureFor(s),opponent=fixture?S.club(fixture.home===own?fixture.away:fixture.home):null;
   const records=s.statistics?.records||[];
-  const last=records.length?result(records.at(-1)):null;
+  const outcomes=records.map(result);let currentStreak=0,bestStreak=0,streak=0,completedGoals=0;
+  for(const outcome of outcomes){completedGoals+=outcome.completed;if(outcome.perfect){streak++;bestStreak=Math.max(bestStreak,streak);}else streak=0;}
+  for(let i=outcomes.length-1;i>=0&&outcomes[i].perfect;i--)currentStreak++;
   return {upcoming:opponent?{opponent:opponent.name,competition:s.competition,cards:goals(opponent)}:null,
-   pending:s.match?.phase==='full',last,perfectCount:records.reduce((n,r)=>n+Number(result(r).perfect),0),recordCount:records.length};
+   pending:s.match?.phase==='full',last:outcomes.at(-1)||null,perfectCount:outcomes.filter(outcome=>outcome.perfect).length,
+   currentStreak,bestStreak,completedGoals,recordCount:records.length};
  }
  const api={read,goals,result};root.MatchdayObjectives=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

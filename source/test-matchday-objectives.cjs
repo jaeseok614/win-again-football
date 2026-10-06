@@ -24,7 +24,9 @@ test('only a confirmed receipt earns a three-goal badge and substitution must oc
  assert.equal(result.cards[2].done,true);
  assert.equal(result.cards[2].evidence,'교체 1명');
  assert.equal(model.perfectCount,Number(result.perfect));assert.equal(model.last.completed,result.completed);
+ assert.equal(model.currentStreak,1);assert.equal(model.bestStreak,1);assert.equal(model.completedGoals,result.completed);
  assert.deepEqual(Objectives.read(S.restore(copy(s))),model);
+ let next=S.restore(copy(s));finish(next.match);next=S.settle(next);const afterMiss=Objectives.read(next);assert.equal(afterMiss.currentStreak,0);assert.equal(afterMiss.bestStreak,1);assert.equal(afterMiss.completedGoals,result.completed+afterMiss.last.completed);assert.equal(afterMiss.perfectCount,1);
 });
 
 test('defensive objective uses own-relative score, not home/away order or guessed statistics',()=>{
@@ -40,5 +42,5 @@ test('home challenge is hidden during live play and escapes opponent names',()=>
  vm.runInContext(fs.readFileSync(__dirname+'/dist/matchday-objectives-ui.js','utf8'),ctx);
  ctx.renderMatchdayObjectives();assert.equal(host.innerHTML,'');
  ctx.view='club';ctx.MatchdayObjectives={read(){return {...Objectives.read(s),upcoming:{opponent:'<상대>',cards:Objectives.read(s).upcoming.cards}};}};
- ctx.renderMatchdayObjectives();assert.match(host.innerHTML,/매치데이 3칸 도전/);assert.match(host.innerHTML,/&lt;상대&gt;/);assert.ok(!host.innerHTML.includes('<상대>'));
+ ctx.renderMatchdayObjectives();assert.match(host.innerHTML,/매치데이 3칸 도전/);assert.match(host.innerHTML,/목표 0개 · 완벽 0회 · 연속 0회 · 최고 0회/);assert.match(host.innerHTML,/&lt;상대&gt;/);assert.ok(!host.innerHTML.includes('<상대>'));
 });
