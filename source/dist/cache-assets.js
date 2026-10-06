@@ -1,4 +1,4 @@
-self.WIN_AGAIN_CACHE_REVISION = "1b5a88388938";
+self.WIN_AGAIN_CACHE_REVISION = "584632b3b28a";
 self.WIN_AGAIN_ASSETS = [
   "./style.css?v=22",
   "./coach-guide.css?v=22",
@@ -125,6 +125,7 @@ self.WIN_AGAIN_ASSETS = [
   "./manager-intro.js?v=23",
   "./club-story-ui.js?v=24",
   "./assets/player-faces-v13.png?v=13",
+  "./assets/player-faces-v15.jpg?v=15",
   "./assets/coach-faces-v1.webp?v=1",
   "./assets/launch-stadium.webp"
 ];

@@ -28,11 +28,11 @@ function assetURLs() {
     if (typeof path !== 'string') throw new Error('invalid-asset-list');
     const url = new URL(path, SCOPE_URL);
     const relative = url.pathname.slice(SCOPE_URL.pathname.length);
-    const versionQuery = url.searchParams.size === 1 && url.searchParams.get('v') === '22';
+    const versionQuery = url.searchParams.size === 1 && /^\d{1,6}$/.test(url.searchParams.get('v') || '');
     const script = /^[a-z][a-z0-9-]*\.(?:js|css)$/i.test(relative) && versionQuery;
     const imageQuery = url.searchParams.size === 0 ||
       url.searchParams.size === 1 && /^\d{1,6}$/.test(url.searchParams.get('v') || '');
-    const image = /^assets\/[a-z][a-z0-9-]*\.(?:png|svg|webp)$/i.test(relative) &&
+    const image = /^assets\/[a-z][a-z0-9-]*\.(?:png|jpe?g|svg|webp)$/i.test(relative) &&
       imageQuery;
     if (!scopeContains(url) || excluded(url) || url.username || url.password || url.hash ||
         !(fixed.includes(url.href) || script || image)) {

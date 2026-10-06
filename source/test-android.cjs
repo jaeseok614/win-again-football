@@ -82,6 +82,8 @@ test('Android pause saves the campaign without automatically resuming play',()=>
   assert.match(html,/Content-Security-Policy/);assert.match(html,/connect-src 'none'/);assert.match(html,/window\.WinAgainAndroid/);
   assert.doesNotMatch(html,/<script src=|<link rel="(?:stylesheet|manifest)"|navigator\.serviceWorker\.register/);
   assert.match(html,/id="campaign-import-file"|id=\\"campaign-import-file\\"/);
+  assert.equal((html.match(/data:image\/jpeg;base64,/g)||[]).length,1);
+  assert.doesNotMatch(html,/player-faces-v15\.jpg/);
   console.log('PASS Android bundle is complete, deterministic, offline and retains the shared importer');
  }finally{fs.rmSync(temp,{recursive:true,force:true});}
 })().catch(error=>{console.error(error);process.exitCode=1;});

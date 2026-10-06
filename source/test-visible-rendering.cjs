@@ -51,4 +51,9 @@ test('health summaries are written only to their visible home, squad or match lo
  const h=harness();h.load('health-ui.js');h.ctx.playerCharacterMarkup=()=>'';h.ctx.Discipline=require('./dist/discipline.js');
  for(const [view,tab,target] of [['club','health','health-summary'],['match','health','match-health'],['squad','health','squad-health'],['squad','records',null],['market','health',null]]){h.ctx.view=view;h.ctx.squadTab=tab;h.clear();const before=JSON.stringify(h.ctx.season);h.ctx.renderHealth();for(const id of ['health-summary','match-health','squad-health'])assert.equal(h.writes.includes(id),id===target);assert.equal(JSON.stringify(h.ctx.season),before);}
 });
+test('home season progress uses the active league length and preserves compact schedules',()=>{
+ const home=section('renderClubDashboard','renderSquadOverview');assert.match(home,/\$\{season\.round\}<small> \/ \$\{S\.roundCount\(season\)\}<\/small>/);
+ for(const division of [1,2,3,4,5]){const season={round:7,league:{division,rules:'five-tier',clubIds:S.fiveTierPools[division].map(c=>c.id)}},html=vm.runInNewContext('`${season.round}<small> / ${S.roundCount(season)}</small>`',{season,S});assert.equal(html,'7<small> / '+(division===1?38:46)+'</small>');}
+ const compact={round:7,league:{division:2,rules:'legacy',clubIds:S.clubs.slice(0,8).map(c=>c.id)}};assert.equal(S.roundCount(compact),14);
+});
 console.log('Validated '+groups+' visible rendering groups against real campaign state.');

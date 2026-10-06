@@ -144,18 +144,13 @@ historic non-five-tier schedules and receipts remain intact. See HANDOFF.md,
 docs/FIVE_TIER_PYRAMID_AND_FINANCE.md and
 docs/ENGLISH_PYRAMID_REFERENCES_2026-27.md.
 
-Owner refinement (2026-10-06, realistic English pyramid): the owner now requests
-real competition sizes and schedules for new careers: 20 Premier League clubs
-with 38 home/away rounds, and 24 clubs in each of Championship, League One,
-League Two and National League with 46 rounds. This supersedes the compact
-eight-club/14-round format for future new careers. Keep existing compact and
-legacy saves loadable exactly as saved; do not silently rewrite their fixtures,
-results, receipts, or history. A full migration must update every season-length
-consumer (including finance, staff clocks, statistics, cups, calendars and UI)
-as one tested change before new careers switch formats. The request is not yet
-implemented end to end; see HANDOFF.md. Retain user-requested real club references
-and tier-aware ability progression. See official Premier League/EFL fixtures and
-FotMob league/player-stat pages when refreshing season-specific reference data.
+The current five-tier implementation already uses real competition sizes and
+schedules: 20 Premier League clubs/38 rounds, and 24 clubs/46 rounds in each of
+the lower four divisions. Schema-10 migration upgrades compact five-tier saves in
+place while retaining their year, results, receipts, finance and current match.
+The home season-progress indicator uses the active schedule length. Keep legacy
+non-five-tier fixtures and receipts intact. See HANDOFF.md, the five-tier design
+and 2026/27 reference list when changing this system.
 
 Owner refinement (2026-10-05, English club references and player faces): use
 2026/27 Premier League, Championship, League One, League Two and National League
@@ -163,8 +158,9 @@ clubs as references for full tier pools. Keep the Tottunham-to-National-League
 story exception, original club IDs, raw ratings, compact schedules and old saves
 stable. Display fictional parody names; keep exact reference clubs in source
 metadata and docs/ENGLISH_PYRAMID_REFERENCES_2026-27.md.
-Use the shared original fictional portrait atlas rather than real-player photos
-or runtime downloads. Keep fixed starters and initial transfer targets on
-distinct deterministic faces, show portraits on the live pitch and in squad and
-tactics screens, and register the large atlas once for both bundled and offline
-builds. Preserve the generation prompt beside the asset.
+Use the shared original fictional portrait atlases rather than real-player photos
+or runtime downloads. Keep fixed starters and initial transfer targets on their
+stable faces; give opposition starters distinct faces. Show portraits on the live
+pitch, in squad/tactics screens, and in the opponent scout. Register the atlases
+once for bundled and offline builds, keep additional atlases compact, and preserve
+each generation prompt beside its asset.

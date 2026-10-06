@@ -1,8 +1,8 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
-const root=path.join(__dirname,'dist'),host={hidden:false,innerHTML:''},lineup=Array.from({length:11},(_,i)=>({id:'opp'+i,no:i+1,name:'선수 '+i,pos:i===0?'GK':i<5?'DEF':i<9?'MID':'FW',primaryLabel:i===0?'선방':i<5?'수비':i<9?'패스':'결정력',primary:60+i,overall:58+i,speed:55+i,endurance:63+i,energy:94,condition:'좋음'}));
+const root=path.join(__dirname,'dist'),Portraits=require('./dist/portraits.js'),host={hidden:false,innerHTML:''},lineup=Array.from({length:11},(_,i)=>({id:'opp'+i,identity:'opposition:arsenal:'+i,no:i+1,name:'선수 '+i,pos:i===0?'GK':i<5?'DEF':i<9?'MID':'FW',primaryLabel:i===0?'선방':i<5?'수비':i<9?'패스':'결정력',primary:60+i,overall:58+i,speed:55+i,endurance:63+i,energy:94,condition:'좋음'}));
 const report={valid:true,club:{id:'arsenal',name:'아스널드 FC',short:'아스널드',code:'AF',color:'#c8f36e',reference:'Arsenal'},division:{number:1,name:'프리미어 리그',rounds:14},plan:{description:'점유율 축구',formation:'442',label:'중원과 패스 중심'},keyPlayer:{id:'opp10',name:'선수 10',pos:'FW',role:'에이스 공격수',threat:'결정력 70 · 속도 65',overall:68},lineup,activePlayers:{ours:11,opponent:11},minute:0,rank:3,points:9,recent:['승'],condition:{opponent:94,ours:92,tired:1},comparisons:[{label:'공격',ours:70,opponent:80},{label:'수비',ours:65,opponent:77},{label:'중원',ours:68,opponent:82},{label:'수비 속도',ours:75,opponent:84}],advice:'상대 수비가 느립니다.'};
-const context={document:{getElementById:id=>id==='opposition-report'?host:null},view:'match',state:{seed:1,minute:0,tactic:'balanced',lineup:['g1'],players:{g1:{energy:92}},phase:'prep',suspensions:false},season:{suspensions:false},Opposition:{read:()=>report},TacticsBoard:{read:()=>({valid:false})},matchdayText:value=>String(value),matchdayCardInfo:()=>({markup:''})};
+report.rivalDiscipline={applicable:true,rows:[{name:"<징계 선수>",pending:1,yellows:0}],absent:[]};lineup[0]={...lineup[0],name:"후보 선수",replacementFor:"<결장 선수>"};report.lineup=lineup;const context={document:{getElementById:id=>id==='opposition-report'?host:null},view:'match',state:{seed:1,minute:0,tactic:'balanced',lineup:['g1'],players:{g1:{energy:92}},phase:'prep',suspensions:false},season:{suspensions:false},Opposition:{read:()=>report},TacticsBoard:{read:()=>({valid:false})},Portraits,matchdayText:value=>String(value).replaceAll("<","&lt;").replaceAll(">","&gt;"),matchdayCardInfo:()=>({markup:''})};
 vm.runInNewContext(fs.readFileSync(path.join(root,'opposition-ui.js'),'utf8'),context,{filename:'opposition-ui.js'});
 context.renderOpponentReport();
 assert.match(host.innerHTML,/실제 구단 전력 참고 <b>Arsenal<\/b>/);
@@ -10,6 +10,9 @@ assert.match(host.innerHTML,/종합 능력은 포지션별 창작 가중치이�
 assert.match(host.innerHTML,/<abbr title="포지션 주요 능력을 가중한 1~99 종합 지수">종합<\/abbr>/);
 assert.equal((host.innerHTML.match(/<th>/g)||[]).length,6);
 assert.equal((host.innerHTML.match(/class="opposition-overall"/g)||[]).length,11);
+assert.equal((host.innerHTML.match(/class="player-portrait portrait-small"/g)||[]).length,11);
+assert.equal(new Set([...host.innerHTML.matchAll(/data-portrait-index="(\d+)"/g)].map(m=>m[1])).size,11);
 assert.equal((host.innerHTML.match(/<tr/g)||[]).length,12);
-const css=fs.readFileSync(path.join(root,'opposition.css'),'utf8');assert.match(css,/\.opposition-overall/);assert.match(css,/@media\(max-width:730px\)/);
-console.log('PASS opponent report identifies real club references and shows eleven compact positional ratings');
+assert.match(host.innerHTML,/경고·출전 정지/);assert.match(host.innerHTML,/&lt;징계 선수&gt; · 이번 리그전 결장/);assert.match(host.innerHTML,/&lt;결장 선수&gt; 누적 정지 · 후보 출전/);assert.doesNotMatch(host.innerHTML,/<징계 선수>|<결장 선수>/);
+const css=fs.readFileSync(path.join(root,'opposition.css'),'utf8');assert.match(css,/\.opposition-overall/);assert.match(css,/\.opposition-discipline/);assert.match(css,/@media\(max-width:730px\)/);
+console.log('PASS opponent report identifies real club references and shows eleven portrait-backed positional ratings');

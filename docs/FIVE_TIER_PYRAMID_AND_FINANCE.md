@@ -87,11 +87,11 @@ floors now rise at every step for attack, defense, midfield and speed. Regressio
 tests also check average generated player attributes and positional overall rise
 from the fifth division to the first.
 
-The owner has since requested full-size future divisions: 20 clubs/38 rounds in
-the Premier League and 24 clubs/46 rounds in each of the next four divisions.
-The current 40-club, 8-team/14-round format remains the active implementation for
-now. Replacing it safely requires a dedicated full-season schema and UI migration;
-never reinterpret a saved compact season as a 38- or 46-round campaign.
+The full-size format above is the active new-career implementation. The historic
+eight-club/14-round schedule remains for non-five-tier saves and for validation
+of the original prototype fixtures. Old five-tier saves are upgraded through
+season schema 10 using the migration described above; a restore never advances
+the season or silently changes confirmed results and receipts.
 
 Reference schedule facts: [Premier League 2026/27 fixture format](https://www.premierleague.com/en/news/4324541/how-the-premier-league-fixture-list-is-compiled),
 [EFL regular-season schedule](https://www.efl.com/news/2026/march/24/sky-bet-efl-end-of-season-schedule--now-confirmed/),
