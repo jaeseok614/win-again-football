@@ -30,7 +30,7 @@ function renderPractice(){
  $('practice-commentary').textContent=latest?latest.minute+'′ · '+F.displayText(latest.text,m.players):'지친 선수를 바꿔보세요. 교체는 경기 시간을 넘기지 않습니다.';
  $('practice-events').innerHTML=r.events.filter(e=>!latest||e.minute!==latest.minute||e.text!==latest.text).slice(-4).reverse().map(e=>'<div><b>'+e.minute+'′</b><span>'+practiceText(F.displayText(e.text,m.players))+'</span></div>').join('');
  $('practice-sound').textContent='소리 '+(soundOn?'켜짐':'꺼짐');$('practice-sound').setAttribute('aria-pressed',soundOn);const device=practiceFeedback.snapshot();$('practice-haptic').textContent=device.supported?'진동 '+(mediaPrefs.haptics?'켜짐':'꺼짐'):'진동 미지원';$('practice-haptic').disabled=!device.supported;$('practice-haptic').setAttribute('aria-pressed',mediaPrefs.haptics);
- if(m.paused||done)renderPracticeSubs();else $('practice-subs').innerHTML='<p class="practice-sub-running">일시 정지 후 선수를 교체하세요.<br>남은 교체 '+(3-m.subs)+'명 · 실제 시간에 반영</p>';
+ if(m.paused||done)renderPracticeSubs();else $('practice-subs').innerHTML='<p class="practice-sub-running">일시 정지 후 선수를 교체하세요.<br>남은 교체 '+Math.max(0,F.substitutionRules(m).limit-m.subs)+'명 · 실제 시간에 반영</p>';
  if(done){const justFinished=!practiceRecorded;recordPracticeResult(r);renderPracticeResult(r);if(justFinished){$('practice-result').scrollIntoView({block:'start',behavior:'instant'});$('practice-result').focus({preventScroll:true});}}else $('practice-result').hidden=true;
  drawPractice();
 }

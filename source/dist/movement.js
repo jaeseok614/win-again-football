@@ -109,13 +109,27 @@
    result.ball=age<350?origin:mixPoint(win,start,pass);result.trail=[];result.carrierId=age===0?frozen.carrierId:age<350?(lost?null:recoverer.id):pass===1?shooter.id:pass===0?recoverer.id:null;result.receiverId=age<350?recoverer.id:shooter.id;result.ownerTeam=age<350?frozen.ownerTeam:event.team;result.phase=lost&&age<350?'turnover':'assist';result.label=lost&&age<350?'공 탈취 · 수비 전환':'전진 패스 · 슈팅 준비';
   }
   if(age>=700)result.ownerTeam=event.type==='shot'&&progress>.97||event.type==='chance'&&progress>.85?1-event.team:event.team;result.attributed=!!(exact||named);result.scorerId=exact?.id||named?.id||null;result.keeperId=keeper.id;result.eventType=event.type;result.action=event.action;
-  result.performerName=shooter.name;
+  result.performerName=shooter.name;applyActionMovement(result,event,age,shooter,source,defenders,frozen,end);
   if(blend>0){
    result.phase='restart';result.label=event.type==='goal'?'실점 팀 킥오프 재개':'수비진으로 공 배급';result.ownerTeam=1-event.team;
    result.ball=mixPoint(result.ball,baseBall,blend);result.trail=[];result.carrierId=null;
    for(let i=0;i<result.own.length;i++)Object.assign(result.own[i],mixPoint(result.own[i],baseOwn[i],blend));
    for(let i=0;i<result.opponent.length;i++)Object.assign(result.opponent[i],mixPoint(result.opponent[i],baseOpp[i],blend));
   }
+ }
+ // Action poses and ball height illustrate recorded events only; no new result or RNG draw.
+ function applyActionMovement(result,event,age,shooter,source,defenders,frozen,end){
+  const people=event.team===0?result.own:result.opponent,opponents=event.team===0?result.opponent:result.own,runner=people.find(p=>p.id===shooter.id),fade=1-smooth((age-1450)/450);
+  if(event.action==='cross'&&age>=250&&age<1100){result.ballHeight=Math.sin(Math.PI*clamp((age-250)/850,0,1))*(event.setPiece==='corner'?1:.75);}
+  if(event.setPiece==='corner'&&event.type!=='chance'&&age>=1000&&age<1450){result.headerId=shooter.id;result.headerLift=Math.sin(Math.PI*clamp((age-1000)/450,0,1));if(age>=1100&&age<1300){result.phase='header';result.label='문전 헤더!';}result.ballHeight=Math.max(result.ballHeight||0,.22*result.headerLift);}
+  if(event.action!=='dribble')return;
+  const direction=event.team===0?-1:1,start={x:shooter.x,y:shooter.y},finish={x:clamp(shooter.x+(shooter.x<50?12:-12),10,90),y:clamp(shooter.y+direction*20,10,90)},run=smooth((age-250)/700),point=mixPoint(start,finish,run),baseRunner=runner?{x:runner.x,y:runner.y}:null;
+  if(runner){const visible=mixPoint(baseRunner,point,fade);Object.assign(runner,visible);}result.runnerId=shooter.id;result.sprintProgress=age>=250&&age<950?run:null;
+  const blocker=defenders.filter(p=>p.pos!=='GK').sort((a,b)=>Math.hypot(a.x-finish.x,a.y-finish.y)-Math.hypot(b.x-finish.x,b.y-finish.y)||a.id.localeCompare(b.id))[0],visibleBlocker=blocker&&opponents.find(p=>p.id===blocker.id);
+  if(visibleBlocker&&age>=300){const follow=smooth((age-300)/650),duel={x:finish.x+(event.type==='chance'?0:shooter.x<50?-3:3),y:finish.y+direction*2},chase=mixPoint(blocker,duel,follow);Object.assign(visibleBlocker,mixPoint(visibleBlocker,chase,fade));result.duelId=blocker.id;}
+  if(age<250){result.ball=mixPoint(frozen.ball,start,smooth(age/250));result.phase='assist';result.label='돌파 선수에게 연결';result.carrierId=age===0?frozen.carrierId:null;result.receiverId=shooter.id;result.ownerTeam=age===0?frozen.ownerTeam:event.team;result.trail=[];}
+  else if(age<950){result.ball={x:point.x,y:point.y};result.carrierId=shooter.id;result.receiverId=shooter.id;result.ownerTeam=event.team;result.phase='sprint';result.label='공을 몰고 전력 질주!';result.trail=[.06,.12,.18].map(lag=>mixPoint(start,finish,Math.max(0,run-lag)));}
+  else{const flight=smooth((age-950)/500),target=event.type==='chance'?finish:end;result.ball=mixPoint(finish,target,flight);result.carrierId=flight<.02?shooter.id:event.type==='chance'&&flight>.85?blocker?.id:event.type==='shot'&&flight>.97?result.keeperId:null;result.receiverId=event.type==='chance'?blocker?.id:event.type==='shot'?result.keeperId:null;result.ownerTeam=event.type==='chance'&&flight>.85||event.type==='shot'&&flight>.97?1-event.team:event.team;result.trail=[.1,.2,.3].map(lag=>mixPoint(finish,target,Math.max(0,flight-lag)));result.phase=event.type==='chance'?'tackle':age<1450?'shot':event.type==='goal'?'goal':event.team===1?'save':'saved';result.label=result.phase==='tackle'?'수비가 발을 뻗어 돌파 저지':result.phase==='shot'?'돌파 뒤 슈팅!':result.phase==='goal'?'골!':'골키퍼 선방';if(event.type==='chance'&&blocker){result.tacklerId=blocker.id;result.tackleProgress=Math.sin(Math.PI*clamp((age-950)/600,0,1));}}
  }
  // Opponent events are aggregate engine events; choose a consistent visual forward,
  // without adding a scorer to saved statistics or drawing from the match RNG.
@@ -126,7 +140,7 @@
   const scorer=people.find(p=>p.id===event.scorerId)||people.find(p=>p.name&&String(event.text||'').includes(p.name))||role(people,'FW',finite(event.minute)%2);
   const name=scorer.name|| (event.team===0?'우리 공격수':'상대 공격수');
   const keeper=role(event.team===0?roster:own,'GK').name||'골키퍼';
-  const variant=Math.abs(finite(event.minute))%3;
+  const variant=Math.abs(finite(event.minute))%3;if(event.setPiece&&event.text)return event.text;if(event.action==='dribble'){if(event.type==='chance')return name+'의 전력 질주! 수비가 발을 뻗어 돌파를 저지합니다.';return name+'이 공을 몰고 수비 뒷공간으로 달립니다. '+(event.type==='goal'?'돌파 뒤 슈팅, 골!':'돌파 뒤 슈팅! '+keeper+'의 선방입니다.');}
   if(['cross','cutback','through_ball'].includes(event.action)){
    const source=event.team===0?match.players?.[event.sourceId]?.name:frameValue?.crossSourceName||role(people,'MID',event.side==='right'?1:0).name,receiver=event.team===0?match.players?.[event.actorId||event.scorerId]?.name:frameValue?.crossTargetName||name,delivery={cross:'크로스',cutback:'컷백',through_ball:'침투 패스'}[event.action];
    if(event.type==='goal')return (source||'측면 선수')+'의 '+delivery+'! '+(receiver||name)+'이(가) 받아 마무리합니다. 골!';
@@ -139,6 +153,7 @@
  }
  function liveCommentary(value){
   const people=[...value.own,...value.opponent],from=people.find(p=>p.id===value.sourceId)||people.find(p=>p.id===value.carrierId),to=people.find(p=>p.id===value.receiverId),name=from?.name||to?.name;
+  if(value.phase==='header')return (value.performerName||'공격수')+'가 뛰어올라 헤딩합니다! 공이 골문을 향합니다.';if(value.phase==='sprint')return (people.find(p=>p.id===value.runnerId)?.name||'공격수')+'이 공을 몰고 전력 질주합니다. 수비가 따라붙습니다.';if(value.phase==='tackle')return (people.find(p=>p.id===value.tacklerId)?.name||'수비수')+'이 발을 뻗어 돌파를 저지합니다.';if(value.phase==='shot')return (value.performerName||'공격수')+'의 슈팅! 공이 골문을 향합니다.';
   if(value.phase==='cross')return (from?.name||'측면 선수')+'이 측면에서 크로스를 올립니다. '+(to?.name||'공격수')+'가 문전으로 쇄도합니다.';
   if(value.phase==='cutback')return (from?.name||'측면 선수')+'이 골라인 근처에서 컷백을 내줍니다. '+(to?.name||'공격수')+'가 슈팅을 준비합니다.';
   if(value.phase==='through')return (from?.name||'미드필더')+'의 침투 패스! '+(to?.name||'공격수')+'가 수비 뒷공간으로 달립니다.';

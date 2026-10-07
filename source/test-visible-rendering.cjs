@@ -61,4 +61,5 @@ test('home season progress uses the active league length and rejects compact sch
  for(const division of [1,2,3,4,5]){const season={round:7,league:{division,rules:'five-tier',clubIds:S.fiveTierPools[division].map(c=>c.id)}},html=vm.runInNewContext('`${season.round}<small> / ${S.roundCount(season)}</small>`',{season,S});assert.equal(html,'7<small> / '+(division===1?38:46)+'</small>');}
  const compact={round:7,league:{division:2,rules:'legacy',clubIds:S.clubs.slice(0,8).map(c=>c.id)}};assert.throws(()=>S.roundCount(compact));
 });
+test('live manager report uses five-player rules after four substitutions',()=>{const h=harness();vm.runInContext(section('renderReport','renderResults'),h.ctx);const m=h.ctx.state;F.begin(m);F.tick(m);m.paused=true;for(const [out,inside] of [['f1','f3'],['d1','d5'],['d2','d6'],['m1','m5']])F.swap(m,out,inside);h.ctx.renderReport();assert.match(h.node('opponent p').textContent,/남은 교체는 1명/);F.swap(m,'g1','g2');h.ctx.renderReport();assert.match(h.node('opponent p').textContent,/남은 교체는 0명/);});
 console.log('Validated '+groups+' visible rendering groups against real campaign state.');
