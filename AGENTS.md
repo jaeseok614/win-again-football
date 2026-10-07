@@ -38,13 +38,23 @@ percentage only when measurable. Keep startup assets small and offline-capable.
 Show a title menu before the management home. Do not run match time behind it.
 Onboarding is an optional device preference with skip and replay in settings.
 The scoreboard, clock, live pitch, commentary and essential match buttons fit one
-phone viewport. Controls occupy two filled rows in prep, running, paused and full
-states. The pitch is observation-only. Tactics, substitutions, statistics, reports,
+phone viewport. Controls occupy two filled rows on portrait phones in prep, running, paused and
+full states. Short landscape screens place these groups side by side to leave room
+for the pitch and readable commentary. The pitch is observation-only. Tactics, substitutions, statistics, reports,
 talks, results and settings use accessible popups with internal scrolling, keyboard
 focus, Escape dismissal and 44px touch targets. Opening planning pauses the match;
 closing never silently resumes it. Tactics use touch/pointer drag and the shared
 12-formation layout. Show full player names, overall skill, condition separately
 from stamina, and stamina gauges. Verify short/small phone and desktop layouts.
+
+Permanent owner feedback (2026-10-08): keep essential live information on one
+phone screen, with readable commentary and no horizontal slides for core facts.
+Use compact kits/numbers on the pitch and portraits in squad/detail dialogs.
+The foreground ball must remain visible over every player. Show possession
+recovery, ball carrying, forward runs, delivery, shot and goalkeeper response in
+order. A wing carrier advances beyond teammates before crossing; a goalkeeper
+narrows the angle and meets the ball before announcing a save. Presentation must
+not invent saved match statistics or change the clock, RNG or recorded outcome.
 
 Reuse the existing explicit substitution selection flow: five players, three
 in-play windows, multiple replacements at the same minute share a window and
@@ -57,6 +67,9 @@ Keep articles visible on the home dashboard and derive assessments, manager stor
 and goals from actual confirmed records. Use original fictional outlets, journalists,
 player/coach names and art; do not attribute simulated quotes to real newsrooms.
 Use bundled portrait atlases with stable identities, never runtime photo downloads.
+The guide opens the whole 18-player squad with positions, calculated overall,
+stamina and separate condition. Transfer filters work with an empty search box;
+clearing/editing a keyword immediately updates results, including Korean IME.
 Keep generation provenance in docs/. Detailed player traits are identity-derived.
 Optional team talks and ClubStory choices retain deterministic validated receipts.
 National-team play remains future work.

@@ -30,6 +30,7 @@ function renderMatchday(){
  if(typeof view!=='undefined'&&view!=='match')return;
  const host=document.getElementById('matchday-summary');if(!host)return;
  const d=Matchday.read(season,selected);host.hidden=!d.valid;if(!d.valid){const board=document.getElementById('tactics-board');if(board)board.hidden=true;return;}
+ renderLiveMatchStats(d);
  if(typeof Opposition!=='undefined'&&typeof opponentMatchContext!=='undefined'&&opponentMatchContext!==state.seed){opponentMatchContext=state.seed;if(d.liveMode==='prep')matchdayTab='opponent';}
  if(d.liveMode==='live'||d.liveMode==='full')matchdayTab='live';
  const stats=d.stats.map(s=>'<div class="matchday-stat"><span>'+s.label+'</span><strong>'+s.own+' <i>:</i> '+s.opponent+'</strong><small>우리 : 상대</small></div>').join('');
@@ -61,6 +62,12 @@ function renderMatchday(){
  document.getElementById('pause').textContent=d.paused?'5분 진행':'일시 정지';
  if(typeof renderOpponentReport==='function')renderOpponentReport();
  const cards=document.getElementById('card-counter');if(cards&&typeof Discipline!=='undefined'){cards.hidden=!state.discipline;const own=Discipline.count(state),opp=Discipline.count(state,1);cards.textContent='🟨 '+own.yellow+':'+opp.yellow+' · 🟥 '+own.red+':'+opp.red;}
+}
+
+function renderLiveMatchStats(data){
+ const host=document.getElementById('match-live-stats');if(!host||!state||view!=='match')return;
+ const possession=Matchday.facts(state).find(row=>row.key==='possession'),markup='<div><span>점유율 · 추정</span><strong>'+possession.own+' : '+possession.opponent+'</strong></div><div><span>슈팅</span><strong>'+state.shots[0]+' : '+state.shots[1]+'</strong></div><div><span>평균 체력</span><strong class="'+(data.averageEnergy<50?'fatigue-low':'')+'">'+Math.round(data.averageEnergy)+'</strong></div><div><span>남은 교체</span><strong>'+data.substitution.remaining+' / '+data.substitution.limit+'</strong></div>';
+ if(host.dataset.markup!==markup){host.innerHTML=markup;host.dataset.markup=markup;}
 }
 function setMatchdayTab(tab){
  if(!['live','opponent','analysis'].includes(tab)||!state||tab==='analysis'&&state.phase==='full')return;

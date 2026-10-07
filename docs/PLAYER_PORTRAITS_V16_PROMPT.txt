@@ -1,0 +1,22 @@
+Use case: precise-object-edit
+Asset type: bundled portrait atlas for an original fictional football management mobile game.
+Input image is the edit target: 7 columns and 4 rows, 28 equal square portrait cells. Preserve exact grid, framing, dark navy backgrounds and original painted semi-realistic style. No text, numbers, logos, watermark or borders. Every cell has one front-facing head and shoulders, navy football shirt with lime trim. Correct only these 18 cells to reflect the distinctive appearance of the real player who inspired our fictional parody character. Faces should remain original illustrations, not photographs. Cell indices are zero based, row-major, left to right then next row.
+0: fictional Italian keeper inspired by Guglielmo Vicario, fair skin, short dark brown hair, angular face.
+10: fictional veteran British keeper inspired by Fraser Forster, fair skin, close cropped brown hair, broad sturdy face and light stubble.
+1: fictional Argentine defender inspired by Cristian Romero, olive skin, dark short fade hair, strong eyebrows, short beard.
+4: fictional Dutch defender inspired by Micky van de Ven, fair skin, light brown swept hair, youthful long face.
+7: fictional Spanish defender inspired by Pedro Porro, tan skin, short dark hair fade, trimmed dark beard.
+6: fictional Italian Nigerian defender inspired by Destiny Udogie, dark brown skin, very short black hair, youthful rounded face.
+9: fictional Romanian defender inspired by Radu Dragusin, fair olive skin, long dark hair tied back, short beard.
+13: fictional Welsh defender inspired by Ben Davies, fair skin, short brown hair, light stubble.
+8: fictional Malian midfielder inspired by Yves Bissouma, dark brown skin, short black hair, fine beard.
+3: fictional English midfielder inspired by James Maddison, fair skin, dark blond brown styled short hair, trimmed beard.
+23: fictional Swedish Macedonian midfielder inspired by Dejan Kulusevski, fair skin, close cropped ginger hair, light ginger beard.
+12: fictional Uruguayan midfielder inspired by Rodrigo Bentancur, olive skin, short dark brown hair, fine beard.
+11: fictional Senegalese midfielder inspired by Pape Matar Sarr, dark brown skin, short black textured hair, youthful clean shaven face.
+18: fictional Swedish young midfielder inspired by Lucas Bergvall, fair skin, wavy blond curtains haircut, youthful clean shaven face.
+21 (fourth row FIRST column): fictional Korean captain inspired by Son Heung-min. CLEAR EAST ASIAN KOREAN male facial features, warm light tan skin, dark brown eyes, black straight hair parted softly, clean shaven, friendly confident smile. Absolutely not a white blond European face.
+15: fictional British Nigerian striker inspired by Dominic Solanke, medium dark brown skin, short black curls, trimmed beard.
+20: fictional Welsh mixed heritage winger inspired by Brennan Johnson, light brown skin, short dark tight curls, youthful clean shaven face.
+22: fictional Brazilian striker inspired by Richarlison, warm tan skin, closely cropped bleached platinum hair, clean shaven angular face.
+Keep all other 10 portraits at indices 2,5,14,16,17,19,24,25,26,27 unchanged. Deliver an exact 7-by-4 contact sheet with no extra margins, no additional heads and no merged cells. Professional consistent portrait lighting; each head fits entirely inside its own square.

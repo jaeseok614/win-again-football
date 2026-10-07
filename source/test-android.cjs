@@ -57,6 +57,8 @@ test('Android back closes game dialogs before switching tabs or exiting',()=>{
  dialogs=[];assert.equal(context.WinAgainAndroid.handleBack(),true);assert.equal(context.view,'club');
  assert.equal(context.WinAgainAndroid.handleBack(),false);assert.equal(pauses,1);assert.equal(saves,1);assert.equal(renders,1);
 });
+test('Android back dismisses the focused child report even when its parent is later in DOM order',()=>{setup();const child={dispatchEvent:()=>true,close:()=>closed++},parent={dispatchEvent:()=>true,close:()=>{throw Error('Parent must remain open');}};dialogs=[child,parent];context.document.activeElement={closest:()=>child};assert.equal(context.WinAgainAndroid.handleBack(),true);assert.equal(closed,1);});
+
 test('Android pause saves the campaign without automatically resuming play',()=>{
  setup();context.WinAgainAndroid.pause();assert.equal(pauses,1);assert.equal(saves,1);assert.equal(renders,1);
 });

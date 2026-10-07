@@ -52,6 +52,7 @@ function initMatchPopup(){
  dialog.addEventListener('click',event=>{if(event.target===dialog){const rect=dialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)closeMatchPopup();}});
  dialog.addEventListener('close',finishMatchPopupClose);
  document.body.classList.add('match-popup-ready');
- const pause=$('pause');quick.prepend(pause);
+ // Primary action, pause and substitutions share the first row; the four
+ // secondary menus fill the second. Never create a third row during live play.
 }
 initMatchPopup();

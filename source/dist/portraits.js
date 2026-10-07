@@ -1,7 +1,7 @@
 (function(root){
  'use strict';
  // This atlas contains original fictional faces. Identity mapping never uses game RNG.
- const asset='assets/player-faces-v13.png?v=13',expandedAsset='assets/player-faces-v15.jpg?v=15';
+ const asset='assets/player-faces-v16.webp?v=16',expandedAsset='assets/player-faces-v15.jpg?v=15';
  // Share the atlas once. Large inline data URIs exceed browsers' custom-property
  // limits, so use one ordinary rule rather than a variable or per-card styles.
  if(typeof root.document?.createElement==='function'&&typeof root.document?.head?.appendChild==='function'){

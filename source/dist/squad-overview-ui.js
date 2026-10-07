@@ -1,0 +1,14 @@
+let squadOverviewOpener=null;
+function squadOverviewMarkup(m){
+ const esc=escapeText;
+ const rows=starting=>m.rows.filter(p=>p.starting===starting).map(p=>'<button type="button" class="squad-overview-row" data-squad-detail="'+esc(p.identity)+'" aria-label="'+esc(p.name+' · 종합 '+p.overall+' · 체력 '+p.energy+' · '+(p.status||p.condition.label))+'">'+Portraits.html(season.squad[p.slot])+'<span class="squad-overview-name"><strong>'+esc(p.name)+'</strong><small>#'+p.no+' · '+p.positions.join(' / ')+(p.status?' · '+p.status:'')+'</small></span><b>'+p.overall+'</b><span class="squad-overview-energy">'+p.energy+'<i aria-hidden="true"><em style="width:'+p.energy+'%"></em></i></span><span class="form-'+p.condition.tier+'">'+esc(p.condition.label)+'</span></button>').join('');
+ return '<header><div><span class="eyebrow">OUR SQUAD</span><h2 id="squad-overview-title">우리 팀 전체 선수단</h2></div><button type="button" id="squad-overview-close" class="secondary" aria-label="선수단 명단 닫기">닫기 ×</button></header><div class="squad-overview-summary"><div><small>전체 평균 종합</small><strong>'+m.overall+'</strong></div><div><small>선발 평균 종합</small><strong>'+m.startingOverall+'</strong></div><div><small>출전 가능</small><strong>'+m.available+'<small> / '+m.total+'</small></strong></div></div><p class="squad-overview-composition">'+m.composition.map(p=>p.pos+' '+p.count+'명').join(' · ')+'</p><div class="squad-overview-columns" aria-hidden="true"><span>선수 · 포지션</span><span>종합</span><span>체력</span><span>컨디션</span></div><div class="squad-overview-list">'+[true,false].map(starting=>'<section aria-label="'+(starting?'선발':'후보')+'"><h3>'+(starting?'선발 명단':'후보 선수')+' <small>'+m.rows.filter(p=>p.starting===starting).length+'명</small></h3>'+rows(starting)+'</section>').join('')+'</div><footer><p>종합: 주 포지션 능력의 가중 평균 · 컨디션: 코치 분석. 이름을 눌러 상세 보고서를 확인하세요.</p><button type="button" id="squad-overview-plan" class="secondary">선발·교체 계획 보기</button></footer>';
+}
+function openSquadOverview(opener=document.activeElement){
+ pauseForPlanning();squadOverviewOpener=opener;const dialog=$('squad-overview-dialog');dialog.innerHTML=squadOverviewMarkup(SquadOverview.read(season));
+ $('squad-overview-close').onclick=()=>dialog.close();$('squad-overview-plan').onclick=()=>{dialog.close();if(managerGuideActive)return;setView('match');openMatchPopup('roster',$('primary'));};
+ dialog.querySelectorAll('[data-squad-detail]').forEach(button=>button.onclick=()=>openPlayerDetails(button.dataset.squadDetail,button));
+ if(!dialog.open)dialog.showModal();$('squad-overview-close').focus({preventScroll:true});
+}
+const squadOverviewDialog=document.createElement('dialog');squadOverviewDialog.id='squad-overview-dialog';squadOverviewDialog.setAttribute('aria-labelledby','squad-overview-title');document.body.append(squadOverviewDialog);
+squadOverviewDialog.addEventListener('close',()=>squadOverviewOpener?.focus?.({preventScroll:true}));

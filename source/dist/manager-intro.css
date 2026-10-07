@@ -1,10 +1,4 @@
-/* Exactly two filled match action rows, including running/paused states. */
-.match-popup-ready.match-view #match-live-actions .main-action{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-.match-popup-ready.match-view #match-live-actions .main-action:has(#matchday-roster[hidden]){grid-template-columns:1fr!important}
-.match-popup-ready.match-view #match-live-actions{grid-template-columns:1fr}
-.match-popup-ready.match-view .match-quick-menu{grid-template-columns:repeat(5,minmax(0,1fr))}
-.match-popup-ready.match-view .match-quick-menu:has(#pause[hidden]){grid-template-columns:repeat(4,minmax(0,1fr))}
-.match-popup-ready.match-view #match-live-actions #pause{min-height:44px;padding:4px;margin:0;font-size:11px;grid-column:auto;grid-row:auto}
+/* Action rows are defined once in match-popup.css. */
 .match-popup-ready.match-view #players .player:disabled{opacity:1;cursor:default;pointer-events:none}
 .tactical-pitch{height:340px;position:relative;background:linear-gradient(90deg,transparent 49.7%,#92ac9277 50%,transparent 50.3%),#163c31;border:1px solid #8da895;border-radius:8px;margin:14px 0}
 .tactical-pitch:before{content:'';position:absolute;inset:8px;border:1px solid #92ac9288;pointer-events:none}

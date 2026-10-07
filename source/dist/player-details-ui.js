@@ -49,6 +49,7 @@ function closePlayerDetails({restore=true}={}){
 }
 function routePlayerDetails(){
  const d=PlayerDetails.read(season,playerDetailIdentity);if(!d.valid)return closePlayerDetails();
+ const overview=$('squad-overview-dialog');if(overview?.open){if(typeof managerGuideWaiting!=='undefined'&&managerGuideWaiting==='squad'){managerGuideActive=false;managerGuideWaiting=null;}overview.close();}
  if(d.owned){const p=Object.values(season.squad).find(person=>person.identity===d.identity);if(!p)return closePlayerDetails();
   individualTrainingSlot=p.id;individualTrainingNote='';if(d.development.recommendation.available)individualTrainingFocus=d.development.recommendation.focus;
   squadTab='training';closePlayerDetails({restore:false});setView('squad');$('individual-training-player')?.focus({preventScroll:true});

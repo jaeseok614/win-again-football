@@ -13,7 +13,7 @@ function renderMatchControls(){
 }
 function pauseForPlanning(){
  if(!state||!F.running(state))return;
- state.paused=true;matchClock.reset();movementStamp=performance.now();clearMatchFeedback();
+ state.paused=true;matchClock.reset();movementStamp=performance.now();clearMatchFeedback({preservePending:true});
 }
 function collapseTacticsBoard(){tacticsBoardOpen=false;const details=document.getElementById('tactics-board')?.querySelector('details');if(details)details.open=false;}
 function toggleMatchPlanning(openBoard=false){

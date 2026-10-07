@@ -8,7 +8,7 @@ function matchMomentFor(events,match,fast=false){
  const player=kind==='goal'?scorer?.name||S.club(S.own).name:kind==='save'?keeper?.name||S.club(S.own).short+' 골키퍼':kind==='concede'?performer||S.opponentFor(season).name:F.displayText(event.text,match.players);
  return {kind,minute:event.minute,title:{goal:'GOAL!',concede:'다시 집중!',save:'SUPER SAVE',sub:'새로운 승부수'}[kind],player,detail:S.displayText(F.displayText(event.text,scorer?[scorer]:match.players)),label:(fast?'하이라이트 · ':'')+event.minute+'′'};
 }
-function clearMatchFeedback(){pendingMatchMoment=null;if(typeof cancelMovementPreview==='function')cancelMovementPreview();clearTimeout(momentTimer);clearTimeout(impactTimer);momentTimer=impactTimer=0;const card=$('match-moment');if(card)card.hidden=true;const pitch=$('pitch');if(pitch)delete pitch.dataset.moment;matchFeedback?.cancel();}
+function clearMatchFeedback(options={}){if(!options?.preservePending)pendingMatchMoment=null;if(typeof cancelMovementPreview==='function')cancelMovementPreview();clearTimeout(momentTimer);clearTimeout(impactTimer);momentTimer=impactTimer=0;const card=$('match-moment');if(card)card.hidden=true;const pitch=$('pitch');if(pitch)delete pitch.dataset.moment;matchFeedback?.cancel();}
 function playMatchFeedback(kind){const result=matchFeedback?.play(kind);renderFeedbackControls();return result;}
 function presentMoment(moment){
  if(view!=='match'||document.hidden)return;clearTimeout(momentTimer);clearTimeout(impactTimer);lastMoment={...moment};
@@ -17,8 +17,7 @@ function presentMoment(moment){
  playMatchFeedback(moment.kind);if(soundOn)tone(moment.kind);momentTimer=setTimeout(()=>{card.hidden=true;},4200);
 }
 function presentMatchEvents(events,fast=false){
- lastEventFast=fast;
- if(!state)return;const reversed=[...events].reverse(),latest=reversed.find(e=>e.type==='goal')||reversed.find(e=>e.type==='shot'&&e.team===1)||reversed.find(e=>['shot','chance'].includes(e.type));if(latest){lastEvent=latest;lastEventAt=performance.now();}
+ if(!state)return;const reversed=[...events].reverse(),latest=reversed.find(e=>e.type==='goal')||reversed.find(e=>e.type==='shot'&&e.team===1)||reversed.find(e=>['shot','chance'].includes(e.type));if(latest){lastEventFast=fast;lastEvent=latest;lastEventAt=performance.now();}
  const moment=matchMomentFor(events,state,fast);if(moment){if(!fast&&motionEnabled()&&latest){clearTimeout(momentTimer);$('match-moment').hidden=true;pendingMatchMoment={event:latest,moment};}else{pendingMatchMoment=null;presentMoment(moment);}}else if(events.some(e=>e.type==='start'))playMatchFeedback('kickoff');else if(state.phase==='full')playMatchFeedback('fulltime');
 }
 function presentSubstitution(change){if(!change||state.phase==='prep')return;presentMoment({kind:'sub',minute:state.minute,title:'새로운 승부수',player:change.in.name,label:state.minute+'′ · 선수 교체',detail:change.out.name+' OUT · '+change.in.name+' IN'});}

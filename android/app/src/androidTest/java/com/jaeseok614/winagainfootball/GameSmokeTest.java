@@ -298,6 +298,34 @@ public final class GameSmokeTest {
         }
     }
 
+    @Test public void wholeSquadGuideAndKeywordFreeMarket() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());season=S.create(4088);state=season.match;appSessionStarted=true;view='club';render();openManagerGuide(2);return true;})()");
+            tapWebElement(scenario, "#manager-guide-next");
+            awaitTrue(scenario, "document.getElementById('squad-overview-dialog').open&&document.querySelectorAll('[data-squad-detail]').length===18");
+            assertEquals("true", evaluate(scenario, "(()=>{const d=document.getElementById('squad-overview-dialog').getBoundingClientRect(),list=document.querySelector('.squad-overview-list');return d.top>=0&&d.bottom<=innerHeight&&d.width<=innerWidth&&list.clientHeight>80;})()"));
+            screenshot(scenario, "android-whole-squad.png");
+            tapWebElement(scenario, "[data-squad-detail='sp_f1']");
+            awaitTrue(scenario, "document.getElementById('player-detail-dialog').open&&document.getElementById('player-detail-name').textContent==='손헝민'");
+            assertEquals("true", evaluate(scenario, "document.querySelector('.detail-hero .player-portrait').dataset.portraitIndex==='21'"));
+            evaluate(scenario, "WinAgainAndroid.handleBack()");
+            awaitTrue(scenario, "!document.getElementById('player-detail-dialog').open&&document.getElementById('squad-overview-dialog').open&&managerGuideStep===2");
+            tapWebElement(scenario, "#squad-overview-close");
+            awaitTrue(scenario, "managerGuideStep===3");
+            evaluate(scenario, "(()=>{managerGuideActive=false;managerGuideWaiting=null;document.getElementById('manager-guide').close();setView('market');return true;})()");
+            assertEquals("8", evaluate(scenario, "document.querySelectorAll('.market-card').length"));
+            evaluate(scenario, "(()=>{const p=document.getElementById('transfer-position');p.value='FW';p.dispatchEvent(new Event('change'));return true;})()");
+            awaitTrue(scenario, "document.querySelectorAll('.market-card').length===2&&document.getElementById('transfer-query').value===''");
+            evaluate(scenario, "(()=>{const q=document.getElementById('transfer-query');q.value='없는 이름';q.dispatchEvent(new Event('input'));return true;})()");
+            awaitTrue(scenario, "document.querySelectorAll('.market-card').length===0");
+            evaluate(scenario, "(()=>{const q=document.getElementById('transfer-query');q.value='';q.dispatchEvent(new Event('input'));return true;})()");
+            awaitTrue(scenario, "document.querySelectorAll('.market-card').length===2");
+            screenshot(scenario, "android-keyword-free-market.png");
+            scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
     @Test public void nativeOriginValidationRejectsConfusableAndFileUrls() {
         assertTrue(MainActivity.isGameDocument(Uri.parse(MainActivity.GAME_URL + "#match")));
         assertFalse(MainActivity.isGameDocument(Uri.parse("https://appassets.androidplatform.net.evil.test/assets/game/index.html")));
