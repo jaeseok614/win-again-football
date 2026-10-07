@@ -1,7 +1,23 @@
 (function(root){
  'use strict';
  const S=root.Season||(typeof require==='function'?require('./season.js'):null);
+ const F=root.Football||(typeof require==='function'?require('./engine.js'):null);
  // Presentation derived from confirmed records: no new save fields or reward claims.
+ function memories(s){
+  const records=[...(s.statistics?.archive||[]).flatMap(a=>a.records),...(s.statistics?.records||[])],entries=[],byMatch=new Map(),yearEnd=new Map(),order=new Map(),finals=new Map();records.forEach((r,i)=>{order.set(r.id,i);yearEnd.set(r.year,i+1);if(r.competition==="cup"&&r.stage===2||r.competition==="europe"&&r.stage===7)finals.set(r.year+r.competition,r);});
+  function remember(record,label,identity=null){let row=byMatch.get(record.id);if(!row){const opponent=S.club(record.home===S.own?record.away:record.home);row={id:'memory-'+record.id,year:record.year,competition:record.competition,round:record.round,order:order.get(record.id),recordId:record.id,division:record.division,score:[...record.score],opponent:{id:opponent.id,name:opponent.name},playerIdentity:identity,badges:[],kind:'match'};byMatch.set(record.id,row);entries.push(row);}if(!row.playerIdentity&&identity)row.playerIdentity=identity;row.badges.push(label+(identity?' · '+F.identityProfile(identity).name:''));}
+  const firstWin=records.find(r=>r.competition==='league'&&r.score[0]>r.score[1]);if(firstWin)remember(firstWin,'첫 리그 승리');
+  const firstGoal=records.find(r=>r.events.length);if(firstGoal)remember(firstGoal,'구단 첫 득점',firstGoal.events[0].scorerIdentity);
+  const academy=records.find(r=>r.events.some(e=>F.identityProfile(e.scorerIdentity)?.academy));if(academy)remember(academy,'유소년의 첫 득점',academy.events.find(e=>F.identityProfile(e.scorerIdentity)?.academy).scorerIdentity);
+  const hat=records.find(r=>r.players.some(p=>p.goals>=3));if(hat)remember(hat,'첫 해트트릭',hat.players.find(p=>p.goals>=3).identity);
+  const clean=records.find(r=>r.competition==='league'&&r.players.some(p=>p.cleanSheets===1));if(clean)remember(clean,'첫 리그 무실점',clean.players.find(p=>p.cleanSheets===1).identity);
+  let best=null;for(const r of records)if(r.score[0]>r.score[1]&&(!best||r.score[0]-r.score[1]>best.score[0]-best.score[1]||r.score[0]-r.score[1]===best.score[0]-best.score[1]&&r.score[0]>best.score[0]))best=r;if(best)remember(best,'기록 속 가장 큰 승리');
+  const history=[...(s.history||[])];if(S.ready(s)){const table=S.standings(s),me=table.find(c=>c.id===S.own);history.push({year:s.year,division:s.league.division,nextDivision:S.movement(s).to,rank:me.rank,points:me.points,champion:table[0].id,cupChampion:s.cup?.champion,europeChampion:s.europe?.champion});}
+  for(const h of history){const movement=h.nextDivision<h.division?'승격':h.nextDivision>h.division?'강등':'잔류',badges=[h.division+'부 '+h.rank+'위 · '+h.points+'점',h.nextDivision+'부로 '+movement];if(h.champion===S.own)badges.push('리그 우승');if(h.cupChampion===S.own)badges.push('국내컵 우승');if(h.europeChampion===S.own)badges.push('유럽 우승');entries.push({id:'memory-season-'+h.year,year:h.year,order:yearEnd.get(h.year)||0,kind:'season',recordId:null,division:h.division,rank:h.rank,nextDivision:h.nextDivision,badges,title:movement==='승격'?'한 계단 위로 올라선 시즌':movement==='강등'?'다시 일어서야 할 시즌':'우리 구단이 버틴 시즌'});}
+  const titles=[...history.map(h=>[h.year,h.cupChampion,h.europeChampion]),[s.year,s.cup?.champion,s.europe?.champion]],remembered=new Set();for(const [year,cup,europe] of titles)for(const [competition,champion,label] of [['cup',cup,'국내컵 우승'],['europe',europe,'유럽 우승']])if(champion===S.own&&!remembered.has(year+competition)){remembered.add(year+competition);const record=finals.get(year+competition);if(record)remember(record,label+(record.score[0]===record.score[1]?' · 승부차기':''));}
+  entries.sort((a,b)=>b.year-a.year||b.order-a.order||a.id.localeCompare(b.id,'en'));
+  return {entries:entries.map(e=>({...e,title:e.title||e.badges[0],playerName:e.playerIdentity?F.identityProfile(e.playerIdentity)?.name||null:null,badges:[...e.badges]})),years:[...new Set([s.year,...entries.map(e=>e.year)])].sort((a,b)=>b-a),matches:records.length,partial:!s.statistics||s.statistics.originYear>1||s.statistics.originRound>0||s.statistics.originMatchMinute>0||records.some(r=>r.unassignedGoals>0||r.statisticsOriginMinute>0)};
+ }
  function race(s,table,me,total){
   const targetRank=s.league.division>1?2:6,remaining=Math.max(0,total-me.played),maximum=me.points+remaining*3;
   const others=table.filter(c=>c.id!==S.own),bestRank=1+others.filter(c=>c.points>maximum).length,worstRank=1+others.filter(c=>c.points+Math.max(0,total-c.played)*3>=me.points).length;
@@ -65,5 +81,5 @@
    partial:!s.statistics||s.statistics.originYear>1||s.statistics.originRound>0,
    carry:'다음 시즌에도 선수 성장·계약·구단 자금과 시즌 기록이 이어집니다. 체력과 부상은 회복됩니다.'};
  }
- const api={read,seasonChallenge,race};root.ManagerJourney=api;if(typeof module!=='undefined')module.exports=api;
+ const api={read,seasonChallenge,race,memories};root.ManagerJourney=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
