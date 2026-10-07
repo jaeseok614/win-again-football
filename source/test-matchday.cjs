@@ -48,7 +48,11 @@ test('injured bench players and removed starters are never offered for re-entry'
 });
 
 test('all three used substitutions disable further changes without inventing bench availability',()=>{
- const s=advance(S.create(),17);for(const [out,incoming] of [['f1','f3'],['d1','d5'],['m1','m5']])F.swap(s.match,out,incoming);const before=copy(s),d=Matchday.read(s,'f3');assert.deepEqual(d.substitution,{used:3,limit:3,remaining:0,canSubstitute:false,suggestion:null,options:[]});assert.deepEqual(d.candidates.map(p=>p.id),['f4']);assert.deepEqual(s,before);
+ const s=advance(S.create(),17);for(const [out,incoming] of [['f1','f3'],['d1','d5'],['m1','m5']])F.swap(s.match,out,incoming);const before=copy(s),d=Matchday.read(s,'f3');assert.deepEqual(d.substitution,{used:3,limit:3,remaining:0,canSubstitute:false,suggestion:null,options:[],windows:null});assert.deepEqual(d.candidates.map(p=>p.id),['f4']);assert.deepEqual(s,before);
+});
+
+test('modern matches expose five players and three real substitution windows without offering a spent window',()=>{
+ const s=advance(S.create(2060,{startingClub:true}),17),m=s.match;for(const [out,incoming] of [['f1','f3'],['d1','d5']])F.swap(m,out,incoming);advance(s,30);F.swap(m,'m1','m5');advance(s,45);F.swap(m,'f2','f4');advance(s,65);F.swap(m,'d2','d6');const before=copy(s),d=Matchday.read(s,'m2');assert.equal(m.version,10);assert.deepEqual(d.substitution.windows,{used:3,limit:3,remaining:0});assert.equal(d.substitution.used,5);assert.equal(d.substitution.remaining,0);assert.equal(d.substitution.canSubstitute,false);assert.equal(d.substitution.suggestion,null);assert.deepEqual(s,before);
 });
 
 test('natural breaks and the last legal minute have distinct accurate control states',()=>{

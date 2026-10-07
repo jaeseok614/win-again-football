@@ -6,8 +6,8 @@ function test(name,run){run();groups++;console.log('PASS '+name);}
 function approx(a,b){assert.ok(Math.abs(a-b)<1e-10,`${a} differs from ${b}`);}
 
 test('the current five-tier career receives the versioned low-block tactic without changing old engine versions',()=>{
- const current=S.create(41806,{startingClub:true});assert.equal(current.match.version,9);assert.equal(current.plan.tactic,'balanced');
- const older=copy(current);older.match.version=6;delete older.match.setPieces;delete older.match.opponentPlans;assert.doesNotThrow(()=>F.restore(older.match));assert.throws(()=>F.setTactic(older.match,'lowBlock'),/경기 지시/);
+ const current=S.create(41806,{startingClub:true});assert.equal(current.match.version,10);assert.equal(current.plan.tactic,'balanced');
+ const older=copy(current);older.match.version=6;delete older.match.setPieces;delete older.match.opponentPlans;delete older.match.subWindows;assert.doesNotThrow(()=>F.restore(older.match));assert.throws(()=>F.setTactic(older.match,'lowBlock'),/경기 지시/);
  const legacy=S.create(41807);assert.equal(legacy.match.version,5);assert.throws(()=>F.setTactic(legacy.match,'lowBlock'),/경기 지시/);
  assert.equal(B.read(legacy).previews.length,3);
 });
@@ -32,7 +32,7 @@ test('the coach recommends a low block for a stronger opponent and keeps chase/f
 test('a low-block change can be paused, serialized, replayed and restored without consuming extra stamina or RNG',()=>{
  const s=S.create(41810,{startingClub:true}),m=s.match;F.begin(m);while(m.minute<9)F.tick(m);m.paused=true;
  const rng=m.rng,energy=Object.fromEntries(m.lineup.map(id=>[id,m.players[id].energy]));F.setTactic(m,'lowBlock');assert.equal(m.rng,rng);assert.equal(m.tactic,'lowBlock');
- s.plan.tactic='lowBlock';const restoredSeason=S.restore(copy(s));assert.equal(restoredSeason.match.version,9);assert.equal(restoredSeason.match.tactic,'lowBlock');
+ s.plan.tactic='lowBlock';const restoredSeason=S.restore(copy(s));assert.equal(restoredSeason.match.version,10);assert.equal(restoredSeason.match.tactic,'lowBlock');
  const a=F.restore(copy(m)),b=F.restore(copy(m));F.finishSegment(a);F.finishSegment(b);assert.deepEqual(a,b);assert.equal(a.minute,45);assert.equal(a.segments.at(-1).tactic,'lowBlock');
  for(const id of m.lineup){const balancedCost=35*(1+(50-m.players[id].endurance)/250);approx(energy[id]-a.players[id].energy,balancedCost*36/90);}
  while(a.phase!=='full'){if(!F.running(a))F.begin(a);F.finishSegment(a);}assert.deepEqual(F.restore(copy(a)),a);

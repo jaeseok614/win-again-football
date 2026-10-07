@@ -42,14 +42,16 @@
   if(!phases.includes(m.phase)||!Number.isInteger(m.minute)||m.minute<0||m.minute>90||!Array.isArray(m.lineup)||!m.lineup.length||!m.players||m.lineup.some(id=>!m.players[id])||!Array.isArray(m.out)||!Array.isArray(m.logs)||!tacticLabels[m.tactic]||!['chances','shots'].every(key=>Array.isArray(m[key])&&m[key].length===2&&m[key].every(value=>Number.isInteger(value)&&value>=0))){
    return {valid:false,reason:'경기 상태를 확인할 수 없습니다.'};
   }
-  const running=F.running(m),liveMode=m.phase==='prep'?'prep':m.phase==='full'?'full':running?(m.paused?'paused':'live'):'break';
+  const running=F.running(m),rules=F.substitutionRules(m),liveMode=m.phase==='prep'?'prep':m.phase==='full'?'full':running?(m.paused?'paused':'live'):'break';
   const status=liveMode==='paused'?'작전 타임':{prep:'경기 준비',first:'전반 진행',half:'하프타임',second:'후반 진행',late:'65분 작전 타임',third:'마지막 승부',full:'경기 종료'}[m.phase];
   const active=typeof Discipline!=='undefined'?Discipline.active(m):m.lineup,lineup=active.map(id=>m.players[id]);
   const selected=m.phase!=='full'&&typeof selectedId==='string'&&active.includes(selectedId)?m.players[selectedId]:null;
   const candidates=selected?Object.values(m.players).filter(p=>p.pos===selected.pos&&!m.lineup.includes(p.id)&&!m.out.includes(p.id)&&F.isAvailable(p)).map(person):[];
   const allowed=m.phase==='prep'||['half','late'].includes(m.phase)||running&&m.minute>0&&m.minute<90;
+  const opensWindow=rules.windowLimit!==null&&m.phase!=='prep'&&m.phase!=='half'&&!m.decisions.some(d=>d.type==='sub'&&d.minute===m.minute);
+  const canSubstitute=allowed&&(m.phase==='prep'||m.subs<rules.limit&&(!opensWindow||rules.windows<rules.windowLimit));
   let suggestion=null,options=[];
-  if(m.phase!=='prep'&&m.phase!=='full'&&allowed&&m.subs<3){
+  if(m.phase!=='prep'&&m.phase!=='full'&&canSubstitute){
    // This is a display-only shortlist. It reads the live squad and never calls the
    // match engine, so the manager still explicitly chooses and confirms a change.
    options=lineup.filter(p=>p.energy<70).map(out=>{const incoming=Object.values(m.players).filter(p=>p.pos===out.pos&&!m.lineup.includes(p.id)&&!m.out.includes(p.id)&&F.isAvailable(p)).sort((a,b)=>b.energy-a.energy||b[primaryKeys[b.pos]]-a[primaryKeys[a.pos]]||b.speed-a.speed||a.id.localeCompare(b.id,'en'))[0];if(!incoming)return null;const energyGain=Math.round(incoming.energy-out.energy),primaryDelta=incoming[primaryKeys[incoming.pos]]-out[primaryKeys[out.pos]],speedDelta=incoming.speed-out.speed;if(energyGain<=0)return null;const urgency=out.energy<40?'긴급':out.energy<55?'주의':'관리';const minutes=Math.max(0,90-m.minute);const score=energyGain*1.2+Math.max(0,primaryDelta)*.55+Math.max(0,speedDelta)*.2+(out.energy<40?18:out.energy<55?7:0);const reason=out.name+' 체력 '+Math.round(out.energy)+' → '+incoming.name+' 투입 시 +'+energyGain+' · 남은 '+minutes+'분';return {out:person(out),incoming:person(incoming),energyGain,primaryDelta,speedDelta,urgency,minutes,score,reason};}).filter(Boolean).sort((a,b)=>b.score-a.score||b.energyGain-a.energyGain||b.primaryDelta-a.primaryDelta||a.out.id.localeCompare(b.out.id,'en')).slice(0,3);
@@ -59,7 +61,7 @@
   return {
    valid:true,minute:m.minute,phase:m.phase,paused:!!m.paused,status,liveMode,formation:m.formation,tactic:m.tactic,tacticLabel:tacticLabels[m.tactic],
    stats:[{key:'chances',label:'공격 기회',own:m.chances[0],opponent:m.chances[1]},{key:'shots',label:'슈팅',own:m.shots[0],opponent:m.shots[1]}],
-   substitution:{used:m.subs,limit:3,remaining:Math.max(0,3-m.subs),canSubstitute:allowed&&(m.phase==='prep'||m.subs<3),suggestion,options},
+   substitution:{used:m.subs,limit:rules.limit,remaining:Math.max(0,rules.limit-m.subs),windows:rules.windowLimit===null?null:{used:rules.windows,limit:rules.windowLimit,remaining:Math.max(0,rules.windowLimit-rules.windows)},canSubstitute,suggestion,options},
    averageEnergy,tiredCount,
    selected:selected?person(selected):null,candidates,lowestEnergy:lineup.slice().sort((a,b)=>a.energy-b.energy||a.id.localeCompare(b.id,'en')).slice(0,3).map(person),
    events:m.logs.slice(-6).reverse().map(event=>({minute:event.minute,type:event.type,text:F.displayText(event.text,m.players)})),momentum:flow,insight:insight(m,flow,tiredCount)

@@ -5,7 +5,7 @@ function test(name,fn){fn();checks++;console.log('PASS '+name);}
 function advance(m,target){while(m.minute<target){if(!F.running(m))F.begin(m);m.paused=false;F.tick(m);}return m;}
 
 test('new five-tier matches adapt at breaks while a saved version-eight match keeps its original first half and rules',()=>{
- const fresh=S.create(7001,{startingClub:true});assert.equal(fresh.match.version,9);assert.deepEqual(fresh.match.opponentPlans,[]);
+ const fresh=S.create(7001,{startingClub:true});assert.equal(fresh.match.version,10);assert.deepEqual(fresh.match.opponentPlans,[]);
  const old=F.create(9,{version:8}),current=F.create(9,{version:9});advance(old,44);advance(current,44);
  for(const key of ['score','chances','shots','xg','rng','logs'])assert.deepEqual(current[key],old[key]);
  advance(old,45);advance(current,45);assert.equal(current.opponentPlans[0].mode,'chase');assert.equal(old.logs.some(log=>log.type==='opponent-tactic'),false);

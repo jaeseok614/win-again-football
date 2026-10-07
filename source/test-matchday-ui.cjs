@@ -118,7 +118,7 @@ test('removed and injured reserve identities never become actionable selections 
 
 test('kickoff and exhausted substitution limits show accurate explanations without calling engine mutation APIs',()=>{
  const kickoff=S.create(2014);F.begin(kickoff.match);const h=harness(kickoff),before=copy(kickoff);h.context.selectMatchdayPlayer('f1');onlyPaused(h,before);assert.match(h.get('matchday-selection').innerHTML,/첫 1분이 지난 뒤 교체/);assert.equal(kickoff.match.subs,0);
- const s=at(17);for(const [out,inside] of [['f1','f3'],['d1','d5'],['m1','m5']])F.swap(s.match,out,inside);s.match.paused=true;const capped=harness(s,{selected:'f3'}),saved=JSON.stringify(s);capped.render();assert.match(capped.get('matchday-selection').innerHTML,/교체 3회를 모두 사용/);unchanged(capped,saved);
+ const s=at(17);for(const [out,inside] of [['f1','f3'],['d1','d5'],['m1','m5']])F.swap(s.match,out,inside);s.match.paused=true;const capped=harness(s,{selected:'f3'}),saved=JSON.stringify(s);capped.render();assert.match(capped.get('matchday-selection').innerHTML,/교체 가능 인원을 모두 사용/);unchanged(capped,saved);
 });
 
 test('player display names are escaped in both quick selection labels and the selected player card',()=>{
