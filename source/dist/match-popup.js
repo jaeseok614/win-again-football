@@ -11,7 +11,7 @@ function openMatchPopup(kind,opener=document.activeElement){
  $('match-popup-title').focus({preventScroll:true});
 }
 function closeMatchPopup(){const dialog=$('match-popup');if(dialog?.open)dialog.close();}
-function finishMatchPopupClose(){matchPopupActive=null;matchdayTab='live';render();const opener=matchPopupOpener;matchPopupOpener=null;if(opener?.isConnected&&!opener.closest('dialog'))opener.focus({preventScroll:true});else $('matchday-roster')?.focus({preventScroll:true});}
+function finishMatchPopupClose(){if($('match-popup')?.open)return;matchPopupActive=null;matchdayTab='live';render();const opener=matchPopupOpener;matchPopupOpener=null;if(opener?.isConnected&&!opener.closest('dialog'))opener.focus({preventScroll:true});else $('matchday-roster')?.focus({preventScroll:true});}
 function showMatchPopupError(text){const error=$('match-popup-error');if($('match-popup')?.open){error.textContent=text;error.hidden=false;error.focus({preventScroll:true});}}
 function renderMatchPopup(){
  const dialog=$('match-popup');if(!dialog)return;
