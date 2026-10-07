@@ -19,6 +19,15 @@
   const message=m.minute===0?'킥오프 후 실제 공격 흐름을 표시합니다.':leader==='own'?'최근 구간은 우리가 주도하고 있습니다.':leader==='opponent'?'최근 구간은 상대 흐름입니다. 전술과 체력을 점검하세요.':'최근 구간은 팽팽합니다.';
   return {windows,active,leader,message,scale:Math.max(1,...windows.flatMap(item=>[item.own,item.opponent]))};
  }
+ function facts(m){
+  const elapsed=(m.segments||[]).reduce((sum,segment)=>sum+Math.max(0,(segment.end??m.minute)-segment.start),0);
+  const control=(m.segments||[]).reduce((sum,segment)=>{const duration=Math.max(0,(segment.end??m.minute)-segment.start),middle=segment.rating?.middle||0,opponent=segment.rating?.opponent?.middle||0;return sum+duration*(middle+opponent?middle/(middle+opponent):.5);},0);
+  const own=Math.max(25,Math.min(75,Math.round(100*(elapsed?control/elapsed:.5))));
+  const setPieces=[0,1].map(()=>({corner:0,freeKick:0})),cards=[0,1].map(()=>({yellow:0,red:0}));
+  for(const event of m.logs||[])if([0,1].includes(event.team)&&event.setPiece&&Object.hasOwn(setPieces[event.team],event.setPiece))setPieces[event.team][event.setPiece]++;
+  for(const event of m.discipline?.events||[]){if(![0,1].includes(event.team))continue;if(event.card==='yellow')cards[event.team].yellow++;if(event.card==='red'){cards[event.team].red++;if(event.reason==='second-yellow')cards[event.team].yellow++;}}
+  return [{key:'possession',label:'점유율 추정',own:own+'%',opponent:(100-own)+'%'},{key:'xg',label:'기대 득점 (xG)',own:m.xg[0].toFixed(2),opponent:m.xg[1].toFixed(2)},{key:'corner',label:'코너킥',own:m.version>=8?setPieces[0].corner:'—',opponent:m.version>=8?setPieces[1].corner:'—'},{key:'freeKick',label:'프리킥 찬스',own:m.version>=8?setPieces[0].freeKick:'—',opponent:m.version>=8?setPieces[1].freeKick:'—'},{key:'yellow',label:'경고',own:m.discipline?cards[0].yellow:'—',opponent:m.discipline?cards[1].yellow:'—'},{key:'red',label:'퇴장',own:m.discipline?cards[0].red:'—',opponent:m.discipline?cards[1].red:'—'}];
+ }
  function insight(m,flow,tiredCount){
   if(m.phase==='prep'||m.phase==='full'||m.minute===0)return null;
   const recent=flow.windows[flow.active];
@@ -54,5 +63,5 @@
    events:m.logs.slice(-6).reverse().map(event=>({minute:event.minute,type:event.type,text:F.displayText(event.text,m.players)})),momentum:flow,insight:insight(m,flow,tiredCount)
   };
  }
- const api={read};root.Matchday=api;if(typeof module!=='undefined')module.exports=api;
+ const api={read,facts};root.Matchday=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -6,8 +6,8 @@ function test(name,run){run();checks++;console.log('PASS '+name);}
 function complete(match){if(match.paused)match.paused=false;if(!F.running(match))F.begin(match);while(match.phase!=='full'){if(!F.running(match))F.begin(match);F.tick(match);}return match;}
 
 test('fresh five-tier campaigns use the versioned set-piece plan while historic match engines stay unchanged',()=>{
- const modern=S.create(60101,{startingClub:true}),legacy=S.create(60102);assert.equal(modern.match.version,8);assert.deepEqual(Object.keys(modern.match.setPieces).sort(),['corner','freeKick','target']);assert.equal(legacy.match.version,5);assert.equal(Object.hasOwn(legacy.match,'setPieces'),false);
- const old=copy(modern.match);old.version=7;delete old.setPieces;assert.doesNotThrow(()=>F.restore(old));assert.throws(()=>F.assignSetPieceRole(old,'corner',old.lineup[1]));
+ const modern=S.create(60101,{startingClub:true}),legacy=S.create(60102);assert.equal(modern.match.version,9);assert.deepEqual(Object.keys(modern.match.setPieces).sort(),['corner','freeKick','target']);assert.equal(legacy.match.version,5);assert.equal(Object.hasOwn(legacy.match,'setPieces'),false);
+ const old=copy(modern.match);old.version=7;delete old.setPieces;delete old.opponentPlans;assert.doesNotThrow(()=>F.restore(old));assert.throws(()=>F.assignSetPieceRole(old,'corner',old.lineup[1]));
 });
 
 test('the manager can assign all three roles only to a starting field player before kickoff',()=>{
@@ -29,8 +29,8 @@ test('set-piece logs occur in actual match simulations and tampered assignments 
 });
 
 test('in-progress season save keeps role assignments and accepts a pre-upgrade version-seven match',()=>{
- const season=S.create(60106,{startingClub:true}),replacement=season.match.lineup.find(id=>season.match.players[id].pos==='DEF');F.assignSetPieceRole(season.match,'target',replacement);F.begin(season.match);for(let i=0;i<18;i++)F.tick(season.match);const restored=S.restore(copy(season));assert.equal(restored.match.version,8);assert.equal(restored.match.setPieces.target,replacement);assert.deepEqual(restored.match.logs,season.match.logs);
- const prior=copy(season);prior.match.version=7;delete prior.match.setPieces;const old=S.restore(prior);assert.equal(old.match.version,7);assert.equal(Object.hasOwn(old.match,'setPieces'),false);
+ const season=S.create(60106,{startingClub:true}),replacement=season.match.lineup.find(id=>season.match.players[id].pos==='DEF');F.assignSetPieceRole(season.match,'target',replacement);F.begin(season.match);for(let i=0;i<18;i++)F.tick(season.match);const restored=S.restore(copy(season));assert.equal(restored.match.version,9);assert.equal(restored.match.setPieces.target,replacement);assert.deepEqual(restored.match.logs,season.match.logs);
+ const prior=copy(season);prior.match.version=7;delete prior.match.setPieces;delete prior.match.opponentPlans;const old=S.restore(prior);assert.equal(old.match.version,7);assert.equal(Object.hasOwn(old.match,'setPieces'),false);
 });
 
 test('a corner header updates identity-based goals and assists in the confirmed season record',()=>{

@@ -25,6 +25,7 @@ commentary and essential match buttons in one viewport without page scrolling.
 Substitution, tactics, player tools, reports, statistics, team talks, settings and
 results belong in accessible popups, not inline panels pushing the pitch away.
 Opening a planning popup pauses the match; closing must never silently resume it.
+Keep in-match and full-time football facts accessible through the existing stats popup. Label derived possession as an estimate; never invent untracked historical card or set-piece counts.
 Reuse existing controls and require an explicit candidate action for substitutions.
 Preserve keyboard focus and Escape dismissal, allow scrolling inside popups, and
 verify small/short phone and desktop viewports. Apply this rule to future features.

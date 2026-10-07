@@ -50,6 +50,14 @@ test('UI scripts initialize before app globals and readonly rendering preserves 
  const s={match:null},h=harness(s),before=JSON.stringify(s);h.render();assert.equal(h.get('matchday-summary').hidden,true);assert.equal(h.get('tactics-board').hidden,true);unchanged(h,before);
 });
 
+test('the match records popup shows live football facts without filling hidden views',()=>{
+ const s=at(65),h=harness(s,{width:390}),before=JSON.stringify(s);h.render();assert.doesNotMatch(h.get('matchday-summary').innerHTML,/점유율 추정/);
+ h.context.matchPopupActive='stats';h.render();const html=h.get('matchday-summary').innerHTML;
+ for(const label of ['점유율 추정','기대 득점','코너킥','프리킥 찬스','경고','퇴장'])assert.match(html,new RegExp(label));
+ assert.match(html,/중원 전력을 바탕으로 추정/);assert.equal(JSON.stringify(s),before);
+ h.context.matchPopupActive=null;h.render();assert.doesNotMatch(h.get('matchday-summary').innerHTML,/점유율 추정/);
+});
+
 test('switching to live and rejecting unknown tabs never advance time or change the actual tactic',()=>{
  const s=freeze(at(17)),h=harness(s),before=JSON.stringify(s);h.render();h.dispatch('matchday-tabs','click',h.get('matchday-tab-live'));assertTab(h,'live');assert.equal(h.get('tactics-board').innerHTML,'');assert.equal(h.document.activeElement,h.get('matchday-tab-live'));assert.equal(h.calls.save,1);assert.equal(h.calls.clockReset,0);unchanged(h,before);
  const renders=h.calls.render,saves=h.calls.save;h.context.setMatchdayTab('other');assert.equal(h.calls.render,renders);assert.equal(h.calls.save,saves);unchanged(h,before);
