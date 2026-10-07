@@ -1,7 +1,7 @@
 'use strict';
 const expectedMinutes=require('./participation-test-helper.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
-const F=require('./dist/engine.js'),S=require('./dist/season.js'),ST=require('./dist/statistics.js'),P=require('./dist/cup.js'),R=require('./dist/match-review.js');
+const F=require('./dist/engine.js'),S=require('./dist/season.js'),ST=require('./dist/statistics.js'),P=require('./dist/cup.js'),MP=require('./dist/match-performance.js'),R=require('./dist/match-review.js');
 const copy=x=>JSON.parse(JSON.stringify(x));let groups=0;
 function test(name,fn){fn();groups++;console.log('PASS '+name);}
 function finish(m,engine=F){while(m.phase!=='full'){if(!engine.running(m))engine.begin(m);engine.finishSegment(m);}return m;}
@@ -23,8 +23,8 @@ test('confirmation aligns league score, fixture, rank, receipt and real individu
  let s=S.create(1402);finish(s.match);const full=copy(s.match);s=S.settle(s);const r=pure(s),record=ST.lastMatch(s);assert.equal(r.valid,true);assert.equal(r.confirmed,true);assert.equal(r.pending,false);assert.equal(r.legacy,false);assert.equal(r.limited,false);assert.deepEqual(r.score,full.score);assert.equal(r.id,record.id);assert.equal(r.opponent.id,s.lastReport.opponent);assert.equal(r.venue.isHome,record.home===S.own);assert.equal(r.rank,s.lastReport.rank);assert.equal(r.points,s.lastReport.points);assert.deepEqual(r.cashflow,s.finance.ledger.find(e=>e.id===record.id));playersMatch(r,record);assert.deepEqual(r.events,record.events);assert.equal(r.healthAligned,true);assert.deepEqual(r.injuries,s.health.lastReport.incidents.map(row=>({...row,name:F.identityProfile(row.identity).name,pos:F.identityProfile(row.identity).pos,no:F.roster.find(p=>p.id===row.id).no,owned:true,slot:row.id})));
 });
 
-test('substitution minutes and starts remain exact without invented ratings or player awards',()=>{
- let s=S.create(128);F.begin(s.match);F.finishSegment(s.match);F.swap(s.match,'f1','f3');F.begin(s.match);F.finishSegment(s.match);F.swap(s.match,'m4','m5');F.swap(s.match,'g1','g2');finish(s.match);const pending=pure(s,'pending');s=S.settle(s);const r=pure(s);for(const [id,minutes,started] of [['f1',45,true],['f3',45,false],['m4',65,true],['m5',25,false],['g1',65,true],['g2',25,false]]){const p=r.players.find(p=>p.id===id);assert.equal(p.minutes,minutes);assert.equal(p.started,started);assert.equal(pending.players.find(p=>p.id===id).minutes,minutes);assert.equal('rating' in p,false);}assert.equal(r.players.filter(p=>p.played).length,14);assert.equal('motm' in r,false);
+test('substitution minutes, starts and display-only ratings remain exact without player awards',()=>{
+ let s=S.create(128);F.begin(s.match);F.finishSegment(s.match);F.swap(s.match,'f1','f3');F.begin(s.match);F.finishSegment(s.match);F.swap(s.match,'m4','m5');F.swap(s.match,'g1','g2');finish(s.match);const pending=pure(s,'pending');s=S.settle(s);const r=pure(s);for(const [id,minutes,started] of [['f1',45,true],['f3',45,false],['m4',65,true],['m5',25,false],['g1',65,true],['g2',25,false]]){const p=r.players.find(p=>p.id===id);assert.equal(p.minutes,minutes);assert.equal(p.started,started);assert.equal(pending.players.find(p=>p.id===id).minutes,minutes);assert.ok(pending.performance.rows.find(row=>row.id===id).rating>=3);assert.equal('rating' in p,false);}assert.equal(r.players.filter(p=>p.played).length,14);assert.equal(r.performance.rows.length,14);assert.equal('motm' in r,false);
 });
 
 test('Cup shootouts are oriented to our club and do not become individual goals',()=>{
@@ -67,6 +67,6 @@ test('positive contribution leaders preserve every tie and never invent a sole b
 });
 
 test('new seasons clear latest reports and returned recap objects are detached in browser UMD',()=>{
- let s=play(S.create(1408));const r=pure(s),before=JSON.stringify(s);r.score[0]=999;r.cashflow.amount=999;r.players[0].minutes=999;r.events.push({});r.coverage.partial=true;assert.equal(JSON.stringify(s),before);const ctx=vm.createContext({Football:F,Season:S,Statistics:ST,Cup:P});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/match-review.js'),'utf8'),ctx);assert.deepEqual(JSON.parse(JSON.stringify(ctx.MatchReview.read(s))),R.read(s));while(s.match)s=play(s);s=S.nextSeason(s);assert.equal(pure(s).valid,false);assert.equal(pure(s,'pending').valid,false);assert.equal(s.version,10);assert.equal(s.match.version,5);
+ let s=play(S.create(1408));const r=pure(s),before=JSON.stringify(s);r.score[0]=999;r.cashflow.amount=999;r.players[0].minutes=999;r.events.push({});r.coverage.partial=true;assert.equal(JSON.stringify(s),before);const ctx=vm.createContext({Football:F,Season:S,Statistics:ST,Cup:P,MatchPerformance:MP});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/match-review.js'),'utf8'),ctx);assert.deepEqual(JSON.parse(JSON.stringify(ctx.MatchReview.read(s))),R.read(s));while(s.match)s=play(s);s=S.nextSeason(s);assert.equal(pure(s).valid,false);assert.equal(pure(s,'pending').valid,false);assert.equal(s.version,10);assert.equal(s.match.version,5);
 });
 console.log('Validated '+groups+' match review groups, including confirmed context alignment, honest legacy coverage and pending previews.');

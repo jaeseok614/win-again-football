@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
-const F=require('./dist/engine.js'),S=require('./dist/season.js'),Matchday=require('./dist/matchday.js'),MatchFlow=require('./dist/match-flow.js'),TacticsBoard=require('./dist/tactics-board.js'),Portraits=require('./dist/portraits.js'),Opposition=require('./dist/opposition.js');
+const F=require('./dist/engine.js'),S=require('./dist/season.js'),Matchday=require('./dist/matchday.js'),MatchPerformance=require('./dist/match-performance.js'),MatchFlow=require('./dist/match-flow.js'),TacticsBoard=require('./dist/tactics-board.js'),Portraits=require('./dist/portraits.js'),Opposition=require('./dist/opposition.js');
 const copy=value=>JSON.parse(JSON.stringify(value));let groups=0;
 function test(name,fn){fn();groups++;console.log('PASS '+name);}
 function at(minute,seed=2011){const s=S.create(seed);while(s.match.minute<minute){if(!F.running(s.match))F.begin(s.match);s.match.paused=false;F.tick(s.match);}return s;}
@@ -35,7 +35,7 @@ function harness(season,{width=1280,selected=null,view='match'}={}){
  context=vm.createContext({document,MatchFlow,innerWidth:width,performance:{now:()=>20000}});
  for(const name of ['tactics-board-ui','match-control-ui','matchday-ui'])vm.runInContext(fs.readFileSync(path.join(__dirname,'dist',name+'.js'),'utf8'),context,{filename:name+'.js'});
  const deny=key=>(()=>{calls[key]++;throw Error('Unexpected model mutation: '+key);});
- Object.assign(context,{season,state:season.match,selected,view,movementStamp:0,Matchday,TacticsBoard,Portraits,escapeText,F:{...F,tick:deny('tick'),begin:deny('begin'),swap:deny('swap'),setTactic:deny('setTactic')},S:{...S,train:deny('train'),recruit:deny('recruit'),settle:deny('settle')},clearMatchFeedback(){calls.feedback++;},save(){calls.save++;saved.push(JSON.stringify(context.season));},render(){calls.render++;context.renderTacticsBoard();context.renderMatchday();},action(fn){fn();context.save();context.render();}});
+ Object.assign(context,{season,state:season.match,selected,view,movementStamp:0,Matchday,MatchPerformance,TacticsBoard,Portraits,escapeText,F:{...F,tick:deny('tick'),begin:deny('begin'),swap:deny('swap'),setTactic:deny('setTactic')},S:{...S,train:deny('train'),recruit:deny('recruit'),settle:deny('settle')},clearMatchFeedback(){calls.feedback++;},save(){calls.save++;saved.push(JSON.stringify(context.season));},render(){calls.render++;context.renderTacticsBoard();context.renderMatchday();},action(fn){fn();context.save();context.render();}});
  const app=fs.readFileSync(path.join(__dirname,'dist/app.js'),'utf8'),editable=/^const editable=.*$/m.exec(app);assert.ok(editable,'Use the actual app editability guard.');vm.runInContext(editable[0],context);
  const reset=context.matchClock.reset;context.matchClock.reset=()=>{calls.clockReset++;reset();};
  return {context,document,nodes,calls,saved,element,render:()=>context.render(),get:id=>nodes.get(id),read:expression=>vm.runInContext(expression,context),dispatch(id,type,target,extra={}){let prevented=0;for(const fn of nodes.get(id).handlers[type]||[])fn({target,key:null,preventDefault(){prevented++;},...extra});return prevented;}};
@@ -54,7 +54,7 @@ test('the match records popup shows live football facts without filling hidden v
  const s=at(65),h=harness(s,{width:390}),before=JSON.stringify(s);h.render();assert.doesNotMatch(h.get('matchday-summary').innerHTML,/점유율 추정/);
  h.context.matchPopupActive='stats';h.render();const html=h.get('matchday-summary').innerHTML;
  for(const label of ['점유율 추정','기대 득점','코너킥','프리킥 찬스','경고','퇴장'])assert.match(html,new RegExp(label));
- assert.match(html,/중원 전력을 바탕으로 추정/);assert.equal(JSON.stringify(s),before);
+ assert.match(html,/중원 전력을 바탕으로 추정/);assert.match(html,/실시간 선수 평점/);assert.match(html,/기록 기반/);assert.equal(JSON.stringify(s),before);
  h.context.matchPopupActive=null;h.render();assert.doesNotMatch(h.get('matchday-summary').innerHTML,/점유율 추정/);
 });
 
