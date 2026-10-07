@@ -1,0 +1,34 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const F=require('./dist/engine.js'),S=require('./dist/season.js'),Staff=globalThis.Staff;
+const copy=x=>JSON.parse(JSON.stringify(x));let groups=0;
+function test(name,fn){fn();groups++;console.log('PASS '+name);}
+function energy(s,id,n){s.squad[id].energy=n;s.match.players[id].energy=n;s.match.players[id].initialEnergy=n;}
+function freeze(x){if(x&&typeof x==='object'){Object.values(x).forEach(freeze);Object.freeze(x);}return x;}
+function finish(m){while(m.phase!=='full'){if(!F.running(m))F.begin(m);F.finishSegment(m);}}
+function hire(s,role){Staff.hire(s,Staff.candidates(s).find(c=>c.role===role&&c.tier===2).id);}
+function unchanged(s,fn){const before=JSON.stringify(s);assert.throws(fn);assert.equal(JSON.stringify(s),before);}
+
+test('every team program previews the exact executed skill and energy without touching campaign or RNG',()=>{
+ for(const focus of ['technique','pace','fitness','recovery']){const s=S.create(9100);Object.keys(s.squad).forEach((id,i)=>energy(s,id,30+i*3));const before=JSON.stringify(s),d=S.trainingPreview(freeze(copy(s)),focus);assert.equal(JSON.stringify(s),before);assert.ok(d.available);assert.equal(d.rows.length,18);const next=copy(s);S.train(next,focus);for(const row of d.rows){assert.equal(next.squad[row.id][row.key],row.after);assert.equal(next.squad[row.id].energy,row.energyAfter);assert.equal(next.match.players[row.id].energy,row.energyAfter);assert.equal(next.match.players[row.id].initialEnergy,row.energyAfter);assert.equal(row.identity,next.squad[row.id].identity);}for(const key of ['rng','seed','score','logs','decisions','lineup','formation','tactic'])assert.deepEqual(next.match[key],s.match[key]);for(const key of ['finance','career','statistics','cup','health'])assert.deepEqual(next[key],s[key]);assert.deepEqual(S.restore(copy(next)),next);}
+});
+test('contract coaches and medical staff preview the actual bonuses, clipped stamina and shared weekly receipt',()=>{
+ for(const focus of ['technique','pace','fitness','recovery']){const s=S.create(9101);hire(s,'FW');hire(s,'MED');energy(s,'f3',92);const d=S.trainingPreview(s,focus),row=d.rows.find(p=>p.id==='f3'),before=copy(s);S.train(s,focus);assert.equal(s.squad.f3[row.key],row.after);assert.equal(s.squad.f3.energy,row.energyAfter);assert.equal(s.staff.trainingWeek,S.calendarClock(s));assert.equal(row.coaching.skillBonus,focus==='technique'?1:0);assert.equal(row.coaching.recoveryBonus,focus==='recovery'?5:0);assert.equal(row.coaching.energySaving,focus==='recovery'?0:2);assert.deepEqual(s.finance,before.finance);assert.deepEqual(S.restore(copy(s)),s);assert.equal(S.trainingPreview(s,focus).available,false);unchanged(s,()=>S.train(s,focus));}
+});
+test('injury, growth caps and exhaustion stay honest without inventing a gain or preventing team training',()=>{
+ const s=S.create(9102);s.squad.f3.injury={remaining:1,kind:'knock',since:1};s.match.players.f3.injuryRemaining=1;energy(s,'f3',50);const key=S.primaryKey(s.squad.f2);s.squad.f2[key]=s.squad.f2.potential;s.match.players.f2[key]=s.squad.f2[key];energy(s,'f2',2);const d=S.trainingPreview(s,'technique');assert.equal(d.rows.find(p=>p.id==='f3').skipped,true);assert.equal(d.rows.find(p=>p.id==='f3').energyAfter,50);assert.equal(d.rows.find(p=>p.id==='f2').gain,0);assert.equal(d.rows.find(p=>p.id==='f2').energyAfter,0);S.train(s,'technique');assert.equal(s.squad.f3.energy,50);assert.equal(s.squad.f2.energy,0);
+ const r=S.create(9103);r.squad.f3.injury={remaining:1,kind:'knock',since:1};r.match.players.f3.injuryRemaining=1;energy(r,'f3',96);const q=S.trainingPreview(r,'recovery').rows.find(p=>p.id==='f3');assert.equal(q.skipped,false);assert.equal(q.gain,4);S.train(r,'recovery');assert.equal(r.squad.f3.energy,100);assert.equal(r.squad.f3.injury.remaining,1);
+});
+test('changed roster identities, malformed prep and duplicate coach weeks reject before all mutations',()=>{
+ for(const mutate of [s=>s.match.players.f3.identity='t_f2',s=>s.match.minute=1,s=>s.staff.trainingWeek=S.calendarClock(s)]){const s=S.create(9104);mutate(s);assert.equal(S.trainingPreview(s,'technique').available,false);unchanged(s,()=>S.train(s,'technique'));}const s=S.create(9105);unchanged(s,()=>S.train(s,'unknown'));assert.equal(S.trainingPreview(s,'unknown').rows.length,0);
+});
+test('every live phase and Cup preparation disables previews until a real next league week',()=>{
+ let s=S.create(9106);F.begin(s.match);assert.equal(S.trainingPreview(s,'pace').available,false);unchanged(s,()=>S.train(s,'pace'));finish(s.match);assert.equal(S.trainingPreview(s,'recovery').available,false);while(s.competition!=='cup'){if(s.match.phase!=='full')finish(s.match);s=S.settle(s);}assert.equal(S.trainingPreview(s,'technique').available,false);unchanged(s,()=>S.train(s,'technique'));while(s.competition!=='league'){finish(s.match);s=S.settle(s);}assert.equal(S.trainingPreview(s,'technique').available,true);
+});
+test('detached preview rows cannot rewrite identities, coaching or live values',()=>{
+ const s=S.create(9107),before=JSON.stringify(s),d=S.trainingPreview(s,'technique');d.rows[0].after=999;d.rows[0].identity='bad';d.rows[0].coaching.skillBonus=999;assert.equal(JSON.stringify(s),before);
+});
+test('home preview shows truthful per-player values, escapes names, and does no work on hidden screens',()=>{
+ const s=S.create(9108);hire(s,'FW');energy(s,'f3',50);s.squad.f3.name='<img src=x onerror=bad>';const host={innerHTML:''},focus={value:'technique'};let calls=0;const ctx=vm.createContext({season:s,S:{trainingPreview(...args){calls++;return S.trainingPreview(...args);}},view:'club',$:id=>id==='team-training-preview'?host:id==='training-focus'?focus:null,playerUiText:v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))});vm.runInContext(fs.readFileSync(__dirname+'/dist/training-ui.js','utf8'),ctx);const before=JSON.stringify(s);vm.runInContext('renderTeamTrainingPreview()',ctx);assert.match(host.innerHTML,/18명/);assert.match(host.innerHTML,/계약 코치 효과/);assert.match(host.innerHTML,/50 → 47/);assert.match(host.innerHTML,/&lt;img/);assert.doesNotMatch(host.innerHTML,/<img/);assert.equal(JSON.stringify(s),before);ctx.view='match';vm.runInContext('renderTeamTrainingPreview()',ctx);assert.equal(calls,1);ctx.view='club';focus.value='recovery';vm.runInContext('renderTeamTrainingPreview()',ctx);assert.match(host.innerHTML,/부상 기간은 줄이지/);S.train(s,'fitness');vm.runInContext('renderTeamTrainingPreview()',ctx);assert.match(host.innerHTML,/주마다 한 번/);assert.doesNotMatch(host.innerHTML,/예상 변화/);
+});
+console.log('Validated '+groups+' team training preview groups.');

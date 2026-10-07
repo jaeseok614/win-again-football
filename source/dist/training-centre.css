@@ -70,6 +70,17 @@
 .training-session-panel .individual-training-preview small{font-size:9px;line-height:1.5}
 .training-session-panel :is(#train-individual,.training-next-match){min-height:46px;width:100%;font-size:12px;border-radius:6px}
 .training-next-match{margin-top:11px;padding:10px 12px;border:1px solid #3e4b60;background:#1a2432;color:#d4e2f4}
+.team-training-preview{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.team-training-preview>strong{font-size:13px;color:var(--lime)}
+.team-training-metrics{display:grid;gap:7px;margin-top:10px;font-size:12px}
+.team-training-metrics b{display:block;font-size:16px;margin-top:3px}
+.team-training-preview p,.team-training-reason{font-size:12px;line-height:1.6;color:var(--muted)}
+.team-training-preview summary{display:flex;align-items:center;min-height:44px;font-size:12px;cursor:pointer}
+.team-training-preview summary:before{content:'＋';margin-right:8px}.team-training-preview details[open] summary:before{content:'−'}
+.team-training-preview ul{list-style:none;margin:0;padding:0}
+.team-training-preview li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:10px 0;border-top:1px solid var(--line)}
+.team-training-preview li strong{font-size:12px}.team-training-preview li small{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+.team-training-preview .team-energy{font-size:11px;white-space:nowrap}
 @media(max-width:730px){
 .training-program-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 .training-selected-heading .profile-inline-button{min-height:44px}

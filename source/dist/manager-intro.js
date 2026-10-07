@@ -12,7 +12,7 @@ const managerGuideSteps=[
 function guideSeen(){try{return localStorage.getItem(managerGuideKey)==='done';}catch{return false;}}
 function rememberGuide(){try{localStorage.setItem(managerGuideKey,'done');}catch{}}
 function offerManagerIntro(){if(managerIntroBypass||restoredSave.payload||launchHasCampaign||guideSeen())return false;openManagerGuide(0);return true;}
-function renderManagerGuide(){const [title,copy,label]=managerGuideSteps[managerGuideStep],text=copy.replaceAll('14경기',(typeof S!=='undefined'?S.roundCount(season):14)+'경기');$('manager-guide-title').textContent=title;$('manager-guide-copy').textContent=text;$('manager-guide-next').textContent=label;$('manager-guide-progress').textContent=(managerGuideStep+1)+' / '+managerGuideSteps.length;$('manager-guide-title').focus({preventScroll:true});}
+function renderManagerGuide(){const [title,copy,label]=managerGuideSteps[managerGuideStep];$('manager-guide-title').textContent=title;$('manager-guide-copy').textContent=copy;$('manager-guide-next').textContent=label;$('manager-guide-progress').textContent=(managerGuideStep+1)+' / '+managerGuideSteps.length;$('manager-guide-title').focus({preventScroll:true});}
 function openManagerGuide(step=2){pauseForPlanning();managerGuideStep=step;managerGuideWaiting=null;managerGuideActive=true;renderManagerGuide();if(!$('manager-guide').open)$('manager-guide').showModal();}
 function finishManagerGuide(){managerGuideActive=false;managerGuideWaiting=null;managerIntroBypass=true;rememberGuide();$('manager-guide').close();if(!appSessionStarted)enterManagerHome();else $('primary')?.focus({preventScroll:true});}
 function nextManagerGuide(){

@@ -149,20 +149,20 @@
  function create(seed=20260930,{suspensions=false}={}){const squad=Object.fromEntries(F.startingRoster.map(p=>[p.id,{...p,xp:0}])),initialLineup=['g1','d4','d1','d2','d3','m2','m1','m4','m3','f1','f2'],s={version:10,startingClub:'tottunham',disciplineRules:1,league:{version:1,division:5,rules:'five-tier',clubIds:fiveTierPools[5].map(c=>c.id)},competition:'league',seed:seed>>>0,year:1,round:0,squad,results:[],history:[],trained:null,lastReport:null,plan:{formation:'442',tactic:'balanced',lineup:initialLineup},match:null};E.initialize(s);Staff?.initialize(s);C.initialize(s);P.initialize(s);U?.initialize(s);H.initialize(s);ST.initialize(s);CL?.initialize(s);selectNextMatch(s);return suspensions?Suspensions.enable(s):s;}
  function standings(s){const rows=leagueClubs(s).map(c=>({...c,played:0,won:0,drawn:0,lost:0,gf:0,ga:0,points:0}));for(const result of s.results){const a=rows.find(c=>c.id===result.home),b=rows.find(c=>c.id===result.away),[x,y]=result.goals;a.played++;b.played++;a.gf+=x;a.ga+=y;b.gf+=y;b.ga+=x;if(x>y){a.won++;a.points+=3;b.lost++;}else if(x<y){b.won++;b.points+=3;a.lost++;}else{a.drawn++;b.drawn++;a.points++;b.points++;}}return rows.map(c=>({...c,gd:c.gf-c.ga})).sort((a,b)=>b.points-a.points||b.gd-a.gd||b.gf-a.gf||a.en.localeCompare(b.en,'en')).map((c,i)=>({...c,rank:i+1}));}
  function aiResult(s,r,f){let rng=seedFor(s,r,f),draw=()=>{rng=(Math.imul(rng,1664525)+1013904223)>>>0;return rng/4294967296;},a=s.league.rules==='five-tier'?Opposition.competitionProfile(rawClub(f.home),s.league.division,'five-tier'):club(f.home),b=s.league.rules==='five-tier'?Opposition.competitionProfile(rawClub(f.away),s.league.division,'five-tier'):club(f.away),goals=[0,0];for(let m=0;m<90;m++){if(draw()<(1.22+(a.attack-b.defense)*.028+.13)/90)goals[0]++;if(draw()<(1.22+(b.attack-a.defense)*.028)/90)goals[1]++;}return {round:r,home:f.home,away:f.away,goals};}
+ function trainingPreview(s,focus){
+  const validFocus=['technique','pace','fitness','recovery'].includes(focus),players=Object.values(s?.squad??{}),registered=players.length>0&&players.every(p=>s.match?.players[p.id]?.identity===p.identity);
+  const available=validFocus&&s.competition==='league'&&s.match?.phase==='prep'&&s.match.minute===0&&!s.trained&&s.round<roundCount(s)&&registered&&(!s.staff||s.staff.trainingWeek!==calendarClock(s));
+  const reason=!validFocus?'훈련 종류를 선택하세요.':!registered?'훈련 선수 등록을 확인하세요.':!available?'훈련은 리그 경기 전, 주마다 한 번 할 수 있어요.':'';
+  const rows=validFocus?players.map(p=>{
+   const coaching=Staff?.trainingBonuses(s,p.id,focus)??{skillBonus:0,energySaving:0,recoveryBonus:0},key=focus==='technique'?primaryKey(p):focus==='pace'?'speed':focus==='fitness'?'endurance':'energy',cap=focus==='recovery'?100:key===primaryKey(p)?p.potential:99,skipped=focus!=='recovery'&&!!p.injury;
+   const before=p[key],after=skipped?before:clamp(before+(focus==='recovery'?15+coaching.recoveryBonus:1+coaching.skillBonus),0,cap),cost=skipped||focus==='recovery'?0:Math.max(0,({technique:5,pace:6,fitness:3}[focus])-coaching.energySaving),energyAfter=focus==='recovery'?after:clamp(p.energy-cost,0,100);
+   return {id:p.id,identity:p.identity,name:p.name,pos:p.pos,key,cap,before,after,gain:after-before,energyBefore:p.energy,energyAfter,cost:p.energy-energyAfter,skipped,starting:s.match?.lineup.includes(p.id)??false,coaching:{...coaching}};
+  }):[];
+  return {focus,available,reason,rows};
+ }
  function train(s,focus){
-  if(s.competition!=='league'||!s.match||s.match.phase!=='prep'||s.trained)throw Error('훈련은 리그 경기 전, 주마다 한 번 할 수 있어요.');
-  if(!['technique','pace','fitness','recovery'].includes(focus))throw Error('훈련 종류를 선택하세요.');
-  for(const p of Object.values(s.squad)){
-   const m=s.match.players[p.id],coaching=Staff?.trainingBonuses(s,p.id,focus)??{skillBonus:0,energySaving:0,recoveryBonus:0};
-   if(focus==='recovery')p.energy=clamp(p.energy+15+coaching.recoveryBonus,0,100);
-   else if(!p.injury){
-    const key=focus==='technique'?primaryKey(p):focus==='pace'?'speed':'endurance';
-    p[key]=clamp(p[key]+1+coaching.skillBonus,0,key===primaryKey(p)?p.potential:99);
-    const cost=Math.max(0,({technique:5,pace:6,fitness:3}[focus])-coaching.energySaving);
-    p.energy=clamp(p.energy-cost,0,100);m[key]=p[key];
-   }
-   m.energy=p.energy;m.initialEnergy=p.energy;
-  }
+  const preview=trainingPreview(s,focus);if(!preview.available)throw Error(preview.reason);
+  for(const row of preview.rows){const p=s.squad[row.id],m=s.match.players[row.id];if(!row.skipped){p[row.key]=row.after;if(focus!=='recovery')m[row.key]=row.after;}p.energy=row.energyAfter;m.energy=p.energy;m.initialEnergy=p.energy;}
   s.trained=focus;Staff?.training(s,focus,undefined,{alreadyApplied:true});return s;
  }
  function participation(s,m,recovery){const changes=[];for(const p of Object.values(s.squad)){const played=m.players[p.id];p.energy=clamp(played.energy+recovery,0,100);const beforeXp=Math.floor(p.xp/270);p.xp+=played.minutes;const growth=Math.floor(p.xp/270)-beforeXp,key=primaryKey(p),before=p[key];p[key]=clamp(p[key]+growth,0,p.potential);const gained=p[key]-before;if(gained)changes.push({id:p.id,identity:p.identity,name:p.name,key,gained});}s.plan={formation:m.formation,tactic:m.tactic,lineup:[...m.lineup]};return changes;}
@@ -220,5 +220,5 @@
   return s;
  }
  function recruit(s,identity,slot){if(s.match?.decisions?.some(d=>d.type==='talk'&&d.lineup.includes(slot)))throw Error('팀 대화를 마친 선수의 영입 교체는 다음 경기 전에 할 수 있어요. 영입 뒤 팀 대화를 진행하세요.');const next=E.recruit(s,identity,slot);C.register(next,slot);if(next.suspensions){if(next.match.decisions.some(d=>d.type==='talk'))throw Error('출전 정지 적용 중에는 팀 대화 전에 영입을 마쳐 주세요.');Suspensions.apply(next);}return next;}
- const api={clubs,clubReferences,fiveTierPools,own,club,rawClub,presentClub,displayText,fixtures,leagueClubs,fixturesFor,divisionInfo,leagueForYear,promotionRules,movement,roundCount,roundCountForYear,calendarClock,leagueFixture,fixtureFor,opponentFor,seedFor,create,standings,train,settle,nextSeason,restore,primaryKey,recruit,scout:C.scout,rotate:H.rotate,selectNextMatch,ready};root.Season=api;if(typeof module!=='undefined')module.exports=api;
+ const api={clubs,clubReferences,fiveTierPools,own,club,rawClub,presentClub,displayText,fixtures,leagueClubs,fixturesFor,divisionInfo,leagueForYear,promotionRules,movement,roundCount,roundCountForYear,calendarClock,leagueFixture,fixtureFor,opponentFor,seedFor,create,standings,trainingPreview,train,settle,nextSeason,restore,primaryKey,recruit,scout:C.scout,rotate:H.rotate,selectNextMatch,ready};root.Season=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
