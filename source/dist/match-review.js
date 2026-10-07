@@ -48,6 +48,14 @@
   const rows=list=>(Array.isArray(list)?list:[]).filter(row=>F.identityProfile(row?.identity)&&(legacy?s.squad[row.id]?.identity===row.identity:players.some(p=>p.id===row.id&&p.identity===row.identity))).map(row=>person(s,copy(row)));
   return {healthAligned:true,injuries:rows(report.incidents),recovered:rows(report.recovered)};
  }
+ function substitutionsFor(match,performance){
+  if(!match?.players||!Array.isArray(match.decisions))return [];
+  const ratings=new Map((performance?.rows||[]).map(row=>[row.id,row]));
+  return match.decisions.filter(decision=>decision?.type==='sub'&&Number.isInteger(decision.minute)&&decision.minute>=1&&decision.minute<=90&&match.players[decision.out]&&match.players[decision.in]).map(decision=>{
+   const out=match.players[decision.out],incoming=match.players[decision.in],outRating=ratings.get(out.id),inRating=ratings.get(incoming.id);
+   return {minute:decision.minute,out:person({squad:{}},{id:out.id,identity:out.identity,minutes:out.minutes}),incoming:person({squad:{}},{id:incoming.id,identity:incoming.identity,minutes:incoming.minutes}),outMinutes:out.minutes,inMinutes:incoming.minutes,outRating:outRating?.rating??null,inRating:inRating?.rating??null};
+  });
+ }
  function pending(s){
   const source='pending',m=s.match;if(!m||m.phase!=='full'||m.minute!==90)return invalid(source,'현재 경기를 90분까지 마친 뒤 리포트를 볼 수 있어요.');
   try{
@@ -56,7 +64,8 @@
    const competition=s.competition,round=competition!=='league'?s.round:s.round+1,stage=competition!=='league'?fixture.stage:null,result=competition==='cup'?P.preview(s,match):competition==='europe'?europeModule().preview(s,match):null;
    const context={id:resultId(s.year,competition,round,stage),year:s.year,competition,round,stage,home:fixture.home,away:fixture.away,opponentId,score:[...match.score],penalties:result?.penalties?oriented(result,result.penalties):null,winner:result?result.winner:match.score[0]===match.score[1]?null:match.score[0]>match.score[1]?own:opponentId};
    const events=eventsFor(F.goalAttributions(match)),players=Object.values(match.players).map(p=>player(s,{id:p.id,identity:p.identity,minutes:p.minutes,started:match.segments[0].lineup.includes(p.id),goals:events.filter(e=>e.scorerIdentity===p.identity).length,assists:events.filter(e=>e.assistIdentity===p.identity).length,cleanSheets:p.pos==='GK'&&p.minutes===90&&match.score[1]===0?1:0})),unassignedGoals=match.score[0]-events.length;
-   return {valid:true,source,reason:null,confirmed:false,pending:true,legacy:false,limited:match.statisticsOriginMinute>0||unassignedGoals>0,...presentation(context),rank:null,points:null,cashflow:null,players,events,performance:MP?.fromMatch(match)||null,growth:[],injuries:[],recovered:[],healthAligned:false,coverage:{statisticsOriginMinute:match.statisticsOriginMinute,unassignedGoals,partial:match.statisticsOriginMinute>0||unassignedGoals>0},leader:leaderFor(players)};
+   const performance=MP?.fromMatch(match)||null;
+   return {valid:true,source,reason:null,confirmed:false,pending:true,legacy:false,limited:match.statisticsOriginMinute>0||unassignedGoals>0,...presentation(context),rank:null,points:null,cashflow:null,players,events,performance,substitutions:substitutionsFor(match,performance),growth:[],injuries:[],recovered:[],healthAligned:false,coverage:{statisticsOriginMinute:match.statisticsOriginMinute,unassignedGoals,partial:match.statisticsOriginMinute>0||unassignedGoals>0},leader:leaderFor(players)};
   }catch{return invalid(source,'현재 경기 기록을 읽을 수 없어요.');}
  }
  function read(s,options={}){
@@ -70,7 +79,7 @@
   if(record&&(record.id!==context.id||record.year!==context.year||record.competition!==context.competition||record.round!==context.round||record.stage!==context.stage||record.home!==context.home||record.away!==context.away||!same(record.score,context.score)))return invalid(source,'최근 선수 기록과 경기 결과가 맞지 않아 리포트를 표시할 수 없어요.');
   if(receipt&&(receipt.id!==context.id||report.cashflow&&!same(report.cashflow,receipt)))return invalid(source,'최근 경기와 재정 결산이 맞지 않아요.');
   const legacy=!record,players=record?record.players.map(row=>player(s,row)):[],events=record?eventsFor(record.events):[],unassignedGoals=record?record.unassignedGoals:context.score[0];
-  return {valid:true,source,reason:null,confirmed:true,pending:false,legacy,limited:legacy||record.statisticsOriginMinute>0||unassignedGoals>0,...presentation(context),rank:report.rank,points:report.points,cashflow:receipt?copy(receipt):null,players,events,performance:record&&MP?.fromRecord(record)||null,growth:growthFor(s,report,players,legacy),...healthFor(s,context,players,legacy),coverage:{statisticsOriginMinute:record?record.statisticsOriginMinute:null,unassignedGoals,partial:legacy||record.statisticsOriginMinute>0||unassignedGoals>0},leader:leaderFor(players)};
+  return {valid:true,source,reason:null,confirmed:true,pending:false,legacy,limited:legacy||record.statisticsOriginMinute>0||unassignedGoals>0,...presentation(context),rank:report.rank,points:report.points,cashflow:receipt?copy(receipt):null,players,events,performance:record&&MP?.fromRecord(record)||null,substitutions:[],growth:growthFor(s,report,players,legacy),...healthFor(s,context,players,legacy),coverage:{statisticsOriginMinute:record?record.statisticsOriginMinute:null,unassignedGoals,partial:legacy||record.statisticsOriginMinute>0||unassignedGoals>0},leader:leaderFor(players)};
   }catch{return invalid(source,'현재 시즌의 최근 경기 기록을 읽을 수 없어요.');}
  }
  const api={read};root.MatchReview=api;if(typeof module!=='undefined')module.exports=api;

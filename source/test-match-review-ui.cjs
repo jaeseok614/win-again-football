@@ -23,7 +23,7 @@ const base=fixtures();
 
 test('pending full-time review shows real goals and minutes without claiming settlement, growth, health or money',()=>{
  const s=copy(base.pending),h=harness(s),before=JSON.stringify(s),d=R.read(s,{source:'pending'}),html=h.render(d);
- assert.equal(d.valid,true);assert.match(html,/FULL TIME \/ NOT CONFIRMED/);assert.match(html,/<h3>경기 결과와 선수 기록<\/h3>/);assert.match(html,/결과 확정 전/);assert.match(html,/결과를 확정해야 경험·성장·부상·재정에 반영됩니다/);assert.match(html,/20′/);assert.match(html,/48′/);assert.match(html,/손헝민/);assert.match(html,/킬리안 음바뻬/);assert.match(html,/케빈 더브라이닝/);assert.match(html,/파올로 말디닝/);assert.match(html,/45<small>분/);assert.match(html,/25<small>분/);assert.doesNotMatch(html,/90분을 뛴 선수들|review-settlement|review-cash|review-growth-player|review-health-line|확정 완료/);same(h,before);
+ assert.equal(d.valid,true);assert.match(html,/FULL TIME \/ NOT CONFIRMED/);assert.match(html,/<h3>경기 결과와 선수 기록<\/h3>/);assert.match(html,/결과 확정 전/);assert.match(html,/결과를 확정해야 경험·성장·부상·재정에 반영됩니다/);assert.match(html,/감독의 교체 기록/);assert.match(html,/투입 뒤 실제 출전 시간과 표시용 평점/);assert.match(html,/20′/);assert.match(html,/48′/);assert.match(html,/손헝민/);assert.match(html,/킬리안 음바뻬/);assert.match(html,/케빈 더브라이닝/);assert.match(html,/파올로 말디닝/);assert.match(html,/45<small>분/);assert.match(html,/25<small>분/);assert.doesNotMatch(html,/90분을 뛴 선수들|review-settlement|review-cash|review-growth-player|review-health-line|확정 완료/);same(h,before);
 });
 
 test('confirmed growth remains the exact earned +1 after later training and next-match changes',()=>{
