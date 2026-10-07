@@ -48,7 +48,7 @@ test('injured bench players and removed starters are never offered for re-entry'
 });
 
 test('all three used substitutions disable further changes without inventing bench availability',()=>{
- const s=advance(S.create(),17);for(const [out,incoming] of [['f1','f3'],['d1','d5'],['m1','m5']])F.swap(s.match,out,incoming);const before=copy(s),d=Matchday.read(s,'f3');assert.deepEqual(d.substitution,{used:3,limit:3,remaining:0,canSubstitute:false,suggestion:null});assert.deepEqual(d.candidates.map(p=>p.id),['f4']);assert.deepEqual(s,before);
+ const s=advance(S.create(),17);for(const [out,incoming] of [['f1','f3'],['d1','d5'],['m1','m5']])F.swap(s.match,out,incoming);const before=copy(s),d=Matchday.read(s,'f3');assert.deepEqual(d.substitution,{used:3,limit:3,remaining:0,canSubstitute:false,suggestion:null,options:[]});assert.deepEqual(d.candidates.map(p=>p.id),['f4']);assert.deepEqual(s,before);
 });
 
 test('natural breaks and the last legal minute have distinct accurate control states',()=>{
@@ -77,5 +77,14 @@ test('suggested substitution pairs the tired starter with a real healthy same-po
  const s=advance(S.create(2040),17),m=s.match;for(const id of m.lineup)m.players[id].energy=80;for(const p of Object.values(m.players).filter(p=>!m.lineup.includes(p.id)))p.energy=75;m.players.f1.energy=31;m.players.f3.energy=94;const before=copy(s),d=Matchday.read(s),q=d.substitution.suggestion;
  assert.equal(q.out.id,'f1');assert.equal(q.incoming.id,'f3');assert.equal(q.out.pos,q.incoming.pos);assert.equal(q.energyGain,63);assert.equal(q.primaryDelta,m.players.f3.attack-m.players.f1.attack);assert.match(q.reason,/체력 31/);assert.equal(m.subs,0);assert.deepEqual(s,before);
  m.players.f3.injuryRemaining=1;m.players.f4.injuryRemaining=1;assert.equal(Matchday.read(s).substitution.suggestion,null);m.phase='full';assert.equal(Matchday.read(s).substitution.suggestion,null);
+});
+
+test('substitution shortlist ranks at most three real same-position changes and only describes their live impact',()=>{
+ const s=advance(S.create(2042),65),m=s.match;m.discipline={version:1,events:[]};for(const id of m.lineup)m.players[id].energy=82;for(const p of Object.values(m.players).filter(p=>!m.lineup.includes(p.id)))p.energy=88;
+ const targets=['FW','DEF','MID'].map(pos=>m.lineup.map(id=>m.players[id]).find(p=>p.pos===pos));for(const [index,p] of targets.entries())p.energy=[28,46,61][index];
+ const before=copy(s),options=Matchday.read(s).substitution.options;
+ assert.equal(options.length,3);assert.equal(options[0].out.id,targets[0].id);assert.equal(options[0].urgency,'긴급');
+ for(const option of options){assert.equal(option.out.pos,option.incoming.pos);assert(option.energyGain>0);assert.equal(option.minutes,25);assert.match(option.reason,/남은 25분/);assert(Number.isFinite(option.score));}
+ assert.deepEqual(s,before);
 });
 console.log('Validated '+checks+' actual matchday centre groups.');
