@@ -12,6 +12,9 @@
 - PWA 5,040,579바이트, Android 오프라인 게임 자산 5,042,155바이트입니다. Android의 JS/Java 파일 한도도 동일한 16MiB로 맞췄습니다. Gradle APK/AAB 빌드와 실제 휴대폰 시각 검증은 이번 세션에서 실행하지 않았습니다.
 - 현재 작업 브랜치: `codex/resume-home-20261006`. 웹 공개 배포 및 Play 출시 완료를 뜻하지 않습니다.
 
+- 원격 반영 확인: `edad824c013a2aba0944ce413e3359a15c592543`에 게임/소스/검증 변경을 올렸습니다. GitHub API로 만든 전체 트리 `9b6b5fdc0ffd3f5b2c4b69fd1cdc9c8ed51a3324`가 로컬 검증 커밋과 완전히 같고, 공개 Git fetch로 원격 브랜치를 다시 확인했습니다.
+- 이 샌드박스의 CLI 인증 도우미는 여전히 MSYS `NtCreateDirectoryObject ... 0xC0000022` 오류가 납니다. 사용자가 다시 푸시할 필요 없이 연결된 GitHub 플러그인의 blob/tree/commit/ref API로 반영할 수 있습니다. 파일 blob과 전체 tree를 로컬 Git 해시와 대조하고, expected_sha를 지정한 비강제 ref 갱신으로 다른 작업을 덮어쓰지 않습니다. 공개 fetch는 `git -c credential.helper= fetch origin codex/resume-home-20261006`으로 됩니다. 이 확인 문서의 후속 커밋까지 브랜치에 올립니다.
+
 ## 이전 개발 기록 (역사적 참고)
 
 # 통합 개발 인수인계 — 2026-10-04
