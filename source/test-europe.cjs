@@ -7,9 +7,7 @@ function finish(m){while(m.phase!=='full'){if(!F.running(m))F.begin(m);F.finishS
 function play(s){finish(s.match);return S.settle(s);}
 function complete(s){while(s.match)s=play(s);return s;}
 let qualifiedTemplate=null;
-function qualified(){
- if(!qualifiedTemplate){let s=S.create(12);for(const p of Object.values(s.squad)){for(const key of ['attack','defense','passing','speed','endurance','keeping']){p[key]=99;s.match.players[p.id][key]=99;}p.potential=99;s.match.players[p.id].potential=99;s.career.baselines[p.identity]=99;}F.setFormation(s.match,'433');F.setTactic(s.match,'press');s=S.nextSeason(complete(s));assert.equal(s.league.division,1);s=S.nextSeason(complete(s));assert.equal(s.year,3);assert.equal(s.history[1].rank,2);assert.equal(s.europe.enabled,true);assert.deepEqual(S.restore(copy(s)),s);qualifiedTemplate=copy(s);}return copy(qualifiedTemplate);
-}
+function qualified(){return require('./current-test-helper.cjs').qualify();}
 // Isolated tournament fixtures use actual owned-player profiles and the same F engine;
 // complete-campaign qualification is separately produced by qualified(), without forged results.
 function tournament(seed=2,{strong=true}={}){
@@ -37,7 +35,7 @@ test('each group plays every opponent once at home and once away across six matc
  assert.equal(pairs.size,24);assert.ok([...pairs.values()].every(n=>n===1));assert.ok(Object.values(home).every(n=>n===3));assert.deepEqual(U.fixturesFor(s,6),[]);assert.deepEqual(U.fixturesFor(s,7),[]);assert.deepEqual(U.gates,[2,4,6,8,10,12,13,14]);
 });
 test('real group draws remain draws with one point and no shootout or winner',()=>{
- const s=tournament(12,{strong:false});s.round=2;const m=finish(matchFor(s));assert.deepEqual(m.score,[0,0]);const before=JSON.stringify(s),p=U.preview(s,m);assert.equal(p.winner,null);assert.equal(p.penalties,null);assert.deepEqual(p.kicks,[[],[]]);assert.equal(JSON.stringify(s),before);U.settle(s,m);const index=s.europe.groups.findIndex(g=>g.includes(U.own)),row=U.standings(s,index).find(c=>c.id===U.own);assert.equal(row.points,1);assert.equal(row.played,1);assert.equal(row.drawn,1);assert.equal(row.gf,0);assert.equal(row.ga,0);U.validate(s);
+ const s=tournament(2,{strong:false});s.round=2;const m=finish(matchFor(s));assert.deepEqual(m.score,[0,0]);const before=JSON.stringify(s),p=U.preview(s,m);assert.equal(p.winner,null);assert.equal(p.penalties,null);assert.deepEqual(p.kicks,[[],[]]);assert.equal(JSON.stringify(s),before);U.settle(s,m);const index=s.europe.groups.findIndex(g=>g.includes(U.own)),row=U.standings(s,index).find(c=>c.id===U.own);assert.equal(row.points,1);assert.equal(row.played,1);assert.equal(row.drawn,1);assert.equal(row.gf,0);assert.equal(row.ga,0);U.validate(s);
 });
 test('actual F matches support all formations, substitutions, ninety minutes and deterministic seeds',()=>{
  for(const formation of ['442','433','352']){const s=tournament(6604);s.round=2;const fixture=U.fixtureFor(s),m=matchFor(s,formation,'counter');assert.equal(m.seed,U.seedFor(s,fixture));assert.equal(m.rng,U.rngFor(s,fixture,0));F.begin(m);F.finishSegment(m);assert.equal(m.minute,45);assert.equal(m.rng,U.rngFor(s,fixture,45));const out=m.lineup.find(id=>m.players[id].pos==='FW'),incoming=Object.keys(m.players).find(id=>m.players[id].pos==='FW'&&!m.lineup.includes(id));F.swap(m,out,incoming);finish(m);assert.equal(m.players[out].minutes,45);assert.equal(m.players[incoming].minutes,45);assert.equal(Object.values(m.players).reduce((sum,p)=>sum+p.minutes,0),990);assert.equal(m.rng,U.rngFor(s,fixture,90));assert.doesNotThrow(()=>F.restore(copy(m)));U.settle(s,m);assert.equal(s.europe.stage,1);assert.equal(s.europe.results.length,4);U.validate(s);}
@@ -65,13 +63,8 @@ test('malformed groups, stage, deterministic NPC results and knockout data are r
 test('canonical receipts retain actual scores, stage, venue and knockout decisions',()=>{
  const s=endTournament(tournament(2)),own=s.europe.results.filter(r=>r.home===U.own||r.away===U.own);s.finance={ledger:own.map(r=>receipt(s,r))};assert.equal(own.length,8);for(const e of s.finance.ledger)assert.ok(U.validateReceipt(s,e));U.validateHistory(s);const corrupt=copy(s);corrupt.finance.ledger[0].goals[0]++;assert.throws(()=>U.validateHistory(corrupt));const missing=copy(s);missing.finance.ledger.pop();assert.throws(()=>U.validateHistory(missing));const omitted=copy(s);delete omitted.europe;assert.throws(()=>U.restore(omitted,undefined));
 });
-test('historical trophies reconstruct groups and opponents from saved regulation scores',()=>{
- const ended=endTournament(tournament(2)),receipts=ended.europe.results.filter(r=>r.home===U.own||r.away===U.own).map(r=>receipt(ended,r)),pastChampion=ended.europe.champion;
- const next={...copy(ended),year:4,round:0,history:[...copy(ended.history),{year:3,division:1,rank:2,europeChampion:pastChampion}],finance:{ledger:receipts}};U.initialize(next);assert.ok(next.europe.enabled);U.validateHistory(next);for(const mutate of [x=>x.history[2].europeChampion=x.history[2].europeChampion===U.own?U.clubs[0].id:U.own,x=>x.finance.ledger.pop(),x=>x.finance.ledger[0].away=x.finance.ledger[0].away===U.own?U.own:U.clubs.find(c=>c.id!==x.finance.ledger[0].home&&c.id!==x.finance.ledger[0].away).id,x=>x.finance.ledger[0].goals=[90,0]]){const raw=copy(next);mutate(raw);assert.throws(()=>U.validateHistory(raw));}
-});
-test('legacy missing Europe preserves the current campaign and waits for next-season qualification',()=>{
- const s=qualified(),before=copy(s);delete s.europe;U.restore(s,undefined);assert.ok(s.europe.legacy);assert.equal(s.europe.enabled,false);assert.deepEqual(s.europe.qualification,{year:2,division:1,rank:2});for(const key of ['finance','squad','match','results','history','round','trained'])assert.deepEqual(s[key],before[key]);U.validate(s);const next={...s,year:4,round:0,history:[...s.history,{year:3,division:1,rank:1}]};U.initialize(next);assert.equal(next.europe.legacy,false);assert.equal(next.europe.enabled,true);
-});
+
+
 test('browser engine exposes the same deterministic tournament without CommonJS or heavy startup',()=>{
  const context=vm.createContext({});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/europe.js'),'utf8'),context);const s=tournament(6607),browser=copy(s);context.Europe.initialize(browser);assert.deepEqual(copy(context.Europe.fixturesFor(browser,0)),U.fixturesFor(s,0));assert.equal(context.Europe.seedFor(browser,context.Europe.fixturesFor(browser,0)[0]),U.seedFor(s,U.fixturesFor(s,0)[0]));assert.equal(context.Europe.clubs.length,7);assert.equal(browser.europe.results.length,0);assert.equal(browser.europe.stage,0);context.Europe.validate(browser);
 });

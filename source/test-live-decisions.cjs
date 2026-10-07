@@ -67,7 +67,7 @@ test('continuous histories resume deterministically at every tactical and substi
 test('invalid tactics, formation changes, wrong positions, injured reserves and exhausted subs are atomic',()=>{
  const match=advance(F.create(),17);match.paused=true;atomic(match,()=>F.setTactic(match,'unknown'));atomic(match,()=>F.setFormation(match,'433'));atomic(match,()=>F.swap(match,'f1','m5'));atomic(match,()=>F.swap(match,'f1','f2'));atomic(match,()=>F.swap(match,'none','f3'));
  match.players.f3.injuryRemaining=1;atomic(match,()=>F.swap(match,'f1','f3'));match.players.f3.injuryRemaining=0;
- F.swap(match,'f1','f3');F.swap(match,'m1','m5');F.swap(match,'d1','d5');atomic(match,()=>F.swap(match,'g1','g2'));atomic(match,()=>F.swap(match,'f3','f1'));
+ F.swap(match,'f1','f3');F.swap(match,'m1','m5');F.swap(match,'d1','d5');F.swap(match,'d2','d6');F.swap(match,'g1','g2');atomic(match,()=>F.swap(match,'g1','g2'));atomic(match,()=>F.swap(match,'f3','f1'));
  advance(match,90);atomic(match,()=>F.setTactic(match,'counter'));atomic(match,()=>F.swap(match,'f3','f4'));
 });
 
@@ -105,7 +105,7 @@ test('automatic pauses at 45 and 65 remain compatible with free changes before t
 
 test('frequent legal decisions remain within the bounded save schema without empty closed segments',()=>{
  const match=F.create(121);F.begin(match);F.setTactic(match,'press');for(let minute=1;minute<=90;minute++){if(!F.running(match))F.begin(match);match.paused=false;F.tick(match);if(F.running(match))F.setTactic(match,match.tactic==='press'?'counter':'press');}
- assert.equal(match.version,5);assert.equal(match.segments.length,90);assert.ok(match.segments.every(segment=>segment.end-segment.start===1));assert.equal(match.subs,0);assert.deepEqual(F.restore(clone(match)),match);
+ assert.equal(match.version,10);assert.equal(match.segments.length,90);assert.ok(match.segments.every(segment=>segment.end-segment.start===1));assert.equal(match.subs,0);assert.deepEqual(F.restore(clone(match)),match);
 });
 
 console.log('Validated '+checks+' live decision groups.');

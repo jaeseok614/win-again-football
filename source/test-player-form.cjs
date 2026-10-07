@@ -5,8 +5,8 @@ function finish(match){while(match.phase!=='full'){if(!F.running(match))F.begin(
 function play(season){finish(season.match);return S.settle(season);}
 
 test('new and newly registered players have no fabricated appearance form',()=>{
- const season=S.create(91301),before=JSON.stringify(season),report=PlayerForm.read(season,'f3');assert.equal(report.valid,true);assert.equal(report.appearances,0);assert.equal(report.form,'');assert.deepEqual(report.matches,[]);assert.equal(JSON.stringify(season),before);
- const recruited=S.recruit(season,'t_f2','f3');assert.equal(PlayerForm.read(recruited,'t_f2').appearances,0);assert.equal(PlayerForm.read(recruited,'f3').valid,false);assert.equal(PlayerForm.read(season,'not-a-player').valid,false);
+ const season=S.create(91301),before=JSON.stringify(season),report=PlayerForm.read(season,'sp_f3');assert.equal(report.valid,true);assert.equal(report.appearances,0);assert.equal(report.form,'');assert.deepEqual(report.matches,[]);assert.equal(JSON.stringify(season),before);
+ const recruited=S.recruit(season,'t_f2','f3');assert.equal(PlayerForm.read(recruited,'t_f2').appearances,0);assert.equal(PlayerForm.read(recruited,'sp_f3').valid,false);assert.equal(PlayerForm.read(season,'not-a-player').valid,false);
 });
 
 test('last five appearances follow confirmed match order and mirror actual minutes, team result and contributions',()=>{
@@ -17,11 +17,11 @@ test('last five appearances follow confirmed match order and mirror actual minut
 });
 
 test('squad form computes one detached recent report per current identity and accepts frozen campaigns',()=>{
- let season=S.create(91303);for(let i=0;i<3;i++)season=play(season);const before=copy(season),frozen=value=>{if(value&&typeof value==='object'){for(const child of Object.values(value))frozen(child);Object.freeze(value);}return value;},reports=PlayerForm.squad(frozen(season));assert.equal(Object.keys(reports).length,18);for(const player of Object.values(season.squad)){const expected=season.statistics.records.filter(record=>record.players.find(row=>row.identity===player.identity)?.minutes>0).length;assert.equal(reports[player.identity].identity,player.identity);assert.equal(reports[player.identity].appearances,Math.min(expected,5));}reports[season.squad.f1.identity].form='changed';assert.deepEqual(season,before);assert.equal(PlayerForm.read(season,'f3',0).limit,5);
+ let season=S.create(91303);for(let i=0;i<3;i++)season=play(season);const before=copy(season),frozen=value=>{if(value&&typeof value==='object'){for(const child of Object.values(value))frozen(child);Object.freeze(value);}return value;},reports=PlayerForm.squad(frozen(season));assert.equal(Object.keys(reports).length,18);for(const player of Object.values(season.squad)){const expected=season.statistics.records.filter(record=>record.players.find(row=>row.identity===player.identity)?.minutes>0).length;assert.equal(reports[player.identity].identity,player.identity);assert.equal(reports[player.identity].appearances,Math.min(expected,5));}reports[season.squad.f1.identity].form='changed';assert.deepEqual(season,before);assert.equal(PlayerForm.read(season,'sp_f3',0).limit,5);
 });
 
 test('the player form module works in a browser without CommonJS globals',()=>{
- let season=S.create(91304);season=play(season);const context=vm.createContext({Football:F,Season:S});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/player-form.js'),'utf8'),context);assert(context.PlayerForm);assert.deepEqual(JSON.parse(JSON.stringify(context.PlayerForm.read(season,'f3'))),PlayerForm.read(season,'f3'));
+ let season=S.create(91304);season=play(season);const context=vm.createContext({Football:F,Season:S});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/player-form.js'),'utf8'),context);assert(context.PlayerForm);assert.deepEqual(JSON.parse(JSON.stringify(context.PlayerForm.read(season,'sp_f3'))),PlayerForm.read(season,'sp_f3'));
 });
 
 console.log('Validated '+groups+' player form groups.');

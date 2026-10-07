@@ -18,7 +18,7 @@ test('missing or incomplete state is safe and invalid options normalize without 
 });
 
 test('fresh centre reports all eighteen registered players and exact unfabricated development values',()=>{
- const s=S.create(),d=readPure(s);assert.equal(d.valid,true);assert.equal(d.players.length,18);assert.equal(d.totalMatched,18);assert.deepEqual(d.context,{year:1,round:1,competition:'league',phase:'prep',trained:null,trainingOpen:true});assert.deepEqual(d.summary,{total:18,fit:18,injured:0,tired:1,growable:18});
+ const s=S.create(),d=readPure(s);assert.equal(d.valid,true);assert.equal(d.players.length,18);assert.equal(d.totalMatched,18);assert.deepEqual(d.context,{year:1,round:1,competition:'league',phase:'prep',trained:null,trainingOpen:true});assert.deepEqual(d.summary,{total:18,fit:18,injured:0,tired:0,growable:18});
  for(const p of d.players){const actual=s.squad[p.slot],development=D.analyze(s,p.slot);assert.equal(p.id,p.slot);assert.equal(p.identity,actual.identity);assert.equal(p.primary,actual[S.primaryKey(actual)]);assert.equal(p.cap,actual.potential);assert.equal(p.remaining,actual.potential-p.primary);assert.equal(p.growthSinceRegistration,0);assert.equal(p.xp,0);assert.equal(p.xpInStep,0);assert.equal(p.minutesToGrowth,270);assert.equal(p.starting,s.match.lineup.includes(p.slot));assert.deepEqual(p.recommendation,development.recommendation);assert.equal(Object.hasOwn(p,'order'),false);}
 });
 
@@ -43,8 +43,8 @@ test('confirmed-minute sorting never promises growth for capped players or inclu
 });
 
 test('injury and the exact seventy-energy threshold use the existing training recommendation',()=>{
- const s=S.create();energy(s,'f3',69.5);s.squad.d5.injury={kind:'knock',remaining:1};s.match.players.d5.injuryRemaining=1;let d=readPure(s);assert.equal(d.summary.injured,1);assert.equal(d.summary.fit,17);assert.equal(row(d,'d5').injured,true);assert.equal(row(d,'d5').recommendation.available,false);assert.match(row(d,'d5').recommendation.reason,/부상/);assert.equal(row(d,'f3').recommendation.focus,'recovery');assert.deepEqual(row(d,'f3').recommendation.preview,T.preview(s,'f3','recovery','f3'));
- energy(s,'f3',70);d=readPure(s);assert.equal(row(d,'f3').recommendation.focus,'technique');assert.equal(row(d,'f3').recommendation.preview.energyAfter,60);assert.equal(d.summary.tired,1);
+ const s=S.create();energy(s,'f3',69.5);s.squad.d5.injury={kind:'knock',remaining:1};s.match.players.d5.injuryRemaining=1;let d=readPure(s);assert.equal(d.summary.injured,1);assert.equal(d.summary.fit,17);assert.equal(row(d,'d5').injured,true);assert.equal(row(d,'d5').recommendation.available,false);assert.match(row(d,'d5').recommendation.reason,/부상/);assert.equal(row(d,'f3').recommendation.focus,'recovery');assert.deepEqual(row(d,'f3').recommendation.preview,T.preview(s,'f3','recovery','sp_f3'));
+ energy(s,'f3',70);d=readPure(s);assert.equal(row(d,'f3').recommendation.focus,'technique');assert.equal(row(d,'f3').recommendation.preview.energyAfter,60);assert.equal(d.summary.tired,0);
 });
 
 test('during actual play current energy is live but confirmed experience and training availability stay honest',()=>{
@@ -53,11 +53,11 @@ test('during actual play current energy is live but confirmed experience and tra
 });
 
 test('individual and whole-team training share the real weekly action and report exact completed growth',()=>{
- for(const individual of [true,false]){const s=S.create(),before=readPure(s);if(individual)T.train(s,'f3','technique','f3');else S.train(s,'fitness');const d=readPure(s);assert.equal(d.context.trained,individual?'technique':'fitness');assert.equal(d.context.trainingOpen,false);assert(d.players.every(p=>!p.recommendation.available&&p.recommendation.focus===null));assert.equal(row(d,'f3').growthSinceRegistration,individual?2:0);if(individual)assert.equal(row(d,'f3').primary,row(before,'f3').primary+2);assert.doesNotThrow(()=>S.restore(copy(s)));}
+ for(const individual of [true,false]){const s=S.create(),before=readPure(s);if(individual)T.train(s,'f3','technique','sp_f3');else S.train(s,'fitness');const d=readPure(s);assert.equal(d.context.trained,individual?'technique':'fitness');assert.equal(d.context.trainingOpen,false);assert(d.players.every(p=>!p.recommendation.available&&p.recommendation.focus===null));assert.equal(row(d,'f3').growthSinceRegistration,individual?2:0);if(individual)assert.equal(row(d,'f3').primary,row(before,'f3').primary+2);assert.doesNotThrow(()=>S.restore(copy(s)));}
 });
 
 test('actual Cup preparations block training without losing the owned roster or its growth',()=>{
- let s=S.create(4201);for(let round=0;round<4;round++)s=play(s);assert.equal(s.competition,'cup');const d=readPure(s);assert.equal(d.context.competition,'cup');assert.equal(d.context.round,5);assert.equal(d.context.phase,'prep');assert.equal(d.context.trainingOpen,false);assert.equal(d.players.length,18);assert(d.players.every(p=>!p.recommendation.available));assert.match(row(d,'f3').recommendation.reason,/컵/);
+ let s=S.create(4201);while(s.competition!=='cup')s=play(s);assert.equal(s.competition,'cup');const d=readPure(s);assert.equal(d.context.competition,'cup');assert.equal(d.context.round,13);assert.equal(d.context.phase,'prep');assert.equal(d.context.trainingOpen,false);assert.equal(d.players.length,18);assert(d.players.every(p=>!p.recommendation.available));assert.match(row(d,'f3').recommendation.reason,/컵/);
 });
 
 test('growth caps have no next primary-minute target and preserve real secondary-skill recommendations',()=>{

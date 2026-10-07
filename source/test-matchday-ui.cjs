@@ -118,11 +118,11 @@ test('removed and injured reserve identities never become actionable selections 
 
 test('kickoff and exhausted substitution limits show accurate explanations without calling engine mutation APIs',()=>{
  const kickoff=S.create(2014);F.begin(kickoff.match);const h=harness(kickoff),before=copy(kickoff);h.context.selectMatchdayPlayer('f1');onlyPaused(h,before);assert.match(h.get('matchday-selection').innerHTML,/첫 1분이 지난 뒤 교체/);assert.equal(kickoff.match.subs,0);
- const s=at(17);for(const [out,inside] of [['f1','f3'],['d1','d5'],['m1','m5']])F.swap(s.match,out,inside);s.match.paused=true;const capped=harness(s,{selected:'f3'}),saved=JSON.stringify(s);capped.render();assert.match(capped.get('matchday-selection').innerHTML,/교체 가능 인원을 모두 사용/);unchanged(capped,saved);
+ const s=at(17);for(const [out,inside] of [['f1','f3'],['d1','d5'],['m1','m5'],['d2','d6'],['g1','g2']])F.swap(s.match,out,inside);s.match.paused=true;const capped=harness(s,{selected:'f3'}),saved=JSON.stringify(s);capped.render();assert.match(capped.get('matchday-selection').innerHTML,/교체 가능 인원을 모두 사용/);unchanged(capped,saved);
 });
 
 test('player display names are escaped in both quick selection labels and the selected player card',()=>{
- const s=S.create(2015),name='<img src=x onerror="advance()"> & \'quoted\'';s.match.players.f1.name=name;const h=harness(s),before=JSON.stringify(s);h.render();assert.match(h.get('matchday-selection').innerHTML,/&lt;img src=x onerror=&quot;advance\(\)&quot;&gt; &amp; &#39;quoted&#39;/);assert.doesNotMatch(h.get('matchday-selection').innerHTML,/<img src=x/);
+ const s=S.create(2015),name='<img src=x onerror="advance()"> & \'quoted\'';s.match.players.f1.name=name;const h=harness(s,{selected:'f1'}),before=JSON.stringify(s);h.render();assert.match(h.get('matchday-selection').innerHTML,/&lt;img src=x onerror=&quot;advance\(\)&quot;&gt; &amp; &#39;quoted&#39;/);assert.doesNotMatch(h.get('matchday-selection').innerHTML,/<img src=x/);
  h.context.selected='f1';h.render();assert.ok(h.get('matchday-selection').innerHTML.includes(escapeText(name)));assert.doesNotMatch(h.get('matchday-selection').innerHTML,/<img src=x/);unchanged(h,before);
 });
 
@@ -154,11 +154,11 @@ test('yellow cards and dismissals identify players in substitution choices and t
   {minute:14,team:1,id:opponents[0].id,card:'yellow',reason:'foul'},
   {minute:21,team:1,id:opponents[1].id,card:'red',reason:'direct-red'}
  ]};
- const h=harness(s);h.render();let html=h.get('matchday-selection').innerHTML;
- assert.match(html,/🟨 경고 1/);assert.match(html,/퇴장한 선수는 교체할 수 없습니다/);
- const dismissed=h.get('matchday-selection').querySelector('[data-matchday-player="d1"]');assert.ok(dismissed);assert.equal(dismissed.disabled,true);
+ const h=harness(s,{selected:'f1'});h.render();let html=h.get('matchday-selection').innerHTML;
+ assert.match(html,/🟨 경고 1/);h.context.selected='d1';h.render();html=h.get('matchday-selection').innerHTML;assert.match(html,/퇴장한 선수는 교체할 수 없습니다/);
+ assert.equal(require('./dist/matchday.js').read(s,'d1').substitution.suggestion,null);
  h.context.selected='f1';h.render();assert.match(h.get('matchday-selection').innerHTML,new RegExp(escapeText(s.match.players.f1.name)));assert.match(h.get('matchday-selection').innerHTML,/🟨 경고 1/);
- const host=h.element('opposition-report');host.hidden=false;h.context.Opposition=Opposition;
+ const host=h.element('opposition-report');host.hidden=false;h.context.Opposition=Opposition;h.context.Football=F;
  vm.runInContext(fs.readFileSync(path.join(__dirname,'dist','opposition-ui.js'),'utf8'),h.context,{filename:'opposition-ui.js'});
  h.context.renderOpponentReport();const report=host.innerHTML;
  assert.match(report,/🟨 경고 1/);assert.match(report,/🟥 퇴장/);assert.match(report,/opposition-dismissed/);

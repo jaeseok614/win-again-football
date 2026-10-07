@@ -23,7 +23,7 @@ test('league and European clubs have unique presentation names without changing 
  assert.equal(S.rawClub('norhaven').name,'노르헤이븐 시티');
  assert.equal(S.club('norhaven').name,'게이츠힐 FC');
  assert.equal(S.club('rosenholt').name,'몬치스타 시티');
- assert.equal(S.leagueClubs({league:{division:2}}).find(club=>club.id==='norhaven').name,'게이츠힐 FC');
+ assert.equal(S.leagueClubs({league:{division:5}}).find(club=>club.id==='norhaven').name,'게이츠힐 FC');
  assert.equal(U.rawClub('meridian').name,'메리디안 FC');
  assert.equal(U.club('meridian').name,'레알 마드리온');
  assert.equal(S.club('meridian').name,'레알 마드리온');
@@ -58,15 +58,15 @@ test('club presentation and opposition reports leave the campaign JSON, RNG and 
  assert.equal(s.match.homeName,S.rawClub(S.own).name);
  assert.equal(s.match.opponentName,raw.name);
  assert.equal(presented.id,raw.id);
- assert.notEqual(presented.name,raw.name);
- assert.deepEqual(profile,ratings(raw));
+ assert.equal(presented.name,S.club(raw.id).name);
+ assert.deepEqual(profile,O.rivalEffect(s,raw,O.competitionProfile(raw,s.league.division,'five-tier')).profile);
  S.club(S.own);S.club(opponentId);S.leagueClubs(s);S.standings(s);O.read(s);
  assert.equal(JSON.stringify(s),before);
  assert.equal(s.match.rng,rng);
  assert.equal(s.match.seed,seed);
  assert.deepEqual(s.match.opponent,profile);
  assert.ok(!before.includes(S.club(S.own).name));
- assert.ok(!before.includes(presented.name));
+ assert.ok(before.includes(raw.name));
  assert.deepEqual(S.restore(copy(s)),s);
 });
 

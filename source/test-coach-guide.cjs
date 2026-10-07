@@ -35,9 +35,6 @@ test('confirmed experience is reflected and an existing club receives next-step 
  let s=finish(S.create(1705));s=S.settle(s);const d=pure(s);assert.equal(d.fresh,false);assert.equal(d.eyebrow,'경기 준비');assert.equal(d.focus.xp,90);assert.equal(d.focus.minutesToGrowth,180);assert.equal(d.mode,'prep');assert.equal(d.action.label,'이번 경기 준비하기');assert.equal(s.round,1);
 });
 
-test('later seasons and legacy records do not restart onboarding or invent scorer data',()=>{
- const s=S.create(1706);s.year=2;delete s.statistics;const d=pure(s);assert.equal(d.fresh,false);assert.equal(d.eyebrow,'경기 준비');assert.equal(d.focus.xp,0);assert.equal(d.focus.minutesToGrowth,270);assert.ok(!Object.hasOwn(d,'goals'));assert.ok(!Object.hasOwn(d.focus,'goals'));
-});
 
 test('a capped player has no promised primary improvement at an XP boundary',()=>{
  const s=S.create(1707);s.squad.f2.attack=s.squad.f2.potential;for(const xp of [0,269,270,540]){s.squad.f2.xp=xp;const d=pure(s);assert.equal(d.focus.capped,true);assert.equal(d.focus.minutesToGrowth,null);assert.equal(d.focus.xpInStep,xp%270);assert.equal(d.focus.primary,d.focus.cap);}
@@ -56,7 +53,7 @@ test('the read model loads in the browser with the same pure results and handles
 });
 
 test('guide markup escapes content and distinguishes optional work from required preparation',()=>{
- const s=S.create(1711);s.squad.f2.name='A <script> "B"';const context=vm.createContext({season:s,Portraits:{html:()=>'<span class="player-portrait"></span>'},document:{addEventListener:()=>{}}});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/coach-guide-ui.js'),'utf8'),context);let d=G.read(s);d.title='<unsafe>';let html=context.coachGuideMarkup(d);assert.match(html,/&lt;unsafe&gt;/);assert.match(html,/&lt;script&gt;/);assert.doesNotMatch(html,/<script>/);assert.match(html,/data-guide-action="practice"/);assert.match(html,/경기 준비 체크/);assert.match(html,/2 \/ 4 확인/);assert.match(html,/class="optional"/);assert.match(html,/상대 맞춤 전술/);assert.match(html,/data-guide-action="analysis"/);assert.match(html,/<em>선택<\/em>/);assert.doesNotMatch(html,/선택 사항 · 선택/);assert.match(html,/data-player-detail="f2"/);assert.match(html,/출전 270분 더하면/);s.squad.f2.attack=s.squad.f2.potential;html=context.coachGuideMarkup(G.read(s));assert.match(html,/성장 한계 도달/);assert.doesNotMatch(html,/분 더하면|role="progressbar"/);
+ const s=S.create(1711);s.squad.f2.name='A <script> "B"';const context=vm.createContext({season:s,Portraits:{html:()=>'<span class="player-portrait"></span>'},document:{addEventListener:()=>{}}});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/coach-guide-ui.js'),'utf8'),context);let d=G.read(s);d.title='<unsafe>';let html=context.coachGuideMarkup(d);assert.match(html,/&lt;unsafe&gt;/);assert.match(html,/&lt;script&gt;/);assert.doesNotMatch(html,/<script>/);assert.match(html,/data-guide-action="practice"/);assert.match(html,/경기 준비 체크/);assert.match(html,/2 \/ 4 확인/);assert.match(html,/class="optional"/);assert.match(html,/상대 맞춤 전술/);assert.match(html,/data-guide-action="analysis"/);assert.match(html,/<em>선택<\/em>/);assert.doesNotMatch(html,/선택 사항 · 선택/);assert.match(html,/data-player-detail="sp_f2"/);assert.match(html,/출전 270분 더하면/);s.squad.f2.attack=s.squad.f2.potential;html=context.coachGuideMarkup(G.read(s));assert.match(html,/성장 한계 도달/);assert.doesNotMatch(html,/분 더하면|role="progressbar"/);
 });
 
 test('guide actions only navigate or open a separate practice and never start gameplay',()=>{

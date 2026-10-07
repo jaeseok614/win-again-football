@@ -11,7 +11,7 @@
   else if(finished)detail=(inside?(promotion?'승격에 성공했습니다.':'TOP 6 목표를 지켰습니다.'):(promotion?'이번 시즌 승격에 실패했습니다.':'TOP 6 목표에 미치지 못했습니다.'))+' 최종 '+me.rank+'위 · '+me.points+'점';
   else if(inside){const gap=Math.max(0,me.points-(rival?.points??0));detail='현재 '+me.rank+'위 · '+(promotion?'승격권 진입':'TOP 6 진입');if(rival)detail+=' · '+(promotion?'3위':'7위')+(gap?'보다 '+gap+'점 앞서고 있습니다.':'과 승점 동률입니다.');else detail+=' · '+me.points+'점';}
   else{const gap=Math.max(0,(line?.points??me.points)-me.points);detail='현재 '+me.rank+'위 · '+(promotion?'2위 승격선':'6위 목표선')+'까지 '+(gap?gap+'점':'승점 동률 · 골득실 추격');}
-  const relegation=division<5&&me.rank>=7;
+  const relegation=S.promotionRules(s).relegation>0&&me.rank>=S.promotionRules(s).relegationStart;
   if(relegation&&!finished)detail+=' · 현재 강등권';
   return {title,detail,played,total,rank:me.rank,points:me.points,targetRank,inside,finished,relegation};
  }
@@ -24,7 +24,7 @@
   if(!recent.length){headline=s.league.division===5?'첫 장 · 아직 아무것도 정해지지 않았다':'새 단계의 첫 장';copy='첫 경기 결과가 이 구단의 새 이야기를 엽니다. '+total+'경기 동안 선수단과 재정을 지키며 '+(s.league.division>1?'한 계단 위를 노리세요.':'1부의 목표를 노리세요.');}
   else if(s.round===total){headline=me.rank<=goal?(s.league.division>1?'승격 확정 · 다음 계단으로':'목표 달성 · 1부 무대에 남다'):(s.league.division>1?'승격 실패 · 다시 세울 계획':'목표 미달 · 다음 시즌 재도전');copy='최종 '+me.rank+'위 · '+me.points+'점 · 최근 '+form.length+'경기 '+wins+'승 '+draws+'무 '+losses+'패. 시즌 결산에서 구단의 다음 장을 직접 결정하세요.';}
   else if(me.rank<=goal){headline=s.league.division>1?'승격권을 지키는 중':'1부의 유럽권을 향해';copy='현재 '+me.rank+'위 · '+me.points+'점. 최근 '+form.length+'경기 '+wins+'승 '+draws+'무 '+losses+'패로, 이 흐름을 이어가면 다음 단계가 가까워집니다.';}
-  else if(s.league.division<5&&me.rank>=7){headline='강등권 탈출이 먼저다';copy='현재 '+me.rank+'위. 최근 '+form.length+'경기 '+wins+'승 '+draws+'무 '+losses+'패. 승격보다 안전한 순위와 선수단 회복을 먼저 챙겨야 합니다.';}
+  else if(S.promotionRules(s).relegation>0&&me.rank>=S.promotionRules(s).relegationStart){headline='강등권 탈출이 먼저다';copy='현재 '+me.rank+'위. 최근 '+form.length+'경기 '+wins+'승 '+draws+'무 '+losses+'패. 승격보다 안전한 순위와 선수단 회복을 먼저 챙겨야 합니다.';}
   else{headline=s.league.division>1?'승격선 바로 아래, 반격의 시점':'목표선 밖에서 다시 출발';copy='현재 '+me.rank+'위 · 승격선까지 '+gap+'점. 최근 '+form.length+'경기 '+wins+'승 '+draws+'무 '+losses+'패. 다음 경기에서 격차를 줄이세요.';}
   const rival=table.find(c=>c.rank===me.rank-1),behind=table.find(c=>c.rank===me.rank+1);
   return {headline,copy,form,wins,draws,losses,rank:me.rank,points:me.points,round:s.round,total,gap,toAbove:rival?Math.max(0,rival.points-me.points):null,aheadOf:behind?Math.max(0,me.points-behind.points):null};

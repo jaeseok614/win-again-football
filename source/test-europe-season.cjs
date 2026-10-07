@@ -10,13 +10,13 @@ function complete(s){while(s.match)s=play(s);return s;}
 function boost(s){for(const p of Object.values(s.squad)){for(const key of ['attack','defense','passing','speed','endurance','keeping'])p[key]=s.match.players[p.id][key]=99;p.potential=s.match.players[p.id].potential=99;s.career.baselines[p.identity]=99;}return s;}
 function advance(match,minute){while(match.minute<minute){if(!F.running(match))F.begin(match);match.paused=false;F.tick(match);}return match;}
 function rejectAtomic(s,fn){const before=JSON.stringify(s);assert.throws(()=>fn(s));assert.equal(JSON.stringify(s),before);}
-const lower=complete(boost(S.create(121))),upperStart=S.nextSeason(lower),upperEnd=complete(copy(upperStart)),qualified=S.nextSeason(upperEnd);
+const qualified=require('./current-test-helper.cjs').qualify(),upperEnd=complete(copy(qualified)),lower=complete(boost(S.create(121))),upperStart=S.nextSeason(lower);
 function firstEurope(s=copy(qualified)){while(s.competition!=='europe'){assert(s.match);s=play(s);}return s;}
 function ownEurope(s){return s.europe.results.filter(r=>r.home===S.own||r.away===S.own);}
 
 test('European qualification follows an actual previous top division finish and keeps international clubs separate',()=>{
- assert.equal(S.create(121).europe.enabled,false);assert.equal(S.movement(lower).rank,1);assert.equal(upperStart.league.division,1);assert.equal(upperStart.europe.enabled,false);
- assert.equal(S.movement(upperEnd).rank,1);assert.equal(qualified.year,3);assert.equal(qualified.europe.enabled,true);assert.deepEqual(qualified.europe.qualification,{year:2,division:1,rank:1});assert.deepEqual(S.restore(copy(qualified)),qualified);
+ assert.equal(S.create(121).europe.enabled,false);assert.equal(S.movement(lower).rank,1);assert.equal(upperStart.league.division,4);assert.equal(upperStart.europe.enabled,false);
+ assert.ok(S.movement(upperEnd).rank<=6);assert.equal(qualified.year,qualified.history.length+1);assert.equal(qualified.europe.enabled,true);assert.deepEqual(qualified.europe.qualification,{year:qualified.year-1,division:1,rank:qualified.history.at(-1).rank});assert.deepEqual(S.restore(copy(qualified)),qualified);
  assert.equal(S.clubs.length,116);for(const club of U.clubs){assert.equal(S.rawClub(club.id),club);assert(!S.clubs.some(c=>c.id===club.id));assert(!S.leagueClubs(qualified).some(c=>c.id===club.id));}
 });
 
@@ -28,7 +28,7 @@ test('six group matchdays and knockout gates preserve league rounds and give the
   if(competition!=='league'){assert.equal(s.round,round);assert.deepEqual(s.results,results);}else assert.equal(s.round,round+1);
   assert.deepEqual(S.restore(copy(s)),s);
  }
- assert.equal(events.filter(e=>e.competition==='league').length,14);assert.equal(s.results.length,56);assert.equal(s.europe.stage,8);assert.equal(s.europe.results.length,27);assert.equal(S.ready(s),true);
+ assert.equal(events.filter(e=>e.competition==='league').length,S.roundCount(s));assert.equal(s.results.length,S.roundCount(s)*S.leagueClubs(s).length/2);assert.equal(s.europe.stage,8);assert.equal(s.europe.results.length,27);assert.equal(S.ready(s),true);
  const european=events.filter(e=>e.competition==='europe');assert.deepEqual(european.slice(0,6).map(e=>e.stage),[0,1,2,3,4,5]);assert.deepEqual(european.slice(0,6).map(e=>e.round),[2,4,6,8,10,12]);
  for(const week of [4,8,12]){const sameWeek=events.filter(e=>e.round===week&&e.competition!=='league');const cup=sameWeek.findIndex(e=>e.competition==='cup'),europe=sameWeek.findIndex(e=>e.competition==='europe');if(cup!==-1&&europe!==-1)assert(cup<europe);}
  assert(U.clubs.some(c=>c.id===s.europe.champion)||s.europe.champion===S.own);
@@ -68,7 +68,7 @@ test('older qualifying saves stay inactive this season and preserve their exact 
 });
 
 test('the final international fixture blocks next year until confirmed and records its champion once',()=>{
- let s=boost(S.create(43));F.setFormation(s.match,'433');F.setTactic(s.match,'press');s=S.nextSeason(complete(s));s=S.nextSeason(complete(s));assert(s.europe.enabled);
+ let s=boost(S.create(43));F.setFormation(s.match,'433');F.setTactic(s.match,'press');s=require('./current-test-helper.cjs').qualify();assert(s.europe.enabled);
  let finalSeen=false;while(s.match){if(s.competition==='europe'&&s.europe.stage===7){finalSeen=true;assert.equal(s.round,14);rejectAtomic(s,x=>S.nextSeason(x));finish(s.match);const resume=S.restore(copy(s));assert.deepEqual(resume.match,s.match);const a=S.settle(s),b=S.settle(resume);assert.deepEqual(a,b);s=a;}else s=play(s);}
  assert(finalSeen,'the actual seeded campaign must reach the final');assert(S.ready(s));const next=S.nextSeason(s);assert.equal(next.history.at(-1).europeChampion,s.europe.champion);assert.equal(next.finance.balance,s.finance.balance);assert.equal(next.europe.stage,0);assert.deepEqual(next.europe.results,[]);assert.deepEqual(S.restore(copy(next)),next);
  const bad=copy(next);bad.history.at(-1).europeChampion='unknown';assert.throws(()=>S.restore(bad));

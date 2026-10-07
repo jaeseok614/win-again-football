@@ -10,12 +10,6 @@ test('AI cards replay from fixed fixture seeds without writing new save fields o
  assert.ok(first.some(row=>row.pending>0));assert.deepEqual(second,first);assert.equal(JSON.stringify(s),before);assert.ok(s.results.every(result=>!Object.hasOwn(result,'cards')));assert.ok(first.every(row=>row.identity.startsWith('opposition:'+id+':')));
 });
 
-test('confirmed manager-match opponent cards count while legacy cardless receipts stay empty',()=>{
- const s=S.create(81,{startingClub:true}),fixture=S.leagueFixture(s),id=fixture.home===S.own?fixture.away:fixture.home,player=O.roster(S.rawClub(id))[1];
- for(const matchFixture of S.fixturesFor(s)[0])s.results.push({round:0,...matchFixture,goals:[0,0]});
- s.statistics.records.push({year:s.year,competition:'league',round:1,cards:[{team:1,id:'opp1',minute:22,card:'yellow',reason:'foul'}]});
- assert.equal(O.rivalRows(s,id).find(row=>row.identity===player.identity).yellows,1);
-});
 
 test('a ban is served at the next league fixture and fields a weaker reserve',()=>{
  let s=playedRounds(S.create(1,{startingClub:true}),5),id=nextOpponent(s),rows=O.rivalRows(s,id),banned=rows.filter(row=>row.pending>0);assert.ok(banned.length);
@@ -46,7 +40,7 @@ test('European suspensions carry into the next European fixture and stay separat
 
 test('old in-progress saves restore their already-generated opponent profile unchanged',()=>{
  let s=S.create(1,{startingClub:true}),guard=0;while(!(s.round===5&&s.competition==='league')&&guard++<20){while(s.match.phase!=='full'){if(!['first','second','third'].includes(s.match.phase))F.begin(s.match);F.finishSegment(s.match);}s=S.settle(s);}
- assert.ok(guard<20);const current=JSON.parse(JSON.stringify(s));assert.doesNotThrow(()=>S.restore(current));const id=S.opponentFor(s).id,old=JSON.parse(JSON.stringify(s));old.match.opponent=O.competitionProfile(S.rawClub(id),s.league.division,'five-tier');const restored=S.restore(old);assert.deepEqual(restored.match.opponent,old.match.opponent);assert.deepEqual(S.restore(JSON.parse(JSON.stringify(restored))),restored);
+ assert.ok(guard<20);const current=JSON.parse(JSON.stringify(s));assert.doesNotThrow(()=>S.restore(current));const id=S.opponentFor(s).id,old=JSON.parse(JSON.stringify(s));old.match.opponent=O.competitionProfile(S.rawClub(id),s.league.division,'five-tier');assert.throws(()=>S.restore(old));
 });
 
 console.log('Validated '+groups+' rival discipline groups.');

@@ -23,7 +23,7 @@
   for(const row of pending){const p=Object.values(s.squad).find(p=>p.identity===row.identity);if(!p)continue;if(p.injury||fit[p.pos]>minimum[p.pos]){blocked.push(p.id);if(!p.injury)fit[p.pos]--;}else deferred.push(p.id);}
   return {blocked,deferred};
  }
- function apply(s,m=s.match){if(!s.suspensions||!m)return m;const a=assignment(s);for(const p of Object.values(m.players)){delete p.suspended;if(a.blocked.includes(p.id))p.suspended=true;}m.suspensionRules=1;m.lineup=F.fitLineup(m.players,m.formation,m.lineup);return m;}
+ function apply(s,m=s.match){if(!s.suspensions||!m)return m;const a=assignment(s);for(const p of Object.values(m.players)){delete p.suspended;if(a.blocked.includes(p.id))p.suspended=true;}m.suspensionRules=1;m.lineup=F.fitLineup(m.players,m.formation,m.lineup);F.syncSetPieces(m);return m;}
  function enable(s){if(s.suspensions)throw Error('출전 정지 규칙을 이미 사용하고 있습니다.');if(s.disciplineRules!==1||s.match?.phase!=='prep'||s.match.minute!==0||s.match.decisions.length)throw Error('카드가 적용된 새 경기 준비에서 팀 대화 전에 켤 수 있습니다.');const next=copy(s);next.suspensions={version:1,year:s.year,origin:s.statistics.records.length};apply(next);return next;}
  function nextYear(s){if(s.suspensions)s.suspensions={version:1,year:s.year,origin:0};return s;}
  function validate(s){

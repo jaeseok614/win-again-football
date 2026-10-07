@@ -40,7 +40,7 @@ test('invalid players, unknown focuses and a replaced identity fail atomically',
 
 test('match segments, halftime, full time and Cup preparation reject training atomically',()=>{
  const s=S.create(1110);F.begin(s.match);rejectAtomic(s,x=>T.train(x,'f3','technique'));F.finishSegment(s.match);assert.equal(s.match.phase,'half');rejectAtomic(s,x=>T.train(x,'f3','recovery'));F.begin(s.match);F.finishSegment(s.match);assert.equal(s.match.phase,'late');rejectAtomic(s,x=>T.train(x,'f3','pace'));finish(s.match);rejectAtomic(s,x=>T.train(x,'f3','fitness'));
- let cup=S.create(1111);for(let i=0;i<4;i++)cup=play(cup);assert.equal(cup.competition,'cup');rejectAtomic(cup,x=>T.train(x,'f3','recovery'));assert.match(T.preview(cup,'f3','technique').reason,/컵/);
+ let cup=S.create(1111);while(cup.competition!=='cup')cup=play(cup);assert.equal(cup.competition,'cup');rejectAtomic(cup,x=>T.train(x,'f3','recovery'));assert.match(T.preview(cup,'f3','technique').reason,/컵/);
 });
 
 test('injured, exhausted and capped players retain every stat on rejected sessions',()=>{
@@ -64,6 +64,6 @@ test('new seasons retain trained player skills while resetting the common weekly
 });
 
 test('the training model works as a browser script without CommonJS and leaves the season schema intact',()=>{
- const context=vm.createContext({Football:F});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/training.js'),'utf8'),context);assert.ok(context.Training);const s=S.create(1119),keys=Object.keys(s);context.Training.train(s,'f3','technique');assert.deepEqual(Object.keys(s),keys);assert.equal(s.version,10);assert.equal(s.match.version,5);assert.equal(s.squad.f3.attack,F.roster.find(p=>p.id==='f3').attack+2);assert.doesNotThrow(()=>S.restore(copy(s)));
+ const context=vm.createContext({Football:F});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/training.js'),'utf8'),context);assert.ok(context.Training);const s=S.create(1119),keys=Object.keys(s);context.Training.train(s,'f3','technique');assert.deepEqual(Object.keys(s),keys);assert.equal(s.version,10);assert.equal(s.match.version,10);assert.equal(s.squad.f3.attack,F.startingRoster.find(p=>p.id==='f3').attack+2);assert.doesNotThrow(()=>S.restore(copy(s)));
 });
 console.log('Validated '+groups+' individual training groups, including shared weekly actions, identity growth and persistence.');

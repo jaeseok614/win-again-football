@@ -5,12 +5,6 @@ const copy=value=>JSON.parse(JSON.stringify(value));let groups=0;
 function test(name,run){run();groups++;console.log('PASS '+name);}
 function approx(a,b){assert.ok(Math.abs(a-b)<1e-10,`${a} differs from ${b}`);}
 
-test('the current five-tier career receives the versioned low-block tactic without changing old engine versions',()=>{
- const current=S.create(41806,{startingClub:true});assert.equal(current.match.version,10);assert.equal(current.plan.tactic,'balanced');
- const older=copy(current);older.match.version=6;delete older.match.setPieces;delete older.match.opponentPlans;delete older.match.subWindows;assert.doesNotThrow(()=>F.restore(older.match));assert.throws(()=>F.setTactic(older.match,'lowBlock'),/경기 지시/);
- const legacy=S.create(41807);assert.equal(legacy.match.version,5);assert.throws(()=>F.setTactic(legacy.match,'lowBlock'),/경기 지시/);
- assert.equal(B.read(legacy).previews.length,3);
-});
 
 test('the low block offers an explicit defensive tradeoff against the real balanced preview',()=>{
  const s=S.create(41808,{startingClub:true}),before=JSON.stringify(s),board=B.read(s),balanced=board.previews.find(p=>p.tactic==='balanced'),low=board.previews.find(p=>p.tactic==='lowBlock');

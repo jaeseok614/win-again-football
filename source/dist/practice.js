@@ -5,13 +5,14 @@
   Object.freeze({id:'comeback',title:'15분의 승부',startMinute:75,objective:'한 골 뒤진 경기를 따라잡기'}),
   Object.freeze({id:'protect',title:'마지막 10분',startMinute:80,objective:'한 골 차 리드 지키기'})
  ]);
- const seeds={comeback:32,protect:72},copy=value=>JSON.parse(JSON.stringify(value)),equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
- const tacticText={balanced:{label:'균형',description:'공격과 수비의 균형을 유지해요.'},press:{label:'전방 압박',description:'공격 기회를 늘리는 대신 상대 공격 기회와 체력 소모도 늘어요.'},counter:{label:'빠른 역습',description:'공격 기회와 상대 기회가 함께 줄어요. 공격수가 더 빠르면 역습 슈팅이 유리해요.'}};
+ const seeds={comeback:29,protect:16},starts=new Map(),copy=value=>JSON.parse(JSON.stringify(value)),equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+ const tacticText={balanced:{label:'균형',description:'공격과 수비의 균형을 유지해요.'},press:{label:'전방 압박',description:'공격 기회를 늘리는 대신 상대 공격 기회와 체력 소모도 늘어요.'},lowBlock:{label:'로우 블록',description:'수비 간격을 좁혀 상대 기회를 줄여요. 우리 공격 기회도 줄어듭니다.'},counter:{label:'빠른 역습',description:'공격 기회와 상대 기회가 함께 줄어요. 공격수가 더 빠르면 역습 슈팅이 유리해요.'}};
  function scenarioFor(id){return scenarios.find(scenario=>scenario.id===id)||null;}
  function startingMatch(scenario){
-  const match=F.create(seeds[scenario.id]);
+  if(starts.has(scenario.id))return copy(starts.get(scenario.id));
+  const match=F.create(seeds[scenario.id],{players:Object.fromEntries(F.startingRoster.map(p=>[p.id,p])),homeName:'토투넘',opponentName:'팔켄루 04'});
   while(match.minute<scenario.startMinute){if(!F.running(match))F.begin(match);F.tick(match);}
-  match.paused=true;return match;
+  match.paused=true;starts.set(scenario.id,copy(match));return match;
  }
  function metadata(match){return {startMinute:match.minute,startScore:[...match.score],startChances:[...match.chances],startShots:[...match.shots],startXg:[...match.xg],startEnergy:Object.fromEntries(Object.values(match.players).map(player=>[player.id,player.energy])),startPlayerMinutes:Object.fromEntries(Object.values(match.players).map(player=>[player.id,player.minutes])),startDecisionCount:match.decisions.length,startSubs:match.subs};}
  function create(id){

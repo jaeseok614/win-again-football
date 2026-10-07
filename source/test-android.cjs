@@ -33,7 +33,7 @@ test('WebView restricts local origin, untrusted navigation, file access, and bri
  assert.match(java,/WebViewAssetLoader/);assert.match(java,/setAllowFileAccess\(false\)/);assert.match(java,/setAllowContentAccess\(false\)/);
  assert.doesNotMatch(java,/addJavascriptInterface/);assert.match(java,/Collections\.singleton\(GAME_ORIGIN\)/);assert.match(java,/!isMainFrame/);
  assert.match(java,/request\.hasGesture\(\)/);assert.match(java,/Intent\.ACTION_CREATE_DOCUMENT/);assert.match(java,/Intent\.ACTION_OPEN_DOCUMENT/);
- assert.match(java,/MAX_FILE_BYTES = 2 \* 1024 \* 1024/);assert.match(java,/onRenderProcessGone/);
+ assert.match(java,/MAX_FILE_BYTES = 16 \* 1024 \* 1024/);assert.match(java,/onRenderProcessGone/);
  assert.match(java,/!request\.isForMainFrame\(\) && isInlineImage\(uri\)/);
  for(const mime of ['png','webp','jpeg'])assert.ok(java.includes('data:image/'+mime+';base64,'));
  assert.doesNotMatch(java,/data:text\/html|data:image\/svg/);
@@ -69,7 +69,7 @@ test('Android pause saves the campaign without automatically resuming play',()=>
  const cancel=context.WinAgainAndroid.exportFile(text,'cancel.json');
  context.WinAgainNative.onmessage({data:JSON.stringify({id:posts[1].id,status:'cancelled'})});assert.equal((await cancel).status,'cancelled');
  await assert.rejects(context.WinAgainAndroid.exportFile(text,'../../escape.json'),/형식/);
- await assert.rejects(context.WinAgainAndroid.exportFile('가'.repeat(800000),'large.json'),/크기/);
+ await assert.rejects(context.WinAgainAndroid.exportFile('가'.repeat(Math.floor(16*1024*1024/3)+1),'large.json'),/크기/);
  console.log('PASS cancelled export, traversal filename and oversized UTF8 export are handled');
  const recovered=context.exportRecoveryOriginal();assert.equal(posts[2].text,'malformed original bytes');
  context.WinAgainNative.onmessage({data:JSON.stringify({id:posts[2].id,status:'error',message:'disk failed'})});assert.equal(await recovered,null);assert.equal(context.portabilityError,'disk failed');

@@ -69,7 +69,7 @@
  }
  function applyRotation(s,fingerprint){
   const plan=rotationPlan(s);if(typeof fingerprint!=='string'||plan.fingerprint!==fingerprint)throw Error('선수 상태나 선발이 바뀌었습니다. 다시 미리 확인하세요.');
-  s.match.lineup=[...plan.after];s.plan={...s.plan,formation:s.match.formation,lineup:[...plan.after]};return plan;
+  s.match.lineup=[...plan.after];F.syncSetPieces(s.match);s.plan={...s.plan,formation:s.match.formation,lineup:[...plan.after]};return plan;
  }
  function rotate(s){return applyRotation(s,rotationPlan(s).fingerprint);}
  function restore(s,rawHealth,rawSquad){

@@ -47,7 +47,7 @@
   return list.sort((a,b)=>b.order-a.order||b.id.localeCompare(a.id)).slice(0,12).map(({order,...article})=>article);
  }
  function validate(s){
-  const life=s.clubLife;if(!exact(life,['version','year','originLedger','press','news'])||life.version!==1||life.year!==s.year||!Number.isInteger(life.originLedger)||life.originLedger<0||life.originLedger>s.finance.ledger.length||s.finance.ledger.slice(life.originLedger).some(entry=>entry.year!==s.year)||!Array.isArray(life.press)||life.press.length>50||!Array.isArray(life.news)||life.news.length>12)fail();
+  const life=s.clubLife;if(!exact(life,['version','year','originLedger','press','news'])||life.version!==1||life.year!==s.year||!Number.isInteger(life.originLedger)||life.originLedger<0||life.originLedger>s.finance.ledger.length||s.finance.ledger.slice(life.originLedger).some(entry=>entry.year!==s.year)||!Array.isArray(life.press)||life.press.length>2*((root.Season?.roundCount(s)??46)+11)||!Array.isArray(life.news)||life.news.length>12)fail();
   const settled=new Map(matchEntries(s).map(entry=>[entry.id,settledSpec(s,entry)])),current=currentSpec(s,{availableOnly:false}),seen=new Set();if(current)settled.set(current.id,current);
   for(const record of life.press){
    if(!exact(record,['id','phase','choice','year','competition','round','stage','home','away','score','winner','penalties'])||!['before','after'].includes(record.phase)||!pressChoices.some(option=>option.id===record.choice)||seen.has(record.id+'-'+record.phase))fail();seen.add(record.id+'-'+record.phase);

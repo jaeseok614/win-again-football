@@ -67,7 +67,7 @@ import java.util.concurrent.Executors;
 public final class MainActivity extends ComponentActivity {
     static final String GAME_ORIGIN = "https://appassets.androidplatform.net";
     static final String GAME_URL = GAME_ORIGIN + "/assets/game/index.html";
-    static final int MAX_FILE_BYTES = 2 * 1024 * 1024;
+    static final int MAX_FILE_BYTES = 16 * 1024 * 1024;
     private final ExecutorService io = Executors.newSingleThreadExecutor();
     private final List<String> consoleErrors = new CopyOnWriteArrayList<>();
     private FrameLayout root;
@@ -115,7 +115,7 @@ public final class MainActivity extends ComponentActivity {
                     if (destroyed) return;
                     loading.setVisibility(View.GONE);
                     callback.onReceiveValue(accepted ? new Uri[]{uri} : null);
-                    if (!accepted) toast("저장 파일은 2MB 이하만 불러올 수 있어요.");
+                    if (!accepted) toast("저장 파일은 16MiB 이하만 불러올 수 있어요.");
                 });
             });
         });

@@ -2,13 +2,13 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),F=require('./dist/engine.js'),Practice=require('./dist/practice.js');
 const copy=value=>JSON.parse(JSON.stringify(value));let checks=0;
 function test(label,fn){fn();checks++;console.log('PASS '+label);}
-function natural(seed,minute){const match=F.create(seed);while(match.minute<minute){if(!F.running(match))F.begin(match);F.tick(match);}match.paused=true;return match;}
+function natural(seed,minute){const match=F.create(seed,{players:Object.fromEntries(F.startingRoster.map(p=>[p.id,p])),homeName:'토투넘',opponentName:'팔켄루 04'});while(match.minute<minute){if(!F.running(match))F.begin(match);F.tick(match);}match.paused=true;return match;}
 function advance(session,minute){const match=session.match;while(match.minute<minute){if(!F.running(match))F.begin(match);match.paused=false;F.tick(match);}return session;}
 function complete(session,tactic){F.setTactic(session.match,tactic);advance(session,90);return Practice.summary(session);}
 
 test('two practice scenarios reach their starting situations through unmodified normal simulation',()=>{
  assert.deepEqual(Practice.scenarios.map(s=>[s.id,s.title,s.startMinute]),[['comeback','15분의 승부',75],['protect','마지막 10분',80]]);
- for(const [id,seed,minute,score] of [['comeback',32,75,[0,1]],['protect',72,80,[1,0]]]){const session=Practice.create(id);assert.deepEqual(session.match,natural(seed,minute));assert.deepEqual(session.startScore,score);assert.equal(session.startMinute,minute);assert.equal(session.match.paused,true);assert.equal(session.match.phase,'third');assert.equal(session.match.subs,0);assert.equal(session.match.players.f1.minutes,minute);assert.equal(Object.values(session.match.players).reduce((sum,p)=>sum+p.minutes,0),minute*11);assert.deepEqual(F.restore(session.match),session.match);assert.equal(Practice.read(session).valid,true);}
+ for(const [id,seed,minute,score] of [['comeback',29,75,[0,1]],['protect',16,80,[2,1]]]){const session=Practice.create(id);assert.deepEqual(session.match,natural(seed,minute));assert.deepEqual(session.startScore,score);assert.equal(session.startMinute,minute);assert.equal(session.match.paused,true);assert.equal(session.match.phase,'third');assert.equal(session.match.subs,0);assert.equal(session.match.players.f1.minutes,minute);assert.equal(Object.values(session.match.players).reduce((sum,p)=>sum+p.minutes,0),minute*11);assert.deepEqual(F.restore(session.match),session.match);assert.equal(Practice.read(session).valid,true);}
  assert.throws(()=>Practice.create('other'),/연습 경기/);
 });
 
@@ -21,13 +21,13 @@ test('the same practice can be replayed with exactly the same team, seed and sta
 });
 
 test('all three tactics complete each objective from real final scores without a victory guarantee',()=>{
- const outcomes={comeback:{balanced:[[0,1],false],press:[[1,1],true],counter:[[0,1],false]},protect:{balanced:[[1,1],false],press:[[1,1],false],counter:[[1,0],true]}};
+ const outcomes={comeback:{balanced:[[0,1],false],press:[[1,1],true],counter:[[0,1],false]},protect:{balanced:[[2,2],false],press:[[2,2],false],counter:[[2,1],true]}};
  for(const scenario of Practice.scenarios)for(const tactic of ['balanced','press','counter']){const session=Practice.create(scenario.id),summary=complete(session,tactic),[score,achieved]=outcomes[scenario.id][tactic];assert.equal(summary.valid,true);assert.equal(summary.status,'fulltime');assert.equal(summary.minute,90);assert.equal(summary.fulltime,true);assert.equal(summary.remainingMinutes,0);assert.deepEqual(summary.score,score);assert.equal(summary.objectiveAchieved,achieved);assert.deepEqual(F.restore(session.match),session.match);assert.deepEqual(Practice.summary(session),summary);}
 });
 
 test('tactics and substitutions at the practice start preserve pause, time, RNG and existing history',()=>{
  for(const scenario of Practice.scenarios){const session=Practice.create(scenario.id),before=copy(session.match);F.setTactic(session.match,'press');F.swap(session.match,'f1','f3');F.setTactic(session.match,'counter');assert.equal(session.match.minute,before.minute);assert.equal(session.match.paused,true);assert.equal(session.match.rng,before.rng);assert.deepEqual(session.match.logs.slice(0,before.logs.length),before.logs);assert.deepEqual(session.match.players,before.players);assert.deepEqual(session.match.score,before.score);assert.equal(session.match.segments.at(-1).start,scenario.startMinute);assert.equal(session.match.segments.at(-1).end,null);
-  const summary=Practice.read(session);assert.equal(summary.valid,true);assert.equal(summary.status,'ready');assert.equal(summary.objectiveAchieved,null);assert.equal(summary.subsUsed,1);assert.deepEqual(summary.decisions.map(d=>[d.minute,d.type]),[[scenario.startMinute,'tactic'],[scenario.startMinute,'sub'],[scenario.startMinute,'tactic']]);assert.equal(summary.decisions[0].toLabel,'전방 압박');assert.equal(summary.decisions[1].outIdentity,'f1');assert.equal(summary.decisions[1].inIdentity,'f3');assert.equal(summary.decisions[1].outName,session.match.players.f1.name);assert.equal(summary.tactic.id,'counter');assert.match(summary.tactic.description,/상대 기회/);assert.deepEqual(summary.events,[]);
+  const summary=Practice.read(session);assert.equal(summary.valid,true);assert.equal(summary.status,'ready');assert.equal(summary.objectiveAchieved,null);assert.equal(summary.subsUsed,1);assert.deepEqual(summary.decisions.map(d=>[d.minute,d.type]),[[scenario.startMinute,'tactic'],[scenario.startMinute,'sub'],[scenario.startMinute,'tactic']]);assert.equal(summary.decisions[0].toLabel,'전방 압박');assert.equal(summary.decisions[1].outIdentity,'sp_f1');assert.equal(summary.decisions[1].inIdentity,'sp_f3');assert.equal(summary.decisions[1].outName,session.match.players.f1.name);assert.equal(summary.tactic.id,'counter');assert.match(summary.tactic.description,/상대 기회/);assert.deepEqual(summary.events,[]);
  }
 });
 
@@ -65,7 +65,7 @@ test('invalid scenarios, changed start snapshots and foreign or malformed matche
 });
 
 test('practice sessions stay independent of campaign state, transfers, economy and prior attempts',()=>{
- const campaign={seed:123,round:12,cash:480000,squad:{f1:{identity:'t_f1',attack:99,energy:9}},match:continuousOtherMatch()};const before=JSON.stringify(campaign),session=Practice.create('protect');F.swap(session.match,'f1','f3');F.setTactic(session.match,'counter');advance(session,90);assert.equal(Practice.read(session).valid,true);assert.equal(JSON.stringify(campaign),before);assert.equal(session.match.players.f1.identity,'f1');assert.ok(!Object.hasOwn(session,'season'));assert.ok(!Object.hasOwn(session,'cash'));assert.ok(!Object.hasOwn(Practice,'settle'));assert.deepEqual(Practice.create('protect').match,natural(72,80));
+ const campaign={seed:123,round:12,cash:480000,squad:{f1:{identity:'t_f1',attack:99,energy:9}},match:continuousOtherMatch()};const before=JSON.stringify(campaign),session=Practice.create('protect');F.swap(session.match,'f1','f3');F.setTactic(session.match,'counter');advance(session,90);assert.equal(Practice.read(session).valid,true);assert.equal(JSON.stringify(campaign),before);assert.equal(session.match.players.f1.identity,'sp_f1');assert.ok(!Object.hasOwn(session,'season'));assert.ok(!Object.hasOwn(session,'cash'));assert.ok(!Object.hasOwn(Practice,'settle'));assert.deepEqual(Practice.create('protect').match,natural(16,80));
  const source=fs.readFileSync(path.join(__dirname,'dist/practice.js'),'utf8');assert.ok(!/require\(['"]\.\/(?:season|economy|career|statistics|health)\.js/.test(source));
 });
 function continuousOtherMatch(){const match=F.create(123);F.begin(match);for(let i=0;i<4;i++)F.tick(match);F.setTactic(match,'press');return match;}
