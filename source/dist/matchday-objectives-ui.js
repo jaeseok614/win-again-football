@@ -1,3 +1,8 @@
+function matchdayChallengeMarkup(d){
+ if(!d?.valid)return '';
+ const labels={waiting:'킥오프 대기',holding:d.pending?'현재 충족':'유지 중',missed:'목표 초과',met:'현재 충족',working:'진행 중'},esc=escapeText;
+ return '<details class="live-objectives" aria-label="이번 경기 도전 진행 상황"><summary><span><small>MATCHDAY CHALLENGE</small><b>이번 경기 3칸 도전</b></span><strong>'+d.minute+'′ · '+(d.prep?'경기 준비':d.pending?'결과 확정 대기':'현재 '+d.met+' / 3')+'</strong></summary><ol>'+d.cards.map(card=>'<li class="objective-'+card.status+'"><div><b>'+esc(card.title)+'</b><span>'+labels[card.status]+'</span></div><p>'+esc(card.evidence)+'</p><small>'+esc(card.hint)+'</small></li>').join('')+'</ol><p class="live-objective-note">'+(d.prep?'선택 도전입니다. 경기 중 기록을 여기서 확인할 수 있습니다.':d.pending?'경기는 끝났지만 아직 휘장을 받지 않았습니다. 결과를 확정한 뒤 감독실에 반영합니다.':'실점 목표는 종료 전까지 바뀔 수 있습니다. 휘장은 경기 결과를 확정한 뒤 판정합니다.')+' 선수 능력치와 자금은 바뀌지 않습니다.</p></details>';
+}
 function renderMatchdayObjectives(){
  if(view!=='club')return;
  const host=$('matchday-objectives');if(!host)return;
