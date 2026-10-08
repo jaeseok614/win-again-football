@@ -75,7 +75,7 @@ function harness(config = {}, shared = storage()) {
     importScripts: name => {
       assert.equal(name, './cache-assets.js');
       if (config.importFail) throw new Error('asset-import-failed');
-      self.WIN_AGAIN_ASSETS = config.assets ?? ['./app.js?v=22', './style.css?v=22', './assets/player-faces-v13.png'];
+      self.WIN_AGAIN_ASSETS = config.assets ?? ['./app.js?v=22', './style.css?v=22', './assets/player-faces-v16.webp', './assets/player-faces-v17.webp?v=17'];
       self.WIN_AGAIN_CACHE_REVISION = config.revision || 'release22';
       self.WIN_AGAIN_INLINE_SHELL = config.inline === true;
       self.WIN_AGAIN_INLINE_SHELL_HASH = Object.hasOwn(config, 'inlineHash') ? config.inlineHash : inlineHash(config.html || defaultHTML);
@@ -124,8 +124,9 @@ function readPNG(file) {
 
 (async () => {
   await test('manifest preserves relative installation and the long Korean title with recognizable mask-safe football icons', async () => {
-    assert.equal(manifest.name, '눈 떠보니 5부 리그 감독이었다! 이번 생엔 우승한다'); assert.equal(manifest.short_name, '이번 생엔 우승한다');
-    assert.equal(Array.from(manifest.name).length, 29);
+    assert.equal(manifest.name, '눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기'); assert.ok([...manifest.name].length<=30); assert.equal(manifest.short_name, '5부 감독 귀환기');
+    assert.equal(Array.from(manifest.name).length, 26);
+    const appHtml=fs.readFileSync(path.join(dir,'index.html'),'utf8');assert.match(appHtml,/<title>눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기<\/title>/);assert.match(appHtml,/강등된 토투넘, 출발선은 잉글랜드 5부/);assert.match(appHtml,/네 번의 승격/);
     for (const key of ['id', 'scope', 'start_url']) assert.equal(manifest[key], './');
     assert.equal(manifest.display, 'standalone'); assert.equal(manifest.theme_color, '#0c0e12');
     assert.equal(manifest.background_color, '#0c0e12');
@@ -157,9 +158,12 @@ function readPNG(file) {
     assert(h.urls.includes(absolute('./app.js?v=22')));
     assert(!h.urls.includes(absolute('./assets/stadium-v10.png')));
     assert.equal(h.messages.length, 2); assert(h.messages.every(x => x.message.type === 'WIN_AGAIN_PWA_READY'));
-    const versioned = harness({ assets: ['./app.js?v=22', './style.css?v=22', './assets/player-faces-v13.png?v=13', './assets/stadium-v10.png?v=10'] });
+    const versioned = harness({ assets: ['./app.js?v=22', './style.css?v=22', './assets/player-faces-v16.webp?v=16', './assets/player-faces-v17.webp?v=17', './assets/player-faces-v18.webp?v=18', './assets/club-growth-v1.webp?v=1', './assets/stadium-v10.png?v=10'] });
     await versioned.event('install');
-    assert(versioned.urls.includes(absolute('./assets/player-faces-v13.png?v=13')));
+    assert(versioned.urls.includes(absolute('./assets/player-faces-v16.webp?v=16')));
+    assert(versioned.urls.includes(absolute('./assets/player-faces-v17.webp?v=17')));
+    assert(versioned.urls.includes(absolute('./assets/player-faces-v18.webp?v=18')));
+    assert(versioned.urls.includes(absolute('./assets/club-growth-v1.webp?v=1')));
     assert(versioned.urls.includes(absolute('./assets/stadium-v10.png?v=10')));
   });
   await test('compiled public shell installs without absent original game images or external scripts', async () => {
@@ -276,7 +280,7 @@ function readPNG(file) {
   });
   await test('invalid or unavailable build asset lists cannot install or fetch unintended content', async () => {
     const invalid = [{ importFail: true }, { assets: [] }, { assets: ['./qa-v22-app.js?v=22'] },
-      { assets: ['./app.js?v=21'] }, { assets: ['./save.json'] }, { assets: ['https://elsewhere.test/app.js?v=22'] },
+      { assets: ['./app.js?v=not-a-version'] }, { assets: ['./save.json'] }, { assets: ['https://elsewhere.test/app.js?v=22'] },
       { assets: ['../app.js?v=22'] }, { assets: ['./auth/secret.js?v=22'] }, { assets: ['./assets/private.json'] }];
     for (const config of invalid) {
       const h = harness(config); await assert.rejects(h.event('install'));

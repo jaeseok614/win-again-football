@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
-const F=require('./dist/engine.js'),S=require('./dist/season.js'),Matchday=require('./dist/matchday.js'),MatchFlow=require('./dist/match-flow.js'),TacticsBoard=require('./dist/tactics-board.js'),Portraits=require('./dist/portraits.js');
+const F=require('./dist/engine.js'),S=require('./dist/season.js'),Matchday=require('./dist/matchday.js'),MatchPerformance=require('./dist/match-performance.js'),MatchFlow=require('./dist/match-flow.js'),TacticsBoard=require('./dist/tactics-board.js'),Portraits=require('./dist/portraits.js'),Opposition=require('./dist/opposition.js'),MatchdayObjectives=require('./dist/matchday-objectives.js'),SquadOverview=require('./dist/squad-overview.js'),PlayerTraits=require('./dist/player-traits.js');
 const copy=value=>JSON.parse(JSON.stringify(value));let groups=0;
 function test(name,fn){fn();groups++;console.log('PASS '+name);}
 function at(minute,seed=2011){const s=S.create(seed);while(s.match.minute<minute){if(!F.running(s.match))F.begin(s.match);s.match.paused=false;F.tick(s.match);}return s;}
@@ -33,9 +33,9 @@ function harness(season,{width=1280,selected=null,view='match'}={}){
  for(const id of ['matchday-summary','matchday-live','tactics-board','matchday-selection','matchday-roster','selection-hint','bench-heading','pause','matchday-tabs','match-pane','match-controls'])element(id);
  const live=element('matchday-tab-live','data-matchday-tab="live"'),analysis=element('matchday-tab-analysis','data-matchday-tab="analysis"');nodes.get('matchday-tabs').children=[live,analysis];
  context=vm.createContext({document,MatchFlow,innerWidth:width,performance:{now:()=>20000}});
- for(const name of ['tactics-board-ui','match-control-ui','matchday-ui'])vm.runInContext(fs.readFileSync(path.join(__dirname,'dist',name+'.js'),'utf8'),context,{filename:name+'.js'});
+ for(const name of ['matchday-objectives-ui','tactics-board-ui','match-control-ui','matchday-ui'])vm.runInContext(fs.readFileSync(path.join(__dirname,'dist',name+'.js'),'utf8'),context,{filename:name+'.js'});
  const deny=key=>(()=>{calls[key]++;throw Error('Unexpected model mutation: '+key);});
- Object.assign(context,{season,state:season.match,selected,view,movementStamp:0,Matchday,TacticsBoard,Portraits,escapeText,F:{...F,tick:deny('tick'),begin:deny('begin'),swap:deny('swap'),setTactic:deny('setTactic')},S:{...S,train:deny('train'),recruit:deny('recruit'),settle:deny('settle')},clearMatchFeedback(){calls.feedback++;},save(){calls.save++;saved.push(JSON.stringify(context.season));},render(){calls.render++;context.renderTacticsBoard();context.renderMatchday();},action(fn){fn();context.save();context.render();}});
+ Object.assign(context,{season,state:season.match,selected,view,movementStamp:0,Matchday,MatchPerformance,MatchdayObjectives,TacticsBoard,Portraits,Opposition,SquadOverview,PlayerTraits,escapeText,F:{...F,tick:deny('tick'),begin:deny('begin'),swap:deny('swap'),setTactic:deny('setTactic')},S:{...S,train:deny('train'),recruit:deny('recruit'),settle:deny('settle')},clearMatchFeedback(){calls.feedback++;},save(){calls.save++;saved.push(JSON.stringify(context.season));},render(){calls.render++;context.renderTacticsBoard();context.renderMatchday();},action(fn){fn();context.save();context.render();}});
  const app=fs.readFileSync(path.join(__dirname,'dist/app.js'),'utf8'),editable=/^const editable=.*$/m.exec(app);assert.ok(editable,'Use the actual app editability guard.');vm.runInContext(editable[0],context);
  const reset=context.matchClock.reset;context.matchClock.reset=()=>{calls.clockReset++;reset();};
  return {context,document,nodes,calls,saved,element,render:()=>context.render(),get:id=>nodes.get(id),read:expression=>vm.runInContext(expression,context),dispatch(id,type,target,extra={}){let prevented=0;for(const fn of nodes.get(id).handlers[type]||[])fn({target,key:null,preventDefault(){prevented++;},...extra});return prevented;}};
@@ -50,6 +50,14 @@ test('UI scripts initialize before app globals and readonly rendering preserves 
  const s={match:null},h=harness(s),before=JSON.stringify(s);h.render();assert.equal(h.get('matchday-summary').hidden,true);assert.equal(h.get('tactics-board').hidden,true);unchanged(h,before);
 });
 
+test('the match records popup shows live football facts without filling hidden views',()=>{
+ const s=at(65),h=harness(s,{width:390}),before=JSON.stringify(s);h.render();assert.doesNotMatch(h.get('matchday-summary').innerHTML,/점유율 추정/);
+ h.context.matchPopupActive='stats';h.render();const html=h.get('matchday-summary').innerHTML;
+ for(const label of ['점유율 추정','기대 득점','코너킥','프리킥 찬스','경고','퇴장'])assert.match(html,new RegExp(label));
+ assert.match(html,/중원 전력을 바탕으로 추정/);assert.match(html,/이번 경기 3칸 도전/);assert.match(html,/휘장은 경기 결과를 확정한 뒤/);assert.match(html,/실시간 선수 평점/);assert.match(html,/기록 기반/);assert.equal(JSON.stringify(s),before);
+ h.context.matchPopupActive=null;h.render();assert.doesNotMatch(h.get('matchday-summary').innerHTML,/점유율 추정/);
+});
+
 test('switching to live and rejecting unknown tabs never advance time or change the actual tactic',()=>{
  const s=freeze(at(17)),h=harness(s),before=JSON.stringify(s);h.render();h.dispatch('matchday-tabs','click',h.get('matchday-tab-live'));assertTab(h,'live');assert.equal(h.get('tactics-board').innerHTML,'');assert.equal(h.document.activeElement,h.get('matchday-tab-live'));assert.equal(h.calls.save,1);assert.equal(h.calls.clockReset,0);unchanged(h,before);
  const renders=h.calls.render,saves=h.calls.save;h.context.setMatchdayTab('other');assert.equal(h.calls.render,renders);assert.equal(h.calls.save,saves);unchanged(h,before);
@@ -57,7 +65,7 @@ test('switching to live and rejecting unknown tabs never advance time or change 
 
 test('analysis pauses the actual current minute and renders the real remaining tactical window without RNG or statistical changes',()=>{
  for(const minute of [17,59,74]){const s=at(minute),h=harness(s),before=copy(s);h.render();h.dispatch('matchday-tabs','click',h.get('matchday-tab-analysis'));onlyPaused(h,before);assertTab(h,'analysis');assert.equal(h.calls.save,1);assert.equal(h.calls.clockReset,1);assert.equal(h.saved.at(-1),JSON.stringify(s));assert.equal(h.document.activeElement,h.get('matchday-tab-analysis'));assert.ok(h.get('tactics-board').querySelector('details').open);assert.match(h.get('tactics-board').innerHTML,new RegExp(minute+'분 작전 타임'));assert.equal(TacticsBoard.read(s,{coachPause65:false}).valid,true);
-  const paused=JSON.stringify(s);h.dispatch('matchday-tabs','click',h.get('matchday-tab-live'));assertTab(h,'live');unchanged(h,paused);assert.equal(h.get('pause').textContent,'5분 진행');
+  const paused=JSON.stringify(s);h.dispatch('matchday-tabs','click',h.get('matchday-tab-live'));assertTab(h,'live');unchanged(h,paused);assert.equal(h.get('pause').value,'normal');
  }
 });
 
@@ -110,11 +118,11 @@ test('removed and injured reserve identities never become actionable selections 
 
 test('kickoff and exhausted substitution limits show accurate explanations without calling engine mutation APIs',()=>{
  const kickoff=S.create(2014);F.begin(kickoff.match);const h=harness(kickoff),before=copy(kickoff);h.context.selectMatchdayPlayer('f1');onlyPaused(h,before);assert.match(h.get('matchday-selection').innerHTML,/첫 1분이 지난 뒤 교체/);assert.equal(kickoff.match.subs,0);
- const s=at(17);for(const [out,inside] of [['f1','f3'],['d1','d5'],['m1','m5']])F.swap(s.match,out,inside);s.match.paused=true;const capped=harness(s,{selected:'f3'}),saved=JSON.stringify(s);capped.render();assert.match(capped.get('matchday-selection').innerHTML,/교체 3회를 모두 사용/);unchanged(capped,saved);
+ const s=at(17);for(const [out,inside] of [['f1','f3'],['d1','d5'],['m1','m5'],['d2','d6'],['g1','g2']])F.swap(s.match,out,inside);s.match.paused=true;const capped=harness(s,{selected:'f3'}),saved=JSON.stringify(s);capped.render();assert.match(capped.get('matchday-selection').innerHTML,/교체 가능 인원을 모두 사용/);unchanged(capped,saved);
 });
 
 test('player display names are escaped in both quick selection labels and the selected player card',()=>{
- const s=S.create(2015),name='<img src=x onerror="advance()"> & \'quoted\'';s.match.players.f1.name=name;const h=harness(s),before=JSON.stringify(s);h.render();assert.match(h.get('matchday-selection').innerHTML,/&lt;img src=x onerror=&quot;advance\(\)&quot;&gt; &amp; &#39;quoted&#39;/);assert.doesNotMatch(h.get('matchday-selection').innerHTML,/<img src=x/);
+ const s=S.create(2015),name='<img src=x onerror="advance()"> & \'quoted\'';s.match.players.f1.name=name;const h=harness(s,{selected:'f1'}),before=JSON.stringify(s);h.render();assert.match(h.get('matchday-selection').innerHTML,/&lt;img src=x onerror=&quot;advance\(\)&quot;&gt; &amp; &#39;quoted&#39;/);assert.doesNotMatch(h.get('matchday-selection').innerHTML,/<img src=x/);
  h.context.selected='f1';h.render();assert.ok(h.get('matchday-selection').innerHTML.includes(escapeText(name)));assert.doesNotMatch(h.get('matchday-selection').innerHTML,/<img src=x/);unchanged(h,before);
 });
 
@@ -138,5 +146,35 @@ test('a real analyst alert opens decision tools but never applies a suggested ta
 test('suggested substitution opens the existing review flow and never swaps players on first tap',()=>{
  const s=at(23);for(const id of s.match.lineup)s.match.players[id].energy=80;s.match.players.f1.energy=25;s.match.players.f3.energy=95;const q=Matchday.read(s).substitution.suggestion,h=harness(s,{width:390}),before=copy(s);h.render();const suggestion=h.get('matchday-selection').querySelector('[data-matchday-player="'+q.out.id+'"]');assert.ok(suggestion);assert.match(h.get('matchday-selection').innerHTML,/코치 추천 교체/);assert.match(h.get('matchday-selection').innerHTML,new RegExp(escapeText(q.incoming.name)));h.dispatch('match-pane','click',suggestion);
  onlyPaused(h,before);assert.equal(h.context.selected,q.out.id);assert.equal(s.match.subs,0);assert.ok(s.match.lineup.includes(q.out.id));assert.ok(!s.match.lineup.includes(q.incoming.id));assert.match(h.get('matchday-selection').innerHTML,/교체 후보를 고르세요/);
+});
+test('yellow cards and dismissals identify players in substitution choices and the opponent report',()=>{
+ const s=at(23),opponents=Opposition.read(s).lineup;s.match.discipline={version:1,events:[
+  {minute:8,team:0,id:'f1',card:'yellow',reason:'foul'},
+  {minute:17,team:0,id:'d1',card:'red',reason:'direct-red'},
+  {minute:14,team:1,id:opponents[0].id,card:'yellow',reason:'foul'},
+  {minute:21,team:1,id:opponents[1].id,card:'red',reason:'direct-red'}
+ ]};
+ const h=harness(s,{selected:'f1'});h.render();let html=h.get('matchday-selection').innerHTML;
+ assert.match(html,/🟨 경고 1/);h.context.selected='d1';h.render();html=h.get('matchday-selection').innerHTML;assert.match(html,/퇴장한 선수는 교체할 수 없습니다/);
+ assert.equal(require('./dist/matchday.js').read(s,'d1').substitution.suggestion,null);
+ h.context.selected='f1';h.render();assert.match(h.get('matchday-selection').innerHTML,new RegExp(escapeText(s.match.players.f1.name)));assert.match(h.get('matchday-selection').innerHTML,/🟨 경고 1/);
+ const host=h.element('opposition-report');host.hidden=false;h.context.Opposition=Opposition;h.context.Football=F;
+ vm.runInContext(fs.readFileSync(path.join(__dirname,'dist','opposition-ui.js'),'utf8'),h.context,{filename:'opposition-ui.js'});
+ h.context.renderOpponentReport();const report=host.innerHTML;
+ assert.match(report,/🟨 경고 1/);assert.match(report,/🟥 퇴장/);assert.match(report,/opposition-dismissed/);
+});
+test('the preparation HUD reads actual lineups and availability then switches to live statistics, without model writes',()=>{
+ const s=S.create(822),h=harness(s),host=h.element('match-live-stats');s.match.players.f1.energy=49;const before=JSON.stringify(s),data=Matchday.read(s);h.context.renderLiveMatchStats(data);const ours=SquadOverview.read(s),xi=Opposition.read(s).lineup,opponent=Math.round(xi.reduce((n,p)=>n+p.overall,0)/xi.length);assert.match(host.innerHTML,new RegExp('<strong>'+ours.startingOverall+'</strong>'));assert.match(host.innerHTML,new RegExp('<strong>'+opponent+'</strong>'));assert.match(host.innerHTML,/가용 선수/);assert.match(host.innerHTML,/18 \/ 18/);assert.doesNotMatch(host.innerHTML,/점유율|슈팅|남은 교체/);const count=host.setCount;h.context.renderLiveMatchStats(data);assert.equal(host.setCount,count);unchanged(h,before);F.begin(s.match);h.context.renderLiveMatchStats(Matchday.read(s));assert.match(host.innerHTML,/점유율 · 추정/);assert.match(host.innerHTML,/슈팅/);assert.match(host.innerHTML,/남은 교체/);assert.doesNotMatch(host.innerHTML,/상대 종합/);h.context.view='club';const liveCount=host.setCount;h.context.renderLiveMatchStats(Matchday.read(s));assert.equal(host.setCount,liveCount);noModelActions(h);
+});
+test('starter comparison uses the current football player, keeps condition separate from stamina, and skips hidden roster work',()=>{
+ const s=at(45),h=harness(s,{selected:'f1',width:390});s.match.players.f1.attack+=2;s.match.players.f1.energy=31;const before=JSON.stringify(s),metrics=h.context.matchdayPlayerMetrics(Matchday.read(s,'f1').selected);assert.equal(metrics.overall,SquadOverview.overall(s.match.players.f1));assert.deepEqual(copy(metrics.condition),PlayerTraits.condition(s,s.match.players.f1));
+ h.context.matchPopupActive='roster';h.render();let html=h.get('matchday-selection').innerHTML;assert.match(html,new RegExp('종합·계산 <b>'+metrics.overall));assert.match(html,/체력 <b class="loss">31/);assert.match(html,new RegExp('컨디션 '+metrics.condition.label+' '+metrics.condition.score+' · 계산'));
+ const writes=h.get('matchday-selection').setCount;h.context.matchPopupActive=null;h.context.matchdayPlayerMetrics=()=>{throw Error('Hidden comparison must not run');};h.render();assert.equal(h.get('matchday-selection').setCount,writes);unchanged(h,before);
+});
+
+test('the actual bench retains availability rules and escaped metrics, caches its DOM and avoids every hidden popup',()=>{
+ const s=at(45),h=harness(s,{selected:'f1',width:390}),host=h.element('bench');s.match.players.f3.name='<후보 선수>';s.match.players.f4.injuryRemaining=2;const before=JSON.stringify(s);h.context.$=id=>h.get(id);h.context.metric=p=>p.pos;h.context.matchPopupActive='roster';
+ const app=fs.readFileSync(path.join(__dirname,'dist','app.js'),'utf8'),start=app.indexOf('function renderBench(){'),end=app.indexOf('\nfunction render(){',start);assert.ok(start>=0&&end>start);vm.runInContext(app.slice(start,end),h.context);h.context.renderBench();assert.match(host.innerHTML,/&lt;후보 선수&gt;/);assert.doesNotMatch(host.innerHTML,/<후보 선수>/);assert.match(host.innerHTML,/종합 \d+ · 체력 \d+/);assert.match(host.innerHTML,/컨디션/);assert.equal(host.querySelector('[data-bench="f4"]').disabled,true);assert.equal(host.querySelector('[data-bench="f3"]').disabled,false);
+ const count=host.setCount;host.querySelector('[data-bench="f3"]').focus();h.context.renderBench();assert.equal(host.setCount,count);s.match.players.f3.energy--;h.context.renderBench();assert.equal(h.document.activeElement.dataset.bench,'f3');s.match.players.f3.energy++;h.context.matchdayPlayerMetrics=()=>{throw Error('Hidden bench must not compute comparisons');};for(const kind of [null,'opponent','tactics','stats']){h.context.matchPopupActive=kind;h.context.renderBench();}h.context.matchPopupActive='roster';h.context.view='club';h.context.renderBench();assert.equal(host.setCount,count+1);unchanged(h,before);
 });
 console.log('Validated '+groups+' matchday UI groups with actual campaign and football models.');

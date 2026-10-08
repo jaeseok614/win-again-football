@@ -10,8 +10,10 @@ function harness(){
  const nav=['club','match','squad','market','academy','cup'].map(v=>({...node('nav-'+v),dataset:{view:v}}));
  const ctx=vm.createContext({season:S.create(8821,{suspensions:true}),state:null,view:'club',squadTab:'health',matchdayTab:'live',selected:null,canSave:true,appSessionStarted:true,F,S,P,E,H,Football:F,Season:S,Economy:E,Cup:P,Health:H,$:node,document:{body:node('body'),getElementById:node,querySelector:node,querySelectorAll:q=>q==='[data-view]'?nav:[],addEventListener(){}},saveRecovery:{isBlocked:()=>false},labels:{balanced:'균형',press:'압박',counter:'역습'},moneyLabel:n=>'£'+n,signedMoney:n=>'£'+n,playerUiText:String,escapeText:String,Portraits:{html:p=>'<span>'+p.identity+'</span>'},fitnessBadge:()=>'',clubMark:c=>c.short,leagueTargetLabel:()=>'',seasonHeadline:()=>'',leagueZone:()=>null,movementText:()=>'',cupOutcome:()=>null,editable:()=>true,metric:p=>p.pos,matchLogText:e=>e.text});ctx.state=ctx.season.match;
  const names=['renderAppShell','renderManagerJourney','renderOwnerBoard','renderSuspensions','renderSeasonReview','renderSeasonCalendar','renderSquadPlans','renderClubLife','renderTeamTalk','renderEurope','renderStaff','renderCoachGuide','renderVisuals','renderFeedbackControls','renderMovementControls','renderMatchControls','renderTacticsBoard','renderPitch','renderBench','renderReport','renderResults','renderDivision','renderMobileCommandCenter','renderLatestMatchReview','renderFinance','renderMarket','renderCareer','renderCup','renderHealth','renderIndividualTraining','renderRecords','refreshPlayerDetails'];
+ ctx.playbackPrefs={speed:'normal',coachPause65:false};
  for(const name of names)ctx[name]=()=>calls.push(name);
  ctx.renderMatchday=()=>{calls.push('renderMatchday');if(ctx.state&&F.running(ctx.state)&&!ctx.state.paused||ctx.state?.phase==='full')ctx.matchdayTab='live';};
+ vm.runInContext(fs.readFileSync(__dirname+'/dist/division-ui.js','utf8').split('function seasonHeadline')[0],ctx);
  vm.runInContext(section('renderSeason','save')+section('render','renderReport'),ctx);
  return {ctx,node,nodes,nav,calls,writes,clear(){calls.length=0;writes.length=0;},load(file){vm.runInContext(fs.readFileSync(__dirname+'/dist/'+file,'utf8'),ctx);}};
 }
@@ -36,6 +38,10 @@ test('returning home after settlement refreshes the next fixture and standings r
  const h=harness();h.ctx.render();const old=h.node('season-fixtures').innerHTML;while(h.ctx.state.phase!=='full'){if(!F.running(h.ctx.state))F.begin(h.ctx.state);F.finishSegment(h.ctx.state);}h.ctx.season=S.settle(h.ctx.season);h.ctx.state=h.ctx.season.match;h.clear();const before=JSON.stringify(h.ctx.season);h.ctx.render();assert.notEqual(h.node('season-fixtures').innerHTML,old);assert.match(h.node('dashboard-context').textContent,/2R/);assert.ok(h.calls.includes('renderLatestMatchReview'));assert.equal(JSON.stringify(h.ctx.season),before);
  h.ctx.view='squad';h.ctx.squadTab='health';h.ctx.render();assert.match(h.node('squad-overview').innerHTML,/270분/);assert.ok(h.node('squad-overview').innerHTML.includes(h.ctx.season.squad.f1.identity));
 });
+test('home identity and league rules follow the actual current full pyramid in all five tiers',()=>{
+ const h=harness(),expected={1:'18~20위 강등',2:'22~24위 강등',3:'21~24위 강등',4:'23~24위 강등',5:'강등 없음'};for(const division of [1,2,3,4,5]){h.ctx.season.league.division=division;h.ctx.season.league.clubIds=[S.own,...S.fiveTierPools[division].filter(c=>c.id!==S.own).map(c=>c.id)].slice(0,division===1?20:24);h.ctx.render();assert.match(h.node('club-overview').innerHTML,/토투넘/);assert.doesNotMatch(h.node('club-overview').innerHTML,/BLACKBORNE|ROVERS|1998/);assert.ok(h.node('league-table').innerHTML.includes(expected[division]));assert.doesNotMatch(h.node('league-table').innerHTML,/7~8위/);}
+});
+
 test('a restored title menu stops before all campaign screen work',()=>{const h=harness();h.ctx.appSessionStarted=false;h.ctx.render();assert.deepEqual(h.calls,['renderAppShell']);assert.equal(h.writes.length,0);});
 test('hidden coach and tactical analysis panels never call expensive read models and refresh when opened',()=>{
  const h=harness();let guideReads=0,analysisReads=0;h.ctx.CoachGuide={read(){guideReads++;return {valid:false};}};h.ctx.TacticsBoard={...B,read(...args){analysisReads++;return B.read(...args);}};h.ctx.playbackPrefs={coachPause65:false};h.load('coach-guide-ui.js');h.load('tactics-board-ui.js');
@@ -51,4 +57,10 @@ test('health summaries are written only to their visible home, squad or match lo
  const h=harness();h.load('health-ui.js');h.ctx.playerCharacterMarkup=()=>'';h.ctx.Discipline=require('./dist/discipline.js');
  for(const [view,tab,target] of [['club','health','health-summary'],['match','health','match-health'],['squad','health','squad-health'],['squad','records',null],['market','health',null]]){h.ctx.view=view;h.ctx.squadTab=tab;h.clear();const before=JSON.stringify(h.ctx.season);h.ctx.renderHealth();for(const id of ['health-summary','match-health','squad-health'])assert.equal(h.writes.includes(id),id===target);assert.equal(JSON.stringify(h.ctx.season),before);}
 });
+test('home season progress uses the active league length and rejects compact schedules',()=>{
+ const home=section('renderClubDashboard','renderSquadOverview');assert.match(home,/\$\{season\.round\}<small> \/ \$\{S\.roundCount\(season\)\}<\/small>/);
+ for(const division of [1,2,3,4,5]){const season={round:7,league:{division,rules:'five-tier',clubIds:S.fiveTierPools[division].map(c=>c.id)}},html=vm.runInNewContext('`${season.round}<small> / ${S.roundCount(season)}</small>`',{season,S});assert.equal(html,'7<small> / '+(division===1?38:46)+'</small>');}
+ const compact={round:7,league:{division:2,rules:'legacy',clubIds:S.clubs.slice(0,8).map(c=>c.id)}};assert.throws(()=>S.roundCount(compact));
+});
+test('live manager report uses five-player rules after four substitutions',()=>{const h=harness();vm.runInContext(section('renderReport','renderResults'),h.ctx);const m=h.ctx.state;F.begin(m);F.tick(m);m.paused=true;for(const [out,inside] of [['f1','f3'],['d1','d5'],['d2','d6'],['m1','m5']])F.swap(m,out,inside);h.ctx.renderReport();assert.match(h.node('opponent p').textContent,/남은 교체는 1명/);F.swap(m,'g1','g2');h.ctx.renderReport();assert.match(h.node('opponent p').textContent,/남은 교체는 0명/);});
 console.log('Validated '+groups+' visible rendering groups against real campaign state.');

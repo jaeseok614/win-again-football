@@ -1,21 +1,36 @@
 # English football pyramid references (2026/27)
 
-The career mode follows the five English men's levels from the Premier League down to the National League. Division one has 20 clubs, and divisions two through five have 24 clubs each. Every tier uses a full home-and-away schedule. Display names remain fictional parodies; the reference names below are development metadata and are not shown in the game. Existing club IDs and ability ratings stay stable for saved campaigns.
+New five-tier careers use the full 2026/27 reference membership: 20 Premier
+League clubs and 24 clubs in each of the next four competitions, for 116 clubs.
+The five leagues generate 38 or 46 home-and-away matches per club. The game
+displays fictional parody club names and generated players. Tottunham is the
+story exception: it represents the manager's club in the National League while
+its inspiration, Tottenham Hotspur, belongs to the Premier League.
 
-The story keeps Tottunham as the manager's starting club in division five, even though Tottenham Hotspur is a Premier League reference. The seven opponents in that opening division are current National League clubs. Promotion then moves the campaign through League Two, League One, the Championship and the Premier League.
+The complete reference membership used by the data model is:
 
-| Game division | Competition reference | Clubs | Real-club references represented in the pool |
-| --- | --- | ---: | --- |
-| 1 | Premier League | 20 | Manchester City, Chelsea, Arsenal, Newcastle United, Manchester United, Aston Villa, Crystal Palace, Liverpool, AFC Bournemouth, Brentford, Brighton & Hove Albion, Coventry City, Everton, Fulham, Hull City, Ipswich Town, Leeds United, Nottingham Forest, Sunderland, Tottenham Hotspur |
-| 2 | Championship | 24 | Wolverhampton Wanderers, Sheffield United, Burnley, West Ham United, Southampton, Norwich City, Middlesbrough, Wrexham, Swansea City, West Bromwich Albion, Queens Park Rangers, Stoke City, Bristol City, Charlton Athletic, Birmingham City, Millwall, Lincoln City, Bolton Wanderers, Blackburn Rovers, Portsmouth, Watford, Cardiff City, Derby County, Preston North End |
-| 3 | League One | 24 | Leicester City, Stockport County, Wigan Athletic, Wycombe Wanderers, Barnsley, Blackpool, Bradford City, Notts County, Stevenage, Luton Town, Plymouth Argyle, Huddersfield Town, Mansfield Town, Reading, Doncaster Rovers, Burton Albion, Peterborough United, AFC Wimbledon, Leyton Orient, Exeter City, Rotherham United, Northampton Town, Cambridge United, Oxford United |
-| 4 | League Two | 24 | York City, Bristol Rovers, Oldham Athletic, Rochdale, Port Vale, Swindon Town, Shrewsbury Town, Walsall, Accrington Stanley, Barrow, Cheltenham Town, Chesterfield, Colchester United, Crawley Town, Crewe Alexandra, Fleetwood Town, Gillingham, Grimsby Town, Harrogate Town, Milton Keynes Dons, Newport County, Salford City, Tranmere Rovers, Barnet |
-| 5 | National League | 24 | Carlisle United, Scunthorpe United, Hartlepool United, Forest Green Rovers, Southend United, Gateshead, Boreham Wood, Aldershot Town, Altrincham, Braintree Town, Boston United, Brackley Town, Dagenham & Redbridge, Eastleigh, Ebbsfleet United, FC Halifax Town, Maidenhead United, Morecambe, Solihull Moors, Sutton United, Tamworth, Wealdstone, Woking; Tottunham is the story exception |
+| Game division | Competition | 2026/27 reference clubs |
+| --- | --- | --- |
+| 1 | Premier League | Arsenal; Aston Villa; AFC Bournemouth; Brentford; Brighton & Hove Albion; Chelsea; Coventry City; Crystal Palace; Everton; Fulham; Hull City; Ipswich Town; Leeds United; Liverpool; Manchester City; Manchester United; Newcastle United; Nottingham Forest; Sunderland; Tottenham Hotspur |
+| 2 | Championship | Birmingham City; Blackburn Rovers; Bolton Wanderers; Bristol City; Burnley; Cardiff City; Charlton Athletic; Derby County; Lincoln City; Middlesbrough; Millwall; Norwich City; Portsmouth; Preston North End; Queens Park Rangers; Sheffield United; Southampton; Stoke City; Swansea City; Watford; West Bromwich Albion; West Ham United; Wolverhampton Wanderers; Wrexham |
+| 3 | League One | AFC Wimbledon; Barnsley; Blackpool; Bradford City; Bromley; Burton Albion; Cambridge United; Doncaster Rovers; Huddersfield Town; Leicester City; Leyton Orient; Luton Town; Mansfield Town; Milton Keynes Dons; Notts County; Oxford United; Peterborough United; Plymouth Argyle; Reading; Sheffield Wednesday; Stevenage; Stockport County; Wycombe Wanderers; Wigan Athletic |
+| 4 | League Two | Accrington Stanley; Barnet; Bristol Rovers; Cheltenham Town; Chesterfield; Colchester United; Crawley Town; Crewe Alexandra; Exeter City; Fleetwood Town; Gillingham; Grimsby Town; Newport County; Northampton Town; Oldham Athletic; Port Vale; Rochdale; Rotherham United; Salford City; Shrewsbury Town; Swindon Town; Tranmere Rovers; Walsall; York City |
+| 5 | National League | AFC Fylde; Aldershot Town; Altrincham; Barrow; Boreham Wood; Boston United; Carlisle United; Eastleigh; FC Halifax Town; Forest Green Rovers; Gateshead; Harrogate Town; Hartlepool United; Hornchurch; Kidderminster Harriers; Scunthorpe United; Solihull Moors; Southend United; Sutton United; Tamworth; Wealdstone; Woking; Worthing; Yeovil Town |
 
-Current Premier League references follow the official 2026/27 fixture list. Championship, League One and League Two references follow the official EFL 2026/27 fixture release and competition fixtures. National League selections follow the confirmed 2026/27 line-up published by Scunthorpe United FC.
+The reference lists are season-specific and were checked against official
+competition sources: [Premier League 2026/27 membership and fixtures](https://www.premierleague.com/en/news/4673099/the-202627-premier-league-season-officially-starts), [EFL 2026/27 fixtures](https://www.efl.com/news/2026/june/25/the-2026-27-efl-fixtures-are-here/), and [FA National League System allocations](https://www.thefa.com/news/2026/may/14/nls-club-allocations-2026-27). The full reference arrays are in [english-pyramid.js](../source/dist/english-pyramid.js).
 
-- [Premier League: all 2026/27 fixtures](https://www.premierleague.com/en/news/4675097)
-- [EFL: 2026/27 fixtures](https://www.efl.com/news/2026/june/25/the-2026-27-efl-fixtures-are-here/)
-- [Scunthorpe United FC: confirmed 2026/27 National League line-up](https://www.scunthorpe-united.co.uk/news/2026/may/enterprise-national-league-line-up-confirmed-for-the-2026-27-season)
+Real clubs supply the tier membership and broad level reference. In-game
+opponents, names, rosters, match ratings and individual attributes are
+fictional. The opposition report's 1–99 positional overall is calculated from
+the game's fictional player attributes; FotMob is a scouting benchmark and not
+a live source or a copied individual rating feed. Attribute averages rise by
+tier. See [the five-tier model and save migration](FIVE_TIER_PYRAMID_AND_FINANCE.md).
 
-Portraits use one locally cached sheet of 28 original fictional faces. New Tottunham starters and the eight initial transfer targets each receive a distinct fixed portrait; other generated players keep deterministic identity-based portraits. See [the generation prompt](../source/player-faces-v13-original-prompt.txt).
+Player portraits use locally cached original fictional atlases: 28 portraits in
+the original sheet and 64 additional cells in the expanded sheet. New Tottunham
+starters and the initial transfer targets retain their fixed original portraits;
+opposition starters receive distinct faces, and other generated players use a
+deterministic identity mapping. The companion atlas is WebP-encoded for a smaller
+offline download. See the [original portrait prompt](../source/player-faces-v13-original-prompt.txt)
+and [expanded portrait and club-scene prompts](CLUB_VISUALS_2026-10-08.md).

@@ -16,7 +16,7 @@ test('pre-match board reads the real eleven, condition-adjusted rating and curre
 });
 
 test('each editable window previews only its actual next 45, 20 or 25 minute segment',()=>{
- for(const [phase,start,end] of [['prep',0,45],['half',45,65],['late',65,90]]){const s=at(phase),b=pure(s);assert.equal(b.valid,true);assert.deepEqual(b.segment,{start,end,minutes:end-start});assert.equal(b.context.phase,phase);assert.equal(b.context.minute,start);assert.equal(b.previews.length,3);assert.deepEqual(b.context.score,s.match.score);}
+ for(const [phase,start,end] of [['prep',0,45],['half',45,65],['late',65,90]]){const s=at(phase),b=pure(s);assert.equal(b.valid,true);assert.deepEqual(b.segment,{start,end,minutes:end-start});assert.equal(b.context.phase,phase);assert.equal(b.context.minute,start);assert.equal(b.previews.length,4);assert.deepEqual(b.context.score,s.match.score);}
 });
 
 test('unpaused running matches explain the pause requirement and completed or absent matches expose no board',()=>{
@@ -56,7 +56,7 @@ test('paused previews match actual remaining-minute energy after a tactic change
 });
 
 test('pressing adds precisely eight endurance-adjusted energy points per ninety minutes',()=>{
- const s=S.create(1507);energy(s,100);const b=pure(s),balanced=b.previews.find(p=>p.tactic==='balanced'),press=b.previews.find(p=>p.tactic==='press');for(const p of press.energy){const other=balanced.energy.find(x=>x.id===p.id);assert.equal(p.costPer90-other.costPer90,8);approx(p.cost-other.cost,4);}approx(press.averageCost-balanced.averageCost,4);
+ const s=S.create(1507);energy(s,100);const b=pure(s),balanced=b.previews.find(p=>p.tactic==='balanced'),press=b.previews.find(p=>p.tactic==='press');for(const p of press.energy){const other=balanced.energy.find(x=>x.id===p.id);approx(p.costPer90-other.costPer90,8);approx(p.cost-other.cost,4);}approx(press.averageCost-balanced.averageCost,4);
 });
 
 test('fatigue takes recommendation priority over chasing a result or a positive pace bonus',()=>{
@@ -84,14 +84,14 @@ test('continuous tactical changes and substitutions read the current paused line
 });
 
 test('injuries, duplicate identities, missing roles and nonfinite energy cannot create misleading boards',()=>{
- const base=S.create(1513);for(const mutate of [s=>s.match.players.g1.injuryRemaining=1,s=>s.match.lineup[1]=s.match.lineup[0],s=>s.match.players.f2.identity='t_f2',s=>{s.match.players.f2.identity='f1';s.squad.f2.identity='f1';},s=>s.match.lineup.splice(0,1),s=>s.match.players.g1.energy=NaN,s=>s.match.isHome=!s.match.isHome]){const s=copy(base);mutate(s);assert.equal(pure(s).valid,false);}
+ const base=S.create(1513);for(const mutate of [s=>s.match.players.g1.injuryRemaining=1,s=>s.match.lineup[1]=s.match.lineup[0],s=>s.match.players.f2.identity='t_f2',s=>{s.match.players.f2.identity='sp_f1';s.squad.f2.identity='sp_f1';},s=>s.match.lineup.splice(0,1),s=>s.match.players.g1.energy=NaN,s=>s.match.isHome=!s.match.isHome]){const s=copy(base);mutate(s);assert.equal(pure(s).valid,false);}
 });
 
 test('Cup boards use their actual stage and migrated saves keep the same next segment',()=>{
- let s=S.create(1514);while(s.competition!=='cup'){finish(s.match);s=S.settle(s);}const b=pure(s);assert.equal(b.valid,true);assert.equal(b.context.competition,'cup');assert.equal(b.context.round,4);assert.equal(b.context.stage,0);const restored=S.restore(copy(s));assert.deepEqual(pure(restored),b);F.begin(s.match);F.finishSegment(s.match);assert.equal(pure(s).segment.minutes,20);
+ let s=S.create(1514);while(s.competition!=='cup'){finish(s.match);s=S.settle(s);}const b=pure(s);assert.equal(b.valid,true);assert.equal(b.context.competition,'cup');assert.equal(b.context.round,12);assert.equal(b.context.stage,0);const restored=S.restore(copy(s));assert.deepEqual(pure(restored),b);F.begin(s.match);F.finishSegment(s.match);assert.equal(pure(s).segment.minutes,20);
 });
 
 test('read-only analysis preserves RNG and later outcomes, with detached data and browser UMD compatibility',()=>{
- const s=S.create(1515),control=copy(s),b=pure(s),before=JSON.stringify(s),version=s.match.version;b.context.score[0]=99;b.current.rating.attack=99;b.previews[0].energy[0].after=99;b.lineup[0].energy=99;assert.equal(JSON.stringify(s),before);const ctx=vm.createContext({Football:F,Season:S});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/tactics-board.js'),'utf8'),ctx);assert.deepEqual(JSON.parse(JSON.stringify(ctx.TacticsBoard.read(s))),B.read(s));F.setTactic(s.match,'counter');F.setTactic(control.match,'counter');finish(s.match);finish(control.match);assert.deepEqual(s,control);assert.equal(s.version,9);assert.equal(s.match.version,version);
+ const s=S.create(1515),control=copy(s),b=pure(s),before=JSON.stringify(s),version=s.match.version;b.context.score[0]=99;b.current.rating.attack=99;b.previews[0].energy[0].after=99;b.lineup[0].energy=99;assert.equal(JSON.stringify(s),before);const ctx=vm.createContext({Football:F,Season:S});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/tactics-board.js'),'utf8'),ctx);assert.deepEqual(JSON.parse(JSON.stringify(ctx.TacticsBoard.read(s))),B.read(s));F.setTactic(s.match,'counter');F.setTactic(control.match,'counter');finish(s.match);finish(control.match);assert.deepEqual(s,control);assert.equal(s.version,10);assert.equal(s.match.version,version);
 });
 console.log('Validated '+groups+' tactical board groups, including exact engine snapshots, energy previews and read-only context guards.');

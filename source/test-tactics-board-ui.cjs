@@ -71,7 +71,7 @@ test('native details state is retained during preview while a new formation rese
 
 test('player and coach text is escaped, identities stay attached to current players and analysis does not mutate snapshots',()=>{
  const s=S.create(1548),h=harness(s),before=JSON.stringify(s),d=copy(B.read(s)),payload='<img src=x onerror="bad()"> & \'Q\'';
- for(const p of d.lineup)p.name=payload;d.recommendation.label=payload;d.recommendation.reason=payload;d.assumption=payload;const html=h.context.tacticsBoardMarkup(d,'press');assert.doesNotMatch(html,/<img|onerror="/);assert.ok((html.match(/&lt;img src=x onerror=&quot;bad\(\)&quot;&gt; &amp; &#39;Q&#39;/g)||[]).length>=6);assert.match(html,/data-player-detail="f1"/);assert.match(html,/data-portrait-index="21"/);unchanged(h,before);
+ for(const p of d.lineup)p.name=payload;d.recommendation.label=payload;d.recommendation.reason=payload;d.assumption=payload;const html=h.context.tacticsBoardMarkup(d,'press');assert.doesNotMatch(html,/<img|onerror="/);assert.ok((html.match(/&lt;img src=x onerror=&quot;bad\(\)&quot;&gt; &amp; &#39;Q&#39;/g)||[]).length>=6);assert.match(html,/data-player-detail="sp_g1"/);assert.match(html,/data-portrait-index="0"/);unchanged(h,before);
 });
 
 test('a mismatched application choice cannot bypass preview selection or call the existing action model',()=>{

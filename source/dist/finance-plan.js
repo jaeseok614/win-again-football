@@ -5,7 +5,7 @@
   const rates=E.rates(s),playerWages=E.wages(s),quote=deal?E.quote(s,deal.identity,deal.slot):null,starting=s.finance.balance-(quote?.cost||0),payroll=playerWages+(quote?.wageChange||0),candidates=Staff.candidates(s),contracts=Object.values(s.staff?.contracts||{}),rows=[];
   let balance=starting,low=starting,lowRound=null,gateTotal=0,sponsorTotal=0,playerTotal=0,staffTotal=0;
   S.fixturesFor(s).forEach((games,index)=>{
-   if(index<s.round)return;const f=games.find(f=>f.home===S.own||f.away===S.own),home=f.home===S.own,clock=(s.year-1)*14+index;
+   if(index<s.round)return;const f=games.find(f=>f.home===S.own||f.away===S.own),home=f.home===S.own,clock=S.calendarClock(s,s.year,index);
    const staffPayroll=contracts.filter(c=>c.started<=clock&&c.expires>clock).reduce((sum,c)=>sum+(candidates.find(p=>p.id===c.candidate)?.wage||0),0),gate=home?rates.gateHome:rates.gateAway,sponsor=rates.sponsor,amount=gate+sponsor-payroll-staffPayroll;
    balance+=amount;if(balance<low){low=balance;lowRound=index+1;}gateTotal+=gate;sponsorTotal+=sponsor;playerTotal+=payroll;staffTotal+=staffPayroll;
    rows.push({round:index+1,home,opponent:S.club(home?f.away:f.home).short,gate,sponsor,playerPayroll:payroll,staffPayroll,amount,balance});

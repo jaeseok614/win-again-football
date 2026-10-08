@@ -22,13 +22,13 @@ function harness(season,overrides={}){
 function unchanged(h,before){assert.equal(JSON.stringify(h.context.season),before);assert.deepEqual(h.calls,{train:0,recruit:0,tick:0});}
 
 test('delegated opening and closing show current identity without training, recruiting or advancing a match',()=>{
- const s=S.create(1331),h=harness(s),before=JSON.stringify(s),opener=h.opener('f2');opener.focus();h.click(opener);
+ const s=S.create(1331),h=harness(s),before=JSON.stringify(s),opener=h.opener('sp_f1');opener.focus();h.click(opener);
  assert.equal(h.dialog.open,true);assert.equal(h.dialog.showCount,1);assert.equal(h.document.activeElement.id,'player-detail-close');assert.ok(h.classes.has('player-detail-open'));assert.match(h.dialog.innerHTML,/손헝민/);assert.match(h.dialog.innerHTML,/개인 훈련 보기/);unchanged(h,before);
  h.nodes.get('player-detail-close').onclick();assert.equal(h.dialog.open,false);assert.equal(h.document.activeElement,opener);assert.ok(!h.classes.has('player-detail-open'));unchanged(h,before);
 });
 
 test('owned routing resolves identity again after a player moves to a different current slot',()=>{
- const s=S.create(1332),h=harness(s);h.context.openPlayerDetails('f2',h.opener('f2'));
+ const s=S.create(1332),h=harness(s);h.context.openPlayerDetails('sp_f2',h.opener('sp_f2'));
  const a=s.squad.f2,b=s.squad.f4;s.squad.f2={...b,id:'f2',no:a.no};s.squad.f4={...a,id:'f4',no:b.no};s.match=F.create(s.match.seed,{players:s.squad});
  const before=JSON.stringify(s);h.nodes.get('player-detail-route').onclick();assert.equal(h.context.individualTrainingSlot,'f4');assert.equal(h.context.individualTrainingFocus,'technique');assert.equal(h.context.individualTrainingNote,'');assert.equal(h.context.squadTab,'training');assert.deepEqual(h.views,['squad']);assert.equal(h.document.activeElement.id,'individual-training-player');assert.equal(h.dialog.open,false);unchanged(h,before);
 });
@@ -36,7 +36,7 @@ test('owned routing resolves identity again after a player moves to a different 
 test('removed squad identities and undiscovered youth cannot open or route to a replacement player',()=>{
  let s=S.create(1333);const h=harness(s),hidden=F.youthCandidates(s.seed,s.year,1,'FW')[0].identity;
  h.context.openPlayerDetails(hidden,h.opener(hidden));h.context.openPlayerDetails('missing',h.opener('missing'));assert.equal(h.dialog.open,false);assert.equal(h.dialog.showCount,undefined);
- h.context.openPlayerDetails('f2',h.opener('f2'));s=S.recruit(s,'t_f1','f2');h.context.season=s;const before=JSON.stringify(s);h.context.routePlayerDetails();assert.equal(h.dialog.open,false);assert.equal(h.context.individualTrainingSlot,'');assert.deepEqual(h.views,[]);unchanged(h,before);
+ h.context.openPlayerDetails('sp_f2',h.opener('sp_f2'));s=S.recruit(s,'t_f1','f2');h.context.season=s;const before=JSON.stringify(s);h.context.routePlayerDetails();assert.equal(h.dialog.open,false);assert.equal(h.context.individualTrainingSlot,'');assert.deepEqual(h.views,[]);unchanged(h,before);
 });
 
 test('market and discovered academy candidate routes stay in their source screens and never select training',()=>{
@@ -45,15 +45,15 @@ test('market and discovered academy candidate routes stay in their source screen
 });
 
 test('Escape prevents native cancellation and restores a replacement opener or the current view when needed',()=>{
- const h=harness(S.create(1335)),opener=h.opener('f2'),replacement=h.opener('f2','replacement');h.context.openPlayerDetails('f2',opener);opener.isConnected=false;let prevented=0;
+ const h=harness(S.create(1335)),opener=h.opener('sp_f2'),replacement=h.opener('sp_f2','replacement');h.context.openPlayerDetails('sp_f2',opener);opener.isConnected=false;let prevented=0;
  h.dialog.dispatch('cancel',{preventDefault(){prevented++;}});assert.equal(prevented,1);assert.equal(h.dialog.open,false);assert.equal(h.document.activeElement,replacement);assert.deepEqual(copy(replacement.focusOptions),{preventScroll:true});
- h.context.openPlayerDetails('f2',replacement);replacement.isConnected=false;h.dialog.dispatch('cancel',{preventDefault(){prevented++;}});assert.equal(prevented,2);assert.equal(h.document.activeElement,h.nav);assert.ok(!h.classes.has('player-detail-open'));
+ h.context.openPlayerDetails('sp_f2',replacement);replacement.isConnected=false;h.dialog.dispatch('cancel',{preventDefault(){prevented++;}});assert.equal(prevented,2);assert.equal(h.document.activeElement,h.nav);assert.ok(!h.classes.has('player-detail-open'));
 });
 
 test('refreshing actual stats preserves focused controls and scroll while unchanged snapshots do not rerender',()=>{
- const s=S.create(1336),h=harness(s);h.context.openPlayerDetails('f3',h.opener('f3'));const oldRoute=h.nodes.get('player-detail-route');oldRoute.focus();h.dialog.scrollTop=318;
+ const s=S.create(1336),h=harness(s);h.context.openPlayerDetails('sp_f3',h.opener('sp_f3'));const oldRoute=h.nodes.get('player-detail-route');oldRoute.focus();h.dialog.scrollTop=318;
  h.context.refreshPlayerDetails();assert.equal(h.nodes.get('player-detail-route'),oldRoute);assert.equal(h.dialog.scrollTop,318);
- s.squad.f3.attack+=1;s.match.players.f3.attack=s.squad.f3.attack;const before=JSON.stringify(s);h.context.refreshPlayerDetails();const newRoute=h.nodes.get('player-detail-route');assert.notEqual(newRoute,oldRoute);assert.equal(oldRoute.isConnected,false);assert.equal(h.document.activeElement,newRoute);assert.deepEqual(copy(newRoute.focusOptions),{preventScroll:true});assert.equal(h.dialog.scrollTop,318);assert.match(h.dialog.innerHTML,/67<small> \/ 97/);assert.equal(h.dialog.showCount,1);unchanged(h,before);
+ s.squad.f3.attack+=1;s.match.players.f3.attack=s.squad.f3.attack;const before=JSON.stringify(s);h.context.refreshPlayerDetails();const newRoute=h.nodes.get('player-detail-route');assert.notEqual(newRoute,oldRoute);assert.equal(oldRoute.isConnected,false);assert.equal(h.document.activeElement,newRoute);assert.deepEqual(copy(newRoute.focusOptions),{preventScroll:true});assert.equal(h.dialog.scrollTop,318);assert.match(h.dialog.innerHTML,/71<small> \/ 97/);assert.equal(h.dialog.showCount,1);unchanged(h,before);
 });
 
 test('previous and next player controls wrap by current identity without changing the original focus return target',()=>{
@@ -64,12 +64,12 @@ test('previous and next player controls wrap by current identity without changin
 test('name, nickname, introduction, quotes and training recommendation text are escaped before rendering',()=>{
  const s=S.create(1338),payload='<img src=x onerror="bad()"> & \'hello\'',p=s.squad.f3;p.name=payload;
  const details={read(season,id){const d=PlayerDetails.read(season,id);if(d.valid){d.nickname=payload;d.tagline=payload;if(d.development)d.development.recommendation.label=payload;}return d;}};
- const h=harness(s,{PlayerDetails:details,PlayerCharacter:{...PlayerCharacter,info(person){return {...PlayerCharacter.info(person),quote:payload};}}}),before=JSON.stringify(s);h.context.openPlayerDetails('f3',h.opener('f3'));
+ const h=harness(s,{PlayerDetails:details,PlayerCharacter:{...PlayerCharacter,info(person){return {...PlayerCharacter.info(person),quote:payload};}}}),before=JSON.stringify(s);h.context.openPlayerDetails('sp_f3',h.opener('sp_f3'));
  assert.doesNotMatch(h.dialog.innerHTML,/<img|onerror="/);assert.ok((h.dialog.innerHTML.match(/&lt;img src=x onerror=&quot;bad\(\)&quot;&gt; &amp; &#39;hello&#39;/g)||[]).length>=5);unchanged(h,before);
 });
 
 test('refresh invalidation and backdrop clicks close safely without routing an unavailable identity',()=>{
- let s=S.create(1339);const h=harness(s),opener=h.opener('f1');h.context.openPlayerDetails('f1',opener);s=S.recruit(s,'t_f1','f1');h.context.season=s;const before=JSON.stringify(s);h.context.refreshPlayerDetails();assert.equal(h.dialog.open,false);assert.deepEqual(h.views,[]);assert.equal(h.document.activeElement,opener);unchanged(h,before);
- h.context.openPlayerDetails('f2',h.opener('f2'));h.dialog.dispatch('click',{clientX:50,clientY:50});assert.equal(h.dialog.open,true);h.dialog.dispatch('click',{clientX:5,clientY:5});assert.equal(h.dialog.open,false);unchanged(h,before);
+ let s=S.create(1339);const h=harness(s),opener=h.opener('sp_f1');h.context.openPlayerDetails('sp_f1',opener);s=S.recruit(s,'t_f1','f1');h.context.season=s;const before=JSON.stringify(s);h.context.refreshPlayerDetails();assert.equal(h.dialog.open,false);assert.deepEqual(h.views,[]);assert.equal(h.document.activeElement,opener);unchanged(h,before);
+ h.context.openPlayerDetails('sp_f2',h.opener('sp_f2'));h.dialog.dispatch('click',{clientX:50,clientY:50});assert.equal(h.dialog.open,true);h.dialog.dispatch('click',{clientX:5,clientY:5});assert.equal(h.dialog.open,false);unchanged(h,before);
 });
 console.log('Validated '+groups+' player detail UI groups, including identity routing, candidate boundaries, focus restoration, refresh and read-only actions.');

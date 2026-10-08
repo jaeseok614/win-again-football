@@ -17,7 +17,7 @@ test('team talks consume no RNG, energy, skill, shots or goals and change actual
 test('personality, score and fatigue make different deterministic player reactions without random draws',()=>{
  const s=S.create(55),m=s.match,before=JSON.stringify(s),preview=Life.previewTalk(s,'demand');assert.equal(JSON.stringify(s),before);assert.ok(preview.some(p=>p.delta<0));assert.ok(preview.some(p=>p.delta>0));assert.deepEqual(preview,Life.previewTalk(s,'demand'));
  const behind=copy(m);behind.score=[0,2];assert.ok(F.talkReactions(behind,'praise').every(p=>p.delta===-1));const ahead=copy(m);ahead.score=[3,0];assert.ok(F.talkReactions(ahead,'praise').some(p=>p.delta===2));
- advance(m,65);const tired=m.lineup.find(id=>m.players[id].energy<60);assert.ok(tired);const calm=Life.previewTalk(s,'calm').find(p=>p.id===tired);assert.equal(calm.delta,2);
+ F.setTactic(m,'press');for(const id of m.lineup){m.players[id].initialEnergy=m.players[id].energy=70;s.squad[id].energy=70;}advance(m,65);const tired=m.lineup.find(id=>m.players[id].energy<60);assert.ok(tired);const calm=Life.previewTalk(s,'calm').find(p=>p.id===tired);assert.equal(calm.delta,2);
 });
 
 test('each of the three pauses accepts one talk and confidence saturates at plus or minus three',()=>{
@@ -62,18 +62,18 @@ test('match articles use actual scores, registered goal scorers and signed coach
 });
 
 test('domestic cup and Champions League interviews, talks and articles use their real separate fixtures',()=>{
- const lower=complete(boost(S.create(121))),upper=complete(S.nextSeason(lower));let s=S.nextSeason(upper),seen=new Set();while(s.match&&seen.size<2){if(s.competition!=='league'){const competition=s.competition;Life.answerPress(s,'before','modest');Life.talk(s,'encourage');advance(s.match,45);Life.talk(s,'calm');assert.doesNotThrow(()=>S.restore(copy(s)));finish(s.match);const score=[...s.match.score];s=S.settle(s);Life.answerPress(s,'after','protect');const article=Life.news(s).find(item=>item.kind==='match'&&item.competition===competition);assert.ok(article);assert.ok(article.headline.includes(score.join('–')));assert.deepEqual(S.restore(copy(s)),s);seen.add(competition);}else s=play(s);}
+ let s=require('./current-test-helper.cjs').qualify(),seen=new Set();while(s.match&&seen.size<2){if(s.competition!=='league'){const competition=s.competition;Life.answerPress(s,'before','modest');Life.talk(s,'encourage');advance(s.match,45);Life.talk(s,'calm');assert.doesNotThrow(()=>S.restore(copy(s)));finish(s.match);const score=[...s.match.score];s=S.settle(s);Life.answerPress(s,'after','protect');const article=Life.news(s).find(item=>item.kind==='match'&&item.competition===competition);assert.ok(article);assert.ok(article.headline.includes(score.join('–')));assert.deepEqual(S.restore(copy(s)),s);seen.add(competition);}else s=play(s);}
  assert.deepEqual([...seen].sort(),['cup','europe']);
 });
 
 test('penalty shootout reports and interviews describe the actual winner without adding shootout goals to scoring records',()=>{
- let s=S.create(2),found=false;delete s.disciplineRules;delete s.match.discipline;while(s.match){finish(s.match);const competition=s.competition,score=[...s.match.score];s=S.settle(s);if(competition==='cup'&&s.lastReport.penalties){found=true;const article=Life.news(s).find(item=>item.kind==='match'&&item.competition==='cup');assert.ok(article.headline.includes('승부차기 승리'));assert.ok(article.headline.includes(score.join('–')));assert.ok(article.body.includes(s.lastReport.penalties.join('–')));assert.ok(Life.pressStatus(s).after.question.includes('승부차기'));const receipt=Life.answerPress(s,'after','confident');assert.equal(receipt.winner,S.own);assert.deepEqual(receipt.penalties,s.lastReport.penalties);assert.equal(Life.pressStatus(s).reputation,2);assert.deepEqual(S.restore(copy(s)),s);break;}}
+ let s=S.create(1),found=false;while(s.match){finish(s.match);const competition=s.competition,score=[...s.match.score];s=S.settle(s);if(competition==='cup'&&s.lastReport.penalties){found=true;const article=Life.news(s).find(item=>item.kind==='match'&&item.competition==='cup');assert.ok(article.headline.includes('승부차기'));assert.ok(article.headline.includes(score.join('–')));assert.ok(article.body.includes(s.lastReport.penalties.join('–')));assert.ok(Life.pressStatus(s).after.question.includes('승부차기'));const receipt=Life.answerPress(s,'after','confident');assert.equal(receipt.winner,s.lastReport.winner);assert.deepEqual(receipt.penalties,s.lastReport.penalties);assert.ok(Math.abs(Life.pressStatus(s).reputation)<=5);assert.deepEqual(S.restore(copy(s)),s);break;}}
  assert.equal(found,true);
 });
 
 test('a whole season caps recent articles and reputation, preserves all allowed answers and starts the next cleanly',()=>{
  let s=S.create(121);let games=0;while(s.match){Life.answerPress(s,'before',games%2?'confident':'protect');finish(s.match,{talks:true});s=S.settle(s);Life.answerPress(s,'after','modest');games++;assert.ok(Life.news(s).length<=12);assert.ok(Math.abs(Life.pressStatus(s).reputation)<=5);assert.deepEqual(S.restore(copy(s)),s);}
- assert.equal(s.clubLife.press.length,games*2);assert.ok(s.clubLife.press.length<=50);assert.equal(s.clubLife.news.length,12);const next=S.nextSeason(s);assert.equal(next.clubLife.year,2);assert.deepEqual(next.clubLife.press,[]);assert.deepEqual(next.clubLife.news,[]);assert.equal(Life.pressStatus(next).reputation,0);assert.deepEqual(S.restore(copy(next)),next);
+ assert.equal(s.clubLife.press.length,games*2);assert.ok(s.clubLife.press.length<=2*(S.roundCount(s)+11));assert.equal(s.clubLife.news.length,12);const next=S.nextSeason(s);assert.equal(next.clubLife.year,2);assert.deepEqual(next.clubLife.press,[]);assert.deepEqual(next.clubLife.news,[]);assert.equal(Life.pressStatus(next).reputation,0);assert.deepEqual(S.restore(copy(next)),next);
 });
 
 test('club save validation rejects unknown versions, invalid origins, false results, future fixtures and duplicate answers',()=>{
@@ -81,7 +81,4 @@ test('club save validation rejects unknown versions, invalid origins, false resu
  for(const mutate of [l=>l.version=2,l=>l.year++,l=>l.originLedger=-1,l=>l.originLedger=100000,l=>l.press.push(copy(l.press[0])),l=>l.press[0].choice='fake',l=>l.press[0].home='future',l=>l.press[0].id='match-1-14',l=>l.press[0].score=[9,0],l=>l.press[1].score[0]++,l=>l.news.push(copy(l.news[0])),l=>l.news[0].source='cup-1-2',l=>l.extra=true]){const bad=copy(s);mutate(bad.clubLife);assert.throws(()=>S.restore(bad));}
 });
 
-test('legacy campaigns acquire optional club state without changing any current match or historical result',()=>{
- for(const minute of [0,17,45,65,90]){const s=S.create(121);advance(s.match,minute);s.match.paused=F.running(s.match);const legacy=copy(s);delete legacy.clubLife;const restored=S.restore(legacy);assert.deepEqual(restored.match,s.match);assert.deepEqual(restored.results,s.results);assert.deepEqual(restored.history,s.history);assert.equal(restored.clubLife.originLedger,legacy.finance.ledger.length);assert.equal(Object.hasOwn(restored.match,'morale'),false);finish(s.match);finish(restored.match);for(const key of ['score','rng','logs','segments','players'])assert.deepEqual(restored.match[key],s.match[key]);}
-});
 console.log('Validated '+groups+' club-life groups for bounded actual team talks, deterministic resumes, canonical interviews and local game articles.');

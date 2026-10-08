@@ -7,7 +7,7 @@ function harness(season){
  let html='',sets=0,details=[],buttons=[];const calls={save:0,render:0,action:0,focus:0},errors=[],status={focus(){calls.focus++;}};
  const panel={querySelectorAll(selector){return selector==='[data-staff-role]'?details:[];},querySelector(selector){return selector==='.staff-note'&&html.includes('class="staff-note"')?status:null;}};
  Object.defineProperty(panel,'innerHTML',{get(){return html;},set(value){html=value;sets++;details=[...value.matchAll(/<details\b([^>]*)>/g)].map(([,attrs])=>({dataset:{staffRole:attrs.match(/data-staff-role="([^"]+)"/)[1]},open:/\bopen\b/.test(attrs)}));buttons=[...value.matchAll(/<button\b([^>]*)>/g)].map(([,attrs])=>({disabled:/\bdisabled\b/.test(attrs),dataset:{staffAction:attrs.match(/data-staff-action="([^"]+)"/)[1],staffChoice:attrs.match(/data-staff-choice="([^"]+)"/)[1]},closest(selector){return selector==='[data-staff-action]'?this:null;}}));}});
- const context=vm.createContext({Staff,season,view:'squad',squadTab:'health',$:id=>id==='staff-panel'?panel:null,action(fn){calls.action++;try{fn();calls.save++;calls.render++;context.renderStaff();}catch(e){errors.push(e.message);}}});
+ const context=vm.createContext({S,Staff,season,view:'squad',squadTab:'health',$:id=>id==='staff-panel'?panel:null,action(fn){calls.action++;try{fn();calls.save++;calls.render++;context.renderStaff();}catch(e){errors.push(e.message);}}});
  vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/staff-ui.js'),'utf8'),context);
  return {context,panel,calls,errors,render(){context.renderStaff();},click(action,choice){const b=buttons.find(b=>b.dataset.staffAction===action&&b.dataset.staffChoice===choice);assert.ok(b);panel.onclick({target:b});},get html(){return html;},get sets(){return sets;},get buttons(){return buttons;},get details(){return details;}};
 }
@@ -26,6 +26,6 @@ test('hidden staff screens defer rendering and inaccessible contract stages rema
  const poor=S.create(4405);poor.finance.balance=1;const debt=harness(poor);debt.render();assert.ok(debt.buttons.every(b=>b.disabled));assert.ok(debt.html.includes('구단 자금이 부족'));
 });
 test('controls and details have accessible target sizes and explicit financial terms',()=>{
- const css=fs.readFileSync(path.join(__dirname,'dist/staff.css'),'utf8'),h=harness(S.create(4406));h.render();assert.ok(css.includes('min-height:44px'));assert.ok(css.includes('@media(max-width:730px)'));assert.ok(css.includes('summary:focus-visible'));assert.equal((h.html.match(/aria-label=/g)||[]).length,10);assert.ok(h.html.includes('COACHING TEAM'));assert.ok(h.html.includes('계약금 즉시 차감'));assert.ok(h.html.includes('컵·챔피언스리그 경기에는 주급과 계약 기간이 소모되지'));
+ const css=fs.readFileSync(path.join(__dirname,'dist/staff.css'),'utf8'),h=harness(S.create(4406));h.render();assert.ok(css.includes('min-height:44px'));assert.ok(css.includes('@media(max-width:730px)'));assert.ok(css.includes('summary:focus-visible'));assert.equal((h.html.match(/aria-label=/g)||[]).length,10);assert.ok(h.html.includes('코치진'));assert.ok(h.html.includes('계약금 즉시 차감'));assert.ok(h.html.includes('컵·챔피언스리그 경기에는 주급과 계약 기간이 소모되지'));
 });
 console.log('Validated '+groups+' staff UI groups including real actions, mobile compact details, lazy hidden panels and accessible controls.');

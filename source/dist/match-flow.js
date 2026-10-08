@@ -1,7 +1,7 @@
 (function(root){
  'use strict';
  const F=root.Football||(typeof require==='function'?require('./engine.js'):null);
- const speeds={slow:{label:'차분하게',multiplier:.5,stepMs:3600},normal:{label:'보통',multiplier:1,stepMs:1800},fast:{label:'빠르게',multiplier:2,stepMs:900}};
+ const speeds={slow:{label:'차분하게',multiplier:.5,stepMs:3600},normal:{label:'보통',multiplier:1,stepMs:1800},fast:{label:'빠르게',multiplier:2,stepMs:900},rapid:{label:'아주 빠르게',multiplier:4,stepMs:450}};
  function normalize(value){return {speed:Object.hasOwn(speeds,value?.speed)?value.speed:'normal',coachPause65:value?.coachPause65===true};}
  function step(match,prefs){
   if(!F.running(match)||match.paused)return [];

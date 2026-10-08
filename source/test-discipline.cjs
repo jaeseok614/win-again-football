@@ -29,9 +29,7 @@ test('forged cards and card commentary are rejected',()=>{
 test('cards use an independent random stream and old matches remain card free',()=>{
  const old=advance(F.create(7)),current=advance(fixture(7));assert.equal(current.rng,old.rng);
  assert.equal(old.discipline,undefined);assert.deepEqual(F.restore(copy(old)),old);
- const legacy=S.create(7);delete legacy.disciplineRules;delete legacy.match.discipline;
- const restored=S.restore(copy(legacy));advance(restored.match);const next=S.settle(restored);
- assert.equal(next.match.discipline,undefined);assert.deepEqual(S.restore(copy(next)),next);
+ const currentSeason=S.create(7);assert.ok(currentSeason.match.discipline);const bad=copy(currentSeason);delete bad.disciplineRules;assert.throws(()=>S.restore(bad));
 });
 test('season career and statistics settle actual red-card minutes and restore',()=>{
  let s,red;for(let seed=1;seed<=30;seed++){s=S.create(seed);advance(s.match);red=s.match.discipline.events.find(e=>e.team===0&&e.card==='red');if(red)break;}

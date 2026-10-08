@@ -15,6 +15,11 @@ Final mechanical export transformations (sharp 0.35.4):
 - football-loading-v1.webp: 720 x 1260 WebP, quality 76, effort 6, 94926 bytes.
 Inspection: both final assets visually checked with view_image; the ball silhouette and stadium lighting remain clear, the portrait has dark upper space for title and status added in code.
 
+Expanded player faces (2026-10-06): `source/dist/assets/player-faces-v15.jpg`
+adds 16 portrait tiles to the original 28-face atlas. It is one shared local asset,
+not one copy per player; JPEG quality 86 is used to keep offline download size low.
+Source generation prompt and provenance: `source/player-faces-v15-original-prompt.txt`.
+
 EXACT APP ICON PROMPT
 Use case: stylized-concept
 Asset type: Android football management game launcher icon, square 1024x1024 composition.

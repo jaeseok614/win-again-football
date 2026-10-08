@@ -33,13 +33,13 @@ test('actual live play counters and fatigue change without the read consuming ra
 });
 
 test('quick selection contains the three actual lowest-energy starters in stable order',()=>{
- const s=advance(S.create(),37),m=s.match,before=copy(s),d=Matchday.read(s);assert.equal(d.lowestEnergy.length,3);for(const p of d.lowestEnergy){assert(m.lineup.includes(p.id));assert.equal(p.energy,m.players[p.id].energy);assert.equal(p.primary,m.players[p.id][p.primaryKey]);}assert(d.lowestEnergy[0].energy<=d.lowestEnergy[1].energy);assert(d.lowestEnergy[1].energy<=d.lowestEnergy[2].energy);assert.equal(d.lowestEnergy[0].id,'f1');assert.deepEqual(s,before);
+ const s=advance(S.create(),37),m=s.match,before=copy(s),d=Matchday.read(s);assert.equal(d.lowestEnergy.length,3);for(const p of d.lowestEnergy){assert(m.lineup.includes(p.id));assert.equal(p.energy,m.players[p.id].energy);assert.equal(p.primary,m.players[p.id][p.primaryKey]);}assert(d.lowestEnergy[0].energy<=d.lowestEnergy[1].energy);assert(d.lowestEnergy[1].energy<=d.lowestEnergy[2].energy);assert.equal(d.lowestEnergy[0].energy,Math.min(...m.lineup.filter(id=>!m.discipline.events.some(e=>e.card==='red'&&e.team===0&&e.id===id)).map(id=>m.players[id].energy)));assert.deepEqual(s,before);
  const fresh=S.create(),freshBefore=copy(fresh),tied=Matchday.read(fresh);assert.deepEqual(tied.lowestEnergy,Matchday.read(fresh).lowestEnergy);tied.lowestEnergy[0].energy=0;assert.deepEqual(fresh,freshBefore);
 });
 
 test('paused tactics and same-minute substitution reflect the current players and decision logs',()=>{
  const s=advance(S.create(),17),m=s.match;m.paused=true;F.setTactic(m,'press');F.swap(m,'f1','f3');const before=copy(s),d=Matchday.read(s,'f3');
- assert.equal(d.liveMode,'paused');assert.equal(d.status,'작전 타임');assert.equal(d.paused,true);assert.equal(d.minute,17);assert.equal(d.tactic,'press');assert.equal(d.tacticLabel,'몰아붙이기');assert.equal(d.selected.id,'f3');assert.equal(d.substitution.used,1);assert.equal(d.substitution.remaining,2);assert.equal(d.events[0].type,'sub');assert.equal(d.events[1].type,'tactic');assert.equal(d.events[0].minute,17);assert.deepEqual(d.candidates.map(p=>p.id),['f4']);assert.equal(Matchday.read(s,'f1').selected,null);assert.deepEqual(s,before);
+ assert.equal(d.liveMode,'paused');assert.equal(d.status,'작전 타임');assert.equal(d.paused,true);assert.equal(d.minute,17);assert.equal(d.tactic,'press');assert.equal(d.tacticLabel,'몰아붙이기');assert.equal(d.selected.id,'f3');assert.equal(d.substitution.used,1);assert.equal(d.substitution.remaining,4);assert.equal(d.events[0].type,'sub');assert.equal(d.events[1].type,'tactic');assert.equal(d.events[0].minute,17);assert.deepEqual(d.candidates.map(p=>p.id),['f4']);assert.equal(Matchday.read(s,'f1').selected,null);assert.deepEqual(s,before);
 });
 
 test('injured bench players and removed starters are never offered for re-entry',()=>{
@@ -48,7 +48,11 @@ test('injured bench players and removed starters are never offered for re-entry'
 });
 
 test('all three used substitutions disable further changes without inventing bench availability',()=>{
- const s=advance(S.create(),17);for(const [out,incoming] of [['f1','f3'],['d1','d5'],['m1','m5']])F.swap(s.match,out,incoming);const before=copy(s),d=Matchday.read(s,'f3');assert.deepEqual(d.substitution,{used:3,limit:3,remaining:0,canSubstitute:false,suggestion:null});assert.deepEqual(d.candidates.map(p=>p.id),['f4']);assert.deepEqual(s,before);
+ const s=advance(S.create(),17);for(const [out,incoming] of [['f1','f3'],['d1','d5'],['m1','m5'],['d2','d6'],['g1','g2']])F.swap(s.match,out,incoming);const before=copy(s),d=Matchday.read(s,'f3');assert.deepEqual(d.substitution,{used:5,limit:5,remaining:0,canSubstitute:false,suggestion:null,options:[],windows:{used:1,limit:3,remaining:2}});assert.deepEqual(d.candidates.map(p=>p.id),['f4']);assert.deepEqual(s,before);
+});
+
+test('modern matches expose five players and three real substitution windows without offering a spent window',()=>{
+ const s=advance(S.create(2060,{startingClub:true}),17),m=s.match;for(const [out,incoming] of [['f1','f3'],['d1','d5']])F.swap(m,out,incoming);advance(s,30);F.swap(m,'m1','m5');advance(s,45);F.swap(m,'f2','f4');advance(s,65);F.swap(m,'d2','d6');const before=copy(s),d=Matchday.read(s,'m2');assert.equal(m.version,10);assert.deepEqual(d.substitution.windows,{used:3,limit:3,remaining:0});assert.equal(d.substitution.used,5);assert.equal(d.substitution.remaining,0);assert.equal(d.substitution.canSubstitute,false);assert.equal(d.substitution.suggestion,null);assert.deepEqual(s,before);
 });
 
 test('natural breaks and the last legal minute have distinct accurate control states',()=>{
@@ -77,5 +81,14 @@ test('suggested substitution pairs the tired starter with a real healthy same-po
  const s=advance(S.create(2040),17),m=s.match;for(const id of m.lineup)m.players[id].energy=80;for(const p of Object.values(m.players).filter(p=>!m.lineup.includes(p.id)))p.energy=75;m.players.f1.energy=31;m.players.f3.energy=94;const before=copy(s),d=Matchday.read(s),q=d.substitution.suggestion;
  assert.equal(q.out.id,'f1');assert.equal(q.incoming.id,'f3');assert.equal(q.out.pos,q.incoming.pos);assert.equal(q.energyGain,63);assert.equal(q.primaryDelta,m.players.f3.attack-m.players.f1.attack);assert.match(q.reason,/체력 31/);assert.equal(m.subs,0);assert.deepEqual(s,before);
  m.players.f3.injuryRemaining=1;m.players.f4.injuryRemaining=1;assert.equal(Matchday.read(s).substitution.suggestion,null);m.phase='full';assert.equal(Matchday.read(s).substitution.suggestion,null);
+});
+
+test('substitution shortlist ranks at most three real same-position changes and only describes their live impact',()=>{
+ const s=advance(S.create(2042),65),m=s.match;m.discipline={version:1,events:[]};for(const id of m.lineup)m.players[id].energy=82;for(const p of Object.values(m.players).filter(p=>!m.lineup.includes(p.id)))p.energy=88;
+ const targets=['FW','DEF','MID'].map(pos=>m.lineup.map(id=>m.players[id]).find(p=>p.pos===pos));for(const [index,p] of targets.entries())p.energy=[28,46,61][index];
+ const before=copy(s),options=Matchday.read(s).substitution.options;
+ assert.equal(options.length,3);assert.equal(options[0].out.id,targets[0].id);assert.equal(options[0].urgency,'긴급');
+ for(const option of options){assert.equal(option.out.pos,option.incoming.pos);assert(option.energyGain>0);assert.equal(option.minutes,25);assert.match(option.reason,/남은 25분/);assert(Number.isFinite(option.score));}
+ assert.deepEqual(s,before);
 });
 console.log('Validated '+checks+' actual matchday centre groups.');

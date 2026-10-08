@@ -24,7 +24,9 @@ test('only a confirmed receipt earns a three-goal badge and substitution must oc
  assert.equal(result.cards[2].done,true);
  assert.equal(result.cards[2].evidence,'교체 1명');
  assert.equal(model.perfectCount,Number(result.perfect));assert.equal(model.last.completed,result.completed);
+ assert.equal(model.currentStreak,1);assert.equal(model.bestStreak,1);assert.equal(model.completedGoals,result.completed);
  assert.deepEqual(Objectives.read(S.restore(copy(s))),model);
+ let next=S.restore(copy(s));finish(next.match);next=S.settle(next);const afterMiss=Objectives.read(next);assert.equal(afterMiss.currentStreak,0);assert.equal(afterMiss.bestStreak,1);assert.equal(afterMiss.completedGoals,result.completed+afterMiss.last.completed);assert.equal(afterMiss.perfectCount,1);
 });
 
 test('defensive objective uses own-relative score, not home/away order or guessed statistics',()=>{
@@ -40,5 +42,19 @@ test('home challenge is hidden during live play and escapes opponent names',()=>
  vm.runInContext(fs.readFileSync(__dirname+'/dist/matchday-objectives-ui.js','utf8'),ctx);
  ctx.renderMatchdayObjectives();assert.equal(host.innerHTML,'');
  ctx.view='club';ctx.MatchdayObjectives={read(){return {...Objectives.read(s),upcoming:{opponent:'<상대>',cards:Objectives.read(s).upcoming.cards}};}};
- ctx.renderMatchdayObjectives();assert.match(host.innerHTML,/매치데이 3칸 도전/);assert.match(host.innerHTML,/&lt;상대&gt;/);assert.ok(!host.innerHTML.includes('<상대>'));
+ ctx.renderMatchdayObjectives();assert.match(host.innerHTML,/매치데이 3칸 도전/);assert.match(host.innerHTML,/목표 0개 · 완벽 0회 · 연속 0회 · 최고 0회/);assert.match(host.innerHTML,/&lt;상대&gt;/);assert.ok(!host.innerHTML.includes('<상대>'));
+});
+
+function at(match,minute){while(match.minute<minute){if(!F.running(match))F.begin(match);match.paused=false;F.tick(match);}}
+test('live challenge counts true in-play replacements and does not award provisional goals',()=>{
+ const s=S.create(101);F.swap(s.match,'f1','f3');let d=Objectives.current(s);assert.equal(d.prep,true);assert.equal(d.cards.find(c=>c.id==='substitute').value,0);assert.ok(d.cards.every(c=>c.met===null));at(s.match,45);F.swap(s.match,'f3','f4');F.swap(s.match,'d1','d5');const before=JSON.stringify(s);d=Objectives.current(s);assert.equal(d.cards.find(c=>c.id==='substitute').value,2);assert.equal(d.cards.find(c=>c.id==='substitute').status,'met');assert.equal(d.confirmed,false);assert.equal(Objectives.read(s).perfectCount,0);assert.equal(JSON.stringify(s),before);assert.deepEqual(Objectives.current(S.restore(copy(s))),d);finish(s.match);const pending=Objectives.current(s);assert.equal(pending.pending,true);const next=S.settle(s),result=Objectives.result(next.statistics.records.at(-1));assert.equal(pending.met,result.completed);assert.equal(Objectives.read(next).perfectCount,Number(result.perfect));
+});
+test('defensive progress remains reversible until full time and every displayed score is own-relative',()=>{
+ const s=S.create(101),ctx=vm.createContext({Season:{...S,club:id=>({...S.club(id),attack:90})}});vm.runInContext(fs.readFileSync(__dirname+'/dist/matchday-objectives.js','utf8'),ctx);s.match.phase='first';s.match.minute=20;s.match.score=[1,1];let card=ctx.MatchdayObjectives.current(s).cards.find(c=>c.id==='defend');assert.equal(card.status,'holding');assert.equal(card.value,1);s.match.score=[1,2];card=ctx.MatchdayObjectives.current(s).cards.find(c=>c.id==='defend');assert.equal(card.status,'missed');assert.equal(card.met,false);assert.equal(card.value,2);assert.equal(ctx.MatchdayObjectives.current(s).confirmed,false);
+});
+test('Cup challenge uses the current Cup fixture without touching league points or pending statistics',()=>{
+ let s=S.create(9109);while(s.competition!=='cup'){finish(s.match);s=S.settle(s);}at(s.match,45);const before=JSON.stringify(s),d=Objectives.current(s);assert.equal(d.competition,'cup');assert.equal(d.opponent,S.opponentFor(s).name);assert.equal(d.minute,45);assert.equal(d.pending,false);assert.equal(JSON.stringify(s),before);assert.equal(Objectives.current({match:null}).valid,false);
+});
+test('live challenge markup keeps waiting and final confirmation separate and escapes goal evidence',()=>{
+ const s=S.create(101),ctx=vm.createContext({escapeText:v=>String(v).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')});vm.runInContext(fs.readFileSync(__dirname+'/dist/matchday-objectives-ui.js','utf8'),ctx);let d=Objectives.current(s),html=ctx.matchdayChallengeMarkup(d);assert.match(html,/킥오프 대기/);assert.match(html,/선택 도전/);finish(s.match);d=Objectives.current(s);d.cards[0].evidence='<기록>';html=ctx.matchdayChallengeMarkup(d);assert.match(html,/결과 확정 대기/);assert.match(html,/아직 휘장을 받지 않았습니다/);assert.match(html,/&lt;기록&gt;/);assert.doesNotMatch(html,/<기록>/);
 });

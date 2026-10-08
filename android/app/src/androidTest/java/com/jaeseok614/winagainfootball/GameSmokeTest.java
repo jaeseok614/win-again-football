@@ -268,23 +268,72 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "appSessionStarted&&view==='club'&&document.getElementById('launch-screen').hidden");
             assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
             assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display!=='none'&&document.querySelectorAll('.media-review').length===3"));
+            assertEquals("New stadium illustration must be visible on the default home", "true", evaluate(scenario,
+                "(()=>{const art=document.querySelector('#mobile-command-center .club-growth-picture');return !!art&&art.getBoundingClientRect().width>0&&getComputedStyle(art).backgroundImage.includes('data:image/webp');})()"));
+            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset,ClubArt.storyAsset,ClubArt.momentAsset,ClubArt.deadballAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048&&widths[5]===2048&&widths[6]===1672&&widths[7]===960).catch(()=>window.newArtDecoded=false);return true;})()");
+            awaitTrue(scenario, "window.newArtDecoded===true");
+            assertEquals("Opponent lineup must retain eleven distinct faces in the expanded atlas", "true", evaluate(scenario,
+                "(()=>{const rows=Opposition.roster(S.opponentFor(season)),indices=rows.map(p=>Portraits.index(p));return new Set(indices).size===11&&rows.every(p=>Portraits.html(p).includes('--portrait-size:800% 800%'));})()"));
             screenshot(scenario, "android-home-media.png");
+            tapWebElement(scenario, "#club-story-open");
+            assertEquals("Narrative replies must stay inside the phone dialog", "true", evaluate(scenario,
+                "(()=>{const d=document.getElementById('club-story-dialog'),buttons=[...d.querySelectorAll('button')];return d.open&&d.scrollHeight<=d.clientHeight+1&&buttons.length>=4&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;})&&getComputedStyle(d.querySelector('.story-art')).backgroundImage.includes('data:image/webp');})()"));
+            screenshot(scenario, "android-story-chapter.png");
+            tapWebElement(scenario, "#club-story-dialog [data-story-close]");
+
             tapWebElement(scenario, "#mobile-match-action");
             awaitTrue(scenario, "view==='match'&&!document.getElementById('match-pane').hidden");
+            assertEquals("Visible speed picker must have four choices and preserve match state", "true", evaluate(scenario,
+                "(()=>{const e=document.getElementById('pause'),before=JSON.stringify(season);if(e.tagName!=='SELECT'||e.options.length!==4)return false;e.value='rapid';e.dispatchEvent(new Event('change',{bubbles:true}));return playbackPrefs.speed==='rapid'&&JSON.stringify(season)===before;})()"));
+
             assertEquals("true", evaluate(scenario, "document.querySelectorAll('#players button:disabled').length===11"));
             assertEquals("true", evaluate(scenario, "!document.getElementById('match-popup').open&&document.getElementById('matchday-live').hidden===false"));
-            tapWebElement(scenario, "#matchday-roster");
+            assertEquals("Preparation HUD must compare actual starter abilities", "true", evaluate(scenario,
+                "(()=>{const h=document.getElementById('match-live-stats').textContent;return h.includes('우리 종합')&&h.includes('상대 종합')&&h.includes('선발 체력')&&!h.includes('점유율');})()"));
+            assertEquals("Preparation offers lineup and opponent directly", "true", evaluate(scenario,
+                "document.getElementById('matchday-roster').textContent==='선발 · 후보'&&document.getElementById('match-open-details').dataset.matchPopup==='opponent'"));
+            tapWebElement(scenario, "#match-open-details");
             awaitTrue(scenario, "document.getElementById('match-popup').open");
-            tapWebElement(scenario, "#match-popup [data-match-popup='opponent']");
             awaitTrue(scenario, "!document.getElementById('opposition-report').hidden&&document.querySelectorAll('.opposition-roster tbody tr').length===11");
             assertEquals("true", evaluate(scenario, "document.getElementById('opposition-report').textContent.includes('전술 성향')&&document.getElementById('opposition-report').textContent.includes('체력')"));
+            assertEquals("Readable opponent summary and roster must precede detailed analysis", "true", evaluate(scenario,
+                "(()=>{const host=document.getElementById('opposition-report'),roster=host.querySelector('.opposition-roster'),coach=host.querySelector('.opposition-coach-analysis'),name=host.querySelector('.opposition-player-name');return host.querySelectorAll('.opposition-snapshot dd').length===4&&!!(roster.compareDocumentPosition(coach)&Node.DOCUMENT_POSITION_FOLLOWING)&&parseFloat(getComputedStyle(name).fontSize)>=12;})()"));
             screenshot(scenario, "android-opposition-report.png");
+            tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
+            tapWebElement(scenario, "#matchday-roster");
+            awaitTrue(scenario, "document.querySelectorAll('#match-popup-roster [data-matchday-player]').length===11");
+            assertEquals("Starter and bench comparison must show ability, fitness and condition", "true", evaluate(scenario,
+                "(()=>{const first=document.querySelector('#match-popup-roster [data-matchday-player]'),bench=document.getElementById('bench'),chooser=document.getElementById('match-popup-select');return first.textContent.includes('종합')&&first.textContent.includes('체력')&&bench.textContent.includes('컨디션')&&chooser.value==='roster'&&first.getBoundingClientRect().height>=44;})()"));
+            screenshot(scenario, "android-starter-comparison.png");
             tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
             awaitTrue(scenario, "!document.getElementById('match-popup').open");
             assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
             assertEquals("Score, pitch and main action must share the phone viewport", "true", evaluate(scenario,
                 "(()=>{const p=document.getElementById('pitch').getBoundingClientRect(),b=document.getElementById('primary').getBoundingClientRect(),s=document.querySelector('.scoreboard').getBoundingClientRect();return s.top>=0&&p.top>=0&&p.bottom<=b.top&&b.bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1;})()"));
             screenshot(scenario, "android-compact-match.png");
+            evaluate(scenario, "openMatchPopup('setpieces');true");
+            awaitTrue(scenario, "matchPopupActive==='setpieces'&&document.querySelectorAll('[data-deadball-role]').length===3");
+            assertEquals("Three specialist roles and their portraits fit without scrolling", "true", evaluate(scenario,
+                "(()=>{const host=document.getElementById('match-popup-setpieces'),body=host.closest('.match-popup-body');return body.scrollHeight<=body.clientHeight+1&&host.querySelectorAll('.player-portrait').length===3&&[...host.querySelectorAll('select')].every(e=>{const r=e.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;});})()"));
+            assertEquals("Role selection persists the actual identity without consuming RNG", "true", evaluate(scenario,
+                "(()=>{const rng=state.rng,e=document.querySelector('[data-deadball-role=freeKick]');e.value='m1';e.dispatchEvent(new Event('change',{bubbles:true}));return season.plan.setPieces.freeKick===state.players.m1.identity&&state.rng===rng&&JSON.stringify(S.restore(JSON.parse(JSON.stringify(season))))===JSON.stringify(season);})()"));
+            screenshot(scenario, "android-set-piece-room.png");
+            tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
+
+            evaluate(scenario, "openMatchPopup('brief');true");
+            awaitTrue(scenario, "matchPopupActive==='brief'&&document.querySelectorAll('.brief-flow ol li').length===6");
+            assertEquals("The match brief must fit without scrolling and retain real counters", "true", evaluate(scenario,
+                "(()=>{const body=document.querySelector('#match-popup .match-popup-body'),buttons=[...document.querySelectorAll('[data-brief-target]')];return body.scrollHeight<=body.clientHeight+1&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.bottom<=innerHeight;})&&MatchBrief.read(state).score.join(':')===state.score.join(':');})()"));
+            screenshot(scenario, "android-match-brief.png");
+            tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
+            tapWebElement(scenario, "#match-bench-events");
+            awaitTrue(scenario, "matchPopupActive==='talk'&&document.querySelectorAll('[data-life-talk]').length===4");
+            tapWebElement(scenario, "[data-life-talk='encourage']");
+            awaitTrue(scenario, "document.querySelectorAll('.life-reaction-card').length===11");
+            assertEquals("All saved player reactions and faces fit the phone", "true", evaluate(scenario,
+                "(()=>{const cards=[...document.querySelectorAll('.life-reaction-card')];return cards.length===11&&cards.every(e=>{const r=e.getBoundingClientRect(),face=e.querySelector('.player-portrait');return r.top>=0&&r.bottom<=innerHeight&&face.getBoundingClientRect().width>0;})&&JSON.stringify(S.restore(JSON.parse(JSON.stringify(season))))===JSON.stringify(season);})()"));
+            screenshot(scenario, "android-player-reactions.png");
+            tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
             if ("true".equals(evaluate(scenario, "state.phase!=='full'"))) {
                 tapWebElement(scenario, ".match-quick-menu [data-match-popup='tactics']");
                 awaitTrue(scenario, "document.querySelectorAll('#tactical-editor input[type=range]').length===0&&document.querySelectorAll('[data-mobile-formation]').length===12");
@@ -294,6 +343,34 @@ public final class GameSmokeTest {
                 tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
             }
 
+            scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
+    @Test public void wholeSquadGuideAndKeywordFreeMarket() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());season=S.create(4088);state=season.match;appSessionStarted=true;view='club';render();openManagerGuide(2);return true;})()");
+            tapWebElement(scenario, "#manager-guide-next");
+            awaitTrue(scenario, "document.getElementById('squad-overview-dialog').open&&document.querySelectorAll('[data-squad-detail]').length===18");
+            assertEquals("true", evaluate(scenario, "(()=>{const d=document.getElementById('squad-overview-dialog').getBoundingClientRect(),list=document.querySelector('.squad-overview-list');return d.top>=0&&d.bottom<=innerHeight&&d.width<=innerWidth&&list.clientHeight>80;})()"));
+            screenshot(scenario, "android-whole-squad.png");
+            tapWebElement(scenario, "[data-squad-detail='sp_f1']");
+            awaitTrue(scenario, "document.getElementById('player-detail-dialog').open&&document.getElementById('player-detail-name').textContent==='손헝민'");
+            assertEquals("true", evaluate(scenario, "document.querySelector('.detail-hero .player-portrait').dataset.portraitIndex==='21'"));
+            evaluate(scenario, "WinAgainAndroid.handleBack()");
+            awaitTrue(scenario, "!document.getElementById('player-detail-dialog').open&&document.getElementById('squad-overview-dialog').open&&managerGuideStep===2");
+            tapWebElement(scenario, "#squad-overview-close");
+            awaitTrue(scenario, "managerGuideStep===3");
+            evaluate(scenario, "(()=>{managerGuideActive=false;managerGuideWaiting=null;document.getElementById('manager-guide').close();setView('market');return true;})()");
+            assertEquals("8", evaluate(scenario, "document.querySelectorAll('.market-card').length"));
+            evaluate(scenario, "(()=>{const p=document.getElementById('transfer-position');p.value='FW';p.dispatchEvent(new Event('change'));return true;})()");
+            awaitTrue(scenario, "document.querySelectorAll('.market-card').length===2&&document.getElementById('transfer-query').value===''");
+            evaluate(scenario, "(()=>{const q=document.getElementById('transfer-query');q.value='없는 이름';q.dispatchEvent(new Event('input'));return true;})()");
+            awaitTrue(scenario, "document.querySelectorAll('.market-card').length===0");
+            evaluate(scenario, "(()=>{const q=document.getElementById('transfer-query');q.value='';q.dispatchEvent(new Event('input'));return true;})()");
+            awaitTrue(scenario, "document.querySelectorAll('.market-card').length===2");
+            screenshot(scenario, "android-keyword-free-market.png");
             scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
         }
     }

@@ -24,12 +24,12 @@ test('a trained recruited outgoing player uses current values instead of the slo
 
 test('incoming current player values are respected when a caller supplies an owned candidate',()=>{
  const s=S.recruit(S.create(1303),'t_f2','f3'),incoming=s.squad.f3,outgoing=s.squad.f2;incoming.attack=95;incoming.speed=99;incoming.endurance=94;
- const html=harness(s).render(incoming,outgoing);assert.match(metric(html,'primary'),/76 → 95/);assert.match(metric(html,'speed'),/70 → 99/);assert.match(metric(html,'endurance'),/64 → 94/);assert.match(metric(html,'growth'),/15 → 2/);assert.equal(F.identityProfile('t_f2').attack,73);
+ const html=harness(s).render(incoming,outgoing);assert.match(metric(html,'primary'),/76 → 95/);assert.match(metric(html,'speed'),/73 → 99/);assert.match(metric(html,'endurance'),/80 → 94/);assert.match(metric(html,'growth'),/15 → 2/);assert.equal(F.identityProfile('t_f2').attack,73);
 });
 
 test('immediate strength and growth headroom remain separate when their comparison directions disagree',()=>{
  const s=S.create(1304),outgoing=s.squad.f3,incoming=F.identityProfile('t_f1'),html=harness(s).render(incoming,outgoing);
- assert.match(metric(html,'primary'),/comparison-delta up/);assert.match(metric(html,'primary'),/66 → 89/);assert.match(metric(html,'growth'),/comparison-delta down/);assert.match(metric(html,'growth'),/31 → 3/);assert.doesNotMatch(html,/종합 점수|무조건|영입 추천|더 좋은 선수/);assert.equal((html.match(/data-comparison-stat=/g)||[]).length,4);
+ assert.match(metric(html,'primary'),/comparison-delta up/);assert.match(metric(html,'primary'),/70 → 89/);assert.match(metric(html,'growth'),/comparison-delta down/);assert.match(metric(html,'growth'),/27 → 3/);assert.doesNotMatch(html,/종합 점수|무조건|영입 추천|더 좋은 선수/);assert.equal((html.match(/data-comparison-stat=/g)||[]).length,4);
 });
 
 test('maximum caps and equal metrics show zero remaining growth rather than an invented future gain',()=>{
@@ -39,7 +39,7 @@ test('maximum caps and equal metrics show zero remaining growth rather than an i
 
 test('youth candidates use their seeded identity and current outgoing growth at the selected slot',()=>{
  const s=S.create(1306),incoming=F.youthCandidates(s.seed,s.year,1,'FW')[1],outgoing=s.squad.f1;outgoing.attack=86;
- const h=harness(s),html=h.render(incoming,outgoing),remaining=incoming.potential-incoming.attack;assert.match(metric(html,'primary'),new RegExp('86 → '+incoming.attack));assert.match(metric(html,'growth'),new RegExp('1 → '+remaining));assert.deepEqual(h.portraits.map(p=>p.identity),['f1',incoming.identity]);assert.ok(html.includes(incoming.name));
+ const h=harness(s),html=h.render(incoming,outgoing),remaining=incoming.potential-incoming.attack;assert.match(metric(html,'primary'),new RegExp('86 → '+incoming.attack));assert.match(metric(html,'growth'),new RegExp('1 → '+remaining));assert.deepEqual(h.portraits.map(p=>p.identity),['sp_f1',incoming.identity]);assert.ok(html.includes(incoming.name));
 });
 
 test('names and identity attributes are escaped before becoming comparison markup',()=>{

@@ -18,7 +18,7 @@ test('official Gradle wrapper and distribution SHA256 are pinned',()=>{
 test('Android title, stadium loader, football bitmap and adaptive safe icon are bundled',()=>{
  const manifest=read('app/src/main/AndroidManifest.xml'),strings=read('app/src/main/res/values/strings.xml');
  assert.match(manifest,/android:label="@string\/app_name"/);assert.match(manifest,/@mipmap\/ic_launcher_round/);
- assert.ok(strings.includes('눈 떠보니 5부 리그 감독이었다! 이번 생엔 우승한다'));
+ assert.ok(strings.includes('눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기'));
  const png=fs.readFileSync(path.join(android,'app/src/main/res/drawable-nodpi/football_icon.png'));
  assert.equal(png.subarray(1,4).toString(),'PNG');assert.equal(png.readUInt32BE(16),512);assert.equal(png.readUInt32BE(20),512);
  const stadium=fs.readFileSync(path.join(android,'app/src/main/res/drawable-nodpi/launch_stadium.webp'));
@@ -33,7 +33,7 @@ test('WebView restricts local origin, untrusted navigation, file access, and bri
  assert.match(java,/WebViewAssetLoader/);assert.match(java,/setAllowFileAccess\(false\)/);assert.match(java,/setAllowContentAccess\(false\)/);
  assert.doesNotMatch(java,/addJavascriptInterface/);assert.match(java,/Collections\.singleton\(GAME_ORIGIN\)/);assert.match(java,/!isMainFrame/);
  assert.match(java,/request\.hasGesture\(\)/);assert.match(java,/Intent\.ACTION_CREATE_DOCUMENT/);assert.match(java,/Intent\.ACTION_OPEN_DOCUMENT/);
- assert.match(java,/MAX_FILE_BYTES = 2 \* 1024 \* 1024/);assert.match(java,/onRenderProcessGone/);
+ assert.match(java,/MAX_FILE_BYTES = 16 \* 1024 \* 1024/);assert.match(java,/onRenderProcessGone/);
  assert.match(java,/!request\.isForMainFrame\(\) && isInlineImage\(uri\)/);
  for(const mime of ['png','webp','jpeg'])assert.ok(java.includes('data:image/'+mime+';base64,'));
  assert.doesNotMatch(java,/data:text\/html|data:image\/svg/);
@@ -57,6 +57,8 @@ test('Android back closes game dialogs before switching tabs or exiting',()=>{
  dialogs=[];assert.equal(context.WinAgainAndroid.handleBack(),true);assert.equal(context.view,'club');
  assert.equal(context.WinAgainAndroid.handleBack(),false);assert.equal(pauses,1);assert.equal(saves,1);assert.equal(renders,1);
 });
+test('Android back dismisses the focused child report even when its parent is later in DOM order',()=>{setup();const child={dispatchEvent:()=>true,close:()=>closed++},parent={dispatchEvent:()=>true,close:()=>{throw Error('Parent must remain open');}};dialogs=[child,parent];context.document.activeElement={closest:()=>child};assert.equal(context.WinAgainAndroid.handleBack(),true);assert.equal(closed,1);});
+
 test('Android pause saves the campaign without automatically resuming play',()=>{
  setup();context.WinAgainAndroid.pause();assert.equal(pauses,1);assert.equal(saves,1);assert.equal(renders,1);
 });
@@ -69,7 +71,7 @@ test('Android pause saves the campaign without automatically resuming play',()=>
  const cancel=context.WinAgainAndroid.exportFile(text,'cancel.json');
  context.WinAgainNative.onmessage({data:JSON.stringify({id:posts[1].id,status:'cancelled'})});assert.equal((await cancel).status,'cancelled');
  await assert.rejects(context.WinAgainAndroid.exportFile(text,'../../escape.json'),/형식/);
- await assert.rejects(context.WinAgainAndroid.exportFile('가'.repeat(800000),'large.json'),/크기/);
+ await assert.rejects(context.WinAgainAndroid.exportFile('가'.repeat(Math.floor(16*1024*1024/3)+1),'large.json'),/크기/);
  console.log('PASS cancelled export, traversal filename and oversized UTF8 export are handled');
  const recovered=context.exportRecoveryOriginal();assert.equal(posts[2].text,'malformed original bytes');
  context.WinAgainNative.onmessage({data:JSON.stringify({id:posts[2].id,status:'error',message:'disk failed'})});assert.equal(await recovered,null);assert.equal(context.portabilityError,'disk failed');
@@ -82,6 +84,8 @@ test('Android pause saves the campaign without automatically resuming play',()=>
   assert.match(html,/Content-Security-Policy/);assert.match(html,/connect-src 'none'/);assert.match(html,/window\.WinAgainAndroid/);
   assert.doesNotMatch(html,/<script src=|<link rel="(?:stylesheet|manifest)"|navigator\.serviceWorker\.register/);
   assert.match(html,/id="campaign-import-file"|id=\\"campaign-import-file\\"/);
+  assert.equal((html.match(/data:image\/webp;base64,/g)||[]).length,11);
+  assert.doesNotMatch(html,/player-faces-v1[78]\.webp|club-growth-v[12]\.webp|club-chapters-v1\.webp|club-moments-v1\.webp/);
   console.log('PASS Android bundle is complete, deterministic, offline and retains the shared importer');
  }finally{fs.rmSync(temp,{recursive:true,force:true});}
 })().catch(error=>{console.error(error);process.exitCode=1;});

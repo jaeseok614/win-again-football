@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('nod
 let groups=0;function test(name,fn){fn();groups++;console.log('PASS '+name);}
 const root=path.resolve(__dirname,'..'),script=path.join(root,'setup-source.py'),archive=path.join(root,'football-source-v22.zip');
 function files(dir){return fs.readdirSync(dir,{recursive:true,withFileTypes:true}).filter(entry=>entry.isFile()).length;}
-function fixture(link=true){const dir=fs.mkdtempSync(path.join(os.tmpdir(),'win-again-source-')),target=path.join(dir,'football-source-v22.zip');fs.copyFileSync(script,path.join(dir,'setup-source.py'));if(link)fs.linkSync(archive,target);else fs.copyFileSync(archive,target);return dir;}
+function fixture(link=true){const dir=fs.mkdtempSync(path.join(os.tmpdir(),'win-again-source-')),target=path.join(dir,'football-source-v22.zip');fs.copyFileSync(script,path.join(dir,'setup-source.py'));if(link){try{fs.linkSync(archive,target);}catch(error){if(!['EPERM','EACCES','EXDEV'].includes(error.code))throw error;fs.copyFileSync(archive,target);}}else fs.copyFileSync(archive,target);return dir;}
 function run(dir){return cp.spawnSync(process.env.PYTHON||(process.platform==='win32'?'python':'python3'),['setup-source.py'],{cwd:dir,encoding:'utf8'});}
 
 test('setup restores a complete snapshot around tracked modular edits without overwriting them',()=>{

@@ -1,145 +1,109 @@
 # Football manager development
 
-Read DEVELOPMENT.md before changing the game.
-If HANDOFF.md is present, read it for the latest checkpoint, known failures and
-unfinished requests before editing or describing the build as ready.
-The latest modular source is tracked in source/. The original fallback snapshot is
-football-source-v22.zip. If source/ is absent,
-run `python3 setup-source.py` (Windows: `python setup-source.py`). This verifies the
-archive and extracts 140 files. If source/ exists, keep its current changes.
+Read DEVELOPMENT.md and the newest entry in HANDOFF.md before editing.
+Develop in source/dist; root index.html is generated. The source/ tree is the
+current implementation. football-source-v22.zip is only a historic snapshot;
+never replace current modules or restore retired legacy modules from that archive.
 
-Develop in source/dist, not the generated root index.html. Use Node.js and Python
-standard libraries; no npm install is needed. Test using the commands in
-DEVELOPMENT.md. Keep season save key win-again-season-v17 and legacy restore
-compatibility. Preserve existing campaigns during tests; use isolated fixtures.
+## Current owner requirements (2026-10-07; supersede historical notes)
 
-Never commit personal campaign exports, credentials, .openai, or local QA pages.
-The root files serve the published game. Source edits alone do not update the
-published game; prepare and verify the complete PWA bundle before deployment.
-Commit edited modular source files so subsequent tasks can continue from them.
+The owner explicitly retired old saves, old superstar rosters and 14-round leagues.
+Only season schema 10, match engine 10 and full five-tier campaigns are supported.
+Do not add compatibility engines, legacy schedules or automatic season migration.
+Fresh and practice squads use Tottunham starter identities (sp_*). Preserve valid
+current campaigns and player/contract identities during development and testing.
+Keep storage key win-again-season-v17 and app/package/protocol IDs stable.
+Opponent reports put formation/tactic, calculated strength and stamina before the
+eleven-player roster; long coach and specialist analysis follows the roster. Keep
+full readable names and preserve all abilities on mobile without horizontal swipes.
+Starter/bench comparison separates calculated overall/form from live stamina and
+does no work while hidden. Season story wording follows the current or historic
+division; first-division dialogue pursues TOP 6 rather than another promotion.
+Old chronological design notes do not override this current scope.
 
-## Persistent development requirements from the owner (2026-10-02)
+The title is "눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기". The parody club starts
+in the fifth division and needs four promotions to return to the first division.
+The first division has 20 clubs and 38 rounds; lower divisions have 24 clubs and
+46 rounds. Use one home and away meeting per opponent. Each lower division promotes
+the top two (the game's simplified rule). Relegation groups are division 1 bottom 3,
+division 2 bottom 3, division 3 bottom 4, division 4 bottom 2, division 5 none.
+Never advance a valid campaign on restore. Only the player's explicit season-review
+action starts a new season. League rounds consume wages and staff contract weeks;
+cup/European fixtures have separate receipts and statistics. Keep deterministic
+fixture, RNG, history and financial validation. Europe qualification uses the
+previous first-division top two. Cups take priority at shared calendar gates.
 
-Match screen requirement (2026-10-05): keep the scoreboard, clock, live pitch,
-commentary and essential match buttons in one viewport without page scrolling.
-Substitution, tactics, player tools, reports, statistics, team talks, settings and
-results belong in accessible popups, not inline panels pushing the pitch away.
-Opening a planning popup pauses the match; closing must never silently resume it.
-Reuse existing controls and require an explicit candidate action for substitutions.
-Preserve keyboard focus and Escape dismissal, allow scrolling inside popups, and
-verify small/short phone and desktop viewports. Apply this rule to future features.
+## Presentation and performance
 
-Owner refinement (2026-10-05): match controls occupy exactly two filled rows in
-prep, running, paused and full-time states. The live pitch is observation-only:
-no player selection or drag there. Position and role changes belong exclusively
-to the tactics popup; substitution selection lists every starter in its own popup.
-New UI campaigns use the Tottunham parody starter identities (sp_*) inspired by
-the 2024/25 Tottenham squad. Keep old squad identities and their contract history.
-The startingClub marker selects canonical starter contracts for finance/statistics
-validation. When an unmarked legacy campaign is already saved, make the title
-screen's primary action start the canonical Tottunham campaign and keep the previous
-campaign recoverable as the prior-save backup; do not resume its old superstar roster
-by default. Mental attributes influence team talks; rules:2 receipts replay the new
-formula and missing rules retain the original formula. Never reinterpret old talks.
-Onboarding/tutorial completion is a device preference, separate from campaign data. Keep the
-guided practice optional, connect it to real controls, and never auto-kickoff.
+Consider mobile performance in every change. Hidden dashboards do no work during
+live ticks. Cache immutable derived structures and invalidate previews when inputs
+change. For perceptible operations immediately show loading/progress, prevent
+repeated actions, report completion/failure and offer retry where useful. Show a
+percentage only when measurable. Keep startup assets small and offline-capable.
 
-Consider performance in every change, especially on mobile. Avoid rebuilding
-hidden dashboards during live match ticks; defer expensive work and keep startup
-assets small. Verify the actual mobile UI, touch targets and responsiveness.
-For operations that may take perceptible time, immediately show a loading state
-or progress gauge. Show a percentage only when progress can be measured; otherwise
-use an indeterminate indicator with a clear description. Prevent duplicate actions,
-show completion or failure, and offer a retry when useful. Never leave the player
-looking at an apparently frozen screen. Preserve these requirements in future work.
+Show a title menu before the management home. Do not run match time behind it.
+Onboarding is an optional device preference with skip and replay in settings.
+The scoreboard, clock, live pitch, commentary and essential match buttons fit one
+phone viewport. Controls occupy two filled rows on portrait phones in prep, running, paused and
+full states. Short landscape screens place these groups side by side to leave room
+for the pitch and readable commentary. The pitch is observation-only. Tactics, substitutions, statistics, reports,
+talks, results and settings use accessible popups with internal scrolling, keyboard
+focus, Escape dismissal and 44px touch targets. Opening planning pauses the match;
+closing never silently resumes it. Tactics use touch/pointer drag and the shared
+12-formation layout. Show full player names, overall skill, condition separately
+from stamina, and stamina gauges. Verify short/small phone and desktop layouts.
 
-Source now includes the full modular tree. Run `node source/run-tests.cjs` and build
-the complete public PWA with `node source/build-pwa.cjs`. Do not commit personal
-QA fixtures or browser saves. The v22 ZIP is the original fallback, not the newest
-source; setup-source.py only fills missing files and preserves current edits.
+Permanent owner feedback (2026-10-08): keep essential live information on one
+phone screen, with readable commentary and no horizontal slides for core facts.
+Use compact kits/numbers on the pitch and portraits in squad/detail dialogs.
+The foreground ball must remain visible over every player. Show possession
+recovery, ball carrying, forward runs, delivery, shot and goalkeeper response in
+order. A wing carrier advances beyond teammates before crossing; a goalkeeper
+narrows the angle and meets the ball before announcing a save. Presentation must
+not invent saved match statistics or change the clock, RNG or recorded outcome.
 
-Champions League is implemented in europe.js with the shared Football engine.
-Prior-season division 1 ranks 1 and 2 qualify for the following season. New
-five-tier campaigns use 20 clubs and 38 home-and-away matches in division one,
-then 24 clubs and 46 matches in divisions two through five. Preserve 14 rounds
-and 56 league result rows for old two-division and eight-club saves; international
-matches use their own results, receipts and statistics. Domestic Cup takes priority at a shared
-calendar gate. Only league matches consume salaries and staff contract weeks.
-Legacy saves keep their current match and season without adding European games;
-qualification applies after the next season transition. Keep strict deterministic
-fixture, RNG, receipt and historical champion validation. National-team matches
-remain future work. The Europe panel renders only when the tournament view opens.
+Reuse the existing explicit substitution selection flow: five players, three
+in-play windows, multiple replacements at the same minute share a window and
+minute-45 halftime changes do not consume windows. Synchronize set-piece takers
+when preparation lineups change. Ratings, estimated possession, chemistry and
+coaching comparisons are labelled derived read-only information; never invent
+missing events, appearances or engine bonuses.
 
-ClubLife provides optional pre-match, halftime and 65-minute team talks, canonical
-pre/post-match interviews and recent articles derived from real game receipts.
-Preserve deterministic RNG and old saves without morale. Talk confidence is capped
-at +/-3, and a spoken-to player cannot be replaced through recruitment mid-fixture.
-Keep hidden journal/talk views cheap. Coach portraits are original fictional art;
-do not substitute real club/player photos or download portrait assets at runtime.
+Keep articles visible on the home dashboard and derive assessments, manager story
+and goals from actual confirmed records. Use original fictional outlets, journalists,
+player/coach names and art; do not attribute simulated quotes to real newsrooms.
+Use bundled portrait atlases with stable identities, never runtime photo downloads.
+Show the current division's club/stadium growth illustration on the default home.
+Stage changes follow the actual explicit season transition, including relegation.
+Review comparisons use confirmed final league movement; pictures and the top-tier
+training campus do not create attendance, capacity, revenue or facility bonuses.
+Keep home rank, points, funds, availability, next opponent and primary actions above
+the phone navigation in both portrait and short landscape. Before kickoff show
+calculated starter strength and fitness; during play show football statistics.
+The guide opens the whole 18-player squad with positions, calculated overall,
+stamina and separate condition. Transfer filters work with an empty search box;
+clearing/editing a keyword immediately updates results, including Korean IME.
+Keep generation provenance in docs/. Detailed player traits are identity-derived.
+Optional team talks and ClubStory choices retain deterministic validated receipts.
+National-team play remains future work.
 
-Android is the intended Google Play release route. Build the offline native app
-with `node source/build-android.cjs` and android/gradlew. Keep local.properties,
-signing keys, generated assets and build outputs out of Git. Release bundles are
-unsigned until the owner creates a Play account and provides an upload key.
+## Verification and delivery
 
-The public game title is now "눈 떠보니 5부 리그 감독이었다! 이번 생엔 우승한다"
-(29 characters). The owner wants a long anime/light-novel-style title and football
-imagery in the app icon and startup loading screen. Keep the title readable on
-small screens; keep win-again protocol identifiers, save keys and package IDs
-stable when changing branding. Preserve original-art provenance in docs/.
+Use Node.js/Python standard libraries; no npm installation is required.
+Run node source/run-tests.cjs. Build and verify the public PWA with
+node source/build-pwa.cjs and source/test-pwa.cjs with PWA_DIST set to the repository.
+Build Android offline assets with node source/build-android.cjs and verify with
+node source/test-android.cjs. APK/AAB compilation requires Android Gradle/SDK;
+asset generation alone is not an APK or Google Play release.
 
-The owner tested the APK and wants an app title menu before the management home,
-visible articles without expansion buttons, and manager/player media assessments.
-Keep startup presentation out of campaign exports; never advance a restored match
-behind the title menu. Main score, pitch and match actions must fit a phone viewport.
-MediaRoom derives opinions from confirmed statistics without touching RNG or saves.
-Use clearly labelled original fictional outlets, never credit simulated quotes to
-actual journalists or newsrooms. Keep articles visible on the home dashboard.
+Commit modular source, regression tests and the complete generated public PWA.
+Never commit personal campaign exports, credentials, .openai, QA fixtures,
+local.properties, signing keys or generated Android game/build assets.
+Document exact tested results and any remaining limitation in HANDOFF.md.
+The owner authorized continued development and GitHub pushes to the current work
+branch. Do not request repeated confirmation for those actions. Never force-push
+or overwrite unexpected remote changes.
 
-Owner refinement (2026-10-05, APK feedback): tactics uses pointer/touch drag/drop,
-never position sliders. Derive assigned pitch position from coordinates while
-preserving natural registration and saved contracts. Live pitch remains read-only.
-Keep a shared layout source for all twelve formations. A shot highlight starts
-at the last visible ball, shows recovery/pass before shooting, and preserves RNG.
-New UI campaigns default to Tottunham with no separate Tottunham-start button.
-Onboarding appears on first play with visible skip; replay belongs in settings.
+All player-facing menus, headings, guidance, loading messages and club names use Korean as the primary language. Keep English IDs and source reference names internal; familiar football position abbreviations and terms may remain. Render English club references through EnglishPyramid.koreanName without changing campaign IDs, ratings or save history.
 
-Owner refinement (2026-10-05, player traits): display player-specific left/right foot
-strength and detailed positional suitability in reports and the tactics popup.
-Separate match condition from stamina. On the live pitch, show stamina as a vertical
-green/yellow/red fill gauge and condition as a separate dot; keep names legible and
-the entire match UI in one phone viewport. Preserve the identity-derived traits and
-old campaign saves. See docs/PLAYER_TRAITS_AND_CONDITION.md.
-Continue fictional story chapters on the home screen from confirmed season progress.
-Interactive ClubStory choices are optional campaign receipts, unlike onboarding.
-Keep their two-turn dialogue, identity, season and round validation on restore;
-derive rookie promises from confirmed league minutes, never invented appearances.
-Dialogue choices affect fictional relationships and later replies, not engine RNG
-or finance. Show dialogue in an accessible popup and keep hidden story views cheap.
-
-Owner refinement (2026-10-05, player labels): tactics player cards show full names
-with wrapping, never ellipsis, plus overall skill and live energy. Support links
-show a derived coach chemistry score and color with named component explanations.
-Use actual passing, deterministic teamwork, current role suitability and energy;
-keep this analysis separate from engine bonuses or invented shared-match records.
-Owner refinement (2026-10-05, career length and finances; expanded 2026-10-09):
-fresh Tottunham UI careers start in division five and pursue four promotions through
-five tiers. Division one has 20 clubs and 38 home-and-away matches; divisions two
-through five have 24 clubs and 46 matches. The game promotes the top two and
-relegates the bottom two where a neighboring tier exists; division five has no
-relegation. Keep league, cup, calendar, review, statistics, and finance tier-aware.
-New division-five scouting costs £8,000 against the £160,000 opening balance.
-Preserve old two-tier and eight-club saves, schedules, and receipts unchanged.
-Details: docs/FIVE_TIER_PYRAMID_AND_FINANCE.md.
-
-Owner refinement (2026-10-05, English club references and player faces; expanded
-2026-10-09): populate the five game tiers with 2026/27 Premier League, Championship,
-League One, League Two and National League references at full 20/24-club sizes.
-Keep Tottunham's National League story exception, existing club IDs, historic raw
-ratings, and old saves stable. Display the fictional parody names; keep the exact
-club references in source metadata and docs/ENGLISH_PYRAMID_REFERENCES_2026-27.md.
-Use the shared original fictional portrait atlas rather than real-player photos
-or runtime downloads. Keep fixed starters and initial transfer targets on
-distinct deterministic faces, show portraits on the live pitch and in squad and
-tactics screens, and register the large atlas once for both bundled and offline
-builds. Preserve the generation prompt beside the asset.
+Match viewing uses a visible 0.5x/1x/2x/4x speed picker, with start/pause/resume instead of a five-minute skip. Keep the same pattern in practice. Speed changes never advance minutes, alter RNG, or resume a pause. At 4x, major live scenes display at at most 2x so the ball/keeper sequence stays readable. Bench alerts use actual energy, discipline and visible score; decisions are explicit, respect substitution rules, and never announce an undisplayed goal. New match stories require confirmed complete records.

@@ -31,7 +31,7 @@ test('the final contract game still shows its paid coach wages after expiry even
  assert.equal(display.staffPayroll,person.wage);assert.equal(display.amount,expected);assert.equal(h.context.clubWeeklyWages(),E.wages(season));const review=h.context.matchReviewMarkup(R.read(season));assert.ok(review.includes(signed(expected)));assert.match(review,/선수·코치 급여 포함/);h.context.renderFinance();assert.ok(h.node('finance-summary').innerHTML.includes(signed(expected)));assert.equal(JSON.stringify(season),before);
 });
 test('Cup reviews exclude league payroll even when a same-week staff receipt exists',()=>{
- let {season}=hired(3704);while(season.competition!=='cup')season=play(season);assert.ok(season.finance.ledger.some(entry=>entry.type==='staff-wages'&&entry.round===season.round));season=play(season);
+ let {season}=hired(3704);while(season.round<season.cup.calendarRounds[0]-6)season=play(season);Staff.renew(season,'FW');while(season.competition!=='cup')season=play(season);assert.ok(season.finance.ledger.some(entry=>entry.type==='staff-wages'&&entry.round===season.round));season=play(season);
  const h=financeUi(season),before=JSON.stringify(season),d=R.read(season),cash=h.context.matchCashflow(d.cashflow);assert.equal(d.competition,'cup');assert.equal(cash.amount,d.cashflow.amount);assert.equal(cash.staffPayroll,0);const html=h.context.matchReviewMarkup(d);assert.ok(html.includes(signed(d.cashflow.amount)));assert.match(html,/컵 상금 포함/);assert.doesNotMatch(html,/선수·코치 급여 포함/);assert.equal(JSON.stringify(season),before);
 });
 test('last-year payroll with the same round never reduces a new-season receipt',()=>{

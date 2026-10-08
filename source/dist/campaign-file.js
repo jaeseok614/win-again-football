@@ -1,8 +1,8 @@
 (function(root){
  'use strict';
  const S=root.Season||(typeof require==='function'?require('./season.js'):null),F=root.Football||(typeof require==='function'?require('./engine.js'):null),Flow=root.MatchFlow||(typeof require==='function'?require('./match-flow.js'):null),T=root.Training||(typeof require==='function'?require('./training.js'):null);
- const format='win-again-campaign',version=1,maxBytes=2*1024*1024,dangerous=new Set(['__proto__','prototype','constructor']),views=['club','match','squad','market','academy','cup'];
- const tooLarge=()=>{throw Error('백업 파일은 2MiB 이하만 불러올 수 있어요.');};
+ const format='win-again-campaign',version=1,maxBytes=16*1024*1024,dangerous=new Set(['__proto__','prototype','constructor']),views=['club','match','squad','market','academy','cup'];
+ const tooLarge=()=>{throw Error('백업 파일은 16MiB 이하만 불러올 수 있어요.');};
  function bytes(text){
   if(typeof TextEncoder!=='undefined')return new TextEncoder().encode(text).length;
   let length=0;for(let i=0;i<text.length;i++){const code=text.charCodeAt(i);if(code<128)length++;else if(code<2048)length+=2;else if(code>=0xd800&&code<=0xdbff&&text.charCodeAt(i+1)>=0xdc00&&text.charCodeAt(i+1)<=0xdfff){length+=4;i++;}else length+=3;}return length;
@@ -34,7 +34,7 @@
  }
  function normalize(raw){
   if(!plain(raw)||!plain(raw.season))throw Error('구단 시즌 정보가 없는 파일이에요.');
-  if(![2,3,4,5,6,7,8,9].includes(raw.season.version))throw Error('현재 게임에서 지원하지 않는 시즌 버전이에요.');
+  if(raw.season.version!==10)throw Error('현재 게임에서 지원하지 않는 시즌 버전이에요.');
   let season;try{season=S.restore(raw.season);}catch(error){throw Error('구단 데이터가 손상되어 불러올 수 없어요. '+(error?.message||'시즌 상태를 확인하세요.'));}
   let view=views.includes(raw.view)?raw.view:'club';if(season.match&&F.running(season.match))view='match';if(!season.match&&view==='match')view='club';
   const individual=plain(raw.individual)?raw.individual:{},media=plain(raw.media)?raw.media:{},records=plain(raw.records)?raw.records:{};
@@ -54,7 +54,7 @@
  function create(payload,options={}){
   const envelope={format,version,createdAt:timestamp(options?.createdAt??new Date().toISOString()),payload:normalize(clone(payload))};if(bytes(JSON.stringify(envelope))>maxBytes)tooLarge();return envelope;
  }
- function stringify(payload,options={}){const text=JSON.stringify(create(payload,options),null,2);if(bytes(text)>maxBytes)tooLarge();return text;}
+ function stringify(payload,options={}){const text=JSON.stringify(create(payload,options));if(bytes(text)>maxBytes)tooLarge();return text;}
  function read(text){
   if(typeof text!=='string')throw Error('백업 파일의 내용을 읽을 수 없어요.');if(bytes(text)>maxBytes)tooLarge();
   let parsed;try{parsed=JSON.parse(text.replace(/^\uFEFF/,''));}catch{throw Error('백업 파일의 JSON 형식을 읽을 수 없어요.');}

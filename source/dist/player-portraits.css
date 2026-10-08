@@ -1,15 +1,47 @@
-/* Keep each fictional player's face recognizable from the squad list through the live match. */
+/* Portraits belong in squad/details; observation uses compact, readable kits. */
 .roster-profile-button .player-portrait{width:44px;height:44px;border-width:2px;box-shadow:0 3px 12px #02090f88}
 .bench-player .name-row .player-portrait{width:38px;height:38px;border-width:2px}
 .detail-hero .portrait-large{width:120px;height:120px}
 .individual-player-profile .portrait-large{width:98px;height:98px}
 .players .player-face-marker{position:relative;display:block;width:34px;height:34px;margin:0 auto 1px;border:2px solid #e4f2d4;border-radius:50%;background:#152632;box-shadow:0 3px 9px #00160f88}
-.players .player-face-marker .player-portrait{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:50%;box-shadow:none;background-size:700% 400%}
+.players .player-face-marker .player-portrait{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:50%;box-shadow:none;background-size:var(--portrait-size,700% 400%)}
 .players .player-face-marker i{position:absolute;right:-5px;bottom:-4px;min-width:15px;height:15px;padding:0 2px;border-radius:8px;background:#df2638;color:#fff;border:1px solid #ffd3d3;font:700 8px/13px system-ui;text-align:center;font-style:normal;box-shadow:0 1px 4px #0009}
 .player.selected .player-face-marker{outline:2px solid #fff;outline-offset:2px}
 .pitch[data-moment=goal] .player .player-face-marker{animation:jersey-celebrate .55s ease-out both}
-#match-popup .tactical-pitch button>.player-portrait{display:block;width:34px;height:34px;margin:2px auto;border:2px solid #98bb78;border-radius:50%;background-size:700% 400%;box-shadow:0 2px 7px #00150f99}
+#match-popup .tactical-pitch button>.player-portrait{display:block;width:34px;height:34px;margin:2px auto;border:2px solid #98bb78;border-radius:50%;background-size:var(--portrait-size,700% 400%);box-shadow:0 2px 7px #00150f99}
 #match-popup .tactical-pitch button>span:not(.player-portrait){display:block;width:100%;white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:normal;word-break:keep-all;line-height:1.12;margin:1px 0;font-size:8px}
 #match-popup .tactical-pitch button[aria-pressed=true]>.player-portrait{border-color:#e7ff8a;box-shadow:0 0 0 2px #d4f57755,0 2px 9px #00150f99}
 @media(max-width:730px){.roster-profile-button .player-portrait{width:39px;height:39px}.bench-player .name-row .player-portrait{width:34px;height:34px}.detail-hero .portrait-large{width:94px;height:94px}.individual-player-profile .portrait-large{width:84px;height:84px}.players .player-face-marker{width:30px;height:30px}#match-popup .tactical-pitch button>.player-portrait{width:30px;height:30px}}
 @media(max-width:380px){#match-popup .tactical-pitch button>span:not(.player-portrait){font-size:7px}}
+.match-popup-ready #players .player{width:60px;min-height:0;height:30px;max-width:none;overflow:visible;opacity:1}
+.match-popup-ready #players .player-face-marker{width:23px;height:25px;border:0;border-radius:0;background:linear-gradient(90deg,#a6d660,#e2ff9b 50%,#91bd4c);clip-path:polygon(24% 3%,37% 0,43% 8%,57% 8%,63% 0,76% 3%,100% 25%,81% 45%,73% 36%,73% 100%,27% 100%,27% 36%,19% 45%,0 25%);box-shadow:none;transform:rotate(var(--keeper-tilt,0deg))}
+.match-popup-ready #players .player-face-marker[data-position=GK]{background:linear-gradient(90deg,#62b2eb,#ace9ff,#4a91d0)}
+.match-popup-ready #players .player-face-marker .player-portrait{display:none}
+.match-popup-ready #players .player-face-marker i{inset:5px 0 auto;min-width:0;height:14px;border:0;border-radius:0;background:transparent;color:#142917;font:800 10px/14px system-ui;padding:0;box-shadow:none}
+.match-popup-ready #players .player-name{position:absolute;bottom:33px;left:50%;transform:translateX(-50%);margin:0;padding:1px 3px;border-radius:3px;background:#08231dc9;font-size:10px;line-height:13px;letter-spacing:0;text-shadow:none;color:#fff;max-width:85px;overflow:hidden;text-overflow:ellipsis}
+.match-popup-ready #players .player-role{display:none}
+.match-popup-ready #players .player-stamina{width:22px;height:3px;margin:3px auto 0}
+.match-popup-ready #players .player-form{position:absolute;right:12px;top:19px;width:4px;height:4px;box-shadow:0 0 0 1px #051c15}
+.match-popup-ready #players.live .player:not(.ball-carrier):not(.sprinting):not(.highlight-player) .player-name{visibility:hidden}
+.match-popup-ready .pitch[data-compact=true] #players .player:not(.ball-carrier):not(.sprinting):not(.highlight-player) .player-name{visibility:hidden}
+.match-popup-ready #players .ball-carrier .player-face-marker{filter:drop-shadow(0 0 3px #f0ffa0)}
+.match-popup-ready #players .sprinting .player-name{color:#e5ffa8}
+#match-ball,#match-ball-shadow{position:absolute;top:0;left:0;pointer-events:none;contain:layout paint;will-change:transform}
+#match-ball{width:12px;height:12px;z-index:9;border-radius:50%;box-sizing:border-box;border:1px solid #16261d;background:radial-gradient(circle at 64% 36%,#15291f 0 15%,transparent 17%),radial-gradient(circle at 28% 74%,#243b2d 0 13%,transparent 15%),#fff;box-shadow:0 0 0 1px #fff9,0 2px 4px #00140ecc}
+#match-ball[data-airborne=true]{box-shadow:0 0 0 1px #fff,0 2px 5px #00140eaa}
+#match-ball-shadow{width:10px;height:4px;z-index:1;border-radius:50%;background:#0007}
+
+/* Compact stamina and form stay attached to the kit, below the foreground ball. */
+.match-popup-ready #match-pane #players .player-stamina{position:absolute;top:27px;left:50%;transform:translateX(-50%);width:22px;height:3px;margin:0}
+.match-popup-ready #match-pane #players .player-stamina i{bottom:0;left:0;width:var(--stamina-level);height:100%;transition:width .3s}
+.match-popup-ready #match-pane #players .player-form{left:auto;right:15px;top:19px;width:4px;height:4px;border:0;margin:0;transform:none;box-shadow:0 0 0 1px #051c15}
+
+/* Running feet use the frozen display clock, so pausing never resets a stride. */
+.match-popup-ready #players .player-legs{position:absolute;top:21px;left:50%;width:13px;height:8px;transform:translateX(-50%);pointer-events:none}
+.match-popup-ready #players .player-legs i{position:absolute;top:0;width:3px;height:7px;border-radius:2px;background:#173728;transform-origin:top center}
+.match-popup-ready #players .player-legs i:first-child{left:2px;transform:translateY(calc(var(--stride,0)*1px)) rotate(calc(var(--stride,0)*9deg))}
+.match-popup-ready #players .player-legs i:last-child{right:2px;transform:translateY(calc(var(--stride,0)*-1px)) rotate(calc(var(--stride,0)*-9deg))}
+
+.match-popup-ready #players .celebrating .player-face-marker{filter:drop-shadow(0 0 4px #edff97)}
+
+.match-popup-ready #players .player-head{position:absolute;top:-4px;left:50%;width:5px;height:5px;border-radius:50%;transform:translateX(-50%);background:var(--player-skin,#d5b18f);box-shadow:0 1px 1px #00140e66;pointer-events:none}

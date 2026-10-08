@@ -1,0 +1,44 @@
+.club-growth{margin:8px 0 0;min-width:0;border-radius:8px;overflow:hidden;background:#12251c}
+.club-growth-picture{width:100%;aspect-ratio:16/9;background-size:300% 200%;background-position:var(--growth-x) var(--growth-y);background-repeat:no-repeat;background-color:#153426}
+.club-growth figcaption{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 9px;color:#e4efd9;font-size:12px}
+.club-growth figcaption>span{font-size:9px;color:#a8b9a2}
+.club-growth-scale{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;list-style:none;margin:6px 0 0;padding:0}
+.club-growth-scale>li{padding:4px;text-align:center;border-radius:4px;background:#0e1c15;color:#9fae9d;font-size:10px;border:1px solid #314435}
+.club-growth-scale>[aria-current]{background:#c8ee78;color:#182616;font-weight:800;border-color:#c8ee78}
+.club-growth-review{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:12px 0;max-width:640px}
+.club-growth-review>div>span{font-size:11px;color:#b3c5ad}
+.club-growth-review .club-growth{margin-top:5px}.club-growth-review figcaption{flex-wrap:wrap}
+.mobile-command-card>.club-growth{max-width:480px}
+.mobile-command-card>.club-growth-scale{max-width:480px}
+@media(min-width:731px){.mobile-command-card{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,42%);column-gap:22px}.mobile-command-top,.mobile-command-card>.mobile-kpis,.mobile-command-card>.mobile-next,.mobile-command-actions,.mobile-command-card>p{grid-column:1}.mobile-command-card>.club-growth{grid-column:2;grid-row:1/5;margin:0;align-self:start}.mobile-command-card>.club-growth-scale{grid-column:2;grid-row:5;align-self:end}.mobile-command-actions{flex-wrap:wrap}.mobile-kpis{flex-wrap:wrap;gap:12px 26px}.mobile-next{flex-wrap:wrap;gap:8px 20px}}
+@media(max-width:730px){.mobile-command-top{gap:6px}.mobile-command-top strong{font-size:11px;line-height:1.5}.mobile-command-card>.club-growth{margin-top:7px}.club-growth figcaption{padding:5px 7px;font-size:11px}.club-growth figcaption>span{font-size:8px}.mobile-command-card>.mobile-kpis{margin:7px 0}.mobile-command-card>.mobile-kpis>div{padding:5px}.mobile-command-card>.mobile-next{padding:6px}.mobile-command-card>.mobile-command-actions{margin-top:6px;gap:5px}.club-growth-scale{gap:4px}.club-growth-scale>li{padding:3px}}
+@media(max-width:360px) and (max-height:650px){.mobile-command-card{padding:9px}.mobile-command-card>.club-growth{margin-top:5px}.mobile-command-card>.club-growth .club-growth-picture{aspect-ratio:16/9}.mobile-command-card>.mobile-kpis{margin:5px 0}.mobile-command-card>.mobile-next{padding:5px}.mobile-command-card .mobile-save-state{display:none}}
+@media(max-width:340px) and (max-height:650px){.mobile-command-card>.club-growth .club-growth-picture{max-width:240px;margin-inline:auto}}
+/* Short landscape phones keep the ground beside the decisions, not above them. */
+@media(min-width:600px) and (max-width:1024px) and (max-height:450px){
+ .app:has(#club-pane:not([hidden])){padding:8px 12px 66px}
+ .app:has(#club-pane:not([hidden])) .masthead{display:flex;flex-direction:row;align-items:center;min-height:44px;gap:10px;padding:0 0 6px}
+ .app:has(#club-pane:not([hidden])) .brand{flex:1;min-width:0;gap:8px}.app:has(#club-pane:not([hidden])) .brand-mark{width:32px;height:32px}
+ .app:has(#club-pane:not([hidden])) .brand-title-first{font-size:10px}.app:has(#club-pane:not([hidden])) .brand-title-last{font-size:14px}
+ .app:has(#club-pane:not([hidden])) .brand-title small,.app:has(#club-pane:not([hidden])) .prototype-tag,.app:has(#club-pane:not([hidden])) [data-open-practice]{display:none}
+ .app:has(#club-pane:not([hidden])) .header-actions{display:flex;width:auto;flex:0 0 auto;gap:6px}
+ .app:has(#club-pane:not([hidden])) .header-actions button{min-height:44px;padding:5px 9px;font-size:11px}
+ .app:has(#club-pane:not([hidden]))>.view-nav{position:fixed;z-index:40;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;min-height:53px;padding:4px 8px calc(4px + env(safe-area-inset-bottom));border-radius:0;border-top:1px solid #303844;background:#0d1117f7}
+ .app:has(#club-pane:not([hidden]))>.view-nav button{min-height:44px;padding:4px;font-size:12px;flex-direction:row}
+ .app:has(#club-pane:not([hidden]))>.view-nav button::before,.app:has(#club-pane:not([hidden]))>.view-nav>span,#club-pane>.dashboard-heading{display:none}
+ #club-pane .club-dashboard{display:grid;grid-template-columns:1fr;gap:10px}
+ #club-pane:not(.mobile-details-open) .club-dashboard>:not(#mobile-command-center):not(#club-life-panel):not(#manager-journey):not(#owner-board-panel):not(#suspensions-panel){display:none}
+ #club-pane .club-dashboard>#mobile-command-center{grid-column:1;order:0}#club-pane .club-dashboard>#club-life-panel{grid-column:1;order:2}
+ #club-pane .mobile-command-card{display:grid;grid-template-columns:minmax(0,42%) minmax(0,1fr);column-gap:12px;row-gap:5px;padding:9px}
+ .mobile-command-card>.mobile-command-top{grid-column:2;grid-row:1}.mobile-command-top>div>span:first-child{font-size:9px}.mobile-command-top strong{font-size:12px;line-height:1.5}
+ .mobile-command-card .mobile-save-state{display:none}
+ #club-pane .mobile-command-card>.club-growth{grid-column:1;grid-row:1/5;margin:0;align-self:start;max-width:none}
+ #club-pane .mobile-command-card>.club-growth-scale{grid-column:1;grid-row:5;margin:0;align-self:end;max-width:none}
+ #club-pane .mobile-command-card>.mobile-kpis{grid-column:2;grid-row:2;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0;gap:0}
+ .mobile-command-card>.mobile-kpis>div{padding:4px;display:block}.mobile-command-card>.mobile-kpis span{font-size:9px}.mobile-command-card>.mobile-kpis b{font-size:16px}.mobile-command-card>.mobile-kpis>div:nth-child(3) b{font-size:12px}
+ #club-pane .mobile-command-card>.mobile-next{grid-column:2;grid-row:3;display:flex;justify-content:space-between;gap:6px;padding:5px;margin:0}
+ .mobile-command-card>.mobile-next span{gap:6px}.mobile-command-card>.mobile-next b{font-size:12px}.mobile-command-card>.mobile-next small{font-size:9px}
+ #club-pane .mobile-command-card>.mobile-command-actions{grid-column:2;grid-row:4/6;display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:0}
+ .mobile-command-actions :is(.primary,.secondary){min-height:44px;padding:4px;font-size:11px}
+ #club-pane .mobile-command-card>p{display:none}
+}

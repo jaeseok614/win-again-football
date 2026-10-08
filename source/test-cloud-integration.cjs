@@ -30,8 +30,5 @@ test('rotation confirmation rejects a preview from another match and changed ran
  const s=S.create(2040),plan=H.rotationPlan(s),other=copy(s);other.match.seed++;
  assert.throws(()=>H.applyRotation(other,plan.fingerprint));s.match.players.f4.attack++;assert.throws(()=>H.applyRotation(s,plan.fingerprint));
 });
-test('home handoff saves with cards migrate to explicit rules without altering the match',()=>{
- const s=advance(S.create(2040),17);delete s.disciplineRules;const restored=S.restore(copy(s));assert.equal(restored.disciplineRules,1);
- assert.deepEqual(restored.match.discipline,s.match.discipline);assert.equal(restored.match.rng,s.match.rng);assert.equal(s.disciplineRules,undefined);
-});
+test('current saves require the card-rule marker',()=>{const s=advance(S.create(2040),17);delete s.disciplineRules;assert.throws(()=>S.restore(copy(s)));});
 console.log('Validated '+groups+' cloud integration groups.');
