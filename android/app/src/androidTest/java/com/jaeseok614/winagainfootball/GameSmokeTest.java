@@ -311,6 +311,12 @@ public final class GameSmokeTest {
             assertEquals("Score, pitch and main action must share the phone viewport", "true", evaluate(scenario,
                 "(()=>{const p=document.getElementById('pitch').getBoundingClientRect(),b=document.getElementById('primary').getBoundingClientRect(),s=document.querySelector('.scoreboard').getBoundingClientRect();return s.top>=0&&p.top>=0&&p.bottom<=b.top&&b.bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1;})()"));
             screenshot(scenario, "android-compact-match.png");
+            evaluate(scenario, "openMatchPopup('brief');true");
+            awaitTrue(scenario, "matchPopupActive==='brief'&&document.querySelectorAll('.brief-flow ol li').length===6");
+            assertEquals("The match brief must fit without scrolling and retain real counters", "true", evaluate(scenario,
+                "(()=>{const body=document.querySelector('#match-popup .match-popup-body'),buttons=[...document.querySelectorAll('[data-brief-target]')];return body.scrollHeight<=body.clientHeight+1&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.bottom<=innerHeight;})&&MatchBrief.read(state).score.join(':')===state.score.join(':');})()"));
+            screenshot(scenario, "android-match-brief.png");
+            tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
             tapWebElement(scenario, "#match-bench-events");
             awaitTrue(scenario, "matchPopupActive==='talk'&&document.querySelectorAll('[data-life-talk]').length===4");
             tapWebElement(scenario, "[data-life-talk='encourage']");

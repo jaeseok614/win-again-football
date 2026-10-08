@@ -70,6 +70,10 @@
   }
 
   const completeGames=games.filter(r=>r.statisticsOriginMinute===0&&!r.unassignedGoals);
+  const assists=completeGames.find(r=>r.players.some(p=>p.assists>=2));
+  if(assists){const hero=assists.players.find(p=>p.assists>=2),name=F.identityProfile(hero.identity).name;beat('assist-maker',assists.round,'도움 기록 선수','마지막 패스에 담긴 이름',name+'이 같은 경기에서 도움 '+hero.assists+'개를 기록했다. 동료들은 골문 앞에서 받은 패스를 떠올린다.','골을 넣은 동료들과 오늘 어떤 이야기를 나눌까요?',['서로 어떤 움직임을 기다렸는지 들어 보자','동료를 살리는 선택에 자신감을 갖자','도움 기록과 다음 경기 역할을 함께 살펴보자'],['골을 넣은 동료의 움직임도 함께 기억하겠습니다.','항상 같은 패스를 고집하지 않고 상황을 읽겠습니다.','좋은 기록 뒤에도 회복과 준비를 이어가겠습니다.'],'captain',hero.identity);}
+  const sharedGoals=completeGames.find(r=>r.players.filter(p=>p.goals>0).length>=3);
+  if(sharedGoals){const names=sharedGoals.players.filter(p=>p.goals>0).map(p=>F.identityProfile(p.identity).name);beat('shared-goals',sharedGoals.round,'주장','여러 이름으로 채운 득점표',names.join(', ')+'의 이름이 같은 경기 득점 기록에 남았다. 라커룸에서는 마지막 슛까지 공을 이어 준 동료들도 함께 박수를 받는다.','여러 선수가 만든 골을 다음 준비로 어떻게 이어갈까요?',['서로에게 고마웠던 움직임을 이야기하자','누구나 기회를 만들 수 있다는 믿음을 갖자','득점 과정과 선수들의 회복 계획을 확인하자'],['기록에 이름이 없는 동료의 움직임도 함께 기억하겠습니다.','다음 경기에도 같은 결과를 보장할 수는 없지만 함께 준비하겠습니다.','들뜨기보다 다음에 뛸 사람까지 생각하겠습니다.']);}
   const clean=completeGames.find(r=>r.players.some(p=>p.cleanSheets===1&&p.minutes===90));
   if(clean){const hero=clean.players.find(p=>p.cleanSheets===1&&p.minutes===90),name=F.identityProfile(hero.identity)?.name||'골키퍼';beat('keeper-night',clean.round,'골키퍼','골문에 남긴 숫자 0',name+'이 90분을 뛰며 무실점을 기록했다. 동료들은 마지막까지 함께 지킨 골문을 돌아본다.','골을 넣은 선수만큼 우리 수비도 기억해 주실까요?',['당신과 수비진이 함께 해낸 일을 듣자','다음 경기에도 집중력을 이어가자','무실점 기록과 다음 회복 계획을 살펴보자'],['함께 뛰어 준 수비진에게도 그 말을 전하겠습니다.','다음 경기의 무실점은 새로 준비해야겠죠.','기록을 남기고 몸을 돌볼 시간도 챙기겠습니다.'],'captain',hero.identity);}
   const brace=completeGames.find(r=>r.players.some(p=>p.goals>=2));

@@ -1,6 +1,6 @@
 // Match presentation only. Move existing controls rather than cloning handlers.
 var matchPopupActive=null,matchPopupOpener=null;
-const matchPopupNames={roster:'선수 교체',tactics:'전술 지시',opponent:'상대 보고서',analysis:'전술 분석',stats:'경기 기록',bench:'벤치 알림',talk:'선수 대화',settings:'경기 설정'};
+const matchPopupNames={roster:'선수 교체',tactics:'전술 지시',opponent:'상대 보고서',analysis:'전술 분석',brief:'흐름 요약',stats:'경기 기록',bench:'벤치 알림',talk:'선수 대화',settings:'경기 설정'};
 function syncMatchScreenMode(){document.body.classList.toggle('match-view',appSessionStarted&&view==='match'&&!!state);if(view!=='match')closeMatchPopup();}
 function openMatchPopup(kind,opener=document.activeElement){
  if(!Object.hasOwn(matchPopupNames,kind)||view!=='match'||!state)return;
@@ -36,7 +36,7 @@ function renderMatchPopup(){
  if(matchPopupActive==='analysis'){tacticsBoardOpen=true;renderTacticsBoard();}
  $('matchday-roster').textContent=state.phase==='prep'?'선발 · 후보':'선수 교체';
  $('primary').textContent={prep:'킥오프',half:'후반 시작',late:'마지막 25분 시작',full:'결과 확정'}[state.phase]||(state.paused?'경기 이어가기':'일시 정지');
- const detail=$('match-open-details');if(detail){detail.textContent=state.phase==='prep'?'상대 정보':state.phase==='full'?'경기 결과':'경기 기록';detail.dataset.matchPopup=state.phase==='prep'?'opponent':'stats';}
+ const detail=$('match-open-details');if(detail){detail.textContent=state.phase==='prep'?'상대 정보':state.phase==='full'?'경기 요약':state.phase==='half'?'전반 요약':'흐름 요약';detail.dataset.matchPopup=state.phase==='prep'?'opponent':'brief';}
  const talkNote=$('match-talk-unavailable');if(talkNote)talkNote.hidden=!$('team-talk-panel').hidden;
 }
 function initMatchPopup(){
