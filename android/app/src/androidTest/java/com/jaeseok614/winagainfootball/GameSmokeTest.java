@@ -287,7 +287,15 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "document.getElementById('match-popup').open");
             awaitTrue(scenario, "!document.getElementById('opposition-report').hidden&&document.querySelectorAll('.opposition-roster tbody tr').length===11");
             assertEquals("true", evaluate(scenario, "document.getElementById('opposition-report').textContent.includes('전술 성향')&&document.getElementById('opposition-report').textContent.includes('체력')"));
+            assertEquals("Readable opponent summary and roster must precede detailed analysis", "true", evaluate(scenario,
+                "(()=>{const host=document.getElementById('opposition-report'),roster=host.querySelector('.opposition-roster'),coach=host.querySelector('.opposition-coach-analysis'),name=host.querySelector('.opposition-player-name');return host.querySelectorAll('.opposition-snapshot dd').length===4&&!!(roster.compareDocumentPosition(coach)&Node.DOCUMENT_POSITION_FOLLOWING)&&parseFloat(getComputedStyle(name).fontSize)>=12;})()"));
             screenshot(scenario, "android-opposition-report.png");
+            tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
+            tapWebElement(scenario, "#matchday-roster");
+            awaitTrue(scenario, "document.querySelectorAll('#match-popup-roster [data-matchday-player]').length===11");
+            assertEquals("Starter and bench comparison must show ability, fitness and condition", "true", evaluate(scenario,
+                "(()=>{const first=document.querySelector('#match-popup-roster [data-matchday-player]'),bench=document.getElementById('bench'),chooser=document.getElementById('match-popup-select');return first.textContent.includes('종합')&&first.textContent.includes('체력')&&bench.textContent.includes('컨디션')&&chooser.value==='roster'&&first.getBoundingClientRect().height>=44;})()"));
+            screenshot(scenario, "android-starter-comparison.png");
             tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
             awaitTrue(scenario, "!document.getElementById('match-popup').open");
             assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));

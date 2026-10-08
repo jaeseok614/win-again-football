@@ -6,8 +6,13 @@ function matchdayCardInfo(id,team=0){
  if(yellow)return {sentOff:false,yellow,label:'경고 '+yellow,markup:'<em class="matchday-card-badge">🟨 경고 '+yellow+'</em>'};
  return {sentOff:false,yellow:0,label:'',markup:''};
 }
+function matchdayPlayerMetrics(p){
+ const live=state?.players?.[p.id],person=live?.identity===p.identity?live:p;
+ return {overall:SquadOverview.overall(person),condition:typeof PlayerTraits!=='undefined'?PlayerTraits.condition(season,person):{score:null,tier:'unknown',label:'정보 없음'}};
+}
 function matchdayPlayerCard(p){
- return '<div class="matchday-selected-player">'+Portraits.html(p)+'<div class="matchday-selected-copy"><small>'+(state.phase==='prep'?'변경할 선발':'교체할 선수')+' · '+matchdayText(p.role)+'</small><h3 id="matchday-selected-name" tabindex="-1">'+matchdayText(p.name)+'</h3>'+matchdayCardInfo(p.id).markup+'</div></div><div class="matchday-selected-stats"><span>'+matchdayText(p.primaryLabel)+' <b>'+p.primary+'</b></span><span>속도 <b>'+p.speed+'</b></span><span>체력 <b class="'+(p.energy<50?'loss':'')+'">'+Math.round(p.energy)+'</b></span></div><div class="matchday-selected-actions"><button type="button" data-player-detail="'+matchdayText(p.identity)+'">선수 상세</button><button type="button" data-matchday="clear">선택 취소</button></div>';
+ const metrics=matchdayPlayerMetrics(p);
+ return '<div class="matchday-selected-player">'+Portraits.html(p)+'<div class="matchday-selected-copy"><small>'+(state.phase==='prep'?'변경할 선발':'교체할 선수')+' · '+matchdayText(p.role)+'</small><h3 id="matchday-selected-name" tabindex="-1">'+matchdayText(p.name)+'</h3><span class="matchday-form form-'+metrics.condition.tier+'">컨디션 '+matchdayText(metrics.condition.label)+(metrics.condition.score===null?'':' '+metrics.condition.score)+' · 계산</span>'+matchdayCardInfo(p.id).markup+'</div></div><div class="matchday-selected-stats"><span>종합·계산 <b>'+metrics.overall+'</b></span><span>'+matchdayText(p.primaryLabel)+' <b>'+p.primary+'</b></span><span>속도 <b>'+p.speed+'</b></span><span>체력 <b class="'+(p.energy<50?'loss':'')+'">'+Math.round(p.energy)+'</b></span></div><div class="matchday-selected-actions"><button type="button" data-player-detail="'+matchdayText(p.identity)+'">선수 상세</button><button type="button" data-matchday="clear">선택 취소</button></div>';
 }
 function matchdaySelectionMarkup(d){
  if(d.liveMode==='full')return '<div class="matchday-selection-hint"><h3>교체 종료</h3><p>경기 결과를 확인한 뒤 다음 일정을 준비하세요.</p></div>';
@@ -16,7 +21,7 @@ function matchdaySelectionMarkup(d){
  const q=d.substitution.suggestion,suggestion=q?'<section class="matchday-substitution-plan" aria-label="코치 추천 교체 우선순위"><div><h3>코치 추천 교체 우선순위</h3><p>체력·주 능력·속도와 남은 시간을 비교합니다.</p></div><div class="matchday-substitution-options">'+d.substitution.options.map((option,index)=>'<button type="button" class="suggested-sub" data-matchday-player="'+matchdayText(option.out.id)+'" aria-label="'+(index+1)+'순위 교체 검토 · '+matchdayText(option.out.name)+' 대신 '+matchdayText(option.incoming.name)+'"><span>'+matchdayText(option.urgency)+' · '+(index+1)+'순위</span><b>'+matchdayText(option.out.name)+' <i aria-hidden="true">→</i> '+matchdayText(option.incoming.name)+'</b><small>'+matchdayText(option.reason)+' · 눌러서 후보 확인</small></button>').join('')+'</div></section>':'';
  const players=typeof openMatchPopup==='function'?state.lineup.map(id=>({...state.players[id]})):d.lowestEnergy.map(p=>({...p}));
  const shown=new Set(players.map(p=>p.id));for(const id of state.lineup)if(!shown.has(id)&&matchdayCardInfo(id).sentOff)players.push({...state.players[id]});
- return suggestion+'<div class="matchday-selection-hint"><h3>'+(d.liveMode==='prep'?'선발 변경':'교체할 선수')+'</h3><p>아래 선발 명단에서 '+(d.liveMode==='prep'?'변경할':'교체할')+' 선수를 선택하세요.</p></div><div class="matchday-tired-list">'+players.map(p=>{const card=matchdayCardInfo(p.id);return '<button type="button" data-matchday-player="'+matchdayText(p.id)+'" aria-label="'+matchdayText(p.name)+' 교체 대상으로 선택'+(card.label?' · '+card.label:'')+'" '+(card.sentOff?'disabled title="퇴장한 선수는 교체할 수 없습니다"':'')+'>'+Portraits.html(p)+'<span><strong>'+matchdayText(p.name)+'</strong><small>'+matchdayText(p.pos)+' · 체력 '+Math.round(p.energy)+'</small>'+card.markup+'</span></button>';}).join('')+'</div><small class="matchday-candidate-note">'+(typeof openMatchPopup==='function'?'선발 명단 · 후보를 선택해야 교체됩니다':'현재 선발 중 체력이 낮은 3명'+(players.length>d.lowestEnergy.length?' · 퇴장 선수 포함':''))+'</small>';
+ return suggestion+'<div class="matchday-selection-hint"><h3>'+(d.liveMode==='prep'?'선발 변경':'교체할 선수')+'</h3><p>선발을 선택한 뒤 같은 포지션의 후보와 비교하세요.</p></div><div class="matchday-tired-list">'+players.map(p=>{const card=matchdayCardInfo(p.id),metrics=matchdayPlayerMetrics(p);return '<button type="button" data-matchday-player="'+matchdayText(p.id)+'" aria-label="'+matchdayText(p.name)+', 종합 '+metrics.overall+', 체력 '+Math.round(p.energy)+', 컨디션 '+matchdayText(metrics.condition.label)+' · '+(d.liveMode==='prep'?'선발 변경':'교체 대상으로 선택')+(card.label?' · '+card.label:'')+'" '+(card.sentOff?'disabled title="퇴장한 선수는 교체할 수 없습니다"':'')+'>'+Portraits.html(p)+'<span><strong>'+matchdayText(p.name)+'</strong><small>'+matchdayText(p.pos)+' · 종합 '+metrics.overall+'</small><small class="matchday-form form-'+metrics.condition.tier+'">체력 '+Math.round(p.energy)+' · '+matchdayText(metrics.condition.label)+'</small>'+card.markup+'</span></button>';}).join('')+'</div><small class="matchday-candidate-note">'+(typeof openMatchPopup==='function'?'종합·컨디션은 게임 내 계산 · 선발을 선택한 뒤 후보를 누르면 '+(d.liveMode==='prep'?'선발이 변경됩니다':'교체됩니다'):'현재 선발 중 체력이 낮은 3명'+(players.length>d.lowestEnergy.length?' · 퇴장 선수 포함':''))+'</small>';
 }
 function matchdayMomentumMarkup(momentum,insight){
  const bars=momentum.windows.map((item,index)=>{
@@ -46,7 +51,9 @@ function renderMatchday(){
  const opponentHost=document.getElementById('opposition-report');if(opponentHost)opponentHost.hidden=matchdayTab!=='opponent';
  document.getElementById('tactics-board').hidden=!analysis;
  for(const id of ['live','opponent','analysis']){const button=document.getElementById('matchday-tab-'+id),active=matchdayTab===id;if(!button)continue;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;button.disabled=id==='analysis'&&d.liveMode==='full';}
- const selection=document.getElementById('matchday-selection'),html=matchdaySelectionMarkup(d);
+ const selection=document.getElementById('matchday-selection');
+ if(typeof matchPopupActive==='undefined'||matchPopupActive==='roster'){
+ const html=matchdaySelectionMarkup(d);
  if(selection.dataset.markup!==html){
   const focused=selection.contains(document.activeElement)?document.activeElement:null;
   const key=focused?.dataset.matchdayPlayer,action=focused?.dataset.matchday;
@@ -55,10 +62,11 @@ function renderMatchday(){
   const selector=key?'[data-matchday-player="'+key+'"]':action?'[data-matchday="'+action+'"]':identity?'[data-player-detail="'+identity+'"]':null;
   if(focused){const next=(selector&&selection.querySelector(selector))||document.getElementById('matchday-selected-name')||selection.querySelector('[data-matchday-player]');next?.focus({preventScroll:true});}
  }
+ }
  const roster=document.getElementById('matchday-roster');roster.hidden=d.liveMode==='full';
  const note=document.getElementById('selection-hint');note.hidden=!!d.selected||d.liveMode==='full';
  if(!d.selected&&d.liveMode!=='full')note.textContent='선발을 선택하면 같은 포지션의 후보만 표시합니다.';
- document.getElementById('bench-heading').textContent=d.selected?d.selected.role+' 교체 후보':'교체 명단';
+ document.getElementById('bench-heading').textContent=d.selected?d.selected.role+(d.liveMode==='prep'?' 선발 변경 후보':' 교체 후보'):d.liveMode==='prep'?'출전 가능한 후보':'교체 명단';
  document.getElementById('pause').textContent=d.paused?'5분 진행':'일시 정지';
  if(typeof renderOpponentReport==='function')renderOpponentReport();
  const cards=document.getElementById('card-counter');if(cards&&typeof Discipline!=='undefined'){cards.hidden=!state.discipline;const own=Discipline.count(state),opp=Discipline.count(state,1);cards.textContent='🟨 '+own.yellow+':'+opp.yellow+' · 🟥 '+own.red+':'+opp.red;}

@@ -8,7 +8,8 @@ function openMatchPopup(kind,opener=document.activeElement){
  if(!dialog.open)matchPopupOpener=opener;
  pauseForPlanning();matchPopupActive=kind;save();render();
  if(!dialog.open)dialog.showModal();
- $('match-popup-title').focus({preventScroll:true});
+ const body=dialog.querySelector('.match-popup-body');if(body)body.scrollTop=0;
+ const chooser=$('match-popup-select');if(chooser?.getClientRects?.().length)chooser.focus({preventScroll:true});else $('match-popup-title').focus({preventScroll:true});
 }
 function closeMatchPopup(){const dialog=$('match-popup');if(dialog?.open)dialog.close();}
 function finishMatchPopupClose(){if($('match-popup')?.open)return;matchPopupActive=null;matchdayTab='live';render();const opener=matchPopupOpener;matchPopupOpener=null;if(opener?.isConnected&&!opener.closest('dialog'))opener.focus({preventScroll:true});else $('matchday-roster')?.focus({preventScroll:true});}
@@ -26,6 +27,7 @@ function renderMatchPopup(){
   const button=dialog.querySelector('[data-match-popup="'+kind+'"]');button?.setAttribute('aria-pressed',String(matchPopupActive===kind));
   if(button){button.disabled=kind==='analysis'&&state.phase==='full';if(kind==='roster')button.textContent=state.phase==='prep'?'선발 · 후보':'선수 교체';}
  }
+ const chooser=$('match-popup-select');if(chooser){chooser.value=matchPopupActive||'roster';for(const option of chooser.options){option.disabled=option.value==='analysis'&&state.phase==='full';if(option.value==='roster')option.textContent=state.phase==='prep'?'선발 · 후보':'선수 교체';}}
  $('opposition-report').hidden=matchPopupActive!=='opponent';
  $('tactics-board').hidden=matchPopupActive!=='analysis';
  matchdayTab=matchPopupActive==='analysis'?'analysis':matchPopupActive==='opponent'?'opponent':'live';
@@ -40,6 +42,7 @@ function renderMatchPopup(){
 function initMatchPopup(){
  const pane=$('match-pane'),dialog=document.createElement('dialog');dialog.id='match-popup';dialog.setAttribute('aria-labelledby','match-popup-title');
  dialog.innerHTML='<header class="match-popup-header"><div><h2 id="match-popup-title" tabindex="-1">경기 메뉴</h2><p id="match-popup-status"></p></div><button type="button" data-match-popup-close aria-label="경기 메뉴 닫기">닫기</button></header><nav class="match-popup-nav" aria-label="경기 상세 메뉴">'+Object.entries(matchPopupNames).map(([kind,label])=>'<button type="button" data-match-popup="'+kind+'" aria-pressed="false">'+label+'</button>').join('')+'</nav><p id="match-popup-error" role="alert" tabindex="-1" hidden></p><div class="match-popup-body">'+Object.keys(matchPopupNames).map(kind=>'<section id="match-popup-'+kind+'" hidden></section>').join('')+'</div><footer class="match-popup-footer"><button type="button" data-match-popup-close>경기로 돌아가기</button></footer>';
+ const chooser=document.createElement('select');chooser.id='match-popup-select';chooser.setAttribute('aria-label','경기 상세 메뉴 선택');chooser.innerHTML=Object.entries(matchPopupNames).map(([kind,label])=>'<option value="'+kind+'">'+label+'</option>').join('');dialog.querySelector('.match-popup-header>div').append(chooser);chooser.addEventListener('change',()=>openMatchPopup(chooser.value,chooser));
  pane.append(dialog);
  const move=(node,kind)=>{if(node)$('match-popup-'+kind).append(node);};
  move($('matchday-selection'),'roster');move(document.querySelector('.bench-heading'),'roster');move($('selection-hint'),'roster');move($('bench'),'roster');move($('pitch-swap-options'),'roster');move($('error'),'roster');

@@ -13,6 +13,12 @@ Do not add compatibility engines, legacy schedules or automatic season migration
 Fresh and practice squads use Tottunham starter identities (sp_*). Preserve valid
 current campaigns and player/contract identities during development and testing.
 Keep storage key win-again-season-v17 and app/package/protocol IDs stable.
+Opponent reports put formation/tactic, calculated strength and stamina before the
+eleven-player roster; long coach and specialist analysis follows the roster. Keep
+full readable names and preserve all abilities on mobile without horizontal swipes.
+Starter/bench comparison separates calculated overall/form from live stamina and
+does no work while hidden. Season story wording follows the current or historic
+division; first-division dialogue pursues TOP 6 rather than another promotion.
 Old chronological design notes do not override this current scope.
 
 The title is "눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기". The parody club starts

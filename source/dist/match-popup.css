@@ -41,7 +41,7 @@ body.match-popup-ready.match-view:not(.launch-mode){height:100dvh;overflow:hidde
 .match-popup-nav{display:flex;flex-wrap:wrap;gap:5px;padding:8px 12px;flex-shrink:0}
 .match-popup-nav button{min-height:44px;flex:1 0 22%;font-size:11px;padding:5px}#match-popup .match-popup-nav button[aria-pressed=true]{border-color:#c8f36e;background:#233421;color:#d7f79a}
 .match-popup-body{min-height:0;overflow:auto;overscroll-behavior:contain;padding:12px;flex:1}
-.match-popup-footer{display:flex;justify-content:flex-end;padding:8px 12px;border-top:1px solid #303947;flex-shrink:0}
+.match-popup-footer{display:flex;justify-content:flex-end;padding:8px 12px;margin:0;border-top:1px solid #303947;flex-shrink:0}
 #match-popup .bench{max-height:none;overflow:visible;grid-template-columns:repeat(2,minmax(0,1fr))}
 #match-popup :is(.tactics,.field-toolbar,#mobile-tactics-dock,#pitch-player-tools,#pitch-swap-options){display:block}
 #match-popup #mobile-tactics-dock{margin:10px 0}
@@ -107,3 +107,28 @@ body.match-popup-ready.match-view:not(.launch-mode){height:100dvh;overflow:hidde
 }
 
 .match-popup-ready.match-view #match-live-actions .main-action:has(#pause[hidden]):has(#matchday-roster[hidden]){grid-template-columns:1fr}
+/* Readable comparison lists; the dialog owns scrolling, never the match page. */
+#match-popup .matchday-tired-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+#match-popup .matchday-tired-list button{min-height:76px;padding:8px;gap:7px;align-items:center}
+#match-popup .matchday-tired-list .player-portrait{width:28px;height:28px;flex:0 0 28px}
+#match-popup .matchday-tired-list strong{font-size:13px;line-height:1.35}
+#match-popup .matchday-tired-list small{font-size:11px;line-height:1.5}
+#match-popup .matchday-selection-hint h3{font-size:15px}
+#match-popup .matchday-selection-hint p,#match-popup .matchday-candidate-note{font-size:12px;line-height:1.6}
+#match-popup .matchday-selected-copy h3{font-size:18px;line-height:1.4;margin:3px 0}
+#match-popup .matchday-selected-copy>small{font-size:12px}
+#match-popup .matchday-selected-stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:9px;background:#1c2732;border-radius:6px}
+#match-popup .matchday-selected-stats>span{font-size:11px;line-height:1.5}
+#match-popup .matchday-selected-stats b{display:block;margin:3px 0 0;font-size:17px}
+#match-popup .matchday-selected-actions button{font-size:13px}
+#match-popup .bench-player{padding:9px;min-height:96px;text-align:left;min-width:0}
+#match-popup .bench-player .name-row{font-size:13px;line-height:1.4;flex-wrap:wrap}
+#match-popup .bench-player .name-row>span:not(.position){overflow-wrap:anywhere;min-width:0}
+#match-popup .bench-player .mini-stats{display:flex;flex-direction:column;gap:3px;font-size:11px;line-height:1.5}
+#match-popup .matchday-form{color:#bcd0e2}
+#match-popup .form-good{color:#cdf6a6}
+#match-popup .form-poor{color:#ffd1a0}
+#match-popup .matchday-selected-copy>.matchday-form{font-size:12px;line-height:1.6}
+@media(max-width:360px){#match-popup .matchday-tired-list button{padding:7px 5px;gap:5px}#match-popup .matchday-tired-list .player-portrait{width:22px;height:22px;flex-basis:22px}#match-popup .matchday-tired-list strong{font-size:12px}#match-popup .matchday-tired-list small{font-size:10px}}
+#match-popup-select{display:none;width:100%;min-width:0;min-height:44px;font:700 14px system-ui;background:#202e3b;color:#edf4fa;border:1px solid #546777;border-radius:6px;padding:7px 10px}
+@media(max-width:520px),(max-height:450px){#match-popup .match-popup-nav{display:none}#match-popup .match-popup-header>div{min-width:0;flex:1;display:grid;grid-template-columns:1fr;gap:3px}#match-popup .match-popup-header h2{font-size:13px;line-height:1.3}#match-popup .match-popup-header p{margin:0;font-size:10px;line-height:1.4}#match-popup-select{display:block;grid-row:1}#match-popup .match-popup-header h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}#match-popup .match-popup-header{padding:7px 10px;gap:8px}#match-popup .match-popup-body{padding:8px}#match-popup .match-popup-footer{padding:5px 8px}}

@@ -19,11 +19,12 @@
  function longSeasonBeats(s,year){
   const history=year===s.year?s.league:s.history?.find(h=>h.year===year),total=root.Season?.roundCountForYear?.(s,year)||14;
   if(history?.rules!=='five-tier'||total<=14)return [];
-  const at=fraction=>Math.ceil(total*fraction),beat=(key,fraction,speaker,title,scene,question,options,replies,relation='captain')=>({key,round:at(fraction),speaker,title,scene,question,options,replies,relation});
+  const division=history.division,promotion=division>1,goal=promotion?'승격':'1부 TOP 6',at=fraction=>Math.ceil(total*fraction),beat=(key,fraction,speaker,title,scene,question,options,replies,relation='captain')=>({key,round:at(fraction),speaker,title,scene,question,options,replies,relation});
+  const surroundings={5:'구장 옆 작은 회복실',4:'원정 장비가 쌓인 회복실',3:'훈련장과 연결된 회복실',2:'새 리그의 일정표가 붙은 회복실',1:'1부 상대 분석 자료가 놓인 회복실'};
   return [
-   beat('marathon',.39,'주장','긴 시즌의 무게','훈련이 끝난 뒤에도 주장과 몇몇 선수는 회복실에 남아 있다. 5부에서 시작한 긴 일정이 이제 절반을 향한다.','지친 선수들이 한 시즌을 끝까지 버틸 수 있도록 무엇을 먼저 챙길까요?',['힘든 선수들의 이야기를 먼저 듣겠습니다','승격을 향한 목표를 다시 확인하겠습니다','회복과 선발 경쟁을 함께 점검하겠습니다'],['우리가 힘든 이유를 알아주는 것만으로도 버틸 수 있어요.','목표를 잊지는 않았습니다. 다만 서로 도울 시간이 필요해요.','경쟁은 이어가되 회복할 기준도 분명히 정해 주세요.']),
-   beat('promotion-race',.67,'수석 코치','승격 레이스의 갈림길','코치가 최근 일정과 남은 상대를 펼친다. 몇 번의 결과가 순위를 바꿀 수 있는 시점이다.','승격 경쟁이 뜨거워지는 지금, 선수들에게 어떤 기준을 제시할까요?',['순위 압박을 느끼는 선수부터 살피죠','승격이라는 목표를 숨기지 않겠습니다','상대와 체력을 보고 경기마다 계획하죠'],['압박이 큰 선수에게는 차분히 말할 시간이 필요합니다.','우리 목표를 들으니 다시 힘이 납니다. 한 경기씩 증명하죠.','남은 상대와 회복일을 함께 보면 선택이 명확해지겠네요.'],'coach'),
-   beat('final-push',.87,'구단주','마지막 질주의 약속','구단주가 남은 일정표를 책상 위에 놓는다. 처음 계약서에 적힌 5부의 이름과 승격 목표가 함께 보인다.','시즌 마지막 고비에서 팀이 서로에게 해 줄 약속은 무엇일까요?',['선수들이 감당한 여정을 함께 돌아보죠','끝까지 승격을 향해 밀어붙이겠습니다','결과와 별개로 다음 세대도 준비하죠'],['여기까지 온 선수들의 이야기를 결과만으로 지우지 말아 주세요.','마지막까지 함께 뛰겠습니다. 한 경기씩 집중하죠.','지금의 도전이 다음 시즌의 기반이 될 수 있겠군요.'],'board')
+   beat('marathon',.39,'주장','긴 시즌의 무게','훈련이 끝난 뒤에도 주장과 몇몇 선수는 '+surroundings[division]+'에 남아 있다. '+division+'부의 '+total+'경기 일정이 이제 절반을 향한다.','지친 선수들이 한 시즌을 끝까지 버틸 수 있도록 무엇을 먼저 챙길까요?',['힘든 선수들의 이야기를 먼저 듣겠습니다',goal+' 목표를 다시 확인하겠습니다','회복과 선발 경쟁을 함께 점검하겠습니다'],['우리가 힘든 이유를 알아주는 것만으로도 버틸 수 있어요.','목표를 잊지는 않았습니다. 다만 서로 도울 시간이 필요해요.','경쟁은 이어가되 회복할 기준도 분명히 정해 주세요.']),
+   beat('promotion-race',.67,'수석 코치',promotion?'승격 레이스의 갈림길':'1부 상위권 경쟁의 갈림길','코치가 최근 일정과 남은 상대를 펼친다. 몇 번의 결과가 순위를 바꿀 수 있는 시점이다.',goal+' 경쟁이 뜨거워지는 지금, 선수들에게 어떤 기준을 제시할까요?',['순위 압박을 느끼는 선수부터 살피죠',goal+' 목표를 숨기지 않겠습니다','상대와 체력을 보고 경기마다 계획하죠'],['압박이 큰 선수에게는 차분히 말할 시간이 필요합니다.','우리 목표를 들으니 다시 힘이 납니다. 한 경기씩 증명하죠.','남은 상대와 회복일을 함께 보면 선택이 명확해지겠네요.'],'coach'),
+   beat('final-push',.87,'구단주','마지막 질주의 약속','구단주가 남은 일정표를 책상 위에 놓는다. '+division+'부에서 쌓아 온 기록과 '+goal+' 목표가 함께 보인다.','시즌 마지막 고비에서 팀이 서로에게 해 줄 약속은 무엇일까요?',['선수들이 감당한 여정을 함께 돌아보죠','끝까지 '+goal+' 목표를 향해 밀어붙이겠습니다','결과와 별개로 다음 세대도 준비하죠'],['여기까지 온 선수들의 이야기를 결과만으로 지우지 말아 주세요.','마지막까지 함께 뛰겠습니다. 한 경기씩 집중하죠.','지금의 도전이 다음 시즌의 기반이 될 수 있겠군요.'],'board')
   ];
  }
  function scheduleLongSeasonEvents(list,s,year){
