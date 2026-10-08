@@ -1,7 +1,7 @@
 (function(root){
  'use strict';
  // League-linked original illustrations, not a simulated facility or attendance.
- const asset='assets/club-growth-v1.webp?v=1',labels=['동네 구장','늘어나는 관중석','프로 구단의 홈','대형 홈 경기장','1부의 불빛'];
+ const asset='assets/club-growth-v2.webp?v=2',labels=['동네 구장','늘어나는 관중석','프로 구단의 홈','대형 홈 경기장','1부의 불빛'];
  if(root.document?.createElement&&root.document?.head?.appendChild){const style=root.document.createElement('style');style.id='club-growth-atlas';style.textContent='.club-growth-picture{background-image:url("'+asset+'")}';root.document.head.appendChild(style);}
  const division=value=>Number.isInteger(value)&&value>=1&&value<=5?value:5;
  function html(value){const d=division(value),i=5-d;return '<figure class="club-growth" data-club-growth="'+d+'"><div class="club-growth-picture" role="img" aria-label="'+d+'부 구단 규모 일러스트 · '+labels[i]+'" style="--growth-x:'+(i%3)*50+'%;--growth-y:'+Math.floor(i/3)*100+'%"></div><figcaption><strong>'+d+'부 · '+labels[i]+'</strong><span>구단 규모 일러스트</span></figcaption></figure>';}

@@ -270,7 +270,7 @@ public final class GameSmokeTest {
             assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display!=='none'&&document.querySelectorAll('.media-review').length===3"));
             assertEquals("New stadium illustration must be visible on the default home", "true", evaluate(scenario,
                 "(()=>{const art=document.querySelector('#mobile-command-center .club-growth-picture');return !!art&&art.getBoundingClientRect().width>0&&getComputedStyle(art).backgroundImage.includes('data:image/webp');})()"));
-            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset,ClubArt.storyAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048&&widths[5]===2048).catch(()=>window.newArtDecoded=false);return true;})()");
+            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset,ClubArt.storyAsset,ClubArt.momentAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048&&widths[5]===2048&&widths[6]===1672).catch(()=>window.newArtDecoded=false);return true;})()");
             awaitTrue(scenario, "window.newArtDecoded===true");
             assertEquals("Opponent lineup must retain eleven distinct faces in the expanded atlas", "true", evaluate(scenario,
                 "(()=>{const rows=Opposition.roster(S.opponentFor(season)),indices=rows.map(p=>Portraits.index(p));return new Set(indices).size===11&&rows.every(p=>Portraits.html(p).includes('--portrait-size:800% 800%'));})()"));
@@ -311,6 +311,14 @@ public final class GameSmokeTest {
             assertEquals("Score, pitch and main action must share the phone viewport", "true", evaluate(scenario,
                 "(()=>{const p=document.getElementById('pitch').getBoundingClientRect(),b=document.getElementById('primary').getBoundingClientRect(),s=document.querySelector('.scoreboard').getBoundingClientRect();return s.top>=0&&p.top>=0&&p.bottom<=b.top&&b.bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1;})()"));
             screenshot(scenario, "android-compact-match.png");
+            tapWebElement(scenario, "#match-bench-events");
+            awaitTrue(scenario, "matchPopupActive==='talk'&&document.querySelectorAll('[data-life-talk]').length===4");
+            tapWebElement(scenario, "[data-life-talk='encourage']");
+            awaitTrue(scenario, "document.querySelectorAll('.life-reaction-card').length===11");
+            assertEquals("All saved player reactions and faces fit the phone", "true", evaluate(scenario,
+                "(()=>{const cards=[...document.querySelectorAll('.life-reaction-card')];return cards.length===11&&cards.every(e=>{const r=e.getBoundingClientRect(),face=e.querySelector('.player-portrait');return r.top>=0&&r.bottom<=innerHeight&&face.getBoundingClientRect().width>0;})&&JSON.stringify(S.restore(JSON.parse(JSON.stringify(season))))===JSON.stringify(season);})()"));
+            screenshot(scenario, "android-player-reactions.png");
+            tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
             if ("true".equals(evaluate(scenario, "state.phase!=='full'"))) {
                 tapWebElement(scenario, ".match-quick-menu [data-match-popup='tactics']");
                 awaitTrue(scenario, "document.querySelectorAll('#tactical-editor input[type=range]').length===0&&document.querySelectorAll('[data-mobile-formation]').length===12");

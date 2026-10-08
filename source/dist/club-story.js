@@ -70,6 +70,12 @@
   }
 
   const completeGames=games.filter(r=>r.statisticsOriginMinute===0&&!r.unassignedGoals);
+  const clean=completeGames.find(r=>r.players.some(p=>p.cleanSheets===1&&p.minutes===90));
+  if(clean){const hero=clean.players.find(p=>p.cleanSheets===1&&p.minutes===90),name=F.identityProfile(hero.identity)?.name||'골키퍼';beat('keeper-night',clean.round,'골키퍼','골문에 남긴 숫자 0',name+'이 90분을 뛰며 무실점을 기록했다. 동료들은 마지막까지 함께 지킨 골문을 돌아본다.','골을 넣은 선수만큼 우리 수비도 기억해 주실까요?',['당신과 수비진이 함께 해낸 일을 듣자','다음 경기에도 집중력을 이어가자','무실점 기록과 다음 회복 계획을 살펴보자'],['함께 뛰어 준 수비진에게도 그 말을 전하겠습니다.','다음 경기의 무실점은 새로 준비해야겠죠.','기록을 남기고 몸을 돌볼 시간도 챙기겠습니다.'],'captain',hero.identity);}
+  const brace=completeGames.find(r=>r.players.some(p=>p.goals>=2));
+  if(brace){const hero=brace.players.find(p=>p.goals>=2),name=F.identityProfile(hero.identity)?.name||'득점 선수';beat('brace-hero',brace.round,'득점 선수','내 이름이 두 번 울리던 날',name+'이 한 경기에서 '+hero.goals+'골을 기록했다. 라커룸에서 동료들은 그 골까지 공을 이어 준 사람들의 이름도 함께 부른다.','오늘 골을 함께 만든 동료들에게 어떤 말을 할까요?',['골까지 이어진 동료들의 이야기를 듣자','다음 경기에도 이 자신감을 지키자','득점 장면과 출전 시간을 함께 돌아보자'],['마지막 슛 전에 도와준 동료들을 기억하겠습니다.','자신감은 얻었지만 매번 골이 나오는 건 아니겠죠.','기록으로 돌아보니 다음에 준비할 움직임이 보입니다.'],'captain',hero.identity);}
+  const rebound=games.find((r,i)=>i>0&&completeGames.includes(r)&&completeGames.includes(games[i-1])&&r.score[0]>r.score[1]&&games[i-1].score[0]<games[i-1].score[1]);
+  if(rebound)beat('bounce-back',rebound.round,'주장','패배 다음에 다시 웃은 날','직전 경기의 패배 뒤 '+rebound.score[0]+' : '+rebound.score[1]+' 승리를 거뒀다. 선수들은 원정 버스 앞에서도 서로의 준비를 돌아본다.','힘든 결과 뒤에도 함께 준비한 시간을 어떻게 기억할까요?',['패배 뒤 힘들었던 마음부터 함께 듣자','좋은 결과에도 다음 준비의 기준을 지키자','두 경기의 기록과 회복 계획을 비교하자'],['이긴 날이라서 어제의 어려움도 이야기할 수 있네요.','한 번의 승리로 모든 문제가 사라지는 건 아니겠죠.','함께 돌아보면 다음 패배 뒤에도 다시 일어설 수 있겠습니다.']);
   const substituteGame=completeGames.find(r=>r.players.some(p=>!p.started&&p.minutes>0&&p.goals>0));
   if(substituteGame){const hero=substituteGame.players.find(p=>!p.started&&p.minutes>0&&p.goals>0),name=F.identityProfile(hero.identity)?.name||'교체 선수';beat('bench-hero',substituteGame.round,'교체 선수','벤치에서 시작된 한 골',name+'은 선발이 아니었지만 '+hero.minutes+'분을 뛰고 '+hero.goals+'골을 기록했다. 경기 뒤 라커룸의 동료들이 그 자리를 두드린다.','감독님, 벤치에서 기다리던 시간도 오늘의 준비였겠죠?',['기다리며 준비한 마음부터 듣고 싶다','다음 기회에도 자신 있게 도전하자','오늘 역할과 회복을 함께 살펴보자'],['골만큼 기다리던 시간도 알아주셔서 좋습니다.','출전 시간이 짧아도 준비를 놓지 않겠습니다.','다음 선발을 보장받기보다 맡은 역할을 준비하겠습니다.'],'captain',hero.identity);}
   const lateGame=completeGames.find(r=>r.score[0]===r.score[1]+1&&r.events.some(e=>e.minute>=80));

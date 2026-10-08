@@ -1,6 +1,6 @@
 // Match presentation only. Move existing controls rather than cloning handlers.
 var matchPopupActive=null,matchPopupOpener=null;
-const matchPopupNames={roster:'선수 교체',tactics:'전술 지시',opponent:'상대 보고서',analysis:'전술 분석',stats:'경기 기록',talk:'벤치 알림·대화',settings:'경기 설정'};
+const matchPopupNames={roster:'선수 교체',tactics:'전술 지시',opponent:'상대 보고서',analysis:'전술 분석',stats:'경기 기록',bench:'벤치 알림',talk:'선수 대화',settings:'경기 설정'};
 function syncMatchScreenMode(){document.body.classList.toggle('match-view',appSessionStarted&&view==='match'&&!!state);if(view!=='match')closeMatchPopup();}
 function openMatchPopup(kind,opener=document.activeElement){
  if(!Object.hasOwn(matchPopupNames,kind)||view!=='match'||!state)return;

@@ -5,14 +5,14 @@ function harness(){
  const season=S.create(125),nodes=new Map(),calls={save:0,opponent:0,analysis:0};F.begin(season.match);
  const document={activeElement:null,body:{classList:{toggle(){}}}};
  const node=id=>{const n={id,hidden:false,textContent:'',dataset:{},isConnected:true,focus(){document.activeElement=n;},closest(){return null;},setAttribute(){},querySelector(){return null;}};nodes.set(id,n);return n;};
- for(const id of ['notice','match-popup-error','match-popup-title','match-popup-status','matchday-live','opposition-report','tactics-board','matchday-roster','primary','match-open-details',...['roster','tactics','opponent','analysis','stats','talk','settings'].map(k=>'match-popup-'+k)])node(id);
+ for(const id of ['notice','match-popup-error','match-popup-title','match-popup-status','matchday-live','opposition-report','tactics-board','matchday-roster','primary','match-open-details',...['roster','tactics','opponent','analysis','stats','bench','talk','settings'].map(k=>'match-popup-'+k)])node(id);
  nodes.get('notice').hidden=true;const dialog=node('match-popup');dialog.open=false;dialog.showModal=()=>{dialog.open=true;};dialog.close=()=>{dialog.open=false;ctx.finishMatchPopupClose();};
  const ctx=vm.createContext({document,season,state:season.match,view:'match',appSessionStarted:true,F,$:id=>nodes.get(id),matchdayTab:'live',tacticsBoardOpen:false,pauseForPlanning(){if(F.running(season.match))season.match.paused=true;},save(){calls.save++;},render(){ctx.renderMatchPopup();},renderOpponentReport(){calls.opponent++;},renderTacticsBoard(){calls.analysis++;}});
  const source=fs.readFileSync(__dirname+'/dist/match-popup.js','utf8').replace(/initMatchPopup\(\);\s*$/,'');vm.runInContext(source,ctx);
  return {ctx,nodes,calls,season,document,node};
 }
 test('all popup sections pause without swapping, advancing RNG or changing statistics',()=>{
- for(const kind of ['roster','tactics','opponent','analysis','stats','talk','settings']){const h=harness(),before=JSON.parse(JSON.stringify(h.season));h.ctx.openMatchPopup(kind);before.match.paused=true;assert.equal(JSON.stringify(h.season),JSON.stringify(before));assert.equal(h.nodes.get('match-popup').open,true);assert.equal(h.nodes.get('match-popup-'+kind).hidden,false);assert.equal(h.nodes.get('matchday-live').hidden,false);assert.equal(h.document.activeElement.id,'match-popup-title');assert.equal(h.calls.save,1);}
+ for(const kind of ['roster','tactics','opponent','analysis','stats','bench','talk','settings']){const h=harness(),before=JSON.parse(JSON.stringify(h.season));h.ctx.openMatchPopup(kind);before.match.paused=true;assert.equal(JSON.stringify(h.season),JSON.stringify(before));assert.equal(h.nodes.get('match-popup').open,true);assert.equal(h.nodes.get('match-popup-'+kind).hidden,false);assert.equal(h.nodes.get('matchday-live').hidden,false);assert.equal(h.document.activeElement.id,'match-popup-title');assert.equal(h.calls.save,1);}
 });
 test('closing restores the original opener and keeps the match paused',()=>{
  const h=harness(),opener=h.node('opener');h.ctx.openMatchPopup('roster',opener);const before=JSON.stringify(h.season);h.ctx.closeMatchPopup();assert.equal(h.document.activeElement,opener);assert.equal(h.season.match.paused,true);assert.equal(JSON.stringify(h.season),before);assert.equal(h.ctx.matchPopupActive,null);

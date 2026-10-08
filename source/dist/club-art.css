@@ -11,6 +11,7 @@
 @media(max-width:730px){.coach-guide-main{grid-template-areas:'top' 'art' 'title' 'copy' 'actions'}.mobile-command-top>.club-art{width:96px;flex-basis:96px}.mobile-command-top>.club-art>span{font-size:8px}}
 
 .club-art[data-club-scene="promotion"]{background-size:cover;background-position:center}
+.moment-art{background-size:200% 200%}
 
 /* Keep the four talk decisions visible; detailed reactions can scroll afterwards. */
 @media(max-width:730px),(max-height:450px){
@@ -31,3 +32,30 @@
 @media(max-height:420px){#match-popup .life-talk{padding:8px}#match-popup .life-context{display:none}#match-popup .life-talk-choices .life-choice{min-height:44px;padding:6px}}
 
 @media(max-height:420px) and (min-width:600px){#match-popup .life-talk-choices{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* Compact reaction cards keep complete names and confidence on one screen. */
+@media(max-width:520px),(max-height:450px){
+ #match-popup #team-talk-panel .life-reaction-card{grid-template-columns:24px minmax(0,1fr);grid-template-rows:24px auto;padding:4px;gap:2px 4px}
+ #match-popup #team-talk-panel .life-reaction-card .player-portrait{grid-column:1;grid-row:1;width:24px;height:24px}
+ #match-popup #team-talk-panel .life-reaction-card strong{grid-column:1/-1;grid-row:2;font-size:11px;line-height:14px;word-break:keep-all;overflow-wrap:anywhere}
+ #match-popup #team-talk-panel .life-reaction-card>b{grid-column:2;grid-row:1;font-size:10px;line-height:13px}
+ #match-popup #team-talk-panel .life-reaction-card>span:not(.player-portrait),#match-popup #team-talk-panel .life-reaction-card>small{display:none}
+ #match-popup #team-talk-panel .life-talk:has(.life-reactions-board)>.life-reaction-heading{display:none}
+ #match-popup #team-talk-panel .life-talk h2{font-size:15px}
+ #match-popup #team-talk-panel .life-section-heading{align-items:start}
+ #match-popup #team-talk-panel .life-minute{font-size:17px}
+}
+@media(max-height:450px) and (min-width:600px){
+ #match-popup #team-talk-panel .life-talk{grid-template-columns:150px minmax(0,1fr);gap:4px 8px;padding:6px}
+ #match-popup #team-talk-panel .life-talk>.club-art{grid-column:1;grid-row:2;width:130px}
+ #match-popup #team-talk-panel .life-talk>.life-section-heading{grid-column:1;grid-row:1}
+ #match-popup #team-talk-panel .life-talk>.life-talk-choices,#match-popup #team-talk-panel .life-talk>.life-reactions-board{grid-column:2;grid-row:2}
+ #match-popup #team-talk-panel .life-talk>.life-reaction-overview{grid-column:2;grid-row:1}
+ #match-popup #team-talk-panel .life-talk>.life-context,#match-popup #team-talk-panel .life-talk>.life-reaction-heading{display:none}
+ #match-popup #team-talk-panel .life-talk>.life-talk-rules{grid-column:1;grid-row:3}
+ #match-popup #team-talk-panel .life-reactions-board{grid-template-columns:repeat(4,minmax(0,1fr));gap:3px}
+ #match-popup #team-talk-panel .life-reaction-card{grid-template-rows:20px auto;padding:2px;gap:1px 3px;grid-template-columns:20px minmax(0,1fr)}
+ #match-popup #team-talk-panel .life-reaction-card .player-portrait{width:20px;height:20px}
+ #match-popup #team-talk-panel .life-reaction-card strong{font-size:10px;line-height:12px}
+ #match-popup #team-talk-panel .life-reaction-card>b{font-size:9px;line-height:11px}
+}
