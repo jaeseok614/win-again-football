@@ -35,3 +35,13 @@
 .match-popup-ready #match-pane #players .player-stamina{position:absolute;top:27px;left:50%;transform:translateX(-50%);width:22px;height:3px;margin:0}
 .match-popup-ready #match-pane #players .player-stamina i{bottom:0;left:0;width:var(--stamina-level);height:100%;transition:width .3s}
 .match-popup-ready #match-pane #players .player-form{left:auto;right:15px;top:19px;width:4px;height:4px;border:0;margin:0;transform:none;box-shadow:0 0 0 1px #051c15}
+
+/* Running feet use the frozen display clock, so pausing never resets a stride. */
+.match-popup-ready #players .player-legs{position:absolute;top:21px;left:50%;width:13px;height:8px;transform:translateX(-50%);pointer-events:none}
+.match-popup-ready #players .player-legs i{position:absolute;top:0;width:3px;height:7px;border-radius:2px;background:#173728;transform-origin:top center}
+.match-popup-ready #players .player-legs i:first-child{left:2px;transform:translateY(calc(var(--stride,0)*1px)) rotate(calc(var(--stride,0)*9deg))}
+.match-popup-ready #players .player-legs i:last-child{right:2px;transform:translateY(calc(var(--stride,0)*-1px)) rotate(calc(var(--stride,0)*-9deg))}
+
+.match-popup-ready #players .celebrating .player-face-marker{filter:drop-shadow(0 0 4px #edff97)}
+
+.match-popup-ready #players .player-head{position:absolute;top:-4px;left:50%;width:5px;height:5px;border-radius:50%;transform:translateX(-50%);background:var(--player-skin,#d5b18f);box-shadow:0 1px 1px #00140e66;pointer-events:none}

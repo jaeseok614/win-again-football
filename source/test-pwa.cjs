@@ -75,7 +75,7 @@ function harness(config = {}, shared = storage()) {
     importScripts: name => {
       assert.equal(name, './cache-assets.js');
       if (config.importFail) throw new Error('asset-import-failed');
-      self.WIN_AGAIN_ASSETS = config.assets ?? ['./app.js?v=22', './style.css?v=22', './assets/player-faces-v16.webp', './assets/player-faces-v15.jpg?v=15'];
+      self.WIN_AGAIN_ASSETS = config.assets ?? ['./app.js?v=22', './style.css?v=22', './assets/player-faces-v16.webp', './assets/player-faces-v17.webp?v=17'];
       self.WIN_AGAIN_CACHE_REVISION = config.revision || 'release22';
       self.WIN_AGAIN_INLINE_SHELL = config.inline === true;
       self.WIN_AGAIN_INLINE_SHELL_HASH = Object.hasOwn(config, 'inlineHash') ? config.inlineHash : inlineHash(config.html || defaultHTML);
@@ -158,10 +158,10 @@ function readPNG(file) {
     assert(h.urls.includes(absolute('./app.js?v=22')));
     assert(!h.urls.includes(absolute('./assets/stadium-v10.png')));
     assert.equal(h.messages.length, 2); assert(h.messages.every(x => x.message.type === 'WIN_AGAIN_PWA_READY'));
-    const versioned = harness({ assets: ['./app.js?v=22', './style.css?v=22', './assets/player-faces-v16.webp?v=16', './assets/player-faces-v15.jpg?v=15', './assets/stadium-v10.png?v=10'] });
+    const versioned = harness({ assets: ['./app.js?v=22', './style.css?v=22', './assets/player-faces-v16.webp?v=16', './assets/player-faces-v17.webp?v=17', './assets/stadium-v10.png?v=10'] });
     await versioned.event('install');
     assert(versioned.urls.includes(absolute('./assets/player-faces-v16.webp?v=16')));
-    assert(versioned.urls.includes(absolute('./assets/player-faces-v15.jpg?v=15')));
+    assert(versioned.urls.includes(absolute('./assets/player-faces-v17.webp?v=17')));
     assert(versioned.urls.includes(absolute('./assets/stadium-v10.png?v=10')));
   });
   await test('compiled public shell installs without absent original game images or external scripts', async () => {

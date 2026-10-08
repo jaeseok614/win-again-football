@@ -28,9 +28,9 @@ a live source or a copied individual rating feed. Attribute averages rise by
 tier. See [the five-tier model and save migration](FIVE_TIER_PYRAMID_AND_FINANCE.md).
 
 Player portraits use locally cached original fictional atlases: 28 portraits in
-the original sheet and 16 additional cells in the expanded sheet. New Tottunham
+the original sheet and 64 additional cells in the expanded sheet. New Tottunham
 starters and the initial transfer targets retain their fixed original portraits;
 opposition starters receive distinct faces, and other generated players use a
-deterministic identity mapping. The companion atlas is JPEG-encoded for a smaller
+deterministic identity mapping. The companion atlas is WebP-encoded for a smaller
 offline download. See the [original portrait prompt](../source/player-faces-v13-original-prompt.txt)
-and [expanded portrait prompt](../source/player-faces-v15-original-prompt.txt).
+and [expanded portrait and club-scene prompts](CLUB_VISUALS_2026-10-08.md).
