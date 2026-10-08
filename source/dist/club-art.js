@@ -10,5 +10,8 @@
  const momentAsset='assets/club-moments-v1.webp?v=1',moments={huddle:[0,'감독의 말에 귀 기울이는 선수단'],substitute:[1,'투입을 기다리며 몸을 푸는 후보 선수'],keeper:[2,'무실점을 함께 축하하는 골키퍼와 동료'],rebound:[3,'원정 버스 앞에서 다시 마음을 모으는 선수단']};
  if(root.document?.getElementById){const style=root.document.getElementById('club-scene-atlas');if(style)style.textContent+=' .moment-art{background-image:url("'+momentAsset+'")}';}
  function moment(kind='huddle'){const key=Object.hasOwn(moments,kind)?kind:'huddle',[i,label]=moments[key];return '<div class="club-art moment-art" role="img" aria-label="'+esc(label)+' · 장면 일러스트" data-moment-scene="'+key+'" style="--scene-x:'+(i%2)*100+'%;--scene-y:'+Math.floor(i/2)*100+'%"><span>장면 일러스트</span></div>';}
- const api={asset,promotionAsset,storyAsset,momentAsset,moments,seasonScene,scenes:Object.freeze(scenes),storyScenes:Object.freeze(storyScenes),html,story,moment};root.ClubArt=api;if(typeof module!=='undefined')module.exports=api;
+ const deadballAsset='assets/club-deadball-v1.webp?v=1',deadballs={corner:[0,'코너킥 움직임을 맞추는 선수들'],freeKick:[1,'프리킥을 준비하는 훈련장'],partnership:[2,'함께 만든 골을 축하하는 동료'],specialist:[3,'프리킥을 돌아보는 선수와 코치']};
+ if(root.document?.getElementById){const style=root.document.getElementById('club-scene-atlas');if(style)style.textContent+=' .deadball-art{background-image:url("'+deadballAsset+'")}';}
+ function deadball(kind='corner'){const key=Object.hasOwn(deadballs,kind)?kind:'corner',[i,label]=deadballs[key];return '<div class="club-art deadball-art" role="img" aria-label="'+esc(label)+' · 장면 일러스트" data-deadball-scene="'+key+'" style="--scene-x:'+(i%2)*100+'%;--scene-y:'+Math.floor(i/2)*100+'%"><span>장면 일러스트</span></div>';}
+ const api={deadballAsset,deadballs,deadball,asset,promotionAsset,storyAsset,momentAsset,moments,seasonScene,scenes:Object.freeze(scenes),storyScenes:Object.freeze(storyScenes),html,story,moment};root.ClubArt=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

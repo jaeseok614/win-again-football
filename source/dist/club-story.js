@@ -70,6 +70,10 @@
   }
 
   const completeGames=games.filter(r=>r.statisticsOriginMinute===0&&!r.unassignedGoals);
+  const cornerGame=completeGames.find(r=>r.events.some(e=>e.setPiece==='corner'&&e.assistIdentity&&e.assistIdentity!==e.scorerIdentity));
+  if(cornerGame){const e=cornerGame.events.find(e=>e.setPiece==='corner'&&e.assistIdentity&&e.assistIdentity!==e.scorerIdentity),scorer=F.identityProfile(e.scorerIdentity).name,kicker=F.identityProfile(e.assistIdentity).name;beat('corner-partners',cornerGame.round,'세트피스 득점 선수','깃발에서 골문까지, 둘의 약속',e.minute+'분, '+kicker+'의 코너킥을 '+scorer+'이 골로 연결했다. 두 선수는 훈련장에서 맞춘 움직임을 다시 떠올린다.','골까지 이어진 두 사람의 호흡을 어떻게 기억할까요?',['공을 올린 동료와 기다린 움직임을 함께 듣자','좋은 호흡을 다음 경기에도 준비하자','다음 선발의 키커와 공중볼 타깃을 확인하자'],['제 이름 옆에 공을 올려 준 동료도 기억하겠습니다.','같은 결과를 약속할 수는 없어도 준비는 함께하겠습니다.','한 골에 들뜨기보다 다음 상대에 맞춰 준비하겠습니다.'],'captain',e.scorerIdentity);}
+  const freeKickGame=completeGames.find(r=>r.events.some(e=>e.setPiece==='freeKick'));
+  if(freeKickGame){const e=freeKickGame.events.find(e=>e.setPiece==='freeKick'),name=F.identityProfile(e.scorerIdentity).name;beat('free-kick-memory',freeKickGame.round,'프리킥 득점 선수','수비벽 너머에 남긴 이름',e.minute+'분, '+name+'의 직접 프리킥이 골로 기록됐다. 선수와 코치는 경기 뒤 멈춘 공 앞에서의 선택을 돌아본다.','오늘의 한 번을 다음 준비로 어떻게 이어갈까요?',['킥 앞에서 어떤 마음이었는지 듣고 싶다','성공 뒤에도 침착하게 준비하는 기준을 지키자','체력과 프리킥 담당을 다시 함께 살펴보자'],['골보다 먼저 제 마음을 물어봐 주셔서 고맙습니다.','다음 공도 들어간다는 생각 대신 준비에 집중하겠습니다.','몸 상태를 보며 누가 맡을지 함께 준비하겠습니다.'],'captain',e.scorerIdentity);}
   const assists=completeGames.find(r=>r.players.some(p=>p.assists>=2));
   if(assists){const hero=assists.players.find(p=>p.assists>=2),name=F.identityProfile(hero.identity).name;beat('assist-maker',assists.round,'도움 기록 선수','마지막 패스에 담긴 이름',name+'이 같은 경기에서 도움 '+hero.assists+'개를 기록했다. 동료들은 골문 앞에서 받은 패스를 떠올린다.','골을 넣은 동료들과 오늘 어떤 이야기를 나눌까요?',['서로 어떤 움직임을 기다렸는지 들어 보자','동료를 살리는 선택에 자신감을 갖자','도움 기록과 다음 경기 역할을 함께 살펴보자'],['골을 넣은 동료의 움직임도 함께 기억하겠습니다.','항상 같은 패스를 고집하지 않고 상황을 읽겠습니다.','좋은 기록 뒤에도 회복과 준비를 이어가겠습니다.'],'captain',hero.identity);}
   const sharedGoals=completeGames.find(r=>r.players.filter(p=>p.goals>0).length>=3);
@@ -132,7 +136,9 @@
  }
  function validate(s){
   if(!Object.hasOwn(s,'clubStory'))return;
-  const fail=()=>{throw Error('저장한 구단 대화 기록을 읽을 수 없어요.');},story=s.clubStory,maxRecords=(catalog.length+1+3+7+3)*2*s.year,lookup=eventLookup(s);if(!story||story.version!==1||Object.keys(story).length!==2||!Array.isArray(story.records)||story.records.length>maxRecords)fail();
+  const fail=()=>{throw Error('저장한 구단 대화 기록을 읽을 수 없어요.');},story=s.clubStory,lookup=eventLookup(s);if(!story||story.version!==1||Object.keys(story).length!==2||!Array.isArray(story.records))fail();
+  // Bound receipts by the actual available catalog, including record-driven stories.
+  let maxRecords=0;for(const year of new Set(story.records.map(r=>Number(String(r?.event||'').split(':')[0])))){if(!Number.isInteger(year)||year<1||year>s.year)fail();maxRecords+=lookup(year).length*2;}if(story.records.length>maxRecords)fail();
   const seen=new Map();let previous=0;
   for(const r of story.records){if(!r||Object.keys(r).length!==5||!['event','step','choice','actor','atRound'].every(k=>Object.hasOwn(r,k))||typeof r.event!=='string'||typeof r.actor!=='string'||![0,1].includes(r.step)||!Number.isInteger(r.atRound))fail();const year=Number(r.event.split(':')[0]),e=lookup(year).find(e=>e.id===r.event),parent=seen.get(r.event);if(!e||year<1||year>s.year||r.atRound<e.round||r.atRound>played(s,year)||e.key==='rookie'&&r.step===1&&r.choice==='commit'&&r.atRound>(root.Season?.roundCountForYear?.(s,year)||46)-2||year*100+r.atRound<previous||r.step!==(parent?1:0)||parent?.step===1||r.step===0&&!['listen','bold','practical'].includes(r.choice)||r.step===1&&!['commit','honest'].includes(r.choice)||parent&&parent.actor!==r.actor)fail();if(e.actor&&r.actor!==e.actor)fail();if(['captain','rookie'].includes(e.relation)?!F.identityProfile(r.actor):r.actor!==e.relation)fail();previous=year*100+r.atRound;seen.set(r.event,r);}
   }

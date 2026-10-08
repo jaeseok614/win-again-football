@@ -270,7 +270,7 @@ public final class GameSmokeTest {
             assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display!=='none'&&document.querySelectorAll('.media-review').length===3"));
             assertEquals("New stadium illustration must be visible on the default home", "true", evaluate(scenario,
                 "(()=>{const art=document.querySelector('#mobile-command-center .club-growth-picture');return !!art&&art.getBoundingClientRect().width>0&&getComputedStyle(art).backgroundImage.includes('data:image/webp');})()"));
-            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset,ClubArt.storyAsset,ClubArt.momentAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048&&widths[5]===2048&&widths[6]===1672).catch(()=>window.newArtDecoded=false);return true;})()");
+            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset,ClubArt.storyAsset,ClubArt.momentAsset,ClubArt.deadballAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048&&widths[5]===2048&&widths[6]===1672&&widths[7]===960).catch(()=>window.newArtDecoded=false);return true;})()");
             awaitTrue(scenario, "window.newArtDecoded===true");
             assertEquals("Opponent lineup must retain eleven distinct faces in the expanded atlas", "true", evaluate(scenario,
                 "(()=>{const rows=Opposition.roster(S.opponentFor(season)),indices=rows.map(p=>Portraits.index(p));return new Set(indices).size===11&&rows.every(p=>Portraits.html(p).includes('--portrait-size:800% 800%'));})()"));
@@ -311,6 +311,15 @@ public final class GameSmokeTest {
             assertEquals("Score, pitch and main action must share the phone viewport", "true", evaluate(scenario,
                 "(()=>{const p=document.getElementById('pitch').getBoundingClientRect(),b=document.getElementById('primary').getBoundingClientRect(),s=document.querySelector('.scoreboard').getBoundingClientRect();return s.top>=0&&p.top>=0&&p.bottom<=b.top&&b.bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1;})()"));
             screenshot(scenario, "android-compact-match.png");
+            evaluate(scenario, "openMatchPopup('setpieces');true");
+            awaitTrue(scenario, "matchPopupActive==='setpieces'&&document.querySelectorAll('[data-deadball-role]').length===3");
+            assertEquals("Three specialist roles and their portraits fit without scrolling", "true", evaluate(scenario,
+                "(()=>{const host=document.getElementById('match-popup-setpieces'),body=host.closest('.match-popup-body');return body.scrollHeight<=body.clientHeight+1&&host.querySelectorAll('.player-portrait').length===3&&[...host.querySelectorAll('select')].every(e=>{const r=e.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;});})()"));
+            assertEquals("Role selection persists the actual identity without consuming RNG", "true", evaluate(scenario,
+                "(()=>{const rng=state.rng,e=document.querySelector('[data-deadball-role=freeKick]');e.value='m1';e.dispatchEvent(new Event('change',{bubbles:true}));return season.plan.setPieces.freeKick===state.players.m1.identity&&state.rng===rng&&JSON.stringify(S.restore(JSON.parse(JSON.stringify(season))))===JSON.stringify(season);})()"));
+            screenshot(scenario, "android-set-piece-room.png");
+            tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
+
             evaluate(scenario, "openMatchPopup('brief');true");
             awaitTrue(scenario, "matchPopupActive==='brief'&&document.querySelectorAll('.brief-flow ol li').length===6");
             assertEquals("The match brief must fit without scrolling and retain real counters", "true", evaluate(scenario,
