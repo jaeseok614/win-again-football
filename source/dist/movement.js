@@ -207,5 +207,12 @@
   const delivery={cross:'크로스',cutback:'컷백',through_ball:'침투 패스',combination:'패스 연계'}[event.action]||'전진 패스';
   return source+' '+delivery+'! '+(event.type==='chance'?'수비가 끊어냅니다.':shooter+' 슈팅, '+outcome);
  }
- return {frame,commentary,liveCommentary,broadcast,timing,impactAge};
+
+ // Only describe the frame being displayed, never the event's future outcome.
+ function sequence(value){
+  if(!value||![0,1].includes(value.ownerTeam))return null;
+  const stage=['turnover','secure','intercept','tackle'].includes(value.phase)?0:['outlet','carry','wing-run','sprint','through','build-up','wide','transition'].includes(value.phase)?1:['cross','cutback','control','shot','header','set-piece'].includes(value.phase)?2:-1;
+  return stage<0?null:{stage,team:value.ownerTeam,label:['확보','전진','문전'][stage]};
+ }
+ return {frame,commentary,liveCommentary,broadcast,sequence,timing,impactAge};
 });

@@ -21,6 +21,7 @@ function motionFrame(now=performance.now()){
  const text=movementDemo?'미리보기 · '+playLabel:state.paused?'일시 정지 · '+playLabel:playLabel;
  if(typeof pendingMatchMoment!=='undefined'&&pendingMatchMoment?.event===movementEvent&&movementEventAge>=Movement.impactAge(movementEvent)){const moment=pendingMatchMoment.moment;pendingMatchMoment=null;presentMoment(moment);}
  for(const id of ['movement-label','live-play-label']){const label=$(id);if(label&&label.textContent!==text)label.textContent=text;}
+ if(visible)syncMovementSequence(enabled?lastMotionFrame:null);
  syncMovementCommentary();
  syncMovementScore();
  return lastMotionFrame;
@@ -62,3 +63,11 @@ function movementSnapshot(){return {preview:movementDemo,elapsedMs:movementElaps
 document.addEventListener('visibilitychange',()=>{movementStamp=performance.now();if(document.hidden)cancelMovementPreview();});
 
 function movementHighlightPending(){return !!lastEvent&&(movementEvent!==lastEvent||movementEventAge<Movement.timing.end);}
+
+function syncMovementSequence(frame){
+ const node=$('live-sequence');if(!node)return;
+ const cue=Movement.sequence(frame),key=cue?cue.team+':'+cue.stage:'idle';if(node.dataset.sequence===key)return;
+ node.dataset.sequence=key;node.dataset.team=cue?String(cue.team):'';node.dataset.stage=cue?String(cue.stage):'';
+ node.textContent=cue?(cue.team===0?'우리 ':'상대 ')+cue.label:'중계';
+ node.setAttribute('aria-label',cue?(cue.team===0?'우리 팀':'상대 팀')+' 공격 · '+cue.label+' 단계':'경기 중계');
+}

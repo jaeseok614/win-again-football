@@ -270,11 +270,17 @@ public final class GameSmokeTest {
             assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display!=='none'&&document.querySelectorAll('.media-review').length===3"));
             assertEquals("New stadium illustration must be visible on the default home", "true", evaluate(scenario,
                 "(()=>{const art=document.querySelector('#mobile-command-center .club-growth-picture');return !!art&&art.getBoundingClientRect().width>0&&getComputedStyle(art).backgroundImage.includes('data:image/webp');})()"));
-            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048).catch(()=>window.newArtDecoded=false);return true;})()");
+            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset,ClubArt.storyAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048&&widths[5]===2048).catch(()=>window.newArtDecoded=false);return true;})()");
             awaitTrue(scenario, "window.newArtDecoded===true");
             assertEquals("Opponent lineup must retain eleven distinct faces in the expanded atlas", "true", evaluate(scenario,
                 "(()=>{const rows=Opposition.roster(S.opponentFor(season)),indices=rows.map(p=>Portraits.index(p));return new Set(indices).size===11&&rows.every(p=>Portraits.html(p).includes('--portrait-size:800% 800%'));})()"));
             screenshot(scenario, "android-home-media.png");
+            tapWebElement(scenario, "#club-story-open");
+            assertEquals("Narrative replies must stay inside the phone dialog", "true", evaluate(scenario,
+                "(()=>{const d=document.getElementById('club-story-dialog'),buttons=[...d.querySelectorAll('button')];return d.open&&d.scrollHeight<=d.clientHeight+1&&buttons.length>=4&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;})&&getComputedStyle(d.querySelector('.story-art')).backgroundImage.includes('data:image/webp');})()"));
+            screenshot(scenario, "android-story-chapter.png");
+            tapWebElement(scenario, "#club-story-dialog [data-story-close]");
+
             tapWebElement(scenario, "#mobile-match-action");
             awaitTrue(scenario, "view==='match'&&!document.getElementById('match-pane').hidden");
             assertEquals("true", evaluate(scenario, "document.querySelectorAll('#players button:disabled').length===11"));

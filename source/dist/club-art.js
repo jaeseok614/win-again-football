@@ -1,9 +1,11 @@
 (function(root){
  'use strict';
  const asset='assets/club-scenes-v1.webp?v=1',promotionAsset='assets/club-promotion-v1.webp?v=1',scenes={arrival:[0,'비 내리는 하위 리그 경기장'],locker:[1,'라커룸에서 전술을 설명하는 감독'],press:[2,'구단 기자회견'],training:[3,'패스와 달리기를 연습하는 선수단'],academy:[4,'유소년 훈련을 관찰하는 코치'],celebration:[5,'우승을 축하하는 선수단'],promotion:[6,'다음 리그 승격을 축하하는 감독과 선수단']};
+ const storyAsset='assets/club-chapters-v1.webp?v=1',storyScenes={arrival:[0,'작은 경기장에 첫발을 내딛는 감독'],coach:[1,'코치와 함께 살펴보는 전술판'],captain:[2,'라커룸에서 마음을 모으는 선수단'],rookie:[3,'출전을 준비하는 젊은 선수'],board:[4,'구단 사무실에서 나누는 면담'],fans:[5,'우리 팀을 응원하는 지역 팬들']};
  const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- if(root.document?.createElement&&root.document?.head?.appendChild){const style=root.document.createElement('style');style.id='club-scene-atlas';style.textContent='.club-art{background-image:url("'+asset+'")} .club-art[data-club-scene="promotion"]{background-image:url("'+promotionAsset+'")}';root.document.head.appendChild(style);}
+ if(root.document?.createElement&&root.document?.head?.appendChild){const style=root.document.createElement('style');style.id='club-scene-atlas';style.textContent='.club-art{background-image:url("'+asset+'")} .club-art[data-club-scene="promotion"]{background-image:url("'+promotionAsset+'")} .story-art{background-image:url("'+storyAsset+'")}';root.document.head.appendChild(style);}
  function html(kind='arrival'){const [index,label]=Object.hasOwn(scenes,kind)?scenes[kind]:scenes.arrival;return '<div class="club-art" role="img" aria-label="'+esc(label)+' · 구단 일러스트" data-club-scene="'+(Object.hasOwn(scenes,kind)?kind:'arrival')+'" style="--scene-x:'+(index%3)*50+'%;--scene-y:'+Math.floor(index/3)*100+'%"><span>구단 일러스트</span></div>';}
  function seasonScene({final=false,rank,division}={}){if(!final||!Number.isInteger(division)||division<1||division>5)return 'arrival';if(rank===1)return 'celebration';return rank===2&&division>1?'promotion':'arrival';}
- const api={asset,promotionAsset,seasonScene,scenes:Object.freeze(scenes),html};root.ClubArt=api;if(typeof module!=='undefined')module.exports=api;
+ function story(kind='arrival'){const key=Object.hasOwn(storyScenes,kind)?kind:'arrival',[index,label]=storyScenes[key];return '<div class="story-art" role="img" aria-label="'+esc(label)+' · 장면 일러스트" data-story-scene="'+key+'" style="--scene-x:'+(index%3)*50+'%;--scene-y:'+Math.floor(index/3)*100+'%"><span>장면 일러스트</span></div>';}
+ const api={asset,promotionAsset,storyAsset,seasonScene,scenes:Object.freeze(scenes),storyScenes:Object.freeze(storyScenes),html,story};root.ClubArt=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
