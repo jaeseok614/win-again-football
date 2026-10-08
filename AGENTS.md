@@ -67,6 +67,13 @@ Keep articles visible on the home dashboard and derive assessments, manager stor
 and goals from actual confirmed records. Use original fictional outlets, journalists,
 player/coach names and art; do not attribute simulated quotes to real newsrooms.
 Use bundled portrait atlases with stable identities, never runtime photo downloads.
+Show the current division's club/stadium growth illustration on the default home.
+Stage changes follow the actual explicit season transition, including relegation.
+Review comparisons use confirmed final league movement; pictures and the top-tier
+training campus do not create attendance, capacity, revenue or facility bonuses.
+Keep home rank, points, funds, availability, next opponent and primary actions above
+the phone navigation in both portrait and short landscape. Before kickoff show
+calculated starter strength and fitness; during play show football statistics.
 The guide opens the whole 18-player squad with positions, calculated overall,
 stamina and separate condition. Transfer filters work with an empty search box;
 clearing/editing a keyword immediately updates results, including Korean IME.

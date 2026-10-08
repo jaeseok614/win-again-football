@@ -269,8 +269,8 @@ public final class GameSmokeTest {
             assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
             assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display!=='none'&&document.querySelectorAll('.media-review').length===3"));
             assertEquals("New stadium illustration must be visible on the default home", "true", evaluate(scenario,
-                "(()=>{const art=document.querySelector('#mobile-command-center .club-art');return !!art&&art.getBoundingClientRect().width>0&&getComputedStyle(art).backgroundImage.includes('data:image/webp');})()"));
-            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672).catch(()=>window.newArtDecoded=false);return true;})()");
+                "(()=>{const art=document.querySelector('#mobile-command-center .club-growth-picture');return !!art&&art.getBoundingClientRect().width>0&&getComputedStyle(art).backgroundImage.includes('data:image/webp');})()"));
+            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048).catch(()=>window.newArtDecoded=false);return true;})()");
             awaitTrue(scenario, "window.newArtDecoded===true");
             assertEquals("Opponent lineup must retain eleven distinct faces in the expanded atlas", "true", evaluate(scenario,
                 "(()=>{const rows=Opposition.roster(S.opponentFor(season)),indices=rows.map(p=>Portraits.index(p));return new Set(indices).size===11&&rows.every(p=>Portraits.html(p).includes('--portrait-size:800% 800%'));})()"));
@@ -279,9 +279,12 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "view==='match'&&!document.getElementById('match-pane').hidden");
             assertEquals("true", evaluate(scenario, "document.querySelectorAll('#players button:disabled').length===11"));
             assertEquals("true", evaluate(scenario, "!document.getElementById('match-popup').open&&document.getElementById('matchday-live').hidden===false"));
-            tapWebElement(scenario, "#matchday-roster");
+            assertEquals("Preparation HUD must compare actual starter abilities", "true", evaluate(scenario,
+                "(()=>{const h=document.getElementById('match-live-stats').textContent;return h.includes('우리 종합')&&h.includes('상대 종합')&&h.includes('선발 체력')&&!h.includes('점유율');})()"));
+            assertEquals("Preparation offers lineup and opponent directly", "true", evaluate(scenario,
+                "document.getElementById('matchday-roster').textContent==='선발 · 후보'&&document.getElementById('match-open-details').dataset.matchPopup==='opponent'"));
+            tapWebElement(scenario, "#match-open-details");
             awaitTrue(scenario, "document.getElementById('match-popup').open");
-            tapWebElement(scenario, "#match-popup [data-match-popup='opponent']");
             awaitTrue(scenario, "!document.getElementById('opposition-report').hidden&&document.querySelectorAll('.opposition-roster tbody tr').length===11");
             assertEquals("true", evaluate(scenario, "document.getElementById('opposition-report').textContent.includes('전술 성향')&&document.getElementById('opposition-report').textContent.includes('체력')"));
             screenshot(scenario, "android-opposition-report.png");

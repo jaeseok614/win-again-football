@@ -19,12 +19,12 @@ function renderMatchPopup(){
  if(view!=='match'||!state){closeMatchPopup();return;}
  // The pitch always stays visible behind a dialog. Hidden popup sections stay cheap.
  $('matchday-live').hidden=false;
- $('match-popup-title').textContent=matchPopupNames[matchPopupActive]||'경기 메뉴';
+ $('match-popup-title').textContent=matchPopupActive==='roster'&&state.phase==='prep'?'선발 · 후보':matchPopupNames[matchPopupActive]||'경기 메뉴';
  $('match-popup-status').textContent=state.minute+'′ · '+(F.running(state)?'경기 일시 정지 · 닫은 뒤 직접 이어가세요.':{prep:'킥오프 전',half:'하프타임',late:'작전 시간',full:'경기 종료'}[state.phase]||'');
  for(const [kind] of Object.entries(matchPopupNames)){
   const section=$('match-popup-'+kind);section.hidden=matchPopupActive!==kind;
   const button=dialog.querySelector('[data-match-popup="'+kind+'"]');button?.setAttribute('aria-pressed',String(matchPopupActive===kind));
-  if(button)button.disabled=kind==='analysis'&&state.phase==='full';
+  if(button){button.disabled=kind==='analysis'&&state.phase==='full';if(kind==='roster')button.textContent=state.phase==='prep'?'선발 · 후보':'선수 교체';}
  }
  $('opposition-report').hidden=matchPopupActive!=='opponent';
  $('tactics-board').hidden=matchPopupActive!=='analysis';
@@ -32,9 +32,9 @@ function renderMatchPopup(){
  if(matchPopupActive==='opponent')renderOpponentReport();
  if(matchPopupActive==='tactics'&&typeof renderTacticalEditor==='function')renderTacticalEditor();
  if(matchPopupActive==='analysis'){tacticsBoardOpen=true;renderTacticsBoard();}
- $('matchday-roster').textContent='선수 교체';
+ $('matchday-roster').textContent=state.phase==='prep'?'선발 · 후보':'선수 교체';
  $('primary').textContent={prep:'킥오프',half:'후반 시작',late:'마지막 25분 시작',full:'결과 확정'}[state.phase]||(state.paused?'경기 이어가기':'5분 진행');
- const detail=$('match-open-details');if(detail)detail.textContent=state.phase==='full'?'경기 결과':'경기 기록';
+ const detail=$('match-open-details');if(detail){detail.textContent=state.phase==='prep'?'상대 정보':state.phase==='full'?'경기 결과':'경기 기록';detail.dataset.matchPopup=state.phase==='prep'?'opponent':'stats';}
  const talkNote=$('match-talk-unavailable');if(talkNote)talkNote.hidden=!$('team-talk-panel').hidden;
 }
 function initMatchPopup(){
