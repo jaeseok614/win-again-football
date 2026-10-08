@@ -65,7 +65,7 @@ test('switching to live and rejecting unknown tabs never advance time or change 
 
 test('analysis pauses the actual current minute and renders the real remaining tactical window without RNG or statistical changes',()=>{
  for(const minute of [17,59,74]){const s=at(minute),h=harness(s),before=copy(s);h.render();h.dispatch('matchday-tabs','click',h.get('matchday-tab-analysis'));onlyPaused(h,before);assertTab(h,'analysis');assert.equal(h.calls.save,1);assert.equal(h.calls.clockReset,1);assert.equal(h.saved.at(-1),JSON.stringify(s));assert.equal(h.document.activeElement,h.get('matchday-tab-analysis'));assert.ok(h.get('tactics-board').querySelector('details').open);assert.match(h.get('tactics-board').innerHTML,new RegExp(minute+'분 작전 타임'));assert.equal(TacticsBoard.read(s,{coachPause65:false}).valid,true);
-  const paused=JSON.stringify(s);h.dispatch('matchday-tabs','click',h.get('matchday-tab-live'));assertTab(h,'live');unchanged(h,paused);assert.equal(h.get('pause').textContent,'5분 진행');
+  const paused=JSON.stringify(s);h.dispatch('matchday-tabs','click',h.get('matchday-tab-live'));assertTab(h,'live');unchanged(h,paused);assert.equal(h.get('pause').value,'normal');
  }
 });
 

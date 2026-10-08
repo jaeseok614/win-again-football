@@ -105,3 +105,5 @@ branch. Do not request repeated confirmation for those actions. Never force-push
 or overwrite unexpected remote changes.
 
 All player-facing menus, headings, guidance, loading messages and club names use Korean as the primary language. Keep English IDs and source reference names internal; familiar football position abbreviations and terms may remain. Render English club references through EnglishPyramid.koreanName without changing campaign IDs, ratings or save history.
+
+Match viewing uses a visible 0.5x/1x/2x/4x speed picker, with start/pause/resume instead of a five-minute skip. Keep the same pattern in practice. Speed changes never advance minutes, alter RNG, or resume a pause. At 4x, major live scenes display at at most 2x so the ball/keeper sequence stays readable. Bench alerts use actual energy, discipline and visible score; decisions are explicit, respect substitution rules, and never announce an undisplayed goal. New match stories require confirmed complete records.

@@ -9,7 +9,7 @@ function motionFrame(now=performance.now()){
  const eventChanged=movementEvent!==lastEvent;if(eventChanged){movementEventOrigin=lastMotionFrame;movementEvent=lastEvent;movementEventElapsed=movementElapsed;movementEventAge=lastEvent?(typeof lastEventFast!=='undefined'&&lastEventFast?Movement.impactAge(lastEvent):0):Infinity;}
  const visible=view==='match'&&!document.hidden,enabled=motionEnabled();if(movementDemo&&(!enabled||state.phase!=='prep'))cancelMovementPreview();
  const playing=visible&&enabled&&!state.paused&&(F.running(state)||movementEventAge<Movement.timing.end),demo=visible&&enabled&&movementDemo;
- const speed=typeof playbackPrefs==='undefined'?'normal':playbackPrefs.speed,rate=demo?1:speed==='fast'?2:speed==='slow'?.5:1;
+ const speed=typeof playbackPrefs==='undefined'?'normal':playbackPrefs.speed,rate=demo?1:speed==='rapid'?(movementEventAge<Movement.timing.end?2:4):speed==='fast'?2:speed==='slow'?.5:1;
  if(playing||demo){movementElapsed+=visualDelta*rate;if(Number.isFinite(movementEventAge)&&!eventChanged)movementEventAge+=rawDelta*rate;if(demo){movementDemoElapsed+=rawDelta;if(movementDemoElapsed>=12000)cancelMovementPreview();}}
  const match=movementDemo?{...state,phase:'first',paused:false}:state;
  const shapeKey=state.formation+':'+state.tactic+':'+F.opponentPlan(state);if(movementShapeKey!==shapeKey){movementShapeFrom=F.running(state)?lastMotionFrame:null;movementShapeAge=movementShapeFrom?0:650;movementShapeKey=shapeKey;}else if(playing||demo)movementShapeAge=Math.min(650,movementShapeAge+visualDelta*rate);
@@ -37,7 +37,7 @@ function syncMovementCommentary(){
 function syncMovementScore(){
  if(!state||view!=='match')return;
  const pending=motionEnabled()&&movementEvent?.type==='goal'&&movementEventAge<Movement.impactAge(movementEvent)&&!(typeof lastEventFast!=='undefined'&&lastEventFast);
- for(const [index,id] of ['home-score','away-score'].entries()){const node=$(id);if(node)node.textContent=String(Math.max(0,state.score[index]-(pending&&movementEvent.team===index?1:0)));}
+ for(const [index,id] of ['home-score','away-score'].entries()){const node=$(id),text=String(Math.max(0,state.score[index]-(pending&&movementEvent.team===index?1:0)));if(node&&node.textContent!==text)node.textContent=text;}
 }
 function drawMotionActors(ctx,w,h){
  const motion=motionFrame();if(!motion)return;

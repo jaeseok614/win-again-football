@@ -1,6 +1,6 @@
 // Match presentation only. Move existing controls rather than cloning handlers.
 var matchPopupActive=null,matchPopupOpener=null;
-const matchPopupNames={roster:'선수 교체',tactics:'전술 지시',opponent:'상대 보고서',analysis:'전술 분석',stats:'경기 기록',talk:'선수 대화',settings:'경기 설정'};
+const matchPopupNames={roster:'선수 교체',tactics:'전술 지시',opponent:'상대 보고서',analysis:'전술 분석',stats:'경기 기록',talk:'벤치 알림·대화',settings:'경기 설정'};
 function syncMatchScreenMode(){document.body.classList.toggle('match-view',appSessionStarted&&view==='match'&&!!state);if(view!=='match')closeMatchPopup();}
 function openMatchPopup(kind,opener=document.activeElement){
  if(!Object.hasOwn(matchPopupNames,kind)||view!=='match'||!state)return;
@@ -35,7 +35,7 @@ function renderMatchPopup(){
  if(matchPopupActive==='tactics'&&typeof renderTacticalEditor==='function')renderTacticalEditor();
  if(matchPopupActive==='analysis'){tacticsBoardOpen=true;renderTacticsBoard();}
  $('matchday-roster').textContent=state.phase==='prep'?'선발 · 후보':'선수 교체';
- $('primary').textContent={prep:'킥오프',half:'후반 시작',late:'마지막 25분 시작',full:'결과 확정'}[state.phase]||(state.paused?'경기 이어가기':'5분 진행');
+ $('primary').textContent={prep:'킥오프',half:'후반 시작',late:'마지막 25분 시작',full:'결과 확정'}[state.phase]||(state.paused?'경기 이어가기':'일시 정지');
  const detail=$('match-open-details');if(detail){detail.textContent=state.phase==='prep'?'상대 정보':state.phase==='full'?'경기 결과':'경기 기록';detail.dataset.matchPopup=state.phase==='prep'?'opponent':'stats';}
  const talkNote=$('match-talk-unavailable');if(talkNote)talkNote.hidden=!$('team-talk-panel').hidden;
 }
@@ -50,7 +50,7 @@ function initMatchPopup(){
  move($('opposition-report'),'opponent');move($('tactics-board'),'analysis');move($('matchday-summary'),'stats');move($('timeline'),'stats');move($('results'),'stats');move($('team-talk-panel'),'talk');move($('matchday-controls'),'settings');$('matchday-controls').open=true;
  const talkNote=document.createElement('p');talkNote.id='match-talk-unavailable';talkNote.textContent='선수 대화는 경기 전, 하프타임, 65분 작전 시간에 할 수 있습니다.';$('match-popup-talk').append(talkNote);
  const commands=document.createElement('div');commands.id='match-live-actions';commands.append(document.querySelector('.main-action'));
- const quick=document.createElement('div');quick.className='match-quick-menu';quick.innerHTML='<button type="button" data-match-popup="tactics">전술 지시</button><button id="match-open-details" type="button" data-match-popup="stats">경기 기록</button><button type="button" data-match-popup="talk">선수 대화</button><button type="button" data-match-popup="settings">설정</button>';commands.append(quick);pane.append(commands);
+ const quick=document.createElement('div');quick.className='match-quick-menu';quick.innerHTML='<button type="button" data-match-popup="tactics">전술 지시</button><button id="match-open-details" type="button" data-match-popup="stats">경기 기록</button><button id="match-bench-events" type="button" data-match-popup="talk">벤치 알림</button><button type="button" data-match-popup="settings">설정</button>';commands.append(quick);pane.append(commands);
  pane.addEventListener('click',event=>{const open=event.target.closest('[data-match-popup]'),close=event.target.closest('[data-match-popup-close]');if(open)openMatchPopup(open.dataset.matchPopup,open);else if(close)closeMatchPopup();});
  dialog.addEventListener('click',event=>{if(event.target===dialog){const rect=dialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)closeMatchPopup();}});
  dialog.addEventListener('close',finishMatchPopupClose);

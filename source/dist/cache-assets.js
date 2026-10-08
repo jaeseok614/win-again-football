@@ -1,4 +1,4 @@
-self.WIN_AGAIN_CACHE_REVISION = "cdc11b9709b8";
+self.WIN_AGAIN_CACHE_REVISION = "eb24dce9a5d8";
 self.WIN_AGAIN_ASSETS = [
   "./style.css?v=22",
   "./coach-guide.css?v=22",
@@ -127,8 +127,10 @@ self.WIN_AGAIN_ASSETS = [
   "./career-records.js?v=22",
   "./career-records-ui.js?v=22",
   "./app-shell.js?v=22",
+  "./match-events.js?v=1",
   "./app.js?v=22",
   "./match-popup.js?v=22",
+  "./match-events-ui.js?v=1",
   "./touchline-plan.js?v=25",
   "./touchline-plan-ui.js?v=25",
   "./tactical-editor.js?v=24",

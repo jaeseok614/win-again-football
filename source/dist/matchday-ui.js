@@ -67,7 +67,7 @@ function renderMatchday(){
  const note=document.getElementById('selection-hint');note.hidden=!!d.selected||d.liveMode==='full';
  if(!d.selected&&d.liveMode!=='full')note.textContent='선발을 선택하면 같은 포지션의 후보만 표시합니다.';
  document.getElementById('bench-heading').textContent=d.selected?d.selected.role+(d.liveMode==='prep'?' 선발 변경 후보':' 교체 후보'):d.liveMode==='prep'?'출전 가능한 후보':'교체 명단';
- document.getElementById('pause').textContent=d.paused?'5분 진행':'일시 정지';
+ if(typeof playbackPrefs!=='undefined')document.getElementById('pause').value=playbackPrefs.speed;
  if(typeof renderOpponentReport==='function')renderOpponentReport();
  const cards=document.getElementById('card-counter');if(cards&&typeof Discipline!=='undefined'){cards.hidden=!state.discipline;const own=Discipline.count(state),opp=Discipline.count(state,1);cards.textContent='🟨 '+own.yellow+':'+opp.yellow+' · 🟥 '+own.red+':'+opp.red;}
 }

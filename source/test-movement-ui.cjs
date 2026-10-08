@@ -108,4 +108,9 @@ test('playback speed changes presentation duration while pause and the fixed pre
 
 test('paused tactic changes hold actor positions until resume, then players find their new shape gradually',()=>{const h=harness();F.begin(h.context.state);h.frame(80);const old=h.snapshot().frame.own;h.context.state.paused=true;F.setTactic(h.context.state,'lowBlock');const held=h.frame(160);assert.deepEqual(held.own,old);assert.equal(held.phase,'shape-change');assert.deepEqual(h.frame(4000).own,old);const saved=JSON.stringify(h.context.state);h.context.state.paused=false;const first=h.frame(4016);assert.notDeepEqual(first.own,old);assert.equal(first.phase,'shape-change');for(let i=1;i<=9;i++)h.frame(4016+i*80);assert.notEqual(h.snapshot().frame.phase,'shape-change');h.context.state.paused=true;assert.equal(JSON.stringify(h.context.state),saved);});
 
+test('scoreboard writes only at a visible score change and four-speed highlights keep a readable two-speed ceiling',()=>{
+ const h=harness();let text='',writes=0;h.nodes.set('home-score',{get textContent(){return text;},set textContent(value){text=value;writes++;}});F.begin(h.context.state);h.context.playbackPrefs={speed:'rapid'};h.frame(80);for(let i=2;i<30;i++)h.frame(i*80);assert.equal(text,'0');assert.equal(writes,1);const before=h.snapshot().elapsedMs;h.frame(2400);assert.equal(h.snapshot().elapsedMs-before,320);
+ h.context.state.score[0]=1;h.context.lastEvent={type:'goal',team:0,minute:12};h.frame(2480);h.frame(2580);assert.equal(h.snapshot().eventAgeMs,200);assert.equal(writes,1);assert.equal(text,'0');h.context.state.paused=true;h.frame(9000);assert.equal(h.snapshot().eventAgeMs,200);h.context.state.paused=false;h.frame(9016+T.impact);assert.equal(text,'1');assert.equal(writes,2);h.frame(15000);assert.equal(writes,2);
+});
+
 console.log('Movement UI checks passed: '+groups+' groups.');

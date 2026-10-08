@@ -68,6 +68,14 @@
     beat('signing-deadball',deadball.round,'영입 선수','계획한 공이 골문으로',name+'의 '+kind+' '+role+'이 실제 경기 기록에 남았다. 훈련장 전술판과 작은 구장의 골망이 한 장면으로 이어진다.','이 장면을 다음 경기 준비에도 이어갈까요?',['동료들과 어떤 움직임이 맞았는지 들어보자','한 번의 성공보다 꾸준한 준비를 강조하자','선발과 키커·타깃 역할을 다시 확인하자'],['같이 만든 장면을 기억하며 다음 공도 준비하겠습니다.','모든 킥이 골이 되지는 않겠지만 준비는 반복할 수 있어요.','누가 공을 차고 누가 기다릴지 분명하니 함께 움직일 수 있어요.'],'captain',person.identity);
    }
   }
+
+  const completeGames=games.filter(r=>r.statisticsOriginMinute===0&&!r.unassignedGoals);
+  const substituteGame=completeGames.find(r=>r.players.some(p=>!p.started&&p.minutes>0&&p.goals>0));
+  if(substituteGame){const hero=substituteGame.players.find(p=>!p.started&&p.minutes>0&&p.goals>0),name=F.identityProfile(hero.identity)?.name||'교체 선수';beat('bench-hero',substituteGame.round,'교체 선수','벤치에서 시작된 한 골',name+'은 선발이 아니었지만 '+hero.minutes+'분을 뛰고 '+hero.goals+'골을 기록했다. 경기 뒤 라커룸의 동료들이 그 자리를 두드린다.','감독님, 벤치에서 기다리던 시간도 오늘의 준비였겠죠?',['기다리며 준비한 마음부터 듣고 싶다','다음 기회에도 자신 있게 도전하자','오늘 역할과 회복을 함께 살펴보자'],['골만큼 기다리던 시간도 알아주셔서 좋습니다.','출전 시간이 짧아도 준비를 놓지 않겠습니다.','다음 선발을 보장받기보다 맡은 역할을 준비하겠습니다.'],'captain',hero.identity);}
+  const lateGame=completeGames.find(r=>r.score[0]===r.score[1]+1&&r.events.some(e=>e.minute>=80));
+  if(lateGame)beat('late-goal',lateGame.round,'수석 코치','끝까지 남아 있던 불빛','80분 이후 우리 팀의 골이 기록된 경기에서 한 골 차 승리를 거뒀다. 코치는 마지막까지 뛰던 선수들의 이름을 전술판에 남긴다.','이 짜릿한 승리를 다음 준비로 어떻게 이어갈까요?',['끝까지 버틴 선수들의 이야기를 듣자','마지막까지 포기하지 않는 기준을 세우자','막판 전술과 교체, 회복을 함께 돌아보자'],['승리한 날에도 지친 마음을 살피는군요.','다음 경기에도 같은 골이 나리라는 보장은 없지만 준비는 할 수 있죠.','기억에 남은 장면을 구체적인 다음 계획으로 바꿔 봅시다.'],'coach');
+  const resilient=completeGames.find(r=>r.score[0]>=r.score[1]&&(()=>{let own=0,other=0;const reds=(r.cards||[]).filter(c=>c.card==='red'&&c.minute<90);for(const minute of [...new Set(reds.map(c=>c.minute))].sort((a,b)=>a-b)){for(const c of reds.filter(c=>c.minute===minute))c.team===0?own++:other++;if(own>other)return true;}return false;})());
+  if(resilient)beat('outnumbered-result',resilient.round,'주장','빈자리까지 함께 뛰던 날','퇴장으로 수적 열세를 겪은 경기에서 '+resilient.score[0]+' : '+resilient.score[1]+' 결과를 지켰다. 라커룸 바닥에는 평소보다 오래 벗지 못한 축구화가 놓여 있다.','힘든 경기를 버틴 동료들에게 어떤 말을 남길까요?',['빈자리를 메워 준 동료들에게 고맙다고 하자','같은 경고와 퇴장을 반복하지 않도록 돌아보자','수비 배치와 교체 시점을 함께 점검하자'],['오늘 뛰지 않은 자리까지 서로 책임졌습니다.','동료를 탓하기보다 다음 선택의 기준을 만들겠습니다.','버텨 낸 이유를 알면 다음에는 조금 덜 힘들겠죠.']);
   const league=results(s,year);let unbeaten=0,losses=0,unbeatenGame=null,lossGame=null;
   for(const r of league){unbeaten=r.score[0]>=r.score[1]?unbeaten+1:0;losses=r.score[0]<r.score[1]?losses+1:0;if(unbeaten===5&&!unbeatenGame)unbeatenGame=r;if(losses===3&&!lossGame)lossGame=r;}
   if(unbeatenGame)beat('five-unbeaten',unbeatenGame.round,'팬 대표','다섯 경기, 지워지지 않은 응원','리그 다섯 경기 연속으로 패하지 않았다. 승리와 무승부를 함께 버틴 팬들이 훈련장 문 앞에 모인다.','좋은 흐름이 이어지는 동안 어떤 마음을 지켜야 할까요?',['이 흐름을 만든 선수와 팬의 이야기를 듣자','승격 목표를 기억하되 다음 한 경기에 집중하자','회복과 로테이션으로 긴 일정을 준비하자'],['비긴 날의 응원도 기억해 주니 반갑습니다.','좋은 흐름은 아직 승격이 아니라는 것도 함께 기억하죠.','지금의 선수들이 마지막 경기까지 건강하게 뛰길 바랍니다.'],'fans');

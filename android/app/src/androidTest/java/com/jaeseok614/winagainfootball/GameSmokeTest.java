@@ -283,6 +283,9 @@ public final class GameSmokeTest {
 
             tapWebElement(scenario, "#mobile-match-action");
             awaitTrue(scenario, "view==='match'&&!document.getElementById('match-pane').hidden");
+            assertEquals("Visible speed picker must have four choices and preserve match state", "true", evaluate(scenario,
+                "(()=>{const e=document.getElementById('pause'),before=JSON.stringify(season);if(e.tagName!=='SELECT'||e.options.length!==4)return false;e.value='rapid';e.dispatchEvent(new Event('change',{bubbles:true}));return playbackPrefs.speed==='rapid'&&JSON.stringify(season)===before;})()"));
+
             assertEquals("true", evaluate(scenario, "document.querySelectorAll('#players button:disabled').length===11"));
             assertEquals("true", evaluate(scenario, "!document.getElementById('match-popup').open&&document.getElementById('matchday-live').hidden===false"));
             assertEquals("Preparation HUD must compare actual starter abilities", "true", evaluate(scenario,
