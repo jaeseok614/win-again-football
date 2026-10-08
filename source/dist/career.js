@@ -1,6 +1,7 @@
 (function(root){
  'use strict';
  const F=root.Football||(typeof require==='function'?require('./engine.js'):null),E=root.Economy||(typeof require==='function'?require('./economy.js'):null),copy=x=>JSON.parse(JSON.stringify(x));
+ const roundCount=s=>root.Season?.leagueRoundCount?.(s)??14,scoutCycle=(s,completed)=>completed<Math.ceil(roundCount(s)/2)?1:2;
  const positions=['GK','DEF','MID','FW'],tasks={wins:{threshold:3,amount:20000,increment:1},growth:{threshold:3,amount:15000,increment:3},youth:{threshold:270,amount:25000,increment:90}};
  const candidates=(s,cycle,pos)=>F.youthCandidates(s.seed,s.year,cycle,pos).map(p=>typeof p==='string'?p:p.identity);
  function initialize(s){s.career={year:s.year,originRound:s.round,originLedger:s.finance.ledger.length,reports:[],baselines:{},minutes:{},missions:{wins:null,growth:null,youth:null}};for(const slot of Object.keys(s.squad))register(s,slot);return s;}
@@ -11,8 +12,8 @@
  function nonLeagueMatchesThrough(s,round){return cupMatchesThrough(s,round)+europeMatchesThrough(s,round);}
  function matchesThrough(s,round){return round-s.career.originRound+nonLeagueMatchesThrough(s,round);}
  function coachedWeeks(s,round){
-  const start=(s.year-1)*14+s.career.originRound,end=(s.year-1)*14+round,weeks=new Set(),ledger=s.finance.ledger,releases=new Map();
-  for(const e of ledger)if(e.type==='staff-release')releases.set(e.role+'-'+e.started,(e.year-1)*14+e.round);
+  const start=root.Staff?.clock?.(s,s.year,s.career.originRound)??((s.year-1)*14+s.career.originRound),end=root.Staff?.clock?.(s,s.year,round)??((s.year-1)*14+round),weeks=new Set(),ledger=s.finance.ledger,releases=new Map();
+  for(const e of ledger)if(e.type==='staff-release')releases.set(e.role+'-'+e.started,(root.Staff?.clock?.(s,e.year,e.round)??((e.year-1)*14+e.round)));
   for(const e of ledger){
    if(!['staff-hire','staff-renew'].includes(e.type)||e.role==='MED')continue;
    const expires=Math.min(e.expires,releases.get(e.role+'-'+e.started)??e.expires);
@@ -29,8 +30,8 @@
   return {wins:winsThrough(s,s.round),growth:Math.max(0,growth),youth};
  }
  function scout(s,pos){
-  if(!positions.includes(pos))throw Error('탐색할 포지션을 선택하세요.');if(s.competition!=='league'||!s.match||s.match.phase!=='prep'||s.match.minute!==0||s.round>=14)throw Error('유소년 탐색은 리그 경기 전에 할 수 있어요.');
-  const cycle=Math.floor(s.round/7)+1;if(s.career.reports.some(r=>r.cycle===cycle))throw Error('이번 기간의 유소년 보고서를 이미 받았어요.');
+  if(!positions.includes(pos))throw Error('탐색할 포지션을 선택하세요.');if(s.competition!=='league'||!s.match||s.match.phase!=='prep'||s.match.minute!==0||s.round>=roundCount(s))throw Error('유소년 탐색은 리그 경기 전에 할 수 있어요.');
+  const cycle=scoutCycle(s,s.round);if(s.career.reports.some(r=>r.cycle===cycle))throw Error('이번 기간의 유소년 보고서를 이미 받았어요.');
   const next=copy(s),ids=candidates(next,cycle,pos);E.payScout(next,pos,cycle);next.career.reports.push({cycle,round:next.round+1,pos,candidates:ids});return next;
  }
  function advance(s,match,{cup=false,nonLeague=false}={}){
@@ -45,7 +46,7 @@
   const entries=transactions(s),scouts=entries.filter(e=>e.type==='scout'),boards=entries.filter(e=>e.type==='board');
   if(scouts.length!==c.reports.length||new Set(c.reports.map(r=>r?.cycle)).size!==c.reports.length)fail();
   for(const report of c.reports){
-   if(!report||![1,2].includes(report.cycle)||!Number.isInteger(report.round)||report.round<c.originRound+1||report.round>Math.min(14,s.round+1)||Math.floor((report.round-1)/7)+1!==report.cycle||!positions.includes(report.pos)||!Array.isArray(report.candidates)||report.candidates.length!==3||JSON.stringify(report.candidates)!==JSON.stringify(candidates(s,report.cycle,report.pos)))fail();
+   if(!report||![1,2].includes(report.cycle)||!Number.isInteger(report.round)||report.round<c.originRound+1||report.round>Math.min(roundCount(s),s.round+1)||scoutCycle(s,report.round-1)!==report.cycle||!positions.includes(report.pos)||!Array.isArray(report.candidates)||report.candidates.length!==3||JSON.stringify(report.candidates)!==JSON.stringify(candidates(s,report.cycle,report.pos)))fail();
    const entry=scouts.find(e=>e.id==='scout-'+s.year+'-'+report.cycle);if(!entry||entry.round!==report.round||entry.pos!==report.pos||entry.cycle!==report.cycle||entry.amount!==-(E.scoutCost?.(s,report.year)||12000))fail();
   }
   const identities=new Set(Object.values(s.squad).map(p=>p.identity));for(const e of entries)if(e.type==='transfer'){identities.add(e.incoming);identities.add(e.outgoing);}
@@ -60,7 +61,7 @@
   const current=progress(s);if(Object.keys(c.missions).length!==3||boards.length!==Object.values(c.missions).filter(r=>r!==null).length)fail();
   for(const [task,rule] of Object.entries(tasks)){
    const earned=c.missions[task],entry=boards.find(e=>e.id==='board-'+s.year+'-'+task);
-   const coached=task==='growth'?coachedWeeks(s,earned===null?s.round+1:earned):new Set(),lastWeek=(s.year-1)*14+(earned===null?s.round:earned-1),bonus=coached.has(lastWeek)?1:0;
+   const coached=task==='growth'?coachedWeeks(s,earned===null?s.round+1:earned):new Set(),lastWeek=(root.Staff?.clock?.(s,s.year,earned===null?s.round:earned-1)??((s.year-1)*14+(earned===null?s.round:earned-1))),bonus=coached.has(lastWeek)?1:0;
    if(earned===null){if(entry||current[task]>=rule.threshold&&(task!=='growth'||s.competition!=='league'||!s.match||s.trained!=='technique'||current.growth>rule.threshold+1+bonus))fail();continue;}
    if(!Number.isInteger(earned)||earned<c.originRound||earned===c.originRound&&nonLeagueMatchesThrough(s,earned)===0||earned>s.round||!entry||entry.task!==task||entry.round!==earned||entry.amount!==rule.amount||!Number.isInteger(entry.progress)||entry.progress<rule.threshold||entry.progress>=rule.threshold+rule.increment+bonus||entry.progress>current[task])fail();
    if(task==='wins'&&(entry.progress!==winsThrough(s,earned)||winsThrough(s,earned-1)>=rule.threshold))fail();

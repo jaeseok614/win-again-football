@@ -59,9 +59,11 @@ QA fixtures or browser saves. The v22 ZIP is the original fallback, not the newe
 source; setup-source.py only fills missing files and preserves current edits.
 
 Champions League is implemented in europe.js with the shared Football engine.
-Prior-season division 1 ranks 1 and 2 qualify for the following season. Preserve
-the 14 league rounds and 56 league result rows; international matches use their
-own results, receipts and statistics. Domestic Cup takes priority at a shared
+Prior-season division 1 ranks 1 and 2 qualify for the following season. New
+five-tier campaigns use 20 clubs and 38 home-and-away matches in division one,
+then 24 clubs and 46 matches in divisions two through five. Preserve 14 rounds
+and 56 league result rows for old two-division and eight-club saves; international
+matches use their own results, receipts and statistics. Domestic Cup takes priority at a shared
 calendar gate. Only league matches consume salaries and staff contract weeks.
 Legacy saves keep their current match and season without adding European games;
 qualification applies after the next season transition. Keep strict deterministic
@@ -120,20 +122,22 @@ with wrapping, never ellipsis, plus overall skill and live energy. Support links
 show a derived coach chemistry score and color with named component explanations.
 Use actual passing, deterministic teamwork, current role suitability and energy;
 keep this analysis separate from engine bonuses or invented shared-match records.
-Owner refinement (2026-10-05, career length and finances): fresh Tottunham UI
-careers start in division five and pursue four promotions through a 40-club,
-five-division pyramid. Each tier has eight clubs and 14 home/away matches; top
-two promote and seventh/eighth relegate where a neighboring tier exists. Keep
-league, cup, and economy receipts tier-aware. New division-five scouting costs
-£8,000 against the £160,000 opening balance. Preserve two-tier and legacy save
-rules and receipts. Details: docs/FIVE_TIER_PYRAMID_AND_FINANCE.md.
+Owner refinement (2026-10-05, career length and finances; expanded 2026-10-09):
+fresh Tottunham UI careers start in division five and pursue four promotions through
+five tiers. Division one has 20 clubs and 38 home-and-away matches; divisions two
+through five have 24 clubs and 46 matches. The game promotes the top two and
+relegates the bottom two where a neighboring tier exists; division five has no
+relegation. Keep league, cup, calendar, review, statistics, and finance tier-aware.
+New division-five scouting costs £8,000 against the £160,000 opening balance.
+Preserve old two-tier and eight-club saves, schedules, and receipts unchanged.
+Details: docs/FIVE_TIER_PYRAMID_AND_FINANCE.md.
 
-Owner refinement (2026-10-05, English club references and player faces): use
-representative clubs from the 2026/27 Premier League, Championship, League One,
-League Two and National League in the five game tiers. Keep the eight-club
-fixture pools, the Tottunham-to-National-League story exception, club IDs, raw
-ratings, match fixtures and old saves stable. Display the fictional parody names;
-keep exact reference clubs in source metadata and docs/ENGLISH_PYRAMID_REFERENCES_2026-27.md.
+Owner refinement (2026-10-05, English club references and player faces; expanded
+2026-10-09): populate the five game tiers with 2026/27 Premier League, Championship,
+League One, League Two and National League references at full 20/24-club sizes.
+Keep Tottunham's National League story exception, existing club IDs, historic raw
+ratings, and old saves stable. Display the fictional parody names; keep the exact
+club references in source metadata and docs/ENGLISH_PYRAMID_REFERENCES_2026-27.md.
 Use the shared original fictional portrait atlas rather than real-player photos
 or runtime downloads. Keep fixed starters and initial transfer targets on
 distinct deterministic faces, show portraits on the live pitch and in squad and

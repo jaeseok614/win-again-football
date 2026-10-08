@@ -17,7 +17,7 @@ function ownEurope(s){return s.europe.results.filter(r=>r.home===S.own||r.away==
 test('European qualification follows an actual previous top division finish and keeps international clubs separate',()=>{
  assert.equal(S.create(121).europe.enabled,false);assert.equal(S.movement(lower).rank,1);assert.equal(upperStart.league.division,1);assert.equal(upperStart.europe.enabled,false);
  assert.equal(S.movement(upperEnd).rank,1);assert.equal(qualified.year,3);assert.equal(qualified.europe.enabled,true);assert.deepEqual(qualified.europe.qualification,{year:2,division:1,rank:1});assert.deepEqual(S.restore(copy(qualified)),qualified);
- assert.equal(S.clubs.length,40);for(const club of U.clubs){assert.equal(S.rawClub(club.id),club);assert(!S.clubs.some(c=>c.id===club.id));assert(!S.leagueClubs(qualified).some(c=>c.id===club.id));}
+ assert.equal(S.clubs.length,115);for(const club of U.clubs){assert.equal(S.rawClub(club.id),club);assert(!S.clubs.some(c=>c.id===club.id));assert(!S.leagueClubs(qualified).some(c=>c.id===club.id));}
 });
 
 test('six group matchdays and knockout gates preserve league rounds and give the domestic cup priority',()=>{

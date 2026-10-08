@@ -7,7 +7,7 @@ function matchReviewMarkup(d,{compact=false}={}){
  if(!d?.valid)return '';
  const played=d.players.filter(p=>p.minutes>0),creators=played.filter(p=>p.goals>0||p.assists>0).sort((a,b)=>b.goals-a.goals||b.assists-a.assists||b.minutes-a.minutes||a.name.localeCompare(b.name,'ko'));
  const featured=creators.length?creators:played.filter(p=>p.cleanSheets>0),outcome=d.winner===S.own?'승리':d.winner?'패배':'무승부';
- const label=d.competition==='cup'?'컵 '+P.stageNames[d.stage]:d.competition==='europe'?'챔피언스리그 '+Europe.stageNames[d.stage]:'리그 '+d.round+'R',header=d.pending?'경기 결과와 선수 기록':'최근 경기 결과';
+ const label=d.competition==='cup'?'컵 '+P.stageName({league:S.leagueForYear(season,d.year)},d.stage):d.competition==='europe'?'챔피언스리그 '+Europe.stageNames[d.stage]:'리그 '+d.round+'R',header=d.pending?'경기 결과와 선수 기록':'최근 경기 결과';
  const partial=d.legacy?'이전 저장에는 이 경기의 선수별 출전·득점 자료가 없습니다.':d.coverage.unassignedGoals>0?'이 경기에는 득점 선수가 기록되지 않은 골이 있습니다.':d.coverage.partial?'이전 저장에서 이어진 경기입니다. 기록이 있는 득점부터 집계합니다.':'';
  const board=d.confirmed&&d.cashflow?season.finance.ledger.slice(season.finance.ledger.findIndex(e=>e.id===d.cashflow.id)+1).filter(e=>e.type==='board'&&e.year===d.year&&e.round===d.round):[];
  const cashflow=typeof matchCashflow==='function'?matchCashflow(d.cashflow):d.cashflow;

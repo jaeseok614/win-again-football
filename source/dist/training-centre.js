@@ -10,10 +10,10 @@
  function invalid(filters){return {valid:false,reason:'현재 선수단을 확인할 수 없어요.',context:null,summary:{total:0,fit:0,injured:0,tired:0,growable:0},players:[],totalMatched:0,filters};}
  function read(season,options={}){
   const filters=normalize(options),s=season;
-  if(!s||!Number.isInteger(s.year)||s.year<1||!Number.isInteger(s.round)||s.round<0||s.round>14||!s.squad||typeof s.squad!=='object'||Array.isArray(s.squad))return invalid(filters);
+  if(!s||!Number.isInteger(s.year)||s.year<1||!Number.isInteger(s.round)||s.round<0||s.round>S.leagueRoundCount(s)||!s.squad||typeof s.squad!=='object'||Array.isArray(s.squad))return invalid(filters);
   const slots=F.roster.map(p=>p.id);
   if(slots.some(slot=>{const p=s.squad[slot],key=p&&S.primaryKey(p);return !p||p.id!==slot||typeof p.identity!=='string'||typeof p.name!=='string'||!positions.includes(p.pos)||p.pos==='all'||!key||!['speed','endurance','energy',key,'potential'].every(k=>Number.isFinite(p[k]))||!Number.isInteger(p.xp)||p.xp<0;}))return invalid(filters);
-  const trainingOpen=s.competition==='league'&&s.match?.phase==='prep'&&s.match.minute===0&&s.round<14&&!s.trained;
+  const trainingOpen=s.competition==='league'&&s.match?.phase==='prep'&&s.match.minute===0&&s.round<(S.leagueRoundCount(s))&&!s.trained;
   const rows=slots.map((slot,index)=>{
    const p=s.squad[slot],m=s.match?.players?.[slot],live=m?.identity===p.identity?m:null,d=D.analyze(s,slot),key=S.primaryKey(p),profile=F.identityProfile(p.identity),baseline=profile?.[key];
    const recommendation=copy(d.recommendation);

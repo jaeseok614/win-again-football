@@ -78,8 +78,8 @@
   s.health=health;return validate(s);
  }
  function validate(s){
-  const fail=()=>{throw Error('저장한 선수 건강 기록을 읽을 수 없어요.');},h=s.health,cupCount=ownCupResults(s).length,europeResults=ownEuropeResults(s),originEurope=h?.originEuropeGames===undefined?0:h.originEuropeGames;
-  if(!h||h.version!==1||h.year!==s.year||!Number.isInteger(h.originRound)||h.originRound<0||h.originRound>s.round||!Number.isInteger(h.originCupGames)||h.originCupGames<0||h.originCupGames>cupCount||cupCount>3||!Number.isInteger(originEurope)||originEurope<0||originEurope>europeResults.filter(r=>r.week<=h.originRound).length||europeResults.length>8||!Number.isInteger(h.playedGames)||h.playedGames<0||h.playedGames>25||h.playedGames!==completed(s)||Object.keys(s.squad||{}).length!==18)fail();
+  const fail=()=>{throw Error('저장한 선수 건강 기록을 읽을 수 없어요.');},h=s.health,cupCount=ownCupResults(s).length,europeResults=ownEuropeResults(s),originEurope=h?.originEuropeGames===undefined?0:h.originEuropeGames,cupStages=root.Cup?.stageCount?.(s)??3,rounds=root.Season?.leagueRoundCount?.(s)??14,maxGames=rounds+cupStages+13;
+  if(!h||h.version!==1||h.year!==s.year||!Number.isInteger(h.originRound)||h.originRound<0||h.originRound>s.round||!Number.isInteger(h.originCupGames)||h.originCupGames<0||h.originCupGames>cupCount||cupCount>cupStages||!Number.isInteger(originEurope)||originEurope<0||originEurope>europeResults.filter(r=>r.week<=h.originRound).length||europeResults.length>13||!Number.isInteger(h.playedGames)||h.playedGames<0||h.playedGames>maxGames||h.playedGames!==completed(s)||Object.keys(s.squad||{}).length!==18)fail();
   let injured=0;for(const slot of F.roster){const p=s.squad[slot.id];if(!p||p.id!==slot.id||p.pos!==slot.pos)fail();try{canonical(p.id,p.identity);}catch{fail();}let injury;try{injury=normalizeInjury(p.injury);}catch{fail();}if(injury){injured++;if(injury.since>h.playedGames||injury.remaining+h.playedGames-injury.since>2)fail();}}
   if(injured>4||Object.entries(minimum).some(([pos,count])=>Object.values(s.squad).filter(p=>p.pos===pos&&!p.injury).length<count))fail();
   const report=h.lastReport;if(h.playedGames===0){if(report!==null||injured)fail();return s;}

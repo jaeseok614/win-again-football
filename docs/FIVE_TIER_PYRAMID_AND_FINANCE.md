@@ -1,21 +1,25 @@
 # Five-division career and finances
 
 Fresh UI careers marked `startingClub: "tottunham"` begin in division five. The
-fictional national pyramid has five divisions with eight clubs apiece: 40 clubs
-in total. Each season keeps the existing 14-round home-and-away schedule. The
-top two clubs move up one division; places seven and eight move down one division
-where a lower tier exists. The fifth tier has no relegation, and the first tier
-has no relegation target above it. Four successful promotions are needed to
+fictional national pyramid has 20 clubs in division one and 24 in each lower tier.
+Every club plays each opponent home and away: 38 league matches in division one
+and 46 in divisions two through five. A round-robin schedule is generated for
+the selected pool. The game promotes the top two clubs one division and relegates
+the bottom two where a lower tier exists. The fifth tier has no relegation, and the
+first tier has no division above it. Four successful promotions are needed to
 reach the first division. Its top two qualify for the Champions League under the
-existing rule.
+existing rule. Promotion places and playoffs are simplified game rules; the match
+counts and club numbers follow the English leagues.
 
 The league names are Foundation League, Regional League, Merchant League, Crown
-Championship, and Highland Premier, from fifth to first. Each tier has its own
-eight-team cup. Existing club IDs and the legacy two-division pools remain
-unchanged. The five-tier roster adds 25 fictional clubs. When Tottunham moves to
-a different tier, the destination league records its exact eight club IDs and
-replaces its lowest-rated place with Tottunham. Season history stores the exact
-club list used for strict fixture, cup, and champion validation.
+Championship, and Highland Premier, from fifth to first. Each tier has its own cup
+with a five-round single-elimination bracket and byes where needed. Existing club
+IDs and the legacy two-division pools remain unchanged. The five-tier roster now
+contains 115 unique English-club references, with Tottunham retained as the story
+exception across its fifth-tier start and eventual first-tier campaign. When
+Tottunham moves to another tier, the destination league records its exact 20 or 24
+club IDs. Season history stores the exact club list used for strict fixture, cup,
+and champion validation.
 
 New careers retain the existing £160,000 opening balance. Youth scouting costs
 £8,000 per report in the new pyramid (5% of opening funds; at most £16,000 per
@@ -36,9 +40,9 @@ for division one. Cup income, match bonuses, and transfer rules follow the
 corresponding division rates. Legacy and existing `pyramid` rates are unchanged.
 
 The season schema is version 9. It stores `five-tier` league rules and each
-season's eight club IDs. Restoring versions 2–8 keeps their original division,
-fixtures, financial receipts, and campaign history; an old save is never silently
-converted into the five-tier game. The device save key stays
+season's 20 or 24 club IDs. Restoring versions 2–8 keeps their original division,
+fixtures, 14-round schedules, financial receipts, and campaign history; an old
+save is never silently converted into the five-tier game. The device save key stays
 `win-again-season-v17`, and campaign backup format remains version 1.
 
 Each promoted season replaces all seven opponents with the destination tier's
