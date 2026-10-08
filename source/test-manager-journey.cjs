@@ -8,7 +8,7 @@ test('season challenge follows confirmed promotion and top-six table positions',
  const s=S.create(4439,{startingClub:true}),opponent=S.leagueClubs(s).find(c=>c.id!==S.own).id;
  s.results=[{round:0,home:S.own,away:opponent,goals:[2,0]}];s.round=1;const before=JSON.stringify(s);let c=Journey.read(s).challenge;assert.equal(JSON.stringify(s),before);assert.equal(c.inside,true);assert.match(c.detail,/승격권/);assert.match(c.detail,/3위보다 3점/);
  s.results=[{round:0,home:opponent,away:S.own,goals:[4,0]}];c=Journey.read(s).challenge;assert.equal(c.inside,false);assert.equal(c.relegation,false);assert.match(c.detail,/2위 승격선까지/);
- const top=S.create(4440,{startingClub:true});top.league.division=1;top.league.clubIds=[S.own,...S.fiveTierPools[1].map(x=>x.id).filter(id=>id!==S.own).slice(0,19)];top.results=[{round:0,home:S.own,away:S.leagueClubs(top).find(x=>x.id!==S.own).id,goals:[2,0]}];top.round=1;c=Journey.read(top).challenge;assert.equal(c.total,38);assert.match(c.title,/TOP 6/);assert.equal(c.inside,true);assert.match(c.detail,/7위보다 3점/);
+ const top=S.create(4440,{startingClub:true});top.league.division=1;top.league.clubIds=[S.own,...S.fiveTierPools[1].map(x=>x.id).filter(id=>id!==S.own).slice(0,19)];top.results=[{round:0,home:S.own,away:S.leagueClubs(top).find(x=>x.id!==S.own).id,goals:[2,0]}];top.round=1;c=Journey.read(top).challenge;assert.equal(c.total,38);assert.match(c.title,/상위 6위/);assert.equal(c.inside,true);assert.match(c.detail,/7위보다 3점/);
 });
 test('season arc tells a grounded story from confirmed results, current table and recent form',()=>{
  const s=S.create(4441,{startingClub:true}),before=JSON.stringify(s);let arc=Journey.read(s).arc;assert.match(arc.headline,/아직 아무것도/);assert.deepEqual(arc.form,[]);assert.equal(JSON.stringify(s),before);

@@ -105,3 +105,5 @@ test('the reported key player is the actual featured lineup member and read rema
 });
 
 console.log('Validated '+groups+' football-world groups.');
+
+test('Korean club presentation keeps every raw ID, rating and current save intact',()=>{const EP=require('./dist/english-pyramid.js'),s=S.create(857),before=JSON.stringify(s);for(const rows of Object.values(EP.clubs))for(const name of rows){assert.match(EP.koreanName(name),/[가-힣]/);assert.doesNotMatch(EP.koreanName(name),/[A-Za-z]/);}for(const raw of S.clubs){const shown=S.presentClub(raw);assert.match(shown.name,/[가-힣]/);assert.match(shown.short,/[가-힣]/);assert.equal(shown.id,raw.id);for(const key of ['attack','defense','middle','speed'])assert.equal(shown[key],raw[key]);}assert.equal(EP.koreanName('Worthing'),'워딩');assert.equal(EP.koreanName(''), '');assert.equal(EP.koreanName('미등록 구단'),'미등록 구단');assert.equal(JSON.stringify(s),before);assert.deepEqual(S.restore(JSON.parse(before)),s);console.log('Korean presentation covers all 116 English reference clubs.');});

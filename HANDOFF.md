@@ -526,3 +526,6 @@ Play 신원 확인·서명 키 등 출시 준비는 기존 인수인계의 상�
 - 시작 자금 £160,000은 유지하고 새 리그의 유소년 탐색을 1회 £8,000으로 조정했습니다. 구버전의 £12,000 회계 기록은 그대로 유지합니다.
 - 리그 단계마다 관중 수입·후원·목표 보상을 높입니다. 구버전 2부 승강 규칙과 수입은 변하지 않습니다.
 - 이 단계 당시 저장 시즌 버전은 9였습니다. 현재 버전 10, 일정과 구형 저장 확장은 [FIVE_TIER_PYRAMID_AND_FINANCE.md](docs/FIVE_TIER_PYRAMID_AND_FINANCE.md)에 정리했습니다.
+
+## 2026-10-08 Korean-first presentation
+The owner requested Korean as the default for the Korean audience. Translated launch, manager home, player/transfer/academy/cup/records/planning headings, match labels and substitution notices. EnglishPyramid.koreanName translates all 116 reference names; generated league club display names and opponent source references use Korean while original club IDs, ratings, reference metadata and save history stay intact. Existing valid campaigns restore unchanged. Familiar football position abbreviations and club crest codes remain. Added a durable AGENTS.md requirement. Actual six-view touch navigation, report opening, unchanged campaign and reload passed at 360x640; eight portrait/landscape/tablet layouts retained readable opponent/starter rows without horizontal overflow. Full tests and new Android CI are required before handing out the new APK. See docs/KOREAN_PRESENTATION_2026-10-08.md.

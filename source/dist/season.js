@@ -105,7 +105,7 @@
   extraByDivision[division]=names.map(name=>{
    const id='eng'+division+'-'+name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''),hash=[...name].reduce((n,ch)=>(Math.imul(n,31)+ch.charCodeAt(0))>>>0,division),base={1:90,2:82,3:75,4:68,5:61}[division],spread=n=>base+((hash>>>n)%9)-4;
    const short=name.replace(/^(AFC|FC) /,'').replace(/ United$| Rovers$| Town$| City$| Athletic$/,'').slice(0,16),code=name.split(/\s+/).map(part=>part[0]).join('').slice(0,3).toUpperCase();
-   clubReferences[id]={division,competition:competitionFor[division],reference:name,display:[name,short,code]};
+   clubReferences[id]={division,competition:competitionFor[division],reference:name,display:[EnglishPyramid.koreanName(name),EnglishPyramid.koreanName(name).replace(/ 유나이티드$| 로버스$| 타운$| 시티$| 애슬레틱$/,''),code]};
    return {id,name,en:name,short,code,color:palettes[hash%palettes.length],style:'현실적인 잉글랜드 '+division+'부 전력과 전술 성향을 바탕으로 생성한 구단',attack:spread(0),defense:spread(5),middle:spread(11),speed:spread(17)};
   });
  }

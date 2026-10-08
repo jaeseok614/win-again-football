@@ -103,3 +103,5 @@ Document exact tested results and any remaining limitation in HANDOFF.md.
 The owner authorized continued development and GitHub pushes to the current work
 branch. Do not request repeated confirmation for those actions. Never force-push
 or overwrite unexpected remote changes.
+
+All player-facing menus, headings, guidance, loading messages and club names use Korean as the primary language. Keep English IDs and source reference names internal; familiar football position abbreviations and terms may remain. Render English club references through EnglishPyramid.koreanName without changing campaign IDs, ratings or save history.

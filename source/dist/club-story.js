@@ -19,7 +19,7 @@
  function longSeasonBeats(s,year){
   const history=year===s.year?s.league:s.history?.find(h=>h.year===year),total=root.Season?.roundCountForYear?.(s,year)||14;
   if(history?.rules!=='five-tier'||total<=14)return [];
-  const division=history.division,promotion=division>1,goal=promotion?'승격':'1부 TOP 6',at=fraction=>Math.ceil(total*fraction),beat=(key,fraction,speaker,title,scene,question,options,replies,relation='captain')=>({key,round:at(fraction),speaker,title,scene,question,options,replies,relation});
+  const division=history.division,promotion=division>1,goal=promotion?'승격':'1부 상위 6위',at=fraction=>Math.ceil(total*fraction),beat=(key,fraction,speaker,title,scene,question,options,replies,relation='captain')=>({key,round:at(fraction),speaker,title,scene,question,options,replies,relation});
   const surroundings={5:'구장 옆 작은 회복실',4:'원정 장비가 쌓인 회복실',3:'훈련장과 연결된 회복실',2:'새 리그의 일정표가 붙은 회복실',1:'1부 상대 분석 자료가 놓인 회복실'};
   return [
    beat('marathon',.39,'주장','긴 시즌의 무게','훈련이 끝난 뒤에도 주장과 몇몇 선수는 '+surroundings[division]+'에 남아 있다. '+division+'부의 '+total+'경기 일정이 이제 절반을 향한다.','지친 선수들이 한 시즌을 끝까지 버틸 수 있도록 무엇을 먼저 챙길까요?',['힘든 선수들의 이야기를 먼저 듣겠습니다',goal+' 목표를 다시 확인하겠습니다','회복과 선발 경쟁을 함께 점검하겠습니다'],['우리가 힘든 이유를 알아주는 것만으로도 버틸 수 있어요.','목표를 잊지는 않았습니다. 다만 서로 도울 시간이 필요해요.','경쟁은 이어가되 회복할 기준도 분명히 정해 주세요.']),
