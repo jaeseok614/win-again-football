@@ -72,6 +72,9 @@ shot or reveal its result early. Use the same field geometry for live and replay
 Receivers approach incoming passes and take a visible first touch before ordinary
 shots. Running stride and body lean follow actual displayed displacement, settle
 when standing, and freeze on pause. Keep these poses out of persistent match state.
+Both sides' off-ball defenders and midfielders should shift toward developing
+attacks, while supporting attackers advance in separate lanes. Preserve primary
+duel/keeper contact paths and verify both teams at every animation boundary.
 
 Reuse the existing explicit substitution selection flow: five players, three
 in-play windows, multiple replacements at the same minute share a window and
