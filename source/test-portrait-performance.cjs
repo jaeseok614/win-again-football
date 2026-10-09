@@ -7,7 +7,7 @@ function context(sources,{style=true,document=true}={}){const calls=[],styles=[]
 function scripts(html){return [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match=>match[1]);}
 
 test('portrait modules remain safe in CommonJS and browser fixtures without a DOM or CSS style API',()=>{
- assert.equal(Portraits.asset,'assets/player-faces-v16.webp?v=16');assert.equal(Portraits.expandedAsset,'assets/player-faces-v17.webp?v=17');assert.equal(Portraits.extraAsset,'assets/player-faces-v18.webp?v=18');assert.equal(StaffFaces.asset,'assets/coach-faces-v1.webp?v=1');
+ assert.equal(Portraits.asset,'assets/player-faces-v19.webp?v=19');assert.equal(Portraits.expandedAsset,'assets/player-faces-v17.webp?v=17');assert.equal(Portraits.extraAsset,'assets/player-faces-v18.webp?v=18');assert.equal(StaffFaces.asset,'assets/coach-faces-v1.webp?v=1');
  for(const options of [{document:false},{style:false}]){const h=context([playerSource,staffSource],options);assert.equal(h.calls.length,0);assert.equal(h.styles.length,0);assert.equal(h.ctx.Portraits.index('g1'),0);assert.equal(h.ctx.StaffPortraits.index('이든 브룩스'),0);assert.ok(h.ctx.Portraits.html('f2').includes('data-portrait-index="15"'));}
 });
 
@@ -22,7 +22,7 @@ test('portrait spans keep identity and tile coordinates while omitting atlas URL
 });
 
 test('new Tottunham campaigns and transfer targets receive distinct, stable original faces',()=>{
- const players=[...F.startingRoster,...F.market],indices=players.map(player=>Portraits.index(player.identity));assert.equal(F.startingRoster.length,18);assert.equal(F.market.length,8);assert.equal(new Set(indices).size,players.length);
+ const players=[...F.startingRoster,...F.market],indices=players.map(player=>Portraits.index(player.identity));assert.equal(F.startingRoster.length,18);assert.equal(F.market.length,32);assert.equal(new Set(indices).size,players.length);
  for(const player of players){const markup=Portraits.html(player);assert.ok(markup.includes('data-portrait-index="'+Portraits.index(player.identity)+'"'));assert.ok(markup.includes('assets/player-faces-v16.webp')===false);}
 });
 test('generated identities use the compact expanded atlas while opposition starters receive eleven distinct faces',()=>{

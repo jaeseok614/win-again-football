@@ -12,6 +12,7 @@
  const potentials={g1:88,g2:74,d1:89,d2:88,d3:86,d4:91,d5:90,d6:83,m1:89,m2:91,m3:94,m4:86,m5:87,m6:94,f1:87,f2:91,f3:97,f4:91};
  const roleKey=p=>({GK:'keeping',DEF:'defense',MID:'passing',FW:'attack'}[p.pos]);
  for(const p of roster){p.identity=p.id;p.age=ages[p.id];p.potential=potentials[p.id];p.fee=Math.max(15000,Math.round(((p[roleKey(p)]-55)*1400+25000)/1000)*1000);p.wage=Math.round((p[roleKey(p)]-50)*25+600);p.kind=p.age<=21?'유망주':'기존 선수';}
+ const MarketRoster=root.MarketRoster||(typeof require==='function'?require('./market-roster.js'):null);
  const market=[
  {identity:'t_g1',name:'베니오 렌츠',pos:'GK',age:28,potential:87,fee:78000,wage:1800,kind:'즉시 전력',attack:30,defense:62,passing:61,speed:48,endurance:78,keeping:83},
  {identity:'t_g2',name:'엘리안 벨로',pos:'GK',age:19,potential:95,fee:35000,wage:650,kind:'유망주',attack:25,defense:54,passing:58,speed:52,endurance:82,keeping:68},
@@ -21,7 +22,7 @@
  {identity:'t_m2',name:'다리오 펠스',pos:'MID',age:18,potential:97,fee:44000,wage:850,kind:'유망주',attack:70,defense:52,passing:73,speed:83,endurance:82,keeping:0},
  {identity:'t_f1',name:'엔조 카르벤',pos:'FW',age:28,potential:92,fee:125000,wage:2800,kind:'즉시 전력',attack:89,defense:31,passing:69,speed:77,endurance:76,keeping:0},
  {identity:'t_f2',name:'테오린 베르츠',pos:'FW',age:19,potential:97,fee:49000,wage:900,kind:'유망주',attack:73,defense:29,passing:63,speed:92,endurance:86,keeping:0}
- ];
+ ].concat(MarketRoster?.players||[]);
  const personalities={
   g1:['마테오 하른','골문 앞 거인','팔을 쭉 펴면 골대가 갑자기 작아 보여요.'],
   g2:['로웰 프레인','산책하는 골키퍼','골대도 지키고 수비 뒷마당도 순찰해요.'],
@@ -52,7 +53,7 @@
  };
  const legacyNames={},textAliases=new Map();
  function rememberAlias(before,after){if(!textAliases.has(before))textAliases.set(before,new Set());textAliases.get(before).add(after);}
- for(const p of [...roster,...market]){legacyNames[p.identity]=p.name;p.name=personalities[p.identity][0];rememberAlias(legacyNames[p.identity],p.name);}
+ for(const p of [...roster,...market]){if(!personalities[p.identity])personalities[p.identity]=[p.name,'역할 스페셜리스트',MarketRoster.scouting[p.identity]?.use||'필요한 역할과 예산을 함께 비교하세요.'];legacyNames[p.identity]=p.name;p.name=personalities[p.identity][0];rememberAlias(legacyNames[p.identity],p.name);}
  const identities=Object.fromEntries([...roster,...market].map(p=>[p.identity,p]));
  // A fictional 2024/25-inspired starting squad; legacy identities remain intact.
  const startingNames=[
@@ -62,7 +63,8 @@
   ['f1','손헝민','우리의 주장',32],['f2','도미닉 솔랑케잉','박스의 해결사',27],['f3','브레넌 존쏜','침투의 화살',23],['f4','히샬리쏭','골문 사냥꾼',27]
  ];
  const startingSkills={g1:[30,62,65,50,70,76],g2:[25,58,52,40,68,68],d1:[42,78,65,68,78,0],d2:[38,75,63,87,76,0],d3:[58,69,76,77,77,0],d4:[52,70,65,82,79,0],d5:[35,68,54,66,74,0],d6:[37,70,64,59,75,0],m1:[55,70,74,70,80,0],m2:[72,43,83,68,71,0],m3:[73,48,77,74,80,0],m4:[54,65,76,65,75,0],m5:[58,65,70,78,83,0],m6:[57,50,68,74,74,0],f1:[82,32,73,83,76,0],f2:[76,36,63,73,80,0],f3:[70,30,62,88,77,0],f4:[73,39,57,76,74,0]};
- const startingRoster=startingNames.map(([slot,name,nickname,age])=>{const p=roster.find(p=>p.id===slot),identity='sp_'+slot;personalities[identity]=[name,nickname,'강등된 토투넘을 다시 일으키기 위해 함께 뛰어요.'];return identities[identity]={...p,...Object.fromEntries(['attack','defense','passing','speed','endurance','keeping'].map((key,index)=>[key,startingSkills[slot][index]])),identity,name,age,energy:100,kind:'토투넘 선수'};});
+ const startingDescriptions={g1:'골문 밖까지 살피는 장갑. 수비 뒤 공간과 첫 패스를 함께 맡아요.',g2:'어려운 순간을 겪어 본 베테랑. 빠른 질주보다 골문 앞 안정감을 비교하세요.',d1:'앞에서 맞서는 수비의 투사. 태클과 경고 관리를 함께 살펴요.',d2:'수비 뒤를 쫓아가는 번개. 속도와 왼발로 뒷공간을 메워요.',d3:'오른쪽에서 찬스를 배달해요. 크로스와 세트피스를 눈여겨보세요.',d4:'왼쪽을 왕복하는 질주. 전진과 회복을 함께 담당해요.',d5:'박스 안 높은 공에 맞서는 수비수. 헤더와 몸싸움을 비교하세요.',d6:'큰 소리보다 좋은 간격으로 수비해요. 중앙과 왼쪽을 잇는 버팀목입니다.',m1:'동료가 공격할 동안 중원의 공을 되찾아요. 수비 앞 연결을 맡겨보세요.',m2:'동료가 뛰어갈 틈을 먼저 봐요. 마지막 패스와 킥이 무기입니다.',m3:'왼발로 측면과 중앙을 연결해요. 드리블과 활동량을 함께 살펴요.',m4:'공을 되찾은 뒤 동료 발로 연결해요. 수비 앞 패스의 연결고리입니다.',m5:'두 박스 사이를 쉬지 않고 달려요. 지구력과 활동량이 강점입니다.',m6:'토투넘과 함께 자랄 새로운 박자. 출전 경험과 개인 훈련이 필요해요.',f1:'양발로 골문을 노리는 주장. 빠른 침투와 마무리로 귀환을 이끌어요.',f2:'자신의 골과 동료의 공간을 함께 만들어요. 중앙 마무리와 압박을 맡겨보세요.',f3:'패스가 출발하면 수비 뒤로 달려요. 빠른 측면 침투가 무기입니다.',f4:'박스 안에서 높은 공과 맞서요. 헤더와 골문 앞 경합을 비교하세요.'};
+ const startingRoster=startingNames.map(([slot,name,nickname,age])=>{const p=roster.find(p=>p.id===slot),identity='sp_'+slot;personalities[identity]=[name,nickname,startingDescriptions[slot]];return identities[identity]={...p,...Object.fromEntries(['attack','defense','passing','speed','endurance','keeping'].map((key,index)=>[key,startingSkills[slot][index]])),identity,name,age,energy:100,kind:'토투넘 선수'};});
  function mentalProfile(value){
   const identity=typeof value==='string'?value:value.identity||value.id;
   let hash=2166136261;for(const ch of identity)hash=(Math.imul(hash,16777619)^ch.charCodeAt(0))>>>0;

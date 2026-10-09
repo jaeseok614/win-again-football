@@ -20,16 +20,17 @@
  };
  // Game-specific fictional scouting profiles. Identity, rather than roster slot,
  // keeps each player's traits when a slot is replaced or a campaign is restored.
- const featured={
+ const MarketRoster=root.MarketRoster||(typeof require==='function'?require('./market-roster.js'):null);
+ const featured={...MarketRoster?.traits,
   sp_g1:{feet:[2,5],positions:['GK']},sp_g2:{feet:[2,5],positions:['GK']},
-  sp_d1:{feet:[3,5],positions:['CB','RB']},sp_d2:{feet:[5,3],positions:['CB','LB']},
-  sp_d3:{feet:[3,5],positions:['RB','RWB']},sp_d4:{feet:[5,3],positions:['LB','LWB']},
-  sp_d5:{feet:[2,5],positions:['CB','RB']},sp_d6:{feet:[5,3],positions:['LB','CB']},
+  sp_d1:{feet:[3,5],positions:['CB']},sp_d2:{feet:[5,3],positions:['CB','LB']},
+  sp_d3:{feet:[3,5],positions:['RB','RWB','RM']},sp_d4:{feet:[5,3],positions:['LB','LWB']},
+  sp_d5:{feet:[2,5],positions:['CB']},sp_d6:{feet:[5,3],positions:['CB','LB']},
   sp_m1:{feet:[3,5],positions:['DM','CM']},sp_m2:{feet:[4,5],positions:['AM','CM']},
-  sp_m3:{feet:[5,3],positions:['RW','AM','RM']},sp_m4:{feet:[4,5],positions:['CM','DM']},
+  sp_m3:{feet:[5,3],positions:['AM','CM','RW','RM']},sp_m4:{feet:[4,5],positions:['DM','CM','AM']},
   sp_m5:{feet:[3,5],positions:['CM','DM']},sp_m6:{feet:[3,5],positions:['CM','AM']},
   sp_f1:{feet:[5,5],positions:['LW','ST','RW']},sp_f2:{feet:[3,5],positions:['ST']},
-  sp_f3:{feet:[3,5],positions:['RW','ST']},sp_f4:{feet:[3,5],positions:['ST','LW']}
+  sp_f3:{feet:[3,5],positions:['RW','ST','LW','RM']},sp_f4:{feet:[3,5],positions:['ST','LW']}
  };
  function hash(text){let n=2166136261;for(const ch of String(text))n=(Math.imul(n,16777619)^ch.charCodeAt(0))>>>0;return n;}
  function feet(player){
