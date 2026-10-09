@@ -19,7 +19,7 @@
   for(const e of m.logs.slice(0,id))if(e.type==='goal'&&[0,1].includes(e.team))score[e.team]++;
   const match={...m,lineup:[...segment.lineup],tactic:segment.tactic,minute:event.minute,phase:'first',score,opponentPlans:(m.opponentPlans||[]).filter(p=>p.minute<event.minute),discipline:m.discipline?{...m.discipline,events:cards}:undefined},report=O.read({...s,match});if(!report.valid)return {valid:false};
   const counts={DEF:0,MID:0,FW:0},layout=F.formationPositions[m.formation],rows=segment.lineup.map(id=>{const p=m.players[id],base=p.pos==='GK'?[50,88]:layout[p.pos]?.[counts[p.pos]++]||[50,50],saved=positions[p.identity],point=Array.isArray(saved)&&saved.length===2&&saved.every(Number.isFinite)?saved:base;return {id,p,x:point[0],y:point[1]};}).filter(p=>!ownRed.has(p.id));
-  const eventElapsedMs=(event.minute*197)%18000,input={match,event,positions:rows,opponentRoster:report.lineup,opponentFormation:report.plan.formation,dismissedOpponent:opponentRed,eventElapsedMs,motion:true};
+  const eventElapsedMs=(event.minute*197)%(M.passing.segment*8),input={match,event,positions:rows,opponentRoster:report.lineup,opponentFormation:report.plan.formation,dismissedOpponent:opponentRed,eventElapsedMs,motion:true};
   input.eventOrigin=M.frame({...input,event:null,elapsedMs:eventElapsedMs});
   const performer=M.frame({...input,elapsedMs:eventElapsedMs+M.timing.shot,eventAgeMs:M.timing.shot}).performerName;
   return {valid:true,scene:{...scene,actorName:scene.actorName||performer||null},event,input,duration:M.timing.end-1,club:report.club,ownName:m.homeName};

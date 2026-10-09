@@ -61,6 +61,11 @@ recovery, ball carrying, forward runs, delivery, shot and goalkeeper response in
 order. A wing carrier advances beyond teammates before crossing; a goalkeeper
 narrows the angle and meets the ball before announcing a save. Presentation must
 not invent saved match statistics or change the clock, RNG or recorded outcome.
+Permanent owner feedback (2026-10-09): ordinary passes should move briskly while
+decisive shooting and goalkeeping remain easy to follow. Show the ball travelling
+from the shooting player toward the goalkeeper/net, including visible recovery
+before a possession change. Bound display deltas so a stalled frame cannot skip a
+shot or reveal its result early. Use the same field geometry for live and replay.
 
 Reuse the existing explicit substitution selection flow: five players, three
 in-play windows, multiple replacements at the same minute share a window and
@@ -106,4 +111,4 @@ or overwrite unexpected remote changes.
 
 All player-facing menus, headings, guidance, loading messages and club names use Korean as the primary language. Keep English IDs and source reference names internal; familiar football position abbreviations and terms may remain. Render English club references through EnglishPyramid.koreanName without changing campaign IDs, ratings or save history.
 
-Match viewing uses a visible 0.5x/1x/2x/4x speed picker, with start/pause/resume instead of a five-minute skip. Keep the same pattern in practice. Speed changes never advance minutes, alter RNG, or resume a pause. At 4x, major live scenes display at at most 2x so the ball/keeper sequence stays readable. Bench alerts use actual energy, discipline and visible score; decisions are explicit, respect substitution rules, and never announce an undisplayed goal. New match stories require confirmed complete records.
+Match viewing uses a visible 0.5x/1x/2x/4x speed picker, with start/pause/resume instead of a five-minute skip. Keep the same pattern in practice. Speed changes never advance minutes, alter RNG, or resume a pause. Major live build-ups display at at most 2x; decisive controls, shots and outcomes display at at most 1x so the ball/keeper sequence stays readable. Bench alerts use actual energy, discipline and visible score; decisions are explicit, respect substitution rules, and never announce an undisplayed goal. New match stories require confirmed complete records.

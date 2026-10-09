@@ -42,7 +42,7 @@ test('actual goal scorers and a substituted starting goalkeeper guide real event
  const actualScorer=match.lineup.find(id=>match.players[id].pos==='FW'),goal={type:'goal',team:0,minute:42,scorerId:actualScorer,scorerIdentity:match.players[actualScorer].identity};
  const start=Movement.frame({match,elapsedMs:3500,event:goal,eventAgeMs:T.shot,motion:true});assert.equal(start.carrierId,actualScorer);assert.equal(start.scorerId,actualScorer);assert.equal(start.attributed,true);
  const end=Movement.frame({match,elapsedMs:3500,event:goal,eventAgeMs:T.impact,motion:true});assert.equal(end.phase,'goal');assert.equal(end.ball.y,4);
- const save=Movement.frame({match,elapsedMs:3500,event:{type:'shot',team:1,minute:19},eventAgeMs:T.impact,motion:true});assert.equal(save.phase,'save');assert.equal(save.keeperId,'g2');assert.equal(save.carrierId,'g2');assert.equal(save.ball.y,82);
+ const save=Movement.frame({match,elapsedMs:3500,event:{type:'shot',team:1,minute:19},eventAgeMs:T.impact,motion:true});assert.equal(save.phase,'save');assert.equal(save.keeperId,'g2');assert.equal(save.carrierId,'g2');assert.equal(save.ball.y,86);
 });
 test('a recorded cross travels from a named wide player to its striker before the shot',()=>{
  const match=F.create(3,{version:10});F.setFormation(match,'433');F.begin(match);let event;for(let minute=0;minute<90&&!event;minute++){const generated=F.tick(match).find(row=>row.action==='cross'&&!row.setPiece&&row.team===0&&row.type==='shot');if(generated)event=generated;if(match.phase==='half'||match.phase==='late')F.begin(match);}assert.ok(event,'the deterministic match contains an attacking cross');const opponentRoster=Array.from({length:11},(_,index)=>({id:'opp'+index,name:'상대 '+(index+1),pos:index===0?'GK':index<5?'DEF':index<8?'MID':'FW'})),origin=Movement.frame({match,elapsedMs:6200,opponentFormation:'433',opponentRoster,motion:true}),input={match,event,eventOrigin:origin,eventElapsedMs:6200,elapsedMs:6200,opponentFormation:'433',opponentRoster,motion:true},entry=Movement.frame({...input,eventAgeMs:0}),delivery=Movement.frame({...input,eventAgeMs:T.carry+350}),shot=Movement.frame({...input,eventAgeMs:T.shot+200});assert.deepEqual(entry.ball,origin.ball);assert.equal(delivery.phase,'cross');assert.equal(delivery.sourceId,event.sourceId);assert.equal(delivery.receiverId,event.actorId);assert.match(Movement.liveCommentary(delivery),new RegExp(match.players[event.sourceId].name));assert.match(Movement.liveCommentary(delivery),new RegExp(match.players[event.actorId].name));assert.equal(shot.phase,'shot');assert.equal(shot.scorerId,event.actorId);const commentary=Movement.commentary(event,match,opponentRoster,shot);assert.match(commentary,new RegExp(match.players[event.sourceId].name));assert.match(commentary,new RegExp(match.players[event.actorId].name));assert.match(commentary,/크로스/);const awayEvent={...event,team:1,sourceId:undefined,actorId:undefined,actorIndex:0},awayFrame=Movement.frame({...input,event:awayEvent,eventAgeMs:T.shot+200});assert.match(Movement.commentary(awayEvent,match,opponentRoster,awayFrame),/상대 \d+의 크로스!/);assert.notDeepEqual(delivery.ball,entry.ball);assert.deepEqual(match.logs.filter(row=>row.action).at(-1),event);
@@ -66,11 +66,44 @@ test('passing labels never invent a goal, save or shot and visible players move 
  assert.ok(seen.has('역습 전개'));assert.ok(seen.has('수비 전환'));assert.ok(carried>0);
  const mid=positions.get(match.lineup.find(id=>match.players[id].pos==='MID'));assert.ok(Math.max(...mid.map(p=>p.y))-Math.min(...mid.map(p=>p.y))>20);
 });
-test('continuous normal frames avoid teleports at pass and cycle boundaries',()=>{
- const match=active();for(const ms of [1400,2800,4200,5600,7000,8400,9800,11200,12600,14000,28000]){
+test('continuous normal frames avoid teleports at every actual pass and cycle boundary',()=>{
+ const match=active();for(let ms=Movement.passing.segment;ms<=Movement.passing.segment*24;ms+=Movement.passing.segment){
   const before=Movement.frame({match,elapsedMs:ms-.01,motion:true}),after=Movement.frame({match,elapsedMs:ms+.01,motion:true});assert.ok(Math.abs(before.ball.x-after.ball.x)<.05);assert.ok(Math.abs(before.ball.y-after.ball.y)<.05);
   for(let i=0;i<before.own.length;i++){assert.ok(Math.abs(before.own[i].x-after.own[i].x)<.05);assert.ok(Math.abs(before.own[i].y-after.own[i].y)<.05);}
  }
+});
+
+test('ordinary passes arrive briskly while striker-to-keeper shots have a longer visible flight',()=>{
+ const match=active(),before=copy(match),air=[];for(let ms=0;ms<1200;ms+=16){const v=Movement.frame({match,elapsedMs:ms});if(v.carrierId===null)air.push(ms);}
+ assert.ok(air.length>20);assert.ok(air.at(-1)-air[0]<900);
+ for(const team of [0,1])for(const action of ['cross','cutback','through_ball','dribble','combination']){
+  const event={type:'shot',team,action,minute:12,actorId:team===0?'f1':undefined},input={match,event,eventElapsedMs:6000,eventOrigin:Movement.frame({match,elapsedMs:6000})};
+  const start=Movement.frame({...input,eventAgeMs:T.shot}),arrival=Movement.frame({...input,eventAgeMs:T.impact});let previous=start.ball;
+  assert.ok(Math.abs(start.ball.y-arrival.ball.y)>=12,'the ball must visibly travel toward the goalkeeper');assert.ok(T.impact-T.shot>=1200);
+  for(let age=T.shot+16;age<T.impact;age+=16){const v=Movement.frame({...input,eventAgeMs:age});assert.equal(v.phase,'shot');assert.ok(team===0?v.ball.y<previous.y:v.ball.y>previous.y);assert.notEqual(v.carrierId,v.keeperId);previous=v.ball;}
+  const keeper=[...arrival.own,...arrival.opponent].find(p=>p.id===arrival.keeperId);assert.deepEqual(arrival.ball,{x:keeper.x,y:keeper.y});assert.equal(arrival.carrierId,keeper.id);
+ }
+ assert.deepEqual(match,before);
+});
+
+test('recovering players meet over the existing ball before possession changes for either side',()=>{
+ const match=active(),before=copy(match);for(const team of [0,1]){
+  const origin=Movement.frame({match,elapsedMs:team===0?4800:0}),event={type:'shot',team,action:'dribble',minute:12,actorId:team===0?'f1':undefined},input={match,event,eventOrigin:origin};
+  assert.equal(origin.ownerTeam,1-team);assert.ok(origin.carrierId);
+  const approaching=Movement.frame({...input,eventAgeMs:T.win-1}),won=Movement.frame({...input,eventAgeMs:T.win});assert.deepEqual(approaching.ball,origin.ball);assert.equal(approaching.ownerTeam,1-team);assert.equal(won.ownerTeam,team);
+  const recoverer=[...won.own,...won.opponent].find(p=>p.id===won.recovererId),holder=[...won.own,...won.opponent].find(p=>p.id===origin.carrierId);assert.ok(Math.hypot(recoverer.x+1.3-origin.ball.x,recoverer.y+1.2-origin.ball.y)<.01);assert.ok(Math.hypot(holder.x-recoverer.x,holder.y-recoverer.y)<.01);
+ }
+ assert.deepEqual(match,before);
+});
+
+test('all attack paths, steals and restarts stay continuous at 60fps, including actual cycle boundaries',()=>{
+ const match=active(),before=copy(match),origin=Movement.frame({match,elapsedMs:6000});let previous=Movement.frame({match,elapsedMs:0});
+ for(let elapsedMs=16;elapsedMs<29000;elapsedMs+=16){const v=Movement.frame({match,elapsedMs});assert.ok(Math.hypot(v.ball.x-previous.ball.x,v.ball.y-previous.ball.y)<4,'normal pass/turnover cannot teleport');previous=v;}
+ for(const team of [0,1])for(const type of ['goal','shot','chance'])for(const path of ['cross','cutback','through_ball','dribble','combination','corner','freeKick']){
+  const event={type,team,minute:12,actorId:team===0?'f1':undefined,action:path,setPiece:['corner','freeKick'].includes(path)?path:undefined},input={match,event,eventOrigin:origin,eventElapsedMs:6000};previous=Movement.frame({...input,eventAgeMs:0,elapsedMs:6000});
+  for(let age=16;age<T.end+32;age+=16){const v=Movement.frame({...input,eventAgeMs:age,elapsedMs:6000+age});assert.ok(Math.hypot(v.ball.x-previous.ball.x,v.ball.y-previous.ball.y)<4,JSON.stringify({team,type,path,age}));previous=v;}
+ }
+ assert.deepEqual(match,before);
 });
 test('missing or unrelated event metadata safely falls back to normal movement',()=>{
  const match=active(),normal=Movement.frame({match,elapsedMs:3700,motion:true});

@@ -14,7 +14,7 @@ function harness(){
  vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/movement-ui.js'),'utf8'),context,{filename:'movement-ui.js'});
  const frame=ms=>{env.time=ms;return copy(context.motionFrame(ms));},snapshot=()=>copy(context.movementSnapshot());
  frame(0);context.renderMovementControls();
- return {context,env,nodes,frame,snapshot,preview(){nodes.get('movement-preview').onclick();},visibility(hidden,time){env.time=time;context.document.hidden=hidden;listeners.get('visibilitychange')?.();},tick(){return F.tick(context.state);}};
+ return {context,env,nodes,frame,snapshot,untilAge(age){let count=0;while(snapshot().eventAgeMs<age&&count++<2000)frame(env.time+16);assert.ok(count<2000,'the visible scene must finish');return snapshot().frame;},preview(){nodes.get('movement-preview').onclick();},visibility(hidden,time){env.time=time;context.document.hidden=hidden;listeners.get('visibilitychange')?.();},tick(){return F.tick(context.state);}};
 }
 test('movement preview leaves the entire season, finances, RNG, scores and player skills unchanged',()=>{
  const h=harness(),before=copy(h.context.season);h.preview();assert.equal(h.snapshot().preview,true);
@@ -45,8 +45,8 @@ test('turning effects off or reducing motion stops movement and restores static 
 test('a real full-time event animates briefly without changing the full-time model',()=>{
  const h=harness();F.begin(h.context.state);while(h.context.state.phase!=='full'){if(!F.running(h.context.state))F.begin(h.context.state);F.finishSegment(h.context.state);}
  const before=copy(h.context.season),scorer=h.context.state.lineup.find(id=>h.context.state.players[id].pos==='FW');h.context.lastEvent={type:'goal',team:0,minute:90,scorerId:scorer};h.frame(16);assert.equal(h.context.movementShouldAnimate(),true);
- for(let i=1;i<=60;i++)h.frame(16+i*80);assert.equal(h.snapshot().frame.phase,'goal');assert.deepEqual(copy(h.context.season),before);
- for(let i=61;i<=73;i++)h.frame(16+i*80);assert.equal(h.context.movementShouldAnimate(),false);assert.equal(h.snapshot().frame.phase,'static');assert.deepEqual(copy(h.context.season),before);
+ h.untilAge(T.impact+400);assert.equal(h.snapshot().frame.phase,'goal');assert.deepEqual(copy(h.context.season),before);
+ h.untilAge(T.end);assert.equal(h.context.movementShouldAnimate(),false);assert.equal(h.snapshot().frame.phase,'static');assert.deepEqual(copy(h.context.season),before);
 });
 test('preview stops after twelve display seconds and effects off cancels preview immediately',()=>{
  const h=harness(),before=copy(h.context.season);h.preview();for(let i=1;i<=150;i++)h.frame(i*80);assert.equal(h.snapshot().preview,false);assert.equal(h.context.movementShouldAnimate(),false);assert.deepEqual(copy(h.context.season),before);
@@ -69,12 +69,13 @@ test('a different match seed resets the display clock and removes an old preview
  const h=harness();h.preview();h.frame(80);h.frame(160);h.context.state=F.create(909);h.context.lastEvent=null;const next=h.frame(240);
  assert.equal(h.snapshot().preview,false);assert.equal(h.snapshot().elapsedMs,0);assert.equal(h.snapshot().eventAgeMs,null);assert.equal(next.phase,'static');assert.equal(h.context.movementShouldAnimate(),false);
 });
-test('slow frames finish the shared highlight clock without aging a newly found event early',()=>{
+test('stalled frames cannot skip a visible shot or age a newly found event early',()=>{
  const h=harness();F.begin(h.context.state);while(h.context.state.phase!=='full'){if(!F.running(h.context.state))F.begin(h.context.state);F.finishSegment(h.context.state);}
  const before=copy(h.context.season),scorer=h.context.state.lineup.find(id=>h.context.state.players[id].pos==='FW');h.context.lastEvent={type:'goal',team:0,minute:90,scorerId:scorer};h.frame(900);
  assert.equal(h.snapshot().eventAgeMs,0);assert.equal(h.snapshot().frame.phase,'turnover');
- h.frame(1800);assert.equal(h.snapshot().eventAgeMs,900);h.frame(5400);assert.equal(h.snapshot().eventAgeMs,4500);assert.equal(h.snapshot().frame.phase,'goal');
- h.frame(7200);assert.equal(h.snapshot().eventAgeMs,6300);assert.equal(h.snapshot().frame.phase,'static');assert.equal(h.context.movementShouldAnimate(),false);assert.deepEqual(copy(h.context.season),before);
+ h.frame(1800);assert.equal(h.snapshot().eventAgeMs,80);h.frame(5400);assert.equal(h.snapshot().eventAgeMs,160);assert.ok(h.snapshot().eventAgeMs<T.shot);
+ h.untilAge(T.shot);const shot=h.snapshot();h.frame(h.env.time+9000);assert.equal(h.snapshot().frame.phase,'shot');assert.equal(h.snapshot().eventAgeMs-shot.eventAgeMs,80);assert.ok(h.snapshot().eventAgeMs<T.impact);
+ h.untilAge(T.end);assert.equal(h.snapshot().frame.phase,'static');assert.equal(h.context.movementShouldAnimate(),false);assert.deepEqual(copy(h.context.season),before);
 });
 test('slow 900ms preview frames still stop after twelve wall-clock seconds and preserve the season',()=>{
  const h=harness(),before=copy(h.context.season);h.preview();for(let i=1;i<=13;i++)h.frame(i*900);assert.equal(h.snapshot().preview,true);
@@ -83,36 +84,43 @@ test('slow 900ms preview frames still stop after twelve wall-clock seconds and p
 test('moment cards wait for ball arrival and pause preserves the pending result',()=>{
  const h=harness();F.begin(h.context.state);const event={type:'goal',team:1,minute:7};h.context.lastEvent=event;let presented=0;h.context.pendingMatchMoment={event,moment:{kind:'concede'}};h.context.presentMoment=()=>presented++;
  h.frame(80);h.frame(780);assert.equal(presented,0);h.context.state.paused=true;h.frame(4000);assert.equal(presented,0);
- h.context.state.paused=false;h.frame(4016);h.frame(4016+T.impact);assert.equal(presented,1);assert.equal(h.context.pendingMatchMoment,null);h.frame(4096+T.impact);assert.equal(presented,1);
+ h.context.state.paused=false;h.frame(4016);h.untilAge(T.impact);assert.equal(presented,1);assert.equal(h.context.pendingMatchMoment,null);h.frame(h.env.time+80);assert.equal(presented,1);
 });
 test('live commentary survives tick rendering and only announces a goal after arrival',()=>{
  const h=harness(),paragraph={textContent:''},minute={textContent:''};h.nodes.set('commentary',{querySelector:selector=>selector==='p'?paragraph:minute});F.begin(h.context.state);
  h.frame(80);assert.ok(paragraph.textContent.includes('전개'));paragraph.textContent='킥오프';h.frame(160);assert.notEqual(paragraph.textContent,'킥오프');
  h.context.lastEvent={type:'goal',team:1,minute:9};h.context.lastEventAt=240;h.frame(240);assert.ok(paragraph.textContent.includes('공을 확보'));assert.ok(!paragraph.textContent.includes('골입니다'));
- h.frame(1000);h.frame(240+T.impact);assert.ok(paragraph.textContent.includes('골!'));assert.ok(paragraph.textContent.includes(h.snapshot().frame.performerName.split(/\s+/).at(-1)));
+ h.frame(1000);h.untilAge(T.impact);assert.ok(paragraph.textContent.includes('골!'));assert.ok(paragraph.textContent.includes(h.snapshot().frame.performerName.split(/\s+/).at(-1)));
 });
 test('paused five-minute highlights show the ball at its actual outcome instead of its shot origin',()=>{
  const h=harness();F.begin(h.context.state);h.context.state.paused=true;h.context.lastEventFast=true;
  h.context.lastEvent={type:'goal',team:1,minute:9};const goal=h.frame(80);assert.equal(goal.phase,'goal');assert.equal(goal.ball.y,96);
- h.context.lastEvent={type:'shot',team:1,minute:10};const save=h.frame(160);assert.equal(save.phase,'save');assert.equal(save.ball.y,82);assert.equal(save.carrierId,save.keeperId);
+ h.context.lastEvent={type:'shot',team:1,minute:10};const save=h.frame(160);assert.equal(save.phase,'save');assert.equal(save.ball.y,86);assert.equal(save.carrierId,save.keeperId);
  assert.equal(h.context.state.paused,true);
 });
 test('automatic match clock waits for a paused highlight to finish instead of using elapsed wall time',()=>{
- const h=harness();F.begin(h.context.state);h.frame(80);h.context.lastEvent={type:'shot',team:1,minute:7};assert.equal(h.context.movementHighlightPending(),true);h.frame(160);h.frame(460);h.context.state.paused=true;h.frame(20000);assert.equal(h.context.movementHighlightPending(),true);h.context.state.paused=false;h.frame(20016);assert.equal(h.context.movementHighlightPending(),true);h.frame(20016+T.end);assert.equal(h.context.movementHighlightPending(),false);
+ const h=harness();F.begin(h.context.state);h.frame(80);h.context.lastEvent={type:'shot',team:1,minute:7};assert.equal(h.context.movementHighlightPending(),true);h.frame(160);h.frame(460);h.context.state.paused=true;h.frame(20000);assert.equal(h.context.movementHighlightPending(),true);h.context.state.paused=false;h.frame(20016);assert.equal(h.context.movementHighlightPending(),true);h.untilAge(T.end);assert.equal(h.context.movementHighlightPending(),false);
  const app=fs.readFileSync(path.join(__dirname,'dist/app.js'),'utf8');assert.ok(app.includes('active&&motionEnabled()&&movementHighlightPending()'));
 });
 test('visible score waits for the actual ball arrival, survives pause and shows fast/reduced-motion results immediately',()=>{
- const h=harness();h.nodes.set('home-score',{textContent:''});h.nodes.set('away-score',{textContent:''});F.begin(h.context.state);h.context.state.score=[2,1];h.context.lastEvent={type:'goal',team:0,minute:12};h.frame(80);assert.equal(h.nodes.get('home-score').textContent,'1');assert.equal(h.nodes.get('away-score').textContent,'1');h.context.state.paused=true;h.frame(9000);assert.equal(h.nodes.get('home-score').textContent,'1');h.context.state.paused=false;h.frame(9016);h.frame(9016+T.impact);assert.equal(h.nodes.get('home-score').textContent,'2');h.context.lastEvent={type:'goal',team:1,minute:13};h.context.lastEventFast=true;h.context.state.score[1]=2;h.frame(15000);assert.equal(h.nodes.get('away-score').textContent,'2');h.context.lastEventFast=false;h.context.lastEvent={type:'goal',team:0,minute:14};h.context.state.score[0]=3;h.env.reduced=true;h.frame(15080);assert.equal(h.nodes.get('home-score').textContent,'3');assert.deepEqual(h.context.state.score,[3,2]);
+ const h=harness();h.nodes.set('home-score',{textContent:''});h.nodes.set('away-score',{textContent:''});F.begin(h.context.state);h.context.state.score=[2,1];h.context.lastEvent={type:'goal',team:0,minute:12};h.frame(80);assert.equal(h.nodes.get('home-score').textContent,'1');assert.equal(h.nodes.get('away-score').textContent,'1');h.context.state.paused=true;h.frame(9000);assert.equal(h.nodes.get('home-score').textContent,'1');h.context.state.paused=false;h.frame(9016);h.untilAge(T.impact);assert.equal(h.nodes.get('home-score').textContent,'2');h.context.lastEvent={type:'goal',team:1,minute:13};h.context.lastEventFast=true;h.context.state.score[1]=2;h.frame(15000);assert.equal(h.nodes.get('away-score').textContent,'2');h.context.lastEventFast=false;h.context.lastEvent={type:'goal',team:0,minute:14};h.context.state.score[0]=3;h.env.reduced=true;h.frame(15080);assert.equal(h.nodes.get('home-score').textContent,'3');assert.deepEqual(h.context.state.score,[3,2]);
 });
-test('playback speed changes presentation duration while pause and the fixed preview remain stable',()=>{const h=harness();F.begin(h.context.state);h.context.playbackPrefs={speed:'fast'};h.context.lastEvent={type:'shot',team:1,minute:12};h.frame(80);h.frame(180);assert.equal(h.snapshot().eventAgeMs,200);h.context.playbackPrefs.speed='slow';h.frame(280);assert.equal(h.snapshot().eventAgeMs,250);h.context.state.paused=true;h.frame(12000);assert.equal(h.snapshot().eventAgeMs,250);const preview=harness();preview.context.playbackPrefs={speed:'fast'};preview.preview();preview.frame(100);assert.equal(preview.snapshot().elapsedMs,80);assert.equal(preview.snapshot().preview,true);});
+test('playback speed changes presentation duration while pause and the fixed preview remain stable',()=>{const h=harness();F.begin(h.context.state);h.context.playbackPrefs={speed:'fast'};h.context.lastEvent={type:'shot',team:1,minute:12};h.frame(80);h.frame(180);assert.equal(h.snapshot().eventAgeMs,160);h.context.playbackPrefs.speed='slow';h.frame(280);assert.equal(h.snapshot().eventAgeMs,200);h.context.state.paused=true;h.frame(12000);assert.equal(h.snapshot().eventAgeMs,200);const preview=harness();preview.context.playbackPrefs={speed:'fast'};preview.preview();preview.frame(100);assert.equal(preview.snapshot().elapsedMs,80);assert.equal(preview.snapshot().preview,true);});
 
 test('paused tactic changes hold actor positions until resume, then players find their new shape gradually',()=>{const h=harness();F.begin(h.context.state);h.frame(80);const old=h.snapshot().frame.own;h.context.state.paused=true;F.setTactic(h.context.state,'lowBlock');const held=h.frame(160);assert.deepEqual(held.own,old);assert.equal(held.phase,'shape-change');assert.deepEqual(h.frame(4000).own,old);const saved=JSON.stringify(h.context.state);h.context.state.paused=false;const first=h.frame(4016);assert.notDeepEqual(first.own,old);assert.equal(first.phase,'shape-change');for(let i=1;i<=9;i++)h.frame(4016+i*80);assert.notEqual(h.snapshot().frame.phase,'shape-change');h.context.state.paused=true;assert.equal(JSON.stringify(h.context.state),saved);});
 
-test('scoreboard writes only at a visible score change and four-speed highlights keep a readable two-speed ceiling',()=>{
+test('scoreboard writes only at a visible score change and four-speed build-ups keep a two-speed ceiling',()=>{
  const h=harness();let text='',writes=0;h.nodes.set('home-score',{get textContent(){return text;},set textContent(value){text=value;writes++;}});F.begin(h.context.state);h.context.playbackPrefs={speed:'rapid'};h.frame(80);for(let i=2;i<30;i++)h.frame(i*80);assert.equal(text,'0');assert.equal(writes,1);const before=h.snapshot().elapsedMs;h.frame(2400);assert.equal(h.snapshot().elapsedMs-before,320);
- h.context.state.score[0]=1;h.context.lastEvent={type:'goal',team:0,minute:12};h.frame(2480);h.frame(2580);assert.equal(h.snapshot().eventAgeMs,200);assert.equal(writes,1);assert.equal(text,'0');h.context.state.paused=true;h.frame(9000);assert.equal(h.snapshot().eventAgeMs,200);h.context.state.paused=false;h.frame(9016+T.impact);assert.equal(text,'1');assert.equal(writes,2);h.frame(15000);assert.equal(writes,2);
+ h.context.state.score[0]=1;h.context.lastEvent={type:'goal',team:0,minute:12};h.frame(2480);h.frame(2580);assert.equal(h.snapshot().eventAgeMs,160);assert.equal(writes,1);assert.equal(text,'0');h.context.state.paused=true;h.frame(9000);assert.equal(h.snapshot().eventAgeMs,160);h.context.state.paused=false;h.untilAge(T.impact);assert.equal(text,'1');assert.equal(writes,2);h.frame(15000);assert.equal(writes,2);
 });
 
-test('arrival refreshes reports once per real highlight without repeated frame work or advancing the engine',()=>{const h=harness();F.begin(h.context.state);let refreshed=0;h.context.refreshVisibleMatchReports=()=>refreshed++;h.context.lastEvent={type:'goal',team:1,minute:7};const before=JSON.stringify(h.context.season);h.frame(80);h.frame(780);assert.equal(refreshed,0);h.frame(80+T.impact);assert.equal(refreshed,1);h.frame(80+T.impact+80);h.frame(80+T.end);assert.equal(refreshed,1);h.context.lastEvent={type:'chance',team:0,minute:8};h.frame(80+T.end+80);h.frame(80+T.end+80+T.delivery);assert.equal(refreshed,2);assert.equal(JSON.stringify(h.context.season),before);});
+test('fast playback slows the decisive shot and save without changing minutes, RNG or hiding the pause',()=>{
+ for(const speed of ['fast','rapid']){const h=harness();F.begin(h.context.state);h.context.playbackPrefs={speed};h.context.lastEvent={type:'shot',team:1,minute:12};const before=JSON.stringify(h.context.season);h.frame(80);h.untilAge(T.shot+16);const age=h.snapshot().eventAgeMs;
+  h.frame(h.env.time+32);assert.equal(h.snapshot().eventAgeMs-age,32);assert.equal(h.snapshot().frame.phase,'shot');const slow=h.snapshot();h.frame(h.env.time+5000);assert.equal(h.snapshot().eventAgeMs-slow.eventAgeMs,80);assert.equal(h.snapshot().frame.phase,'shot');
+  h.context.state.paused=true;const held=h.snapshot();h.frame(h.env.time+9000);assert.deepEqual(h.snapshot().frame,held.frame);assert.equal(h.snapshot().eventAgeMs,held.eventAgeMs);h.context.state.paused=false;h.untilAge(T.impact);assert.equal(h.snapshot().frame.phase,'save');assert.equal(JSON.stringify(h.context.season),before);
+ }
+});
+
+test('arrival refreshes reports once per real highlight without repeated frame work or advancing the engine',()=>{const h=harness();F.begin(h.context.state);let refreshed=0;h.context.refreshVisibleMatchReports=()=>refreshed++;h.context.lastEvent={type:'goal',team:1,minute:7};const before=JSON.stringify(h.context.season);h.frame(80);h.frame(780);assert.equal(refreshed,0);h.untilAge(T.impact);assert.equal(refreshed,1);h.frame(h.env.time+80);h.untilAge(T.end);assert.equal(refreshed,1);h.context.lastEvent={type:'chance',team:0,minute:8};h.frame(h.env.time+80);h.untilAge(T.delivery);assert.equal(refreshed,2);assert.equal(JSON.stringify(h.context.season),before);});
 test('live coverage caches the actual suspended opponent replacement roster instead of the unavailable first team',()=>{const h=harness();let s=S.create(1),guard=0;while(!(s.round===5&&s.competition==='league')&&guard++<20){while(s.match.phase!=='full'){F.begin(s.match);F.finishSegment(s.match);}s=S.settle(s);}assert.ok(guard<20);h.context.season=s;h.context.state=s.match;const before=JSON.stringify(s),report=Opposition.read(s),reserve=report.lineup.find(p=>p.replacementFor);assert.ok(reserve);const value=h.frame(80),player=value.opponent.find(p=>p.no===reserve.no);assert.equal(player.name,reserve.name);assert.equal(player.identity,reserve.identity);assert.equal(h.context.currentVisualOpponentRoster().find(p=>p.no===reserve.no).identity,reserve.identity);assert.equal(JSON.stringify(s),before);});
 console.log('Movement UI checks passed: '+groups+' groups.');
