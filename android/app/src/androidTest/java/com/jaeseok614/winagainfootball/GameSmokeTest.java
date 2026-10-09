@@ -350,6 +350,20 @@ public final class GameSmokeTest {
                 tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
             }
 
+            evaluate(scenario, "(()=>{while(state.phase!=='full'){if(!F.running(state))F.begin(state);state.paused=false;F.finishSegment(state);}render();openMatchPopup('stats');return true;})()");
+            awaitTrue(scenario, "document.getElementById('match-replay-open')&&!document.getElementById('match-replay-entry').hidden");
+            String replayBefore = evaluate(scenario, "JSON.stringify(season)");
+            tapWebElement(scenario, "#match-replay-open");
+            awaitTrue(scenario, "document.getElementById('match-replay-dialog').open");
+            assertEquals("Actual event replay fits with a visible ball and touch controls", "true", evaluate(scenario,
+                "(()=>{const dialog=document.getElementById('match-replay-dialog'),r=dialog.getBoundingClientRect(),canvas=document.getElementById('match-replay-field'),v=MatchReplay.frame(matchReplayClip,3700);return dialog.querySelector('select').options.length===MatchReplay.read(season).scenes.length&&canvas.width>0&&v.own.length>=7&&v.opponent.length>=7&&Number.isFinite(v.ball.x)&&r.top>=0&&r.bottom<=innerHeight&&r.width<=innerWidth&&[...dialog.querySelectorAll('button,select,input')].every(e=>e.getBoundingClientRect().height>=44);})()"));
+            tapWebElement(scenario, "#match-replay-play");
+            awaitTrue(scenario, "matchReplayAge>250");
+            evaluate(scenario, "stopMatchReplay();true");
+            screenshot(scenario, "android-match-replay.png");
+            evaluate(scenario, "WinAgainAndroid.handleBack()");
+            awaitTrue(scenario, "!document.getElementById('match-replay-dialog').open&&document.getElementById('match-popup').open&&matchReplayRAF===null");
+            assertEquals(replayBefore, evaluate(scenario, "JSON.stringify(season)"));
             scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
         }
     }
@@ -364,7 +378,7 @@ public final class GameSmokeTest {
             screenshot(scenario, "android-whole-squad.png");
             tapWebElement(scenario, "[data-squad-detail='sp_f1']");
             awaitTrue(scenario, "document.getElementById('player-detail-dialog').open&&document.getElementById('player-detail-name').textContent==='손헝민'");
-            assertEquals("New starter portrait must show Son's dedicated v19 cell", "true", evaluate(scenario, "document.querySelector('.detail-hero .player-portrait').dataset.portraitIndex==='14'&&Portraits.asset.includes('player-faces-v19.webp')"));
+            assertEquals("New starter portrait must show Son's dedicated cell and bundled offline atlas", "true", evaluate(scenario, "document.querySelector('.detail-hero .player-portrait').dataset.portraitIndex==='14'&&Portraits.index('sp_f1')===14&&getComputedStyle(document.querySelector('.detail-hero .player-portrait')).backgroundImage.includes('data:image/webp')"));
             evaluate(scenario, "WinAgainAndroid.handleBack()");
             awaitTrue(scenario, "!document.getElementById('player-detail-dialog').open&&document.getElementById('squad-overview-dialog').open&&managerGuideStep===2");
             tapWebElement(scenario, "#squad-overview-close");

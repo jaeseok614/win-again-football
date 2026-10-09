@@ -40,6 +40,6 @@
   };
  }
  const api={createRenderer,createMeasurer};if(typeof module!=='undefined')module.exports=api;
- if(root.document?.createElement)root.PitchArt={...createRenderer(()=>root.document.createElement('canvas')),measure:createMeasurer(root.ResizeObserver,()=>{if(typeof drawField==='function'&&typeof view==='string'&&view==='match'&&!root.document.hidden)drawField();})};
+ if(root.document?.createElement)root.PitchArt={...api,...createRenderer(()=>root.document.createElement('canvas')),measure:createMeasurer(root.ResizeObserver,()=>{if(typeof drawField==='function'&&typeof view==='string'&&view==='match'&&!root.document.hidden)drawField();})};
 })(typeof window!=='undefined'?window:globalThis);
 

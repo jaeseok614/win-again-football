@@ -180,7 +180,7 @@
    const source=event.team===0?match.players?.[event.sourceId]?.name:frameValue?.crossSourceName||widePlayer(people,event.side||'left',scorer.id).name,receiver=event.team===0?match.players?.[event.actorId||event.scorerId]?.name:frameValue?.crossTargetName||name,delivery={cross:'크로스',cutback:'컷백',through_ball:'침투 패스'}[event.action];
    if(event.type==='goal')return (source||'측면 선수')+'의 '+delivery+'! '+named(receiver||name)+' 받아 마무리합니다. 골!';
    if(event.type==='shot')return (source||'측면 선수')+'의 '+delivery+'! '+(receiver||name)+'의 슈팅, '+keeper+'의 선방입니다.';
-   return (source||'측면 선수')+'의 '+delivery+'를 수비가 끊어냅니다. '+named(receiver||name,'을','를')+' 향한 패스가 막힙니다.';
+   return (source||'측면 선수')+'의 '+named(delivery,'을','를')+' 수비가 끊어냅니다. '+named(receiver||name,'을','를')+' 향한 패스가 막힙니다.';
   }
   if(event.type==='goal')return [name+'의 슈팅이 골망을 흔듭니다! '+(event.team===0?'멋진 마무리입니다.':'수비 간격을 다시 정비해야 합니다.'),name+'의 결정적인 한 방, 골입니다! '+(event.team===0?'기회를 놓치지 않았습니다.':'고개를 들고 다음 공격을 준비합니다.'),named(name)+' 골문을 열었습니다! '+(event.team===0?'벤치도 환호합니다.':'다시 집중해야 할 순간입니다.')][variant];
   if(event.type==='shot')return [name+'의 슈팅! '+named(keeper)+' 공을 잡아냅니다.',named(name)+' 골문을 노립니다. '+keeper+'의 선방!',named(name)+' 슈팅을 시도하지만 '+named(keeper)+' 막아냅니다.'][variant];
