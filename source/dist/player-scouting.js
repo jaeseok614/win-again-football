@@ -52,7 +52,7 @@
   return groups.map(([label,keys])=>({label,items:keys.map(key=>({key,label:labels[key],value:base[key]}))}));
  }
  function scoreRole(p,role,values){if(!role||!role.positions.some(code=>T.preferredPositions(p).includes(code)))return null;return Math.round(Object.entries(role.weights).reduce((n,[key,w])=>n+(values[key]||1)*5*w,0));}
- function roleScore(p,id){return scoreRole(p,roles[id],Object.fromEntries(attributes(p).flatMap(g=>g.items).map(i=>[i.key,i.value])));}
+ function roleScore(p,id){if(!Object.hasOwn(roles,id)||!p||!['GK','DEF','MID','FW'].includes(p.pos))return null;return scoreRole(p,roles[id],Object.fromEntries(attributes(p).flatMap(g=>g.items).map(i=>[i.key,i.value])));}
  function read(p){
   if(!p||!['GK','DEF','MID','FW'].includes(p.pos)||!['attack','defense','passing','speed','endurance','keeping'].every(k=>Number.isFinite(p[k])))return null;
   const profile=profiles[p.identity],groups=attributes(p),values=Object.fromEntries(groups.flatMap(g=>g.items).map(i=>[i.key,i.value])),assessments=Object.values(roles).map(role=>({...role,positions:[...role.positions],weights:{...role.weights},score:scoreRole(p,role,values)})).filter(r=>r.score!==null).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));

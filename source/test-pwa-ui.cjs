@@ -5,7 +5,7 @@ async function test(name,fn){await fn();groups++;console.log('PASS '+name);}
 function eventTarget(){return {listeners:{},addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);},emit(type,event={}){for(const fn of this.listeners[type]||[])fn(event);}};}
 function worker(state='activated'){return {...eventTarget(),state,messages:[],postMessage(message){this.messages.push(message);}};}
 function harness(options={}){
- const nodes=new Map(),timers=new Map(),cleared=[],body={children:[],prepend(node){this.children.unshift(node);}},calls={register:0,update:0,prompt:0};let nextTimer=0;
+ const nodes=new Map(),timers=new Map(),cleared=[],body={children:[],prepend(node){this.children.unshift(node);}},calls={register:0,update:0,prompt:0,pause:0,save:0,reload:0};let nextTimer=0;
  function element(id=''){
   const node={hidden:false,dataset:{},attributes:{},children:new Map(),textContent:'',markup:'',setAttribute(name,value){this.attributes[name]=String(value);},querySelector(selector){return this.children.get(selector)||null;}};
   Object.defineProperty(node,'id',{get(){return this.nodeId||'';},set(value){this.nodeId=value;if(value)nodes.set(value,this);}});node.id=id;
@@ -19,10 +19,10 @@ function harness(options={}){
  const serviceWorker={...eventTarget(),controller:active,ready:options.readyResolved?Promise.resolve(registration):new Promise(()=>{}),async register(url,settings){calls.register++;calls.url=url;calls.settings=settings;if(options.registrationError)throw Error('register failed');return registration;}};
  const window={...eventTarget(),isSecureContext:options.secure!==false,matchMedia:()=>({matches:options.standalone===true})};
  const navigator={standalone:options.standalone===true};if(!options.noWorker)navigator.serviceWorker=serviceWorker;
- const context=vm.createContext({window,navigator,location:{protocol:options.protocol||'https:',pathname:options.pathname||'/football/'},document:{body,createElement:()=>element()},$:id=>nodes.get(id)||null,setTimeout(fn,ms){const id=++nextTimer;timers.set(id,{fn,ms});return id;},clearTimeout(id){cleared.push(id);timers.delete(id);}});
+ const context=vm.createContext({window,navigator,URLSearchParams,canSave:options.canSave!==false,practiceSession:options.practice?{}:null,pauseForPlanning(){calls.pause++;},save(){calls.save++;if(options.saveFailure)context.canSave=false;},location:{protocol:options.protocol||'https:',pathname:options.pathname||'/football/',search:options.search||'',reload(){calls.reload++;}},document:{body,createElement:()=>element(),querySelector:()=>options.marker?{content:options.marker}:null},$:id=>nodes.get(id)||null,setTimeout(fn,ms){const id=++nextTimer;timers.set(id,{fn,ms});return id;},clearTimeout(id){cleared.push(id);timers.delete(id);}});
  vm.runInContext(source,context,{filename:'pwa-ui.js'});
  const h={context,nodes,body,timers,cleared,calls,options,window,serviceWorker,registration,active,get:id=>nodes.get(id),read:expression=>vm.runInContext(expression,context),element,
-  async flush(){for(let i=0;i<10;i++)await Promise.resolve();},message(type,source=registration.active,version='v22'){serviceWorker.emit('message',{data:{type,version},source});},expireTimers(){for(const [id,timer] of [...timers]){timers.delete(id);timer.fn();}}};
+  async flush(){for(let i=0;i<10;i++)await Promise.resolve();},message(type,source=registration.active,version='v22',shellHash=options.shellHash){serviceWorker.emit('message',{data:{type,version,shellHash},source});},expireTimers(){for(const [id,timer] of [...timers]){timers.delete(id);timer.fn();}}};
  context.initPwa();return h;
 }
 (async()=>{
@@ -61,8 +61,20 @@ function harness(options={}){
   const standalone=harness({standalone:true,dialog:true});await standalone.flush();standalone.window.emit('beforeinstallprompt',prompt);assert.equal(standalone.get('pwa-install').hidden,true);standalone.message('WIN_AGAIN_PWA_READY');assert.match(standalone.get('pwa-state').textContent,/홈 화면 앱으로 실행 중 · 오프라인 준비 완료/);
  });
  await test('file, insecure, QA and unsupported pages do not advertise preparation and older markup gets a visible status host',async()=>{
-  for(const options of [{protocol:'file:'},{secure:false},{pathname:'/football/qa-v22.html'},{pathname:'/football/offline-check.html'},{noWorker:true}]){const h=harness(options);await h.flush();assert.equal(h.calls.register,0);assert.equal(h.get('pwa-preparation').hidden,true);assert.equal(h.read('pwaReady'),false);}
+  for(const options of [{protocol:'file:'},{secure:false},{pathname:'/football/qa-v22.html'},{pathname:'/football/offline-check.html'},{search:'?qa=scouting'},{search:'?offline-check'},{noWorker:true}]){const h=harness(options);await h.flush();assert.equal(h.calls.register,0);assert.equal(h.get('pwa-preparation').hidden,true);assert.equal(h.read('pwaReady'),false);}
   const h=harness({noHost:true});await h.flush();assert.equal(h.get('pwa-preparation').hidden,false);assert.equal(h.get('pwa-preparation').attributes.role,'status');assert(h.body.children.includes(h.get('pwa-preparation')));
+ });
+ await test('only an activated controlling verified release offers an explicit saved reload and never reloads on arrival',async()=>{
+  const hash='a'.repeat(64),next='b'.repeat(64),h=harness({marker:'v22:'+hash,shellHash:next,dialog:true});await h.flush();
+  h.message('WIN_AGAIN_PWA_READY',worker('installing'));assert.equal(h.read('pwaUpdateReady'),false);assert.equal(h.read('pwaReady'),false);
+  h.message('WIN_AGAIN_PWA_READY',worker('activated'));assert.equal(h.read('pwaUpdateReady'),false);
+  h.message('WIN_AGAIN_PWA_READY');assert.equal(h.read('pwaUpdateReady'),true);assert.equal(h.read('pwaReady'),true);assert.equal(h.calls.reload,0);assert.equal(h.timers.size,0);assert.match(h.get('pwa-state').textContent,/새 게임 버전/);
+  const button=h.get('pwa-preparation').querySelector('.pwa-update-reload');assert(button);assert.equal(button.onclick(),true);assert.equal(h.calls.pause,1);assert.equal(h.calls.save,1);assert.equal(h.calls.reload,1);
+  h.message('WIN_AGAIN_PWA_READY',h.active,'v22',hash);assert.equal(h.read('pwaUpdateReady'),false);assert(!h.get('pwa-preparation').querySelector('.pwa-update-reload'));
+ });
+ await test('blocked saves, active practice and failed persistence stop reload without losing the current session',async()=>{
+  for(const options of [{canSave:false},{practice:true},{saveFailure:true}]){const h=harness({marker:'v22:'+'a'.repeat(64),shellHash:'b'.repeat(64),...options});await h.flush();h.message('WIN_AGAIN_PWA_READY');assert.equal(h.get('pwa-preparation').querySelector('.pwa-update-reload').onclick(),false);assert.equal(h.calls.reload,0);assert.equal(h.get('pwa-preparation').hidden,false);assert.match(h.get('pwa-preparation').innerHTML,/저장|연습/);assert.equal(h.calls.save,options.saveFailure?1:0);}
+  const h=harness({marker:'v22:'+'a'.repeat(64),shellHash:'corrupted'});await h.flush();h.message('WIN_AGAIN_PWA_READY');assert.equal(h.read('pwaUpdateReady'),false);assert.equal(h.calls.reload,0);
  });
  console.log('Validated '+groups+' visible PWA preparation UI groups.');
 })().catch(error=>{console.error(error);process.exitCode=1;});

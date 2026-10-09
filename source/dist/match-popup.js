@@ -1,6 +1,6 @@
 // Match presentation only. Move existing controls rather than cloning handlers.
 var matchPopupActive=null,matchPopupOpener=null;
-const matchPopupNames={roster:'선수 교체',tactics:'전술 지시',setpieces:'세트피스 작전실',opponent:'상대 보고서',analysis:'전술 분석',brief:'흐름 요약',stats:'경기 기록',bench:'벤치 알림',talk:'선수 대화',settings:'경기 설정'};
+const matchPopupNames={roster:'선수 교체',lineup:'코치 선발 제안',tactics:'전술 지시',setpieces:'세트피스 작전실',opponent:'상대 보고서',analysis:'전술 분석',brief:'흐름 요약',stats:'경기 기록',bench:'벤치 알림',talk:'선수 대화',settings:'경기 설정'};
 function syncMatchScreenMode(){document.body.classList.toggle('match-view',appSessionStarted&&view==='match'&&!!state);if(view!=='match')closeMatchPopup();}
 function openMatchPopup(kind,opener=document.activeElement){
  if(!Object.hasOwn(matchPopupNames,kind)||view!=='match'||!state)return;
@@ -33,6 +33,8 @@ function renderMatchPopup(){
  matchdayTab=matchPopupActive==='analysis'?'analysis':matchPopupActive==='opponent'?'opponent':'live';
  if(matchPopupActive==='opponent')renderOpponentReport();
  if(matchPopupActive==='tactics'&&typeof renderTacticalEditor==='function')renderTacticalEditor();
+ if(matchPopupActive==='lineup'&&typeof renderCoachLineup==='function')renderCoachLineup();
+ const coachEntry=$('coach-lineup-entry');if(coachEntry)coachEntry.hidden=state.phase!=='prep'||state!==season.match;
  if(matchPopupActive==='analysis'){tacticsBoardOpen=true;renderTacticsBoard();}
  $('matchday-roster').textContent=state.phase==='prep'?'선발 · 후보':'선수 교체';
  $('primary').textContent={prep:'킥오프',half:'후반 시작',late:'마지막 25분 시작',full:'결과 확정'}[state.phase]||(state.paused?'경기 이어가기':'일시 정지');
@@ -46,6 +48,7 @@ function initMatchPopup(){
  pane.append(dialog);
  const move=(node,kind)=>{if(node)$('match-popup-'+kind).append(node);};
  move($('matchday-selection'),'roster');move(document.querySelector('.bench-heading'),'roster');move($('selection-hint'),'roster');move($('bench'),'roster');move($('pitch-swap-options'),'roster');move($('error'),'roster');
+ const coachEntry=document.createElement('button');coachEntry.id='coach-lineup-entry';coachEntry.type='button';coachEntry.className='secondary coach-lineup-entry';coachEntry.dataset.matchPopup='lineup';coachEntry.textContent='코치와 선발 · 포메이션 비교';$('match-popup-roster').prepend(coachEntry);
  move(document.querySelector('.manager-panel>.tactics'),'tactics');move($('mobile-tactics-dock'),'tactics');move($('pitch-player-tools'),'tactics');move(document.querySelector('.field-toolbar'),'tactics');
  move($('opposition-report'),'opponent');move($('tactics-board'),'analysis');move($('matchday-summary'),'stats');move($('timeline'),'stats');move($('results'),'stats');move($('team-talk-panel'),'talk');move($('matchday-controls'),'settings');$('matchday-controls').open=true;
  const talkNote=document.createElement('p');talkNote.id='match-talk-unavailable';talkNote.textContent='선수 대화는 경기 전, 하프타임, 65분 작전 시간에 할 수 있습니다.';$('match-popup-talk').append(talkNote);

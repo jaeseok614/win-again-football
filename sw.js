@@ -96,13 +96,14 @@ async function readyCache() {
 }
 async function notifyPages(type) {
   const message = type === 'WIN_AGAIN_PWA_READY'
-    ? { type, version: PWA_VERSION, assets: PRECACHE_URLS.length }
+    ? readyMessage()
     : { type, version: PWA_VERSION, message: 'offline-cache-failed' };
   try {
     const pages = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     for (const page of pages) if (gameDocument(new URL(page.url))) page.postMessage(message);
   } catch (_) { /* A closing tab must not invalidate an installed cache. */ }
 }
+function readyMessage(){return {type:'WIN_AGAIN_PWA_READY',version:PWA_VERSION,assets:PRECACHE_URLS.length,...(self.WIN_AGAIN_INLINE_SHELL===true&&/^[a-f0-9]{64}$/.test(self.WIN_AGAIN_INLINE_SHELL_HASH||'')?{shellHash:self.WIN_AGAIN_INLINE_SHELL_HASH}:{})};}
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const alreadyPresent = (await caches.keys()).includes(CACHE_NAME);
@@ -181,7 +182,7 @@ self.addEventListener('message', event => {
   } else if (event.data?.type === 'WIN_AGAIN_PWA_STATUS') {
     event.waitUntil((async () => {
       event.source.postMessage(await readyCache()
-        ? { type: 'WIN_AGAIN_PWA_READY', version: PWA_VERSION, assets: PRECACHE_URLS.length }
+        ? readyMessage()
         : { type: 'WIN_AGAIN_PWA_ERROR', version: PWA_VERSION, message: 'offline-cache-failed' });
     })());
   }
