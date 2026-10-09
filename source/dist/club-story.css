@@ -38,3 +38,4 @@
 .story-page-nav button{min-height:44px;flex:1;padding:6px}
 .story-page-nav span{font-size:11px;color:#bdd0da;white-space:nowrap}
 #club-story-dialog .story-mission{margin:0;font-size:11px;line-height:1.4}
+@media(max-height:650px) and (max-width:599px){#club-story-dialog .story-dialog-head{min-height:56px;padding:6px}#club-story-dialog .story-dialog-head h2{font-size:16px;line-height:1.25}#club-story-dialog .story-speaker{gap:6px}#club-story-dialog .story-choices{gap:6px}#club-story-dialog .story-choices button{padding:8px 10px}#club-story-dialog footer{padding:0}}
