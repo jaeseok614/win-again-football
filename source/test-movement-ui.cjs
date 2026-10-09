@@ -60,8 +60,8 @@ test('drawMotionActors places active own players and draws eleven opposing jerse
 test('foot updates are scoped to cached leg elements and pause preserves the stride',()=>{
  const h=harness(),legs=new Map(),queries=new Map(),tilts=new Map(),noop=()=>{},canvas=new Proxy({},{get:()=>noop,set:()=>true});
  for(const id of h.context.state.lineup){const player=h.nodes.get('player-'+id),leg={style:{setProperty(key,value){this[key]=value;}}};legs.set(id,leg);player.querySelector=selector=>{assert.equal(selector,'.player-legs');queries.set(id,(queries.get(id)||0)+1);return leg;};player.style.setProperty=function(key,value){this[key]=value;if(key==='--keeper-tilt')tilts.set(id,(tilts.get(id)||0)+1);};}
- F.begin(h.context.state);h.env.time=80;h.context.drawMotionActors(canvas,500,600);const before=[...legs].map(([id,leg])=>[id,leg.style['--stride']]);
- h.env.time=96;h.context.drawMotionActors(canvas,500,600);h.context.state.paused=true;h.env.time=2000;h.context.drawMotionActors(canvas,500,600);
+ F.begin(h.context.state);h.env.time=80;h.context.drawMotionActors(canvas,500,600);
+ h.env.time=96;h.context.drawMotionActors(canvas,500,600);const before=[...legs].map(([id,leg])=>[id,leg.style['--stride']]);h.context.state.paused=true;h.env.time=2000;h.context.drawMotionActors(canvas,500,600);
  assert.deepEqual([...legs].map(([id,leg])=>[id,leg.style['--stride']]),before);for(const id of h.context.state.lineup){assert.equal(queries.get(id),1);assert.equal(tilts.get(id),1);assert.equal(h.nodes.get('player-'+id).style['--stride'],undefined);}
 });
 

@@ -69,6 +69,9 @@ decisive shooting and goalkeeping remain easy to follow. Show the ball travellin
 from the shooting player toward the goalkeeper/net, including visible recovery
 before a possession change. Bound display deltas so a stalled frame cannot skip a
 shot or reveal its result early. Use the same field geometry for live and replay.
+Receivers approach incoming passes and take a visible first touch before ordinary
+shots. Running stride and body lean follow actual displayed displacement, settle
+when standing, and freeze on pause. Keep these poses out of persistent match state.
 
 Reuse the existing explicit substitution selection flow: five players, three
 in-play windows, multiple replacements at the same minute share a window and

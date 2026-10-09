@@ -14,7 +14,7 @@
 @media(max-width:730px){.roster-profile-button .player-portrait{width:39px;height:39px}.bench-player .name-row .player-portrait{width:34px;height:34px}.detail-hero .portrait-large{width:94px;height:94px}.individual-player-profile .portrait-large{width:84px;height:84px}.players .player-face-marker{width:30px;height:30px}#match-popup .tactical-pitch button>.player-portrait{width:30px;height:30px}}
 @media(max-width:380px){#match-popup .tactical-pitch button>span:not(.player-portrait){font-size:7px}}
 .match-popup-ready #players .player{width:60px;min-height:0;height:30px;max-width:none;overflow:visible;opacity:1}
-.match-popup-ready #players .player-face-marker{width:23px;height:25px;border:0;border-radius:0;background:linear-gradient(90deg,#a6d660,#e2ff9b 50%,#91bd4c);clip-path:polygon(24% 3%,37% 0,43% 8%,57% 8%,63% 0,76% 3%,100% 25%,81% 45%,73% 36%,73% 100%,27% 100%,27% 36%,19% 45%,0 25%);box-shadow:none;transform:rotate(var(--keeper-tilt,0deg))}
+.match-popup-ready #players .player-face-marker{width:23px;height:25px;border:0;border-radius:0;background:linear-gradient(90deg,#a6d660,#e2ff9b 50%,#91bd4c);clip-path:polygon(24% 3%,37% 0,43% 8%,57% 8%,63% 0,76% 3%,100% 25%,81% 45%,73% 36%,73% 100%,27% 100%,27% 36%,19% 45%,0 25%);box-shadow:none;transform:rotate(calc(var(--keeper-tilt,0deg) + var(--run-lean,0deg)))}
 .match-popup-ready #players .player-face-marker[data-position=GK]{background:linear-gradient(90deg,#62b2eb,#ace9ff,#4a91d0)}
 .match-popup-ready #players .player-face-marker .player-portrait{display:none}
 .match-popup-ready #players .player-face-marker i{inset:5px 0 auto;min-width:0;height:14px;border:0;border-radius:0;background:transparent;color:#142917;font:800 10px/14px system-ui;padding:0;box-shadow:none}
