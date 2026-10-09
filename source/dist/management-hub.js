@@ -25,7 +25,7 @@ function openManagementPanel(id,opener=document.activeElement){
  $('management-section').innerHTML=managementGroups[group].filter(row=>$(row[0])).map(([key,label])=>'<option value="'+key+'">'+label+'</option>').join('');
  if(showManagementSection(id)){managementDialog.showModal();$('management-title').focus({preventScroll:true});}
 }
-managementDialog.addEventListener('close',()=>{restoreManagementPanel();managementActive=null;const target=managementReturn;managementReturn=null;if(target?.isConnected&&!target.closest('[hidden]'))target.focus({preventScroll:true});});
+managementDialog.addEventListener('close',()=>{if(managementDialog.open)return;restoreManagementPanel();managementActive=null;const target=managementReturn;managementReturn=null;if(target?.isConnected&&!target.closest('[hidden]'))target.focus({preventScroll:true});});
 $('management-close').onclick=()=>managementDialog.close();$('management-section').onchange=e=>showManagementSection(e.target.value);
 for(const [group,entries] of Object.entries(managementGroups)){
  if(group==='club')entries.push(['coach-guide','연습 · 도움말']);

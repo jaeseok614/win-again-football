@@ -104,6 +104,17 @@ opening it never answers on the manager's behalf. Keep recovery, loose-ball duel
 defensive stops and keeper possession visible before the next outlet pass.
 National-team play remains future work.
 
+Permanent owner feedback (2026-10-09, report follow-up): player abilities,
+opponent player comparisons, tactical placement and tactical analysis must fit a
+single normal phone viewport, including 320x568 and short 844x390 landscape.
+Use report section selectors/pages instead of long vertical stacks. Keep identity,
+close, section switching and player navigation visible; preserve every ability and
+the existing original control handlers. The tactical pitch adapts to available
+height, retains 44px draggable targets and all 12 formations. Scrolling is only an
+accessibility fallback for enlarged text/unusually small windows, not the default
+way to read these reports. Test actual scroll sizes AND bounds to catch clipped
+details contents. Page selection does not alter campaign/RNG/tactics.
+
 ## Verification and delivery
 
 Use Node.js/Python standard libraries; no npm installation is required.

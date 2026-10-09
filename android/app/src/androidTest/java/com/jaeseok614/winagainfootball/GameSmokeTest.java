@@ -423,6 +423,27 @@ public final class GameSmokeTest {
         }
     }
 
+    @Test public void pagedPlayerAndTacticsReportsFitWithoutChangingTheCampaign() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());season=S.create(4095);state=season.match;appSessionStarted=true;view='match';render();return true;})()");
+            String before = evaluate(scenario, "JSON.stringify(season)");
+            assertEquals("Player report pages must fit and preserve every skill row", "[]", evaluate(scenario,
+                "(()=>{const failures=[];for(const id of ['sp_f1',Object.values(season.squad).find(p=>p.pos==='GK').identity]){openPlayerDetails(id);const d=document.getElementById('player-detail-dialog'),s=d.querySelector('.report-page-select'),b=d.querySelector('.report-page-body');for(const o of s.options){s.value=o.value;s.dispatchEvent(new Event('change'));if(b.scrollHeight>b.clientHeight+1||b.scrollWidth>b.clientWidth+1||b.getBoundingClientRect().bottom>d.getBoundingClientRect().bottom)failures.push(id+':'+o.value);}if(d.querySelectorAll('[data-scout-attribute]').length!==26)failures.push('missing attributes');closePlayerDetails();}return JSON.stringify(failures);})()"));
+            evaluate(scenario, "openPlayerDetails('sp_f1');document.querySelector('#player-detail-dialog .report-page-select').value='기본 능력';document.querySelector('#player-detail-dialog .report-page-select').dispatchEvent(new Event('change'));true");
+            screenshot(scenario, "android-paged-player.png");
+            evaluate(scenario, "closePlayerDetails();openMatchPopup('tactics');true");
+            assertEquals("Tactical pages must keep all eleven players and controls in the viewport", "[]", evaluate(scenario,
+                "(()=>{const failures=[],s=document.getElementById('tactics-page-select'),b=document.querySelector('.match-popup-body');selected='f1';render();for(const o of s.options){s.value=o.value;s.dispatchEvent(new Event('change'));if(b.scrollHeight>b.clientHeight+1||b.scrollWidth>b.clientWidth+1)failures.push(o.value);}s.value='배치';s.dispatchEvent(new Event('change'));if(document.querySelectorAll('[data-tactical-player]').length!==11)failures.push('missing starters');return JSON.stringify(failures);})()"));
+            screenshot(scenario, "android-paged-tactics.png");
+            evaluate(scenario, "openMatchPopup('analysis');true");
+            assertEquals("Analysis pages must not hide overflow below the dialog", "[]", evaluate(scenario,
+                "(()=>{const failures=[],s=document.querySelector('#tactics-board .report-page-select'),b=document.querySelector('#tactics-board .report-page-body'),outer=document.querySelector('.match-popup-body');for(const o of s.options){s.value=o.value;s.dispatchEvent(new Event('change'));if(b.scrollHeight>b.clientHeight+1||b.scrollWidth>b.clientWidth+1||b.getBoundingClientRect().bottom>outer.getBoundingClientRect().bottom)failures.push(o.value);}return JSON.stringify(failures);})()"));
+            assertEquals(before, evaluate(scenario, "JSON.stringify(season)"));
+            scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
     @Test public void nativeOriginValidationRejectsConfusableAndFileUrls() {
         assertTrue(MainActivity.isGameDocument(Uri.parse(MainActivity.GAME_URL + "#match")));
         assertFalse(MainActivity.isGameDocument(Uri.parse("https://appassets.androidplatform.net.evil.test/assets/game/index.html")));
