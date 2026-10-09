@@ -202,6 +202,12 @@ public final class GameSmokeTest {
         String fingerprint;
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
+            // Other smoke tests deliberately save full-time matches. This round-trip
+            // needs its own preparation fixture so test order cannot replace kickoff
+            // with result confirmation. The production import/save path is unchanged.
+            assertEquals("true", evaluate(scenario,
+                "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());" +
+                "season=S.create(4091);state=season.match;appSessionStarted=true;view='club';render();save();return state.phase==='prep';})()"));
             assertEquals("true", evaluate(scenario, "WinAgainAndroid.available"));
             assertEquals("The rendered coach and player portraits must have real image backgrounds", "true", evaluate(scenario,
                 "(()=>{window.androidPortraitsReady=false;setView('squad');squadTab='health';render();" +
@@ -227,7 +233,7 @@ public final class GameSmokeTest {
                 "(()=>{const raw=localStorage.getItem('win-again-season-v17');let rejected=false;" +
                 "try{CampaignFile.read('{\\\"broken\\\":true}')}catch{rejected=true}return rejected&&localStorage.getItem('win-again-season-v17')===raw;})()"));
             assertEquals("true", evaluate(scenario,
-                "(()=>{setView('match');document.getElementById('primary').click();WinAgainAndroid.pause();return state.paused&&!!localStorage.getItem('win-again-season-v17');})()"));
+                "(()=>{setView('match');document.getElementById('primary').click();WinAgainAndroid.pause();return F.running(state)&&state.paused&&!!localStorage.getItem('win-again-season-v17');})()"));
             assertEquals("true", evaluate(scenario,
                 "(()=>{openPortability();const consumed=WinAgainAndroid.handleBack();return consumed&&!document.getElementById('portability-dialog').open;})()"));
             assertEquals("true", evaluate(scenario,
