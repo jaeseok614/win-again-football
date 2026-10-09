@@ -115,6 +115,12 @@ accessibility fallback for enlarged text/unusually small windows, not the defaul
 way to read these reports. Test actual scroll sizes AND bounds to catch clipped
 details contents. Page selection does not alter campaign/RNG/tactics.
 
+Tactical name labels must not spill outside their cards. Use word wrapping for
+full names on normal screens; very narrow/short screens may use the same compact
+name as the live pitch, retaining full identity in the selected-player status and
+accessible label. Render only one name label per card. Verify glyph bounds and
+overlap across all 12 formations, not only the initial 4-4-2.
+
 ## Verification and delivery
 
 Use Node.js/Python standard libraries; no npm installation is required.
