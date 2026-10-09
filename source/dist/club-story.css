@@ -29,3 +29,12 @@
 
 #club-story-dialog .story-art.moment-art{position:absolute;right:0;margin:0;background-size:200% 200%;aspect-ratio:auto}
 #club-story-dialog .story-art.deadball-art{position:absolute;right:0;margin:0;background-size:200% 200%;aspect-ratio:auto}
+
+/* Narrative and replies are read one card at a time, with choices on the question card. */
+#club-story-dialog [hidden]{display:none!important}
+#club-story-dialog .story-conversation{display:flex;flex-direction:column;gap:8px;scrollbar-gutter:auto}
+#club-story-dialog .story-current{margin:0;white-space:pre-line;overflow-wrap:anywhere}
+.story-page-nav{display:flex;align-items:center;gap:8px;margin-top:auto;flex-shrink:0}
+.story-page-nav button{min-height:44px;flex:1;padding:6px}
+.story-page-nav span{font-size:11px;color:#bdd0da;white-space:nowrap}
+#club-story-dialog .story-mission{margin:0;font-size:11px;line-height:1.4}

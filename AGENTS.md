@@ -102,6 +102,9 @@ nodes, restore them on close, pause planning and never resume merely on dismissa
 New confirmed-round dialogue appears automatically when home is unobstructed;
 opening it never answers on the manager's behalf. Keep recovery, loose-ball duels,
 defensive stops and keeper possession visible before the next outlet pass.
+Story dialogs show one scene, question or reaction per page. Reveal reactions only
+after an explicit answer; retain both chosen answers in replay. Follow-up stories
+use validated prior receipts and confirmed rounds, keeping the original actor.
 National-team play remains future work.
 
 Permanent owner feedback (2026-10-09, report follow-up): player abilities,

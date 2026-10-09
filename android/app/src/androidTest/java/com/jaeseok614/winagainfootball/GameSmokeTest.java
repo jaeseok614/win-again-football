@@ -281,7 +281,9 @@ public final class GameSmokeTest {
                 evaluate(scenario, "WinAgainAndroid.handleBack()");
                 assertEquals("true", evaluate(scenario, "document.getElementById('club-story-dialog').open"));
                 screenshot(scenario, "android-first-owner-meeting.png");
+                tapWebElement(scenario, "#club-story-dialog [data-story-page=next]");
                 tapWebElement(scenario, "#club-story-dialog [data-story-choice]");
+                tapWebElement(scenario, "#club-story-dialog [data-story-page=next]");
                 tapWebElement(scenario, "#club-story-dialog [data-story-choice]");
                 tapWebElement(scenario, "#club-story-dialog [data-story-close]");
                 awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===2");
