@@ -219,6 +219,7 @@ public final class GameSmokeTest {
                 "if(urls.some(url=>!url||!url.startsWith('data:image/')))return 'Missing rendered portrait background';let loaded=0;" +
                 "urls.forEach(url=>{const image=new Image();image.onload=()=>{if(image.naturalWidth>0&&++loaded===2)androidPortraitsReady=true};image.src=url});return true;})()"));
             awaitTrue(scenario, "window.androidPortraitsReady===true");
+            tapWebElement(scenario, "[data-management-open='staff-panel']");
             assertEquals("Coach screen must select the squad and display its faces", "true", evaluate(scenario,
                 "(()=>{document.querySelector('[data-staff-role]').open=true;const panel=document.getElementById('staff-panel');" +
                 "panel.scrollIntoView({block:'start',behavior:'instant'});const face=panel.querySelector('.staff-portrait').getBoundingClientRect();" +
@@ -226,6 +227,7 @@ public final class GameSmokeTest {
                 "document.querySelector('[data-view=squad]').getAttribute('aria-current')==='page'&&face.width>0&&face.height>0&&face.top>=0&&face.bottom<innerHeight;})()"));
             assertVisibleWebText(scenario, "#staff-heading", "코치 계약");
             screenshot(scenario, "android-coaches.png");
+            tapWebElement(scenario, "#management-close");
             assertEquals("true", evaluate(scenario,
                 "(()=>{save();const original=JSON.stringify(currentCampaignPayload());const file=CampaignFile.stringify(currentCampaignPayload());" +
                 "previewCampaignText(file);const restored=applyCampaignImport();return restored&&JSON.stringify(currentCampaignPayload())===original;})()"));
@@ -242,10 +244,11 @@ public final class GameSmokeTest {
             scenario.onActivity(activity -> assertTrue("Game emitted JavaScript console errors: " + activity.consoleErrorsForTest(), activity.consoleErrorsForTest().isEmpty()));
             evaluate(scenario, "window.scrollTo(0,0);true");
             screenshot(scenario, "android-game.png");
-            assertEquals("The journal is visible without an expansion click", "true", evaluate(scenario,
+            tapWebElement(scenario, "[data-management-open='club-life-panel']");
+            assertEquals("The journal opens inside the management dialog", "true", evaluate(scenario,
                 "(()=>{const panel=document.getElementById('club-life-panel');" +
                 "panel.scrollIntoView({block:'start',behavior:'instant'});return view==='club'&&!mobileDashboardExpanded&&" +
-                "getComputedStyle(panel).display!=='none'&&panel.querySelectorAll('.media-review').length===3&&" +
+                "document.getElementById('management-dialog').open&&document.getElementById('management-content').contains(panel)&&getComputedStyle(panel).display!=='none'&&panel.querySelectorAll('.media-review').length===3&&" +
                 "!panel.querySelector('details.life-newspaper');})()"));
             assertVisibleWebText(scenario, "#life-club-heading", "오늘의 축구 헤드라인");
             screenshot(scenario, "android-interviews.png");
@@ -262,6 +265,8 @@ public final class GameSmokeTest {
     @Test public void titleMenuHomeAndCompactLiveMatch() throws Exception {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
+            // Independently exercise first arrival even when another test saved a campaign.
+            evaluate(scenario, "(()=>{season=S.create(4092);state=season.match;managerIntroBypass=false;localStorage.removeItem(managerGuideKey);render();return true;})()");
             assertEquals("true", evaluate(scenario, "!appSessionStarted&&!document.getElementById('launch-screen').hidden&&document.querySelector('.app').hidden"));
             String before = evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})");
             screenshot(scenario, "android-title-menu.png");
@@ -293,9 +298,10 @@ public final class GameSmokeTest {
                 "(()=>{const rows=Opposition.roster(S.opponentFor(season)),indices=rows.map(p=>Portraits.index(p));return new Set(indices).size===11&&rows.every(p=>Portraits.html(p).includes('--portrait-size:800% 800%'));})()"));
             screenshot(scenario, "android-home-media.png");
             tapWebElement(scenario, "[data-management-open='club-story-panel']");
-            tapWebElement(scenario, "#club-story-open");
+            tapWebElement(scenario, "#club-story-panel > details > summary");
+            tapWebElement(scenario, ".story-history [data-story-event]");
             assertEquals("Narrative replies must stay inside the phone dialog", "true", evaluate(scenario,
-                "(()=>{const d=document.getElementById('club-story-dialog'),buttons=[...d.querySelectorAll('button')];return d.open&&d.scrollHeight<=d.clientHeight+1&&buttons.length>=4&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;})&&getComputedStyle(d.querySelector('.story-art')).backgroundImage.includes('data:image/webp');})()"));
+                "(()=>{const d=document.getElementById('club-story-dialog'),buttons=[...d.querySelectorAll('button')];return d.open&&ClubStory.scene(season,clubStoryEvent).step===2&&d.scrollHeight<=d.clientHeight+1&&buttons.length>=3&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;})&&getComputedStyle(d.querySelector('.story-art')).backgroundImage.includes('data:image/webp');})()"));
             screenshot(scenario, "android-story-chapter.png");
             tapWebElement(scenario, "#club-story-dialog [data-story-close]");
             tapWebElement(scenario, "#management-close");
