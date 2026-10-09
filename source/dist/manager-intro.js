@@ -2,8 +2,8 @@
 var managerIntroBypass=false,managerGuideStep=0,managerGuideWaiting=null,managerGuideActive=false;
 const managerGuideKey='win-again-manager-guide-v1';
 const managerGuideSteps=[
- ['눈을 뜨니, 감독실이었다','새벽 두 시, 마지막 실점 장면을 보며 잠들었던 당신. 눈을 뜨니 비 내리는 런던의 감독실입니다. 책상에는 토투넘 핫스퍼의 계약서와 사직서가 함께 놓여 있습니다.\n\n“전임 감독은 떠났습니다. 오늘 훈련부터 당신 차례예요.” 문을 연 수석 코치가 말합니다. 복도 끝에는 강등된 구단의 빛바랜 우승 사진이 걸려 있습니다.','다음 이야기'],
- ['다섯 계단의 첫 시즌','“지원금은 무한하지 않습니다. 첫해 목표는 한 단계 승격이에요.” 구단주는 46경기 일정표를 내밉니다. 내셔널 리그(5부) 24팀 가운데 상위 2팀만 다음 단계로 올라갑니다. 네 번 연속 승격해 1부에 복귀하는 것이 이 구단의 장기 목표입니다.\n\n훈련장에서는 손헝민이 먼저 다가옵니다. “팬들은 아직 우리를 기다립니다. 감독님, 어떤 축구를 할까요?” 충성심 강한 베테랑, 기회를 기다리는 유망주, 자신감을 잃은 선수에게 같은 말이 통하지는 않습니다.\n\n첫 원정의 이동비와 제한된 선수단, 긴 46경기 시즌까지 버텨야 합니다. 전술과 선수 대화로 첫 경기를 준비하세요. 이번 시즌의 승격이 토투넘의 귀환을 시작합니다.','감독실로'],
+ ['눈을 뜨니, 감독실이었다','마지막 실점 장면을 보며 잠든 밤. 눈을 뜨니 낡은 감독실입니다. 책상에는 토투넘 핫스퍼의 계약서와 전임 감독의 사직서가 놓여 있습니다.\n\n수석 코치가 문을 엽니다. “구단주가 기다립니다. 오늘부터 이 팀은 감독님 팀입니다.”','구단주실로'],
+ ['추락한 구단, 남아 있는 사람들','1부의 함성은 사라졌습니다. 토투넘은 이제 5부, 내셔널 리그에서 뛰어야 합니다.\n\n구단주가 46경기 일정표를 펼칩니다. “24팀 중 상위 두 팀이 승격합니다. 네 번 올라가야 집으로 돌아갈 수 있어요. 첫 시즌부터 함께 버텨 주시겠습니까?”','면담 시작'],
  ['1. 내 선수 알아보기','전체 선수단의 종합 능력·체력·컨디션을 비교하세요. 이름을 누르면 주발·세부 포지션·성격과 코치의 6축 리포트가 나옵니다. 기술·신체는 1–20으로 비교하고, 충성도와 압박 대처는 감독의 말에 대한 반응을 바꿉니다. 역할을 골라 어울리는 능력을 확인해 보세요. 선수단 명단을 닫으면 다음 안내로 넘어갑니다.','전체 선수단 보기'],
  ['2. 경기 전 전술 준비','12개 포메이션에서 경기 지시를 고르고, 배치판의 유니폼을 끌어 놓아 위치를 정하세요. 위치에 따라 ST·윙·공격형 미드필더 등 배치 포지션이 바뀝니다. 선발·후보의 코치 제안에서는 위치 적합도·능력·체력 안배를 비교한 뒤 직접 확정할 수 있습니다. 준비가 되면 전술 창을 닫아 보세요.','전술 창 열기'],
  ['3. 선수에게 한마디','격려·칭찬·분발 요구·침착하게 중 하나를 고르세요. 선수마다 반응이 다릅니다. 한 구간에서 한 번만 말할 수 있으며 경기 전·하프타임·65분에 기회가 있습니다. 반응을 확인하고 창을 닫으세요.','선수 대화 열기'],
@@ -11,27 +11,28 @@ const managerGuideSteps=[
 ];
 function guideSeen(){try{return localStorage.getItem(managerGuideKey)==='done';}catch{return false;}}
 function rememberGuide(){try{localStorage.setItem(managerGuideKey,'done');}catch{}}
-function offerManagerIntro(){if(managerIntroBypass||restoredSave.payload||launchHasCampaign||guideSeen())return false;openManagerGuide(0);return true;}
-function renderManagerGuide(){const [title,copy,label]=managerGuideSteps[managerGuideStep];$('manager-guide-title').textContent=title;$('manager-guide-copy').textContent=copy;$('manager-guide-next').textContent=label;$('manager-guide-progress').textContent=(managerGuideStep+1)+' / '+managerGuideSteps.length;$('manager-guide-title').focus({preventScroll:true});}
+function offerManagerIntro(){if(managerIntroBypass)return false;const first=season.year===1&&season.round===0&&state?.phase==='prep',arrival=typeof ClubStory!=='undefined'?ClubStory.read(season).pending.some(e=>e.key==='arrival'):!restoredSave.payload&&!launchHasCampaign;if(!first||!arrival)return false;openManagerGuide(0);return true;}
+function renderManagerGuide(){const [title,copy,label]=managerGuideSteps[managerGuideStep];$('manager-guide-title').textContent=title;$('manager-guide-copy').textContent=copy;$('manager-guide-next').textContent=label;$('manager-guide-skip').hidden=managerGuideStep<2;$('manager-guide-progress').textContent=managerGuideStep<2?'첫 출근 · '+(managerGuideStep+1)+' / 2':'조작 안내 · '+(managerGuideStep-1)+' / 4';$('manager-guide-title').focus({preventScroll:true});}
 function openManagerGuide(step=2){pauseForPlanning();managerGuideStep=step;managerGuideWaiting=null;managerGuideActive=true;renderManagerGuide();if(!$('manager-guide').open)$('manager-guide').showModal();}
-function finishManagerGuide(){managerGuideActive=false;managerGuideWaiting=null;managerIntroBypass=true;rememberGuide();$('manager-guide').close();if(!appSessionStarted)enterManagerHome();else $('primary')?.focus({preventScroll:true});}
+function finishManagerGuide(){if(managerGuideStep<2)return;managerGuideActive=false;managerGuideWaiting=null;managerIntroBypass=true;rememberGuide();$('manager-guide').close();if(!appSessionStarted)enterManagerHome();else $('primary')?.focus({preventScroll:true});}
+function completeManagerArrival(){managerGuideWaiting=null;managerGuideStep=2;if(guideSeen())finishManagerGuide();else openManagerGuide(2);}
 function nextManagerGuide(){
  if(managerGuideStep===0){managerGuideStep=1;renderManagerGuide();return;}
- if(managerGuideStep===1){managerIntroBypass=true;$('manager-guide').close();enterManagerHome();managerGuideStep=2;managerGuideWaiting='home';return;}
+ if(managerGuideStep===1){managerIntroBypass=true;$('manager-guide').close();managerGuideWaiting='home';enterManagerHome();return;}
  if(managerGuideStep===5){finishManagerGuide();return;}
  const step=managerGuideStep;$('manager-guide').close();managerGuideWaiting=step===2?'squad':'match';
  if(step===2){openSquadOverview($('launch-continue'));}
  else{view='match';render();openMatchPopup(step===3?'tactics':'talk',$('primary'));}
 }
 function continueManagerGuide(){if(!managerGuideActive||!managerGuideWaiting||managerGuideWaiting==='home')return;if(managerGuideStep===4&&!state.decisions.some(d=>d.type==='talk'&&d.minute===state.minute)&&['prep','half','late'].includes(state.phase)){managerGuideWaiting=null;renderManagerGuide();$('manager-guide').showModal();return;}managerGuideWaiting=null;managerGuideStep++;renderManagerGuide();$('manager-guide').showModal();}
-const managerGuideDialog=document.createElement('dialog');managerGuideDialog.id='manager-guide';managerGuideDialog.setAttribute('aria-labelledby','manager-guide-title');managerGuideDialog.innerHTML='<p class="eyebrow">TOTTUNHAM / FIRST CHAPTER <span id="manager-guide-progress"></span></p><h2 id="manager-guide-title" tabindex="-1"></h2><p id="manager-guide-copy"></p><div class="manager-guide-actions"><button id="manager-guide-next" type="button" class="primary"></button><button id="manager-guide-skip" type="button" class="secondary">건너뛰기</button></div><small>가이드 버튼은 실제 선수 보고서와 전술·대화 창을 엽니다. 건너뛰어도 새 구단은 토투넘으로 시작합니다. 설정에서 처음 안내를 다시 볼 수 있습니다.</small>';document.body.append(managerGuideDialog);
+const managerGuideDialog=document.createElement('dialog');managerGuideDialog.id='manager-guide';managerGuideDialog.setAttribute('aria-labelledby','manager-guide-title');managerGuideDialog.innerHTML='<p class="eyebrow">토투넘 · 감독의 첫 출근 <span id="manager-guide-progress"></span></p><h2 id="manager-guide-title" tabindex="-1"></h2><p id="manager-guide-copy"></p><div class="manager-guide-actions"><button id="manager-guide-next" type="button" class="primary"></button><button id="manager-guide-skip" type="button" class="secondary">건너뛰기</button></div><small>취임 면담 뒤에는 조작 안내를 건너뛸 수 있습니다. 설정에서 조작 안내를 다시 볼 수 있습니다.</small>';document.body.append(managerGuideDialog);
 $('manager-guide-next').onclick=nextManagerGuide;$('manager-guide-skip').onclick=finishManagerGuide;
-managerGuideDialog.addEventListener('cancel',()=>{managerGuideActive=false;managerGuideWaiting=null;managerIntroBypass=true;});
+managerGuideDialog.addEventListener('cancel',event=>{if(managerGuideStep<2){event.preventDefault();return;}managerGuideActive=false;managerGuideWaiting=null;managerIntroBypass=true;rememberGuide();});
 $('squad-overview-dialog').addEventListener('close',()=>{if(managerGuideWaiting==='squad')continueManagerGuide();});$('match-popup').addEventListener('close',()=>{if(managerGuideWaiting==='match')continueManagerGuide();});
 // Replay belongs to settings; ordinary first play offers the tour automatically.
 const guideHelp=document.createElement('button');guideHelp.type='button';guideHelp.id='manager-help';guideHelp.textContent='처음 안내 다시 보기';guideHelp.onclick=()=>{closeMatchPopup();openManagerGuide(2);};$('match-popup-settings').append(guideHelp);
 // Resume the tour once the existing loading state has completed its home render.
-const originalShellRender=renderAppShell;renderAppShell=function(){originalShellRender();if(managerGuideActive&&managerGuideWaiting==='home'&&appSessionStarted&&!launchBusy){managerGuideWaiting=null;renderManagerGuide();managerGuideDialog.showModal();}};
+const originalShellRender=renderAppShell;renderAppShell=function(){originalShellRender();if(managerGuideActive&&managerGuideWaiting==='home'&&appSessionStarted&&!launchBusy){managerGuideWaiting='arrival';const arrival=typeof ClubStory!=='undefined'?ClubStory.read(season).pending.find(e=>e.key==='arrival'):null;if(arrival&&typeof openClubStory==='function')openClubStory(arrival.id,$('launch-continue'),true);else completeManagerArrival();}};
 
 // Fictional chapter prose follows confirmed season progress, never adds receipts.
 function managerStoryChapter(s){

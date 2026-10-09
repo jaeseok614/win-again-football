@@ -42,7 +42,10 @@ repeated actions, report completion/failure and offer retry where useful. Show a
 percentage only when measurable. Keep startup assets small and offline-capable.
 
 Show a title menu before the management home. Do not run match time behind it.
-Onboarding is an optional device preference with skip and replay in settings.
+The first campaign automatically presents two short arrival scenes and the actual
+two-choice owner conversation before management. Do not hide this behind a story
+button or let an old guide preference skip it. Completed arrivals do not replay on
+restore. The subsequent controls tour remains optional with skip and settings replay.
 The scoreboard, clock, live pitch, commentary and essential match buttons fit one
 phone viewport. Controls occupy two filled rows on portrait phones in prep, running, paused and
 full states. Short landscape screens place these groups side by side to leave room
@@ -74,7 +77,8 @@ when preparation lineups change. Ratings, estimated possession, chemistry and
 coaching comparisons are labelled derived read-only information; never invent
 missing events, appearances or engine bonuses.
 
-Keep articles visible on the home dashboard and derive assessments, manager story
+Keep the latest article headline visible on the home dashboard and full articles
+inside the news popup. Derive assessments, manager story
 and goals from actual confirmed records. Use original fictional outlets, journalists,
 player/coach names and art; do not attribute simulated quotes to real newsrooms.
 Use bundled portrait atlases with stable identities, never runtime photo downloads.
@@ -90,6 +94,14 @@ stamina and separate condition. Transfer filters work with an empty search box;
 clearing/editing a keyword immediately updates results, including Korean IME.
 Keep generation provenance in docs/. Detailed player traits are identity-derived.
 Optional team talks and ClubStory choices retain deterministic validated receipts.
+Permanent owner feedback (2026-10-09): home, squad, transfers, academy and competition
+entry screens fit one viewport. Use bounded management dialogs with a persistent
+close control and section selector instead of expanding long dashboard panels.
+Keep transfer filters and candidate results together. Move the existing control
+nodes, restore them on close, pause planning and never resume merely on dismissal.
+New confirmed-round dialogue appears automatically when home is unobstructed;
+opening it never answers on the manager's behalf. Keep recovery, loose-ball duels,
+defensive stops and keeper possession visible before the next outlet pass.
 National-team play remains future work.
 
 ## Verification and delivery

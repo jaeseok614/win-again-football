@@ -269,11 +269,22 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "appSessionStarted||document.getElementById('manager-guide').open");
             if ("true".equals(evaluate(scenario, "document.getElementById('manager-guide').open"))) {
                 assertEquals("true", evaluate(scenario, "document.getElementById('manager-guide-copy').textContent.includes('토투넘')"));
+                assertEquals("true", evaluate(scenario, "document.getElementById('manager-guide-skip').hidden"));
+                tapWebElement(scenario, "#manager-guide-next");
+                tapWebElement(scenario, "#manager-guide-next");
+                awaitTrue(scenario, "document.getElementById('club-story-dialog').open&&clubStoryRequired");
+                evaluate(scenario, "WinAgainAndroid.handleBack()");
+                assertEquals("true", evaluate(scenario, "document.getElementById('club-story-dialog').open"));
+                screenshot(scenario, "android-first-owner-meeting.png");
+                tapWebElement(scenario, "#club-story-dialog [data-story-choice]");
+                tapWebElement(scenario, "#club-story-dialog [data-story-choice]");
+                tapWebElement(scenario, "#club-story-dialog [data-story-close]");
+                awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===2");
                 tapWebElement(scenario, "#manager-guide-skip");
             }
             awaitTrue(scenario, "appSessionStarted&&view==='club'&&document.getElementById('launch-screen').hidden");
             assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
-            assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display!=='none'&&document.querySelectorAll('.media-review').length===3"));
+            assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display==='none'&&document.querySelectorAll('.media-review').length===3&&!!document.querySelector('.management-headline')"));
             assertEquals("New stadium illustration must be visible on the default home", "true", evaluate(scenario,
                 "(()=>{const art=document.querySelector('#mobile-command-center .club-growth-picture');return !!art&&art.getBoundingClientRect().width>0&&getComputedStyle(art).backgroundImage.includes('data:image/webp');})()"));
             evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset,ClubArt.storyAsset,ClubArt.momentAsset,ClubArt.deadballAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048&&widths[5]===2048&&widths[6]===1672&&widths[7]===960).catch(()=>window.newArtDecoded=false);return true;})()");
@@ -281,11 +292,13 @@ public final class GameSmokeTest {
             assertEquals("Opponent lineup must retain eleven distinct faces in the expanded atlas", "true", evaluate(scenario,
                 "(()=>{const rows=Opposition.roster(S.opponentFor(season)),indices=rows.map(p=>Portraits.index(p));return new Set(indices).size===11&&rows.every(p=>Portraits.html(p).includes('--portrait-size:800% 800%'));})()"));
             screenshot(scenario, "android-home-media.png");
+            tapWebElement(scenario, "[data-management-open='club-story-panel']");
             tapWebElement(scenario, "#club-story-open");
             assertEquals("Narrative replies must stay inside the phone dialog", "true", evaluate(scenario,
                 "(()=>{const d=document.getElementById('club-story-dialog'),buttons=[...d.querySelectorAll('button')];return d.open&&d.scrollHeight<=d.clientHeight+1&&buttons.length>=4&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;})&&getComputedStyle(d.querySelector('.story-art')).backgroundImage.includes('data:image/webp');})()"));
             screenshot(scenario, "android-story-chapter.png");
             tapWebElement(scenario, "#club-story-dialog [data-story-close]");
+            tapWebElement(scenario, "#management-close");
 
             tapWebElement(scenario, "#mobile-match-action");
             awaitTrue(scenario, "view==='match'&&!document.getElementById('match-pane').hidden");
@@ -390,6 +403,8 @@ public final class GameSmokeTest {
             tapWebElement(scenario, "#squad-overview-close");
             awaitTrue(scenario, "managerGuideStep===3");
             evaluate(scenario, "(()=>{managerGuideActive=false;managerGuideWaiting=null;document.getElementById('manager-guide').close();setView('market');return true;})()");
+            tapWebElement(scenario, "[data-management-open='transfer-search-panel']");
+            assertEquals("true", evaluate(scenario, "document.getElementById('management-dialog').open&&document.getElementById('management-content').contains(document.getElementById('market-overview'))"));
             assertEquals("8", evaluate(scenario, "document.querySelectorAll('.market-card').length"));
             evaluate(scenario, "(()=>{const p=document.getElementById('transfer-position');p.value='FW';p.dispatchEvent(new Event('change'));return true;})()");
             awaitTrue(scenario, "document.querySelectorAll('.market-card').length===8&&document.getElementById('transfer-query').value===''");
