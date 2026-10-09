@@ -299,6 +299,13 @@ public final class GameSmokeTest {
             assertEquals("Readable opponent summary and roster must precede detailed analysis", "true", evaluate(scenario,
                 "(()=>{const host=document.getElementById('opposition-report'),roster=host.querySelector('.opposition-roster'),coach=host.querySelector('.opposition-coach-analysis'),name=host.querySelector('.opposition-player-name');return host.querySelectorAll('.opposition-snapshot dd').length===4&&!!(roster.compareDocumentPosition(coach)&Node.DOCUMENT_POSITION_FOLLOWING)&&parseFloat(getComputedStyle(name).fontSize)>=12;})()"));
             screenshot(scenario, "android-opposition-report.png");
+            tapWebElement(scenario, ".opposition-player-button");
+            awaitTrue(scenario, "document.getElementById('opponent-detail-dialog').open");
+            assertEquals("Rival detail retains exact abilities and a full original portrait inside its popup", "true", evaluate(scenario,
+                "(()=>{const d=OpponentDetails.read(season,opponentDetailIdentity),dialog=document.getElementById('opponent-detail-dialog'),r=dialog.getBoundingClientRect();return d.valid&&d.rows.length===6&&dialog.querySelectorAll('tbody tr').length===6&&dialog.querySelector('.portrait-large').dataset.portraitIndex===String(Portraits.index(d.person))&&dialog.querySelector('select').getBoundingClientRect().height>=44&&r.top>=0&&r.bottom<=innerHeight&&r.width<=innerWidth;})()"));
+            screenshot(scenario, "android-opponent-player.png");
+            evaluate(scenario, "WinAgainAndroid.handleBack()");
+            awaitTrue(scenario, "!document.getElementById('opponent-detail-dialog').open&&document.getElementById('match-popup').open&&matchPopupActive==='opponent'");
             tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
             tapWebElement(scenario, "#matchday-roster");
             awaitTrue(scenario, "document.querySelectorAll('#match-popup-roster [data-matchday-player]').length===11");
@@ -357,7 +364,7 @@ public final class GameSmokeTest {
             screenshot(scenario, "android-whole-squad.png");
             tapWebElement(scenario, "[data-squad-detail='sp_f1']");
             awaitTrue(scenario, "document.getElementById('player-detail-dialog').open&&document.getElementById('player-detail-name').textContent==='손헝민'");
-            assertEquals("true", evaluate(scenario, "document.querySelector('.detail-hero .player-portrait').dataset.portraitIndex==='21'"));
+            assertEquals("New starter portrait must show Son's dedicated v19 cell", "true", evaluate(scenario, "document.querySelector('.detail-hero .player-portrait').dataset.portraitIndex==='14'&&Portraits.asset.includes('player-faces-v19.webp')"));
             evaluate(scenario, "WinAgainAndroid.handleBack()");
             awaitTrue(scenario, "!document.getElementById('player-detail-dialog').open&&document.getElementById('squad-overview-dialog').open&&managerGuideStep===2");
             tapWebElement(scenario, "#squad-overview-close");
@@ -365,11 +372,11 @@ public final class GameSmokeTest {
             evaluate(scenario, "(()=>{managerGuideActive=false;managerGuideWaiting=null;document.getElementById('manager-guide').close();setView('market');return true;})()");
             assertEquals("8", evaluate(scenario, "document.querySelectorAll('.market-card').length"));
             evaluate(scenario, "(()=>{const p=document.getElementById('transfer-position');p.value='FW';p.dispatchEvent(new Event('change'));return true;})()");
-            awaitTrue(scenario, "document.querySelectorAll('.market-card').length===2&&document.getElementById('transfer-query').value===''");
+            awaitTrue(scenario, "document.querySelectorAll('.market-card').length===8&&document.getElementById('transfer-query').value===''");
             evaluate(scenario, "(()=>{const q=document.getElementById('transfer-query');q.value='없는 이름';q.dispatchEvent(new Event('input'));return true;})()");
             awaitTrue(scenario, "document.querySelectorAll('.market-card').length===0");
             evaluate(scenario, "(()=>{const q=document.getElementById('transfer-query');q.value='';q.dispatchEvent(new Event('input'));return true;})()");
-            awaitTrue(scenario, "document.querySelectorAll('.market-card').length===2");
+            awaitTrue(scenario, "document.querySelectorAll('.market-card').length===8");
             screenshot(scenario, "android-keyword-free-market.png");
             scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
         }
