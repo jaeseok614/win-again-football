@@ -1,10 +1,12 @@
 var movementElapsed=0,movementStamp=0,movementSeed=null,movementEvent=null,movementEventAge=Infinity,movementDemo=false,movementDemoElapsed=0,lastMotionFrame=null;
 var movementNodeHost=null,movementFirstNode=null,movementPlayerNodes=new Map(),movementLegNodes=new Map(),movementOpponentFormation='442',movementOpponentRoster=[],movementEventElapsed=0,movementCommentaryKey='',movementCommentaryText='',movementEventOrigin=null,movementShapeKey=null,movementShapeFrom=null,movementShapeAge=650;
+var movementReportedOutcome=null;
 function cancelMovementPreview(){const wasPreview=movementDemo;movementDemo=false;movementDemoElapsed=0;if(wasPreview){lastEvent=null;movementEvent=null;movementEventAge=Infinity;}movementStamp=performance.now();renderMovementControls();}
+function currentVisualOpponentRoster(){if(movementSeed===state?.seed&&movementOpponentRoster.length)return movementOpponentRoster;return state===season.match&&typeof Opposition.read==='function'?Opposition.read(season).lineup:Opposition.roster(S.opponentFor(season));}
 function renderMovementControls(){const host=$('movement-controls');if(!host||!state)return;const preview=state.phase==='prep',html='<div class="movement-controls"><span><b>2D 경기 중계</b><small id="movement-label">'+(movementDemo?'미리보기 · 경기 기록은 바뀌지 않아요.':'전술과 주요 장면을 보여주는 경기 중계')+'</small></span><button id="movement-preview" class="secondary" '+(!preview||!motionEnabled()?'disabled':'')+'>'+(movementDemo?'미리보기 끝내기':'움직임 미리보기')+'</button></div>';if(host.dataset.markup!==html){host.innerHTML=html;host.dataset.markup=html;$('movement-preview').onclick=()=>{if(state.phase!=='prep'||!motionEnabled())return;if(movementDemo)cancelMovementPreview();else{movementDemo=true;movementDemoElapsed=0;movementElapsed=0;movementStamp=performance.now();renderMovementControls();}if(innerWidth<730)$('pitch').scrollIntoView({behavior:'instant',block:'center'});};}}
 function motionFrame(now=performance.now()){
  if(!state)return null;if(movementSeed!==state.seed){movementSeed=state.seed;movementShapeKey=null;movementShapeFrom=null;movementShapeAge=650;movementEventOrigin=null;lastMotionFrame=null;movementElapsed=0;movementStamp=now;movementEvent=null;movementEventAge=Infinity;movementDemo=false;movementDemoElapsed=0;movementOpponentRoster=[];movementCommentaryKey='';movementOpponentFormation=typeof Opposition!=='undefined'?Opposition.plan(S.opponentFor(season)).formation:'442';}
- if(typeof Opposition!=='undefined'&&!movementOpponentRoster.length)movementOpponentRoster=Opposition.roster(S.opponentFor(season));
+ if(typeof Opposition!=='undefined'&&!movementOpponentRoster.length)movementOpponentRoster=currentVisualOpponentRoster();
  const rawDelta=Math.max(0,now-movementStamp),visualDelta=Math.min(80,rawDelta);movementStamp=now;
  const eventChanged=movementEvent!==lastEvent;if(eventChanged){movementEventOrigin=lastMotionFrame;movementEvent=lastEvent;movementEventElapsed=movementElapsed;movementEventAge=lastEvent?(typeof lastEventFast!=='undefined'&&lastEventFast?Movement.impactAge(lastEvent):0):Infinity;}
  const visible=view==='match'&&!document.hidden,enabled=motionEnabled();if(movementDemo&&(!enabled||state.phase!=='prep'))cancelMovementPreview();
@@ -24,6 +26,7 @@ function motionFrame(now=performance.now()){
  if(visible)syncMovementSequence(enabled?lastMotionFrame:null);
  syncMovementCommentary();
  syncMovementScore();
+ if(visible&&enabled&&movementEvent&&['goal','shot','chance'].includes(movementEvent.type)&&movementEventAge>=Movement.impactAge(movementEvent)&&movementReportedOutcome!==movementEvent){movementReportedOutcome=movementEvent;if(typeof refreshVisibleMatchReports==='function')refreshVisibleMatchReports();}
  return lastMotionFrame;
 }
 function syncMovementCommentary(){

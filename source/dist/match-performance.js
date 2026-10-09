@@ -32,7 +32,7 @@
  function finish(rows,source,detailed,limited){const top=rows[0]?.rating,formula=detailed?'출전 시간, 득점·도움, 실제 슈팅 장면, 카드, 실점·무실점으로 계산한 표시용 평점입니다. 선수 능력·RNG·저장 기록에는 영향을 주지 않습니다.':'확정된 출전 시간, 득점·도움, 카드, 실점·무실점으로 계산한 표시용 평점입니다. 종료 뒤에는 개별 슈팅 장면을 저장하지 않습니다.';return {valid:true,source,detailed,limited,rows,best:top===undefined?[]:rows.filter(row=>row.rating===top),formula};}
  function fromMatch(match){
   if(!match?.players||!Array.isArray(match.logs)||!Array.isArray(match.score)||!Array.isArray(match.segments))return empty('현재 경기 기록을 읽을 수 없어요.');
-  const starters=new Set(match.segments[0]?.lineup||[]),players=Object.values(match.players).map(p=>({id:p.id,identity:p.identity,minutes:p.minutes,started:starters.has(p.id),cleanSheets:F.identityProfile(p.identity).pos==='GK'&&p.minutes===90&&match.score[1]===0}));
+  const starters=new Set(match.segments[0]?.lineup||[]),players=Object.values(match.players).map(p=>({id:p.id,identity:p.identity,minutes:p.minutes,started:starters.has(p.id),cleanSheets:!match.presentationPending&&F.identityProfile(p.identity).pos==='GK'&&p.minutes===90&&match.score[1]===0}));
   const events=match.logs.filter(event=>event?.team===0&&['goal','shot','chance'].includes(event.type));
   return finish(makeRows(players,{score:match.score,events,cards:match.discipline?.events||[],detailed:true,limited:(match.statisticsOriginMinute||0)>0}),'live',true,(match.statisticsOriginMinute||0)>0);
  }

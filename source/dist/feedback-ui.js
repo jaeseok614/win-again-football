@@ -4,7 +4,7 @@ function matchMomentFor(events,match,fast=false){
  const event=[...events].reverse().find(e=>e.type==='goal')||[...events].reverse().find(e=>e.type==='shot'&&e.team===1)||[...events].reverse().find(e=>e.type==='sub');if(!event)return null;
  const kind=event.type==='goal'?(event.team===0?'goal':'concede'):event.type==='shot'?'save':'sub';
  const keeper=match.lineup.map(id=>match.players[id]).find(p=>p.pos==='GK'),scorer=match.players[event.scorerId]||(event.scorerIdentity?F.identityProfile(event.scorerIdentity):null);
- const opponentRoster=Opposition.roster(S.opponentFor(season)),performer=Movement.frame({match,opponentFormation:Opposition.plan(S.opponentFor(season)).formation,opponentRoster,event,eventAgeMs:0,dismissedOpponent:typeof Discipline!=='undefined'?Discipline.dismissed(match,1):[]}).performerName;
+ const opponentRoster=typeof currentVisualOpponentRoster==='function'?currentVisualOpponentRoster():Opposition.roster(S.opponentFor(season)),performer=Movement.frame({match,opponentFormation:Opposition.plan(S.opponentFor(season)).formation,opponentRoster,event,eventAgeMs:0,dismissedOpponent:typeof Discipline!=='undefined'?Discipline.dismissed(match,1):[]}).performerName;
  const player=kind==='goal'?scorer?.name||S.club(S.own).name:kind==='save'?keeper?.name||S.club(S.own).short+' 골키퍼':kind==='concede'?performer||S.opponentFor(season).name:F.displayText(event.text,match.players);
  return {kind,minute:event.minute,title:{goal:'골!',concede:'다시 집중!',save:'멋진 선방',sub:'새로운 승부수'}[kind],player,detail:S.displayText(F.displayText(event.text,scorer?[scorer]:match.players)),label:(fast?'하이라이트 · ':'')+event.minute+'′'};
 }

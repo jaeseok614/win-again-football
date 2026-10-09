@@ -1,0 +1,20 @@
+.attack-analysis{margin:14px 0;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+.attack-analysis summary{min-height:48px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;font-size:14px}
+.attack-analysis summary span{color:var(--muted);font-size:12px;text-align:right}
+.attack-analysis summary:focus-visible{outline:2px solid var(--lime);outline-offset:-3px}
+.attack-analysis-body{padding:0 12px 14px;min-width:0}
+.attack-team-picker,.attack-analysis-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.attack-team-picker button,.attack-analysis-actions button{min-height:44px;white-space:normal;font-size:13px}
+.attack-team-picker [aria-pressed=true]{border-color:var(--lime);color:var(--lime);background:var(--bg)}
+.attack-analysis table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+.attack-analysis th,.attack-analysis td{padding:10px 4px;border-bottom:1px solid var(--line);text-align:center}
+.attack-analysis th:first-child{width:36%;text-align:left}
+.attack-analysis tbody th{position:relative;font-weight:500}
+.attack-analysis tbody th span{position:relative;z-index:1}
+.attack-analysis tbody th i{position:absolute;bottom:4px;left:0;height:3px;background:var(--lime);opacity:.5;max-width:100%}
+.attack-analysis tfoot{font-weight:700;color:var(--lime)}
+.attack-coach-note{margin:14px 0;padding:12px;background:var(--bg);border-radius:8px;font-size:13px;line-height:1.55}
+.attack-coach-note b,.attack-coach-note span{display:block;overflow-wrap:anywhere}
+.attack-coach-note p{margin:7px 0}.attack-coach-note span,.attack-analysis-caption{color:var(--muted);font-size:12px;line-height:1.6}
+.attack-analysis-caption{margin:10px 0}
+@media(max-width:360px){.attack-analysis summary{align-items:flex-start;flex-direction:column;gap:4px}.attack-analysis-body{padding:0 8px 12px}.attack-analysis th,.attack-analysis td{padding:10px 2px}.attack-analysis th:first-child{width:34%}.attack-analysis-actions{gap:6px}}
