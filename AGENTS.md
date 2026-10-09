@@ -107,6 +107,16 @@ after an explicit answer; retain both chosen answers in replay. Follow-up storie
 use validated prior receipts and confirmed rounds, keeping the original actor.
 National-team play remains future work.
 
+Permanent owner feedback (2026-10-09, fan/owner story effects): completed ClubStory
+dialogues now affect actual match focus through StoryMood. This supersedes earlier
+story-only/no-bonus notes for this explicit mechanic. Keep one latest source per
+relationship, personality-based reactions and an aggregate cap of ±2% per player.
+Expire sources after two confirmed league rounds (cups share the window), freeze
+context once kickoff occurs and validate it against the saved receipt prefix.
+Reveal results only after both answers. Never alter permanent skills, money or past
+match records merely for reading/replaying dialogue. Show current focus in player
+details and preserve current v10 saves that predate this optional match context.
+
 Permanent owner feedback (2026-10-09, report follow-up): player abilities,
 opponent player comparisons, tactical placement and tactical analysis must fit a
 single normal phone viewport, including 320x568 and short 844x390 landscape.

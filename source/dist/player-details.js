@@ -15,6 +15,7 @@
   const energy=owned?(live?.energy??p.energy):null,injury=owned?.injury?{...owned.injury}:null;
   const injuryRemaining=injury?.remaining||live?.injuryRemaining||0,conditionStatus=!owned?'unknown':live?.suspended?'suspended':injuryRemaining?'injured':energy<65?'caution':'fit';
   const condition={status:conditionStatus,label:conditionStatus==='unknown'?'영입 전 · 몸 상태 미확인':conditionStatus==='suspended'?'이번 대회 출전 정지':conditionStatus==='injured'?'부상 휴식 · '+injuryRemaining+'경기':conditionStatus==='caution'?'피로 주의':'출전 가능',available:owned?injuryRemaining===0&&!live?.suspended:null,starting:owned?!!live&&!!s.match?.lineup?.includes(slot):null,energySource:owned?(live?'match':'squad'):null};
+  if(live&&s.match.storyMood){const focus=root.StoryMood.value(s.match,live);condition.label+=' · 서사 집중 '+(focus>0?'+':'')+focus+'%';}
   const summary=ST.summary(s,'all',s.year),row=summary.players.find(player=>player.identity===identity);
   const records={year:s.year,...Object.fromEntries(recordKeys.map(stat=>[stat,row?.[stat]??0])),partial:summary.partial,matches:summary.matches,trackedSinceRound:summary.trackedSinceRound};
   const positions=Traits.allPositions(p),feet=Traits.feet(p),matchCondition=owned?Traits.condition(s,p):{score:null,tier:'unknown',label:'영입 전 미확인'},scouting=Scout.read(p);
