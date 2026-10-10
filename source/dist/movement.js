@@ -189,6 +189,15 @@
   if(!blocked){const ready={x:lerp(keeper.x,nearPost,.65),y:catchPoint.y},set=u(timing.outlet,timing.shot),dive=u(timing.shot,timing.impact),point=age<timing.shot?mixPoint(keeper,ready,set):mixPoint(ready,catchPoint,dive);place(opponents,keeper.id,point);result.keeperRush=set;result.saveProgress=age>=timing.shot?dive:null;result.keeperPose=age<timing.delivery?'rush':age<timing.shot?'set':age<timing.hold?'dive':'recover';result.keeperDive=(nearPost<50?-1:1)*Math.sin(Math.PI*clamp((age-timing.shot)/(timing.hold-timing.shot),0,1));}
   if(event.type==='goal'&&age>=timing.impact&&age<timing.hold){result.celebrantIds=team.filter(p=>p.pos!=='GK'&&(p.id===shooter.id||p.id===source.id||p.pos==='FW')).map(p=>p.id);result.celebrationLift=Math.sin(Math.PI*u(timing.impact,timing.hold));}
   if(age===0){result.ball=origin;result.ownerTeam=frozen.ownerTeam;result.carrierId=frozen.carrierId;}
+  // React only after visible possession is secured. The winner stays on the
+  // contact point while teammates open outlets and the beaten side drops back.
+  const securedAt=impactAge(event);
+  if(event.type!=='goal'&&age>=securedAt){
+   const reset=u(securedAt,timing.hold),winnerId=blocked?blocker.id:keeper.id;
+   for(const p of opponents){if(p.pos==='GK'||p.id===winnerId)continue;const width=p.pos==='DEF'?4:2,advance=p.pos==='FW'?5:3;place(opponents,p.id,{x:p.x+(p.baseX<50?-width:width)*reset,y:p.y-direction*advance*reset});}
+   for(const p of people){if(p.pos==='GK')continue;place(people,p.id,{x:lerp(p.x,clamp(p.baseX,20,80),reset*.12),y:p.y-direction*(p.pos==='DEF'?2:5)*reset});}
+   result.transitionTeam=1-event.team;
+  }
   if(age>=timing.hold){
    const blend=u(timing.hold,timing.end);result.phase='restart';result.label=event.type==='goal'?'실점 팀 킥오프 준비':'공을 확보한 수비가 다시 전개';result.ownerTeam=1-event.team;result.ball=mixPoint(result.ball,baseBall,blend);result.trail=[];result.carrierId=null;result.ballHeight=(result.ballHeight||0)*(1-blend);result.headerLift=0;result.tackleProgress=0;result.keeperDive=(result.keeperDive||0)*(1-blend);
    for(let i=0;i<result.own.length;i++){const target=baseOwn.find(p=>p.id===result.own[i].id)||baseOwn[i];if(target)Object.assign(result.own[i],mixPoint(result.own[i],target,blend));}
@@ -230,6 +239,7 @@
  }
  function liveCommentaryText(value){
   const people=[...value.own,...value.opponent],from=people.find(p=>p.id===value.sourceId)||people.find(p=>p.id===value.carrierId),to=people.find(p=>p.id===value.receiverId),name=from?.name||to?.name;
+  if(value.transitionTeam!==undefined&&['save','saved','intercept'].includes(value.phase))return named(people.find(p=>p.id===value.carrierId)?.name||'수비수')+' 공을 확보합니다. 동료는 패스 길을 벌리고 상대는 수비로 복귀합니다.';
   if(value.phase==='secure')return named(people.find(p=>p.id===value.recovererId)?.name||'선수')+' 공을 확보합니다. 동료가 전진할 때까지 전개 방향을 살핍니다.';
   if(value.phase==='outlet')return (to?.name||'동료')+'에게 첫 패스를 연결합니다. 공격진이 앞으로 움직입니다.';
   if(value.phase==='carry')return named(from?.name||'미드필더')+' 공을 운반합니다. 문전으로 달리는 동료를 찾습니다.';
@@ -254,6 +264,7 @@
  const shortName=name=>String(name||'선수').trim().split(/\s+/).at(-1);
  function liveCommentary(value,compact=false){
   if(!compact)return liveCommentaryText(value);
+  if(value.transitionTeam!==undefined&&['save','saved','intercept'].includes(value.phase))return shortName([...value.own,...value.opponent].find(p=>p.id===value.carrierId)?.name)+' 공 확보. 동료는 벌리고 상대는 복귀합니다.';
   const people=[...value.own,...value.opponent],person=id=>shortName(people.find(p=>p.id===id)?.name),source=person(value.sourceId||value.carrierId),receiver=person(value.receiverId),recoverer=person(value.recovererId),shooter=shortName(value.performerName);
   const texts={turnover:named(recoverer)+' 압박합니다. 먼저 공을 확보해야 합니다.',secure:recoverer+' 공 확보. 동료들이 앞으로 움직입니다.',outlet:receiver+'에게 첫 패스. 공격 전개를 시작합니다.',carry:named(source)+' 공을 운반하며 동료의 침투를 봅니다.','wing-run':source+' 측면 돌파! 앞서 나가 크로스를 준비합니다.',sprint:person(value.runnerId)+' 전력 질주! 수비를 뒤에 두고 전진합니다.',duel:named(person(value.tacklerId))+' 따라붙습니다. 공을 두고 경합합니다.',tackle:person(value.tacklerId)+(value.carrierId?' 태클! 돌파를 저지하고 공을 확보합니다.':' 태클! 흘러나온 공을 두고 경합합니다.'),cross:source+' 크로스! '+named(receiver)+' 문전으로 쇄도합니다.',cutback:source+' 컷백! '+named(receiver)+' 슈팅을 준비합니다.',through:source+' 전진 패스! '+named(receiver)+' 뒷공간으로 침투합니다.',control:shooter+' 슈팅 준비. 골키퍼가 나와 각도를 좁힙니다.',header:shooter+' 헤더! 공이 골문을 향합니다.',shot:shooter+' 슈팅! 공이 골문을 향합니다.',intercept:named(person(value.carrierId))+' 공격을 끊고 공을 확보합니다.',contest:named(receiver)+' 접근합니다. 공을 두고 경합합니다.',recovery:recoverer+' 공 확보. 동료와 다시 전개합니다.',restart:value.label+'.','set-piece':value.label+'.'};
   if(texts[value.phase])return texts[value.phase];

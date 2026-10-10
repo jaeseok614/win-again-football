@@ -302,8 +302,17 @@ public final class GameSmokeTest {
             tapWebElement(scenario, "[data-management-open='club-story-panel']");
             tapWebElement(scenario, "#club-story-panel > details > summary");
             tapWebElement(scenario, ".story-history [data-story-event]");
-            assertEquals("Narrative replies must stay inside the phone dialog", "true", evaluate(scenario,
-                "(()=>{const d=document.getElementById('club-story-dialog'),buttons=[...d.querySelectorAll('button')];return d.open&&ClubStory.scene(season,clubStoryEvent).step===2&&d.scrollHeight<=d.clientHeight+1&&buttons.length>=3&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;})&&getComputedStyle(d.querySelector('.story-art')).backgroundImage.includes('data:image/webp');})()"));
+            String storyBefore = evaluate(scenario, "JSON.stringify(season)");
+            int storyPages = Integer.parseInt(evaluate(scenario, "clubStoryPages(ClubStory.scene(season,clubStoryEvent)).length"));
+            while (!"true".equals(evaluate(scenario, "document.querySelector('[data-story-page=previous]').disabled"))) {
+                tapWebElement(scenario, "[data-story-page=previous]");
+            }
+            for (int page = 0; page < storyPages; page++) {
+                assertEquals("Narrative page " + page + " must stay inside the phone dialog", "true", evaluate(scenario,
+                    "(()=>{const d=document.getElementById('club-story-dialog'),buttons=[...d.querySelectorAll('button')].filter(b=>b.getClientRects().length);return d.open&&ClubStory.scene(season,clubStoryEvent).step===2&&d.scrollHeight<=d.clientHeight+1&&buttons.length>=3&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;})&&getComputedStyle(d.querySelector('.story-art')).backgroundImage.includes('data:image/webp');})()"));
+                if (page < storyPages - 1) tapWebElement(scenario, "[data-story-page=next]");
+            }
+            assertEquals("Reading every story page must preserve the campaign", storyBefore, evaluate(scenario, "JSON.stringify(season)"));
             screenshot(scenario, "android-story-chapter.png");
             tapWebElement(scenario, "#club-story-dialog [data-story-close]");
             tapWebElement(scenario, "#management-close");
