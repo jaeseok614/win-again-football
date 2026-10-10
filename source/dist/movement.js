@@ -139,6 +139,12 @@
   for(const [index,p] of runners.entries()){const distance=p.pos==='DEF'?52:p.pos==='MID'?34:29,targetY=event.team===0?Math.max(distance,p.y-12):Math.min(100-distance,p.y+12),lane=clamp(p.baseX,24,76),targetX=p.pos==='FW'?(Math.abs(lane-strike.x)<7?strike.x+(lane<strike.x?-9:9):lane):p.pos==='MID'?clamp(p.x+(p.x<50?5:-5),24,76):p.x;place(people,p.id,{x:lerp(p.x,targetX,support)+Math.sin(Math.PI*support)*(index%2?1:-1)*2,y:lerp(p.y,targetY,support)});}
   const receiverMove=u(timing.secure,timing.delivery);if(shooter.id!==source.id)place(people,shooter.id,age<timing.delivery?mixPoint(shooter,receiveStrike,receiverMove):mixPoint(receiveStrike,strike,u(timing.delivery,timing.shot)));
   place(people,source.id,age<timing.outlet?mixPoint(source,sourceReceive,u(0,timing.outlet)):movingSource);
+  // Release leaves the ball at deliveryFrom while the passer keeps supporting.
+  // Ease into the new lane and settle before the shot; never drag the flight origin.
+  if(source.id!==shooter.id&&!corner&&!freeKick&&age>=timing.carry){const follow=u(timing.carry,timing.shot),target={x:clamp(sourceFinish.x+(wide?(side==='left'?5:-5):sourceFinish.x<strike.x?-3:3),10,90),y:clamp(sourceFinish.y+direction*(wide?2:4),10,90)};place(people,source.id,mixPoint(sourceFinish,target,follow));}
+  // A kick does not stop the runner instantly. Keep the contact pose exact, then
+  // let momentum decay over the flight without moving the recorded shot origin.
+  if(event.type!=='chance'&&!corner&&age>=timing.shot){const t=clamp((age-timing.shot)/(timing.impact-timing.shot),0,1),follow=1-(1-t)**3;place(people,shooter.id,{x:strike.x,y:strike.y+direction*1.8*follow});}
   const recoverySpot={x:origin.x-1.3,y:origin.y-1.2};
   if(!corner&&!freeKick&&recoverer.id!==source.id){const cover={x:recoverer.x,y:event.team===0?Math.max(recoverer.y,38):Math.min(recoverer.y,62)};place(people,recoverer.id,age<timing.outlet?mixPoint(recoverer,recoverySpot,u(0,timing.win)):mixPoint(recoverySpot,cover,u(timing.outlet,timing.carry)));}
   if(lost&&!corner&&!freeKick){const holder=defenders.find(p=>p.id===frozen.carrierId);if(holder&&holder.pos!=='GK'){const contact=mixPoint(holder,recoverySpot,u(0,timing.win)),retreat={x:holder.x,y:holder.y-direction*4};place(opponents,holder.id,age<timing.secure?contact:mixPoint(recoverySpot,retreat,u(timing.secure,timing.outlet)));result.dispossessedId=holder.id;}}
