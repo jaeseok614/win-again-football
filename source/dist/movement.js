@@ -35,14 +35,17 @@
   return ids.filter(row=>row&&row.id).map(row=>{
    const p=row.p||match?.players?.[row.id]||{},pos=p.pos||row.pos||'MID',fallback=pos==='GK'?[50,88]:(layout[pos]?.[counts[pos]++]||[50,50]);
    const x=clamp(finite(row.x,fallback[0]),10,90),y=clamp(finite(row.y,fallback[1]),10,90);
-   return {id:row.id,name:p.name||row.name||'',no:p.no||row.no||0,pos:rows&&Number.isFinite(row.x)&&Number.isFinite(row.y)?engine.assignedPosition(row.x,row.y,pos).line:pos,x,y,baseX:x,baseY:y};
+   return {id:row.id,identity:p.identity||row.identity||row.id,name:p.name||row.name||'',no:p.no||row.no||0,pos:rows&&Number.isFinite(row.x)&&Number.isFinite(row.y)?engine.assignedPosition(row.x,row.y,pos).line:pos,x,y,baseX:x,baseY:y};
   });
  }
  const role=(team,pos,index=0)=>{const people=team.filter(p=>p.pos===pos);return people[index%people.length]||team.find(p=>p.pos!=='GK')||team[0]||{id:null,x:50,y:50};};
  function widePlayer(team,side,excludeId=null){const edge=side==='left'?0:100,penalty={FW:0,MID:2,DEF:6},score=p=>Math.abs(finite(p.baseX,p.x)-edge)+(penalty[p.pos]??10);return team.filter(p=>p.pos!=='GK'&&p.id!==excludeId).sort((a,b)=>score(a)-score(b)||a.id.localeCompare(b.id))[0]||role(team,'MID');}
+ // Stable individual response: no random draws and no per-frame state.
+ const movementStyles=new Map();
+ function movementStyle(p){const id=String(p.identity||p.id);if(movementStyles.has(id))return movementStyles.get(id);let hash=17;for(const c of id)hash=(Math.imul(hash,31)+c.charCodeAt(0))>>>0;hash=Math.imul(hash^(hash>>>16),0x45d9f3b)>>>0;hash=Math.imul(hash^(hash>>>16),0x45d9f3b)>>>0;const style={phase:hash%628/100,tempo:1800+hash%1900,response:.65+(hash%101)/200,delay:hash%420};movementStyles.set(id,style);if(movementStyles.size>128)movementStyles.delete(movementStyles.keys().next().value);return style;}
  // Shift the unit toward play without assigning a new nearest marker each frame.
  // Identity-stable lanes avoid snapping when two attackers cross one another.
- function coverUnit(team,target,progress,goalY,excluded=[]){for(const p of team){if(excluded.includes(p.id))continue;const lateral=p.pos==='GK'?2:p.pos==='DEF'?4:5,depth=p.pos==='DEF'?goalY+(target.y-goalY)*.38:p.pos==='MID'?lerp(p.y,target.y,.32):lerp(p.y,target.y,.16);p.x=clamp(p.x+clamp((target.x-p.x)*.22,-lateral,lateral)*progress,10,90);if(p.pos!=='GK')p.y=clamp(p.y+clamp(depth-p.y,-5,5)*progress,10,90);}}
+ function coverUnit(team,target,progress,goalY,excluded=[]){for(const p of team){if(excluded.includes(p.id))continue;const style=movementStyle(p),near=clamp(1-Math.abs(p.baseX-target.x)/110,.45,1),response=progress*style.response*near,lateral=p.pos==='GK'?2:p.pos==='DEF'?4:5,depth=p.pos==='DEF'?goalY+(target.y-goalY)*.38:p.pos==='MID'?lerp(p.y,target.y,.32):lerp(p.y,target.y,.16);p.x=clamp(p.x+clamp((target.x-p.x)*.22,-lateral,lateral)*Math.min(1,response),10,90);if(p.pos!=='GK')p.y=clamp(p.y+clamp(depth-p.y,-5,5)*Math.min(1,response),10,90);}}
  function buildRoute(team,side){const wide=widePlayer(team,side),forwards=team.filter(p=>p.pos==='FW'&&p.id!==wide.id),wideForward=forwards.sort((a,b)=>Math.abs(a.x-(side==='left'?0:100))-Math.abs(b.x-(side==='left'?0:100)))[0]||team.find(p=>p.pos==='MID'&&p.id!==wide.id)||role(team,'FW');return [role(team,'DEF',1),role(team,'MID',1),wide,wideForward,role(team,'FW',0)];}
  // Circulation is illustrative, like the existing unrecorded passing/duel loop.
  // Replace occasional turnovers with a six-second restart, not a new engine event.
@@ -89,18 +92,14 @@
    oppRoute[0]=nearest(opponent,ownRoute[3]);ownRoute[0]=nearest(own,buildRoute(opponent,side==='left'?'right':'left')[3]);
    const nextRecoveryId=nearest(own,oppRoute[3]).id;
    const routeIds=[...ownRoute,...oppRoute].map(p=>p.id);
-   for(let i=0;i<own.length;i++){
-    const p=own[i],amplitude={GK:1.5,DEF:7,MID:12,FW:8}[p.pos]||8,side=p.pos==='GK'?2:5;
-    p.x=clamp(50+(p.x-50)*width+Math.sin(time/1900+i*.8)*side+attack*(p.x<50?2:-2),10,90);
-    p.y=clamp(p.y-attack*amplitude-(p.pos==='GK'?0:press)+Math.cos(time/2300+i)*1.8,10,90);
-    if(p.pos==='GK'){p.x=clamp(p.x,40,60);p.y=clamp(p.y,83,90);}
-   }
    const opponentMode=engine.opponentPlan(match),opponentWidth=opponentMode==='chase'?1.1:opponentMode==='protect'?.82:1,opponentAdvance=opponentMode==='chase'?4:opponentMode==='protect'?-6:0;
-   for(let i=0;i<opponent.length;i++){
-    const p=opponent[i],amplitude={GK:1.5,DEF:7,MID:10,FW:6}[p.pos];
-    p.x=clamp(50+(p.x-50)*opponentWidth+Math.sin(time/2100+i*.7+1)*4,10,90);
-    p.y=clamp(p.y-attack*amplitude+Math.cos(time/2400+i)*1.6+(p.pos==='GK'?0:opponentAdvance),10,90);
-    if(p.pos==='GK'){p.x=clamp(p.x,40,60);p.y=clamp(p.y,10,17);}
+   for(const [team,spread,advance,sign] of [[own,width,-press,-1],[opponent,opponentWidth,opponentAdvance,1]])for(const p of team){
+    const style=movementStyle(p),wide=Math.abs(p.baseX-50)>25,amplitude={GK:.8,DEF:wide?4:2.5,MID:5,FW:7}[p.pos],personal=Math.sin(time/style.tempo+style.phase),check=Math.sin(time/(style.tempo*1.61)+style.phase*.7);
+    // Centre backs protect depth, wide players hold lanes, midfielders check
+    // at different times, and forwards make individually timed diagonal runs.
+    p.x=clamp(50+(p.baseX-50)*spread+personal*(p.pos==='GK'?1:wide?2:3.5),10,90);
+    p.y=clamp(p.baseY-attack*amplitude*.08+sign*check*amplitude+(p.pos==='GK'?0:advance),10,90);
+    if(p.pos==='GK'){p.x=clamp(p.x,40,60);p.y=clamp(p.y,sign===-1?83:10,sign===-1?90:17);}
    }
    // Defenders close nearby forward lanes while retreating. Distance weights
    // avoid a visible jump when two opposing forwards cross a marking boundary.
@@ -114,7 +113,7 @@
    const route=routeIds.map(id=>[...own,...opponent].find(p=>p.id===id)||role(own,'MID')),from=route[stage],to=stage===7?own.find(p=>p.id===nextRecoveryId):route[(stage+1)%route.length],pass=clamp((segmentLocal-passing.release)/(passing.arrival-passing.release),0,1);
    if(stage%4!==3){const invite=smooth(segmentLocal/.35)*(1-smooth((segmentLocal-.76)/.24)),dx=from.x-to.x,dy=from.y-to.y,length=Math.hypot(dx,dy)||1,direction=stage<4?-1:1;
     to.x=clamp(to.x+dx/length*2.4*invite,10,90);to.y=clamp(to.y+dy/length*2.4*invite,10,90);
-    for(const p of stage<4?own:opponent)if(p.id!==from.id&&p.id!==to.id&&['MID','FW'].includes(p.pos)){p.x=clamp(p.x+(p.x<50?-1:1)*1.2*invite,10,90);p.y=clamp(p.y+direction*(p.pos==='FW'?2.4:1)*invite,10,90);}
+    for(const p of stage<4?own:opponent)if(p.id!==from.id&&p.id!==to.id&&p.pos!=='GK'){const near=clamp(1-Math.hypot(p.x-from.x,p.y-from.y)/65,0,1),style=movementStyle(p),wide=Math.abs(p.baseX-50)>25,run=p.pos==='FW'?2.5:p.pos==='MID'?1.5:wide&&near>.5?1.2:.15;p.x=clamp(p.x+(wide?(p.baseX<50?-1:1):from.x<p.x?1:-1)*near*style.response*invite,10,90);p.y=clamp(p.y+direction*run*(.2+near)*style.response*invite,10,90);}
     coverUnit(stage<4?opponent:own,mixPoint(from,to,smooth(pass)),invite,stage<4?12:88);
    }
    const a={x:from.x+1.3,y:from.y+1.2},b={x:to.x+1.3,y:to.y+1.2};
@@ -162,11 +161,11 @@
   const duelTarget=wide?carryEnd:strike,blocker=defenders.filter(p=>p.pos!=='GK').sort((a,b)=>Math.hypot(a.x-duelTarget.x,a.y-duelTarget.y)-Math.hypot(b.x-duelTarget.x,b.y-duelTarget.y)||a.id.localeCompare(b.id))[0]||keeper;
   const u=(from,to)=>smooth((age-from)/(to-from)),place=(list,id,point)=>{const p=list.find(p=>p.id===id);if(p)Object.assign(p,{x:clamp(point.x,10,90),y:clamp(point.y,10,90)});},foot=p=>({x:clamp(p.x+1.3,4,96),y:clamp(p.y+1.2,4,96)});
   const sourceReceive=corner?cornerSpot:freeKick?strike:receive,sourceFinish=corner?cornerSpot:freeKick?strike:carryEnd,run=u(timing.outlet,dribble?timing.delivery:timing.carry),movingSource={...mixPoint(sourceReceive,sourceFinish,run),x:clamp(lerp(sourceReceive.x,sourceFinish.x,run)+(wide?(side==='left'?-2:2):sourceReceive.x<50?3:-3)*Math.sin(Math.PI*run),10,90)},strikeBall=foot(strike),deliveryFrom=foot(sourceFinish);
-  // Supporting runners advance together. The carrier makes the larger, visible
-  // break and successful defenders chase from behind instead of overtaking him.
+  // Stagger supporting runs by identity and role. Far-side defenders hold
+  // their depth while midfield support and forward runs arrive separately.
   const support=u(timing.secure,timing.delivery);
   const runners=team.filter(p=>p.pos!=='GK'&&![source.id,shooter.id,recoverer.id].includes(p.id));
-  for(const [index,p] of runners.entries()){const distance=p.pos==='DEF'?52:p.pos==='MID'?34:29,targetY=event.team===0?Math.max(distance,p.y-12):Math.min(100-distance,p.y+12),lane=clamp(p.baseX,24,76),targetX=p.pos==='FW'?(Math.abs(lane-strike.x)<7?strike.x+(lane<strike.x?-9:9):lane):p.pos==='MID'?clamp(p.x+(p.x<50?5:-5),24,76):p.x;place(people,p.id,{x:lerp(p.x,targetX,support)+Math.sin(Math.PI*support)*(index%2?1:-1)*2,y:lerp(p.y,targetY,support)});}
+  for(const [index,p] of runners.entries()){const style=movementStyle(p),near=clamp(1-Math.abs(p.baseX-source.baseX)/95,.2,1),progress=u(timing.secure+style.delay+(p.pos==='DEF'?200:0),timing.delivery+style.delay),distance=p.pos==='DEF'?52:p.pos==='MID'?34:29,travel=(p.pos==='DEF'?2+near*2:p.pos==='MID'?6+near*5:10+near*4)*style.response,targetY=event.team===0?Math.max(distance,p.y-travel):Math.min(100-distance,p.y+travel),lane=clamp(p.baseX,24,76),targetX=p.pos==='FW'?(Math.abs(lane-strike.x)<7?strike.x+(lane<strike.x?-9:9):lane):p.pos==='MID'?clamp(p.x+(p.x<50?5:-5)*near,24,76):p.x;place(people,p.id,{x:lerp(p.x,targetX,progress)+Math.sin(Math.PI*progress)*(index%2?1:-1)*2,y:lerp(p.y,targetY,progress)});}
   const receiverMove=u(timing.secure,timing.delivery);if(shooter.id!==source.id)place(people,shooter.id,age<timing.delivery?mixPoint(shooter,receiveStrike,receiverMove):mixPoint(receiveStrike,strike,u(timing.delivery,timing.shot)));
   place(people,source.id,age<timing.outlet?mixPoint(source,sourceReceive,u(0,timing.outlet)):movingSource);
   // Release leaves the ball at deliveryFrom while the passer keeps supporting.
@@ -224,8 +223,8 @@
   const securedAt=impactAge(event);
   if(event.type!=='goal'&&age>=securedAt){
    const reset=u(securedAt,timing.hold),winnerId=blocked?blocker.id:keeper.id;
-   for(const p of opponents){if(p.pos==='GK'||p.id===winnerId)continue;const width=p.pos==='DEF'?4:2,advance=p.pos==='FW'?5:3;place(opponents,p.id,{x:p.x+(p.baseX<50?-width:width)*reset,y:p.y-direction*advance*reset});}
-   for(const p of people){if(p.pos==='GK')continue;place(people,p.id,{x:lerp(p.x,clamp(p.baseX,20,80),reset*.12),y:p.y-direction*(p.pos==='DEF'?2:5)*reset});}
+   for(const p of opponents){if(p.pos==='GK'||p.id===winnerId)continue;const style=movementStyle(p),width=(p.pos==='DEF'?4:2)*style.response,advance=(p.pos==='FW'?5:3)+style.response;place(opponents,p.id,{x:p.x+(p.baseX<50?-width:width)*reset,y:p.y-direction*advance*reset});}
+   for(const p of people){if(p.pos==='GK')continue;place(people,p.id,{x:lerp(p.x,clamp(p.baseX,20,80),reset*.12),y:p.y-direction*(p.pos==='DEF'?1.5+movementStyle(p).response:4.2+movementStyle(p).response)*reset});}
    result.transitionTeam=1-event.team;
   }
   if(age>=timing.hold){

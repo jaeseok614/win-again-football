@@ -45,6 +45,20 @@ pre-rebirth full backup and handle storage failure atomically. The current one-u
 appeal from life two onward is free; real billing is not integrated. Local JSON
 history is not payment entitlement proof. Read docs/REBIRTH_LOOP_2026-10-11.md.
 
+## Pre-match squad and movement direction (2026-10-11)
+
+The mandatory kickoff briefing shows both actual selected elevens, formation,
+calculated strength/energy and three role-based key players. Wide screens compare
+both pitches; phones switch teams without a long page. Player buttons open the
+existing own/opponent detail dialogs over the briefing. Full names and our reserves
+are available in six-player pages. Closing any report never starts the match.
+Use the current custom placements and suspension replacements, not a parallel XI.
+Our overall uses TouchlinePlan; opponent overall uses Opposition consistently.
+Keep individual movement timing keyed to identity, with near-ball support,
+far-side depth and limited centre-back drift. Avoid reintroducing the old shared
+large sine-wave displacement. Movement remains presentation-only and must preserve
+ball contact, local recovery, pause, replay and RNG/score continuity.
+
 ## Presentation and performance
 
 Consider mobile performance in every change. Hidden dashboards do no work during

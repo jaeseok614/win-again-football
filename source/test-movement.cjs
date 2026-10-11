@@ -64,7 +64,8 @@ test('passing labels never invent a goal, save or shot and visible players move 
   for(const p of value.own){if(!positions.has(p.id))positions.set(p.id,[]);positions.get(p.id).push(p);}
  }
  assert.ok(seen.has('역습 전개'));assert.ok(seen.has('수비가 공을 회수합니다'));assert.ok(carried>0);
- const mid=positions.get(match.lineup.find(id=>match.players[id].pos==='MID'));assert.ok(Math.max(...mid.map(p=>p.y))-Math.min(...mid.map(p=>p.y))>20);
+ const mid=positions.get(match.lineup.find(id=>match.players[id].pos==='MID'));// Individual checking runs replace the old whole-unit 20-point sway.
+ assert.ok(Math.max(...mid.map(p=>p.y))-Math.min(...mid.map(p=>p.y))>8);
 });
 test('continuous normal frames avoid teleports at every actual pass and cycle boundary',()=>{
  const match=active();for(let ms=Movement.passing.segment;ms<=Movement.passing.segment*24;ms+=Movement.passing.segment){

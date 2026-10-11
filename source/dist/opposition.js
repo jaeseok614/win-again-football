@@ -72,5 +72,17 @@
   const reference=S.clubReferences?.[club.id]?.reference||null,tier=S.divisionInfo(s);
   return {valid:true,setPieces:setPieceReport(m,lineup),club:{id:club.id,name:club.name,short:club.short,code:club.code,color:club.color,reference},division:{number:s.league.division,name:tier.name,rounds:S.fixturesFor(s).length},plan:p,lineup,rivalDiscipline:{applicable:isSupported(s.competition),competition:s.competition,label:competitionNames[s.competition]||'대회',rows:effect.rows,absent:lineup.filter(player=>player.replacementFor).map(player=>({name:player.replacementFor,replacement:player.name,reason:player.replacementReason}))},keyPlayer:{id:keyPlayer.id,identity:keyPlayer.identity,name:keyPlayer.name,pos:keyPlayer.pos,role:keyRoles[keyPlayer.pos],threat:keyThreat,primary:keyPlayer.primary,overall:keyPlayer.overall,speed:keyPlayer.speed},activePlayers:{ours:own.length,opponent:lineup.filter(p=>!p.dismissed).length},minute:m.minute,rank:rank?.played?rank.rank:null,points:rank?.points??null,recent,condition:{opponent:lineup[0].energy,ours:mean(own.map(p=>p.energy)),tired:own.filter(p=>p.energy<65).length},comparisons:[['attack','공격',rating.attack],['defense','수비',rating.defense],['middle','중원',rating.middle],['speed','수비 속도',rating.pace]].map(([key,label,ours])=>({key,label,opponent:rating.opponent[key],ours})),advice:m.opponent.speed<60?'상대 수비가 느립니다. 빠른 공격수와 역습을 비교해 보세요.':m.opponent.middle>m.opponent.defense?'중원 패스가 강점입니다. 압박의 체력 소모와 수비 간격을 함께 확인하세요.':'수비 조직이 강점입니다. 공격적인 운영과 빠른 전환을 비교해 보세요.'};
  }
- const api={plan,roster,profile,overall,competitionProfile,divisionFloor,seededCards,rivalTables,rivalRows,replacements,weakenedProfile,rivalEffect,setPieceReport,read};root.Opposition=api;if(typeof module!=='undefined')module.exports=api;
+ // Read the actual selected eleven (including custom positions), never a second roster.
+ function preview(s,positions=[]){
+  const d=read(s);if(!d.valid)return d;const S=root.Season,m=s.match,ownRating=p=>(root.TouchlinePlan||(typeof require==='function'?require('./touchline-plan.js'):null)).overall(p);
+  function team(club,formation,lineup,ours){
+   const counts={DEF:0,MID:0,FW:0},layout=F.formationPositions[formation];
+   const players=lineup.map(p=>{const base=p.pos==='GK'?[50,88]:layout[p.pos][counts[p.pos]++],placed=ours&&positions.find(row=>row.id===p.id),x=placed?.x??base[0],y=placed?.y??base[1];return {...p,overall:ours?ownRating(p):overall(p),x,y,position:F.assignedPosition(x,y,p.pos).code};});
+   const keys=['FW','MID','DEF'].map(pos=>players.filter(p=>p.pos===pos&&!p.dismissed).sort((a,b)=>b[keysFor(pos)]-a[keysFor(pos)]||b.overall-a.overall||a.id.localeCompare(b.id))[0]).filter(Boolean).map(p=>({identity:p.identity,name:p.name,reason:labels[p.pos]+' '+p[keysFor(p.pos)]}));
+   return {club,formation,players,keys,overall:Math.round(mean(players.map(p=>p.overall))),energy:Math.round(mean(players.map(p=>p.energy))),bench:ours?Object.values(m.players).filter(p=>!m.lineup.includes(p.id)).map(p=>({...p,overall:ownRating(p)})):[]};
+  }
+  const keysFor=pos=>keys[pos];
+  return {valid:true,teams:[team(S.club(S.own),m.formation,m.lineup.map(id=>({...m.players[id],id})),true),team(d.club,d.plan.formation,d.lineup,false)],advice:d.advice};
+ }
+ const api={preview,plan,roster,profile,overall,competitionProfile,divisionFloor,seededCards,rivalTables,rivalRows,replacements,weakenedProfile,rivalEffect,setPieceReport,read};root.Opposition=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
