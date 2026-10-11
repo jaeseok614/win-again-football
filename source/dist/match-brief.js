@@ -4,7 +4,7 @@
  // A summary must never announce a shot's result before the ball arrives.
  function visible(match,pending){
   if(!pending||!match.logs.includes(pending)||!['chance','shot','goal'].includes(pending.type)||![0,1].includes(pending.team))return match;
-  const m={...match,logs:match.logs.filter(e=>e!==pending),score:[...match.score],shots:[...match.shots],chances:[...match.chances],xg:[...match.xg]};
+  const m={...match,logs:match.logs.filter(e=>e!==pending),opponentPlans:(match.opponentPlans||[]).filter(p=>p.minute<pending.minute),score:[...match.score],shots:[...match.shots],chances:[...match.chances],xg:[...match.xg]};
   m.chances[pending.team]=Math.max(0,m.chances[pending.team]-1);
   if(pending.type!=='chance')m.shots[pending.team]=Math.max(0,m.shots[pending.team]-1);
   if(pending.type==='goal')m.score[pending.team]=Math.max(0,m.score[pending.team]-1);

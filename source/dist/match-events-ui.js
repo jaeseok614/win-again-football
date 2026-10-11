@@ -1,8 +1,8 @@
 var benchEventSelection=null,benchEventCache=null,benchEventCards=[];
 function currentBenchEvents(){
- const pending=motionEnabled()&&lastEvent?.type==='goal'&&!lastEventFast&&(movementEvent!==lastEvent||movementEventAge<Movement.impactAge(lastEvent))?lastEvent:null;
- const key=state?[state.seed,state.minute,state.phase,state.subs,state.tactic,state.score.join(':'),state.logs.length,pending?.minute??'',state.lineup.map(id=>id+':'+Math.floor(state.players[id].energy)).join(',')].join('|'):'';
- if(!benchEventCache||benchEventCache.key!==key)benchEventCache={key,cards:MatchEvents.read(state,{pendingGoal:pending})};return benchEventCache.cards;
+ const pending=pendingVisibleMatchEvent();
+ const key=state?[state.seed,state.minute,state.phase,state.subs,state.tactic,state.score.join(':'),state.logs.length,pending?state.logs.indexOf(pending):'',state.lineup.map(id=>id+':'+Math.floor(state.players[id].energy)).join(',')].join('|'):'';
+ if(!benchEventCache||benchEventCache.key!==key)benchEventCache={key,cards:MatchEvents.read(state,{pendingEvent:pending})};return benchEventCache.cards;
 }
 function renderBenchEvents(){
  if(view!=='match'||!state)return;const cards=currentBenchEvents(),button=$('match-bench-events');if(button){const active=cards.filter(c=>!['opening','watch','full'].includes(c.id)).length,talkTime=['prep','half','late'].includes(state.phase),text=talkTime?'선수 대화':active?'벤치 알림 '+active:'벤치 알림';button.dataset.matchPopup=talkTime?'talk':'bench';if(button.textContent!==text)button.textContent=text;}
