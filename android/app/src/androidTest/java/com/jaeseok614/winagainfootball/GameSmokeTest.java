@@ -119,7 +119,8 @@ public final class GameSmokeTest {
         MotionEvent down=MotionEvent.obtain(start,start,MotionEvent.ACTION_DOWN,sx,sy,0);instrumentation.sendPointerSync(down);down.recycle();
         for(int step=1;step<=10;step++){SystemClock.sleep(20);MotionEvent move=MotionEvent.obtain(start,SystemClock.uptimeMillis(),MotionEvent.ACTION_MOVE,sx+(tx-sx)*step/10,sy+(ty-sy)*step/10,0);instrumentation.sendPointerSync(move);move.recycle();}
         MotionEvent up=MotionEvent.obtain(start,SystemClock.uptimeMillis(),MotionEvent.ACTION_UP,tx,ty,0);instrumentation.sendPointerSync(up);up.recycle();
-        awaitTrue(scenario,"document.querySelector('[data-tactical-player=f1] em').textContent==='AM'&&customPositions[state.players.f1.identity][1]===34");
+        // The central midfield zone snaps away from occupied cards; free pixel y=34 is retired.
+        awaitTrue(scenario,"(()=>{const p=customPositions[state.players.f1.identity];return p&&[41,50,59].includes(p[0])&&[40,46,52].includes(p[1])&&document.querySelector('[data-tactical-player=f1] em').textContent==='CM';})()");
     }
 
     private File verificationFolder() {

@@ -1,0 +1,12 @@
+.focused-tactics .field-toolbar{display:grid!important;grid-template-columns:1fr;gap:3px;padding:0!important;margin:0!important;flex:none}
+.focused-tactics .field-toolbar>label{display:flex;align-items:center;gap:6px;font-size:12px}
+.focused-tactics .field-toolbar select{min-height:44px!important;flex:1;min-width:0}
+.focused-tactics .field-toolbar.report-page-off{display:none!important}
+.formation-actions{display:grid;grid-template-columns:1fr;gap:4px}
+.formation-actions button,.formation-actions select{font-size:12px!important;min-height:44px!important;padding:4px!important;margin:0!important}
+.formation-quick-orders{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr auto;gap:4px}
+.instruction-panel{display:grid;gap:10px}.instruction-panel h3{font-size:14px;margin:0 0 5px}.instruction-panel p{font-size:12px;line-height:1.4;margin:5px 0}
+.instruction-buttons{display:grid;grid-template-columns:1fr 1fr;gap:5px}.instruction-buttons button{min-height:44px!important;padding:6px;font-size:13px}
+.instruction-buttons [aria-pressed="true"]{border-color:#b9f069!important;background:#273d20!important;color:#e9ffc4!important;box-shadow:inset 0 0 0 1px #b9f069}
+@media(max-height:650px){.focused-tactics .field-toolbar{grid-template-columns:1fr 1fr;gap:4px}.focused-tactics .field-toolbar>label{font-size:0}.formation-actions{display:contents}.formation-actions [data-formation-reset]{font-size:10px!important;width:44px;white-space:normal}.formation-quick-orders{grid-column:1/-1}.focused-tactics .tactical-pitch{min-height:145px}}
+@media(orientation:landscape) and (max-height:500px){.focused-tactics .field-toolbar{display:flex!important;flex-direction:column;gap:4px}.focused-tactics .field-toolbar.report-page-off{display:none!important}.formation-actions{display:contents}.formation-quick-orders{grid-template-columns:1fr 1fr}.formation-actions [data-formation-reset]{grid-column:1/-1;width:100%;font-size:12px!important}.instruction-panel{grid-template-columns:1fr 1fr}.focused-tactics .tactical-pitch{min-height:115px}}
