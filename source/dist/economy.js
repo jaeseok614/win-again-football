@@ -52,7 +52,7 @@
   const score=result.home==='brynwell'?result.goals:[result.goals[1],result.goals[0]],gate=result.home==='brynwell'?europeRates.home:europeRates.away,matchBonus=result.stage<6?(score[0]>score[1]?europeRates.win:score[0]===score[1]?europeRates.draw:0):0,advanceBonus=result.stage>=6&&result.winner==='brynwell'?europeRates.bonuses[result.stage]:0,income=gate+matchBonus+advanceBonus;return {gate,matchBonus,advanceBonus,income,amount:income};
  }
  function applyEurope(s,result){
-  const U=europeModule();if(!U||s.competition!=='europe'||!s.match||s.match.phase!=='full'||s.match.minute!==90||!result)throw Error('완료한 유럽 경기의 재정만 반영할 수 있어요.');
+  const U=europeModule();if(!U||s.competition!=='europe'||!s.match||s.match.phase!=='full'||s.match.minute!==(90+(s.match.stoppage?.first||0)+(s.match.stoppage?.second||0))||!result)throw Error('완료한 유럽 경기의 재정만 반영할 수 있어요.');
   const expected=U.preview(s,s.match);if(['stage','index','home','away','week','goals','penalties','kicks','winner'].some(key=>JSON.stringify(result[key])!==JSON.stringify(expected[key])))throw Error('유럽 경기 결과와 대진이 맞지 않아요.');
   const id='europe-'+s.year+'-'+result.stage;if(s.finance.ledger.some(e=>e.id===id))throw Error('이 유럽 경기의 재정을 이미 반영했습니다.');
   const income=europeIncome(result);if(!money(s.finance.balance+income.amount))throw Error('구단 재정을 반영할 수 없어요.');

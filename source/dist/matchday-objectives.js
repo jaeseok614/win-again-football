@@ -1,6 +1,7 @@
 (function(root){
  'use strict';
  const S=root.Season||(typeof require==='function'?require('./season.js'):null);
+ const F=root.Football||(typeof require==='function'?require('./engine.js'):null);
  const own=S.own;
  function opponentForRecord(record){return S.club(record.home===own?record.away:record.home);}
  function substituteCount(record){
@@ -30,7 +31,7 @@
    const value=card.id==='substitute'?substitutions:card.id==='defend'?m.score[1]:m.score[0],target=card.id==='attack'?2:1,met=card.id==='defend'?value<=target:value>=target;
    return {...card,value,target,met:prep?null:met,status:prep?'waiting':card.id==='defend'?(met?'holding':'missed'):(met?'met':'working'),evidence:card.id==='substitute'?'실제 교체 '+value+'명':card.id==='defend'?'현재 실점 '+value+'골 · 허용 '+target+'골': '현재 득점 '+value+' / '+target+'골'};
   });
-  return {valid:true,opponent:opponent.name,competition:s.competition,minute:m.minute,prep,pending,cards,met:prep?0:cards.filter(c=>c.met).length,confirmed:false};
+  return {valid:true,opponent:opponent.name,competition:s.competition,minute:m.minute,clockLabel:F?.clockLabel(m)||String(m.minute),prep,pending,cards,met:prep?0:cards.filter(c=>c.met).length,confirmed:false};
  }
  function read(s){
   const fixture=S.fixtureFor(s),opponent=fixture?S.club(fixture.home===own?fixture.away:fixture.home):null;

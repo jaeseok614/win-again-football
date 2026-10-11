@@ -57,7 +57,7 @@
  }
  function afterLeagueRound(s){
   if(!s.staff)return null;const now=clock(s);
-  if(s.competition!=='league'||s.match?.phase!=='full'||s.match.minute!==90||!Number.isInteger(s.round)||s.round<1||s.round>roundCount(s)||s.staff.lastPayroll!==now-1||!s.finance.ledger.some(e=>e.id==='match-'+s.year+'-'+s.round))throw Error('완료한 리그 경기의 코치 주급만 반영할 수 있어요.');
+  if(s.competition!=='league'||s.match?.phase!=='full'||s.match.minute!==F.clockLimits(s.match).full||!Number.isInteger(s.round)||s.round<1||s.round>roundCount(s)||s.staff.lastPayroll!==now-1||!s.finance.ledger.some(e=>e.id==='match-'+s.year+'-'+s.round))throw Error('완료한 리그 경기의 코치 주급만 반영할 수 있어요.');
   const contracts=roles.map(role=>s.staff.contracts[role]).filter(c=>c&&c.started<now&&c.expires>=now).map(c=>({role:c.role,candidate:c.candidate,wage:person(s,c.candidate).wage})),amount=-contracts.reduce((sum,c)=>sum+c.wage,0),id='staff-wages-'+s.year+'-'+s.round;
   if(s.finance.ledger.some(e=>e.id===id)||!money(s.finance.balance+amount))throw Error('코치 주급을 이미 반영했거나 재정을 확인할 수 없어요.');
   const entry=contracts.length?{id,type:'staff-wages',year:s.year,round:s.round,contracts,amount}:null;

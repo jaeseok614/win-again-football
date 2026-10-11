@@ -11,7 +11,7 @@
   const windows=Array.from({length:6},(_,index)=>({from:index*15,to:(index+1)*15,own:0,opponent:0}));
   const weight={chance:1,shot:2,goal:4};
   for(const event of m.logs){
-   if(!Number.isInteger(event.minute)||event.minute<1||event.minute>90||!Object.hasOwn(weight,event.type)||![0,1].includes(event.team))continue;
+   if(!Number.isInteger(event.minute)||event.minute<1||event.minute>F.clockLimits(m).full||!Object.hasOwn(weight,event.type)||![0,1].includes(event.team))continue;
    windows[Math.min(5,Math.floor((event.minute-1)/15))][event.team===0?'own':'opponent']+=weight[event.type];
   }
   const active=Math.min(5,Math.floor(Math.max(0,m.minute-1)/15)),recent=windows[active],difference=recent.own-recent.opponent;
@@ -39,7 +39,7 @@
  function read(season,selectedId=null){
   const m=season?.match;
   if(!m)return {valid:false,reason:'진행할 경기가 없습니다.'};
-  if(!phases.includes(m.phase)||!Number.isInteger(m.minute)||m.minute<0||m.minute>90||!Array.isArray(m.lineup)||!m.lineup.length||!m.players||m.lineup.some(id=>!m.players[id])||!Array.isArray(m.out)||!Array.isArray(m.logs)||!tacticLabels[m.tactic]||!['chances','shots'].every(key=>Array.isArray(m[key])&&m[key].length===2&&m[key].every(value=>Number.isInteger(value)&&value>=0))){
+  if(!phases.includes(m.phase)||!Number.isInteger(m.minute)||m.minute<0||m.minute>F.clockLimits(m).full||!Array.isArray(m.lineup)||!m.lineup.length||!m.players||m.lineup.some(id=>!m.players[id])||!Array.isArray(m.out)||!Array.isArray(m.logs)||!tacticLabels[m.tactic]||!['chances','shots'].every(key=>Array.isArray(m[key])&&m[key].length===2&&m[key].every(value=>Number.isInteger(value)&&value>=0))){
    return {valid:false,reason:'경기 상태를 확인할 수 없습니다.'};
   }
   const running=F.running(m),rules=F.substitutionRules(m),liveMode=m.phase==='prep'?'prep':m.phase==='full'?'full':running?(m.paused?'paused':'live'):'break';
@@ -47,14 +47,14 @@
   const active=typeof Discipline!=='undefined'?Discipline.active(m):m.lineup,lineup=active.map(id=>m.players[id]);
   const selected=m.phase!=='full'&&typeof selectedId==='string'&&active.includes(selectedId)?m.players[selectedId]:null;
   const candidates=selected?Object.values(m.players).filter(p=>p.pos===selected.pos&&!m.lineup.includes(p.id)&&!m.out.includes(p.id)&&F.isAvailable(p)).map(person):[];
-  const allowed=m.phase==='prep'||['half','late'].includes(m.phase)||running&&m.minute>0&&m.minute<90;
+  const allowed=m.phase==='prep'||['half','late'].includes(m.phase)||running&&m.minute>0&&m.minute<F.clockLimits(m).full;
   const opensWindow=rules.windowLimit!==null&&m.phase!=='prep'&&m.phase!=='half'&&!m.decisions.some(d=>d.type==='sub'&&d.minute===m.minute);
   const canSubstitute=allowed&&(m.phase==='prep'||m.subs<rules.limit&&(!opensWindow||rules.windows<rules.windowLimit));
   let suggestion=null,options=[];
   if(m.phase!=='prep'&&m.phase!=='full'&&canSubstitute){
    // This is a display-only shortlist. It reads the live squad and never calls the
    // match engine, so the manager still explicitly chooses and confirms a change.
-   options=lineup.filter(p=>p.energy<70).map(out=>{const incoming=Object.values(m.players).filter(p=>p.pos===out.pos&&!m.lineup.includes(p.id)&&!m.out.includes(p.id)&&F.isAvailable(p)).sort((a,b)=>b.energy-a.energy||b[primaryKeys[b.pos]]-a[primaryKeys[a.pos]]||b.speed-a.speed||a.id.localeCompare(b.id,'en'))[0];if(!incoming)return null;const energyGain=Math.round(incoming.energy-out.energy),primaryDelta=incoming[primaryKeys[incoming.pos]]-out[primaryKeys[out.pos]],speedDelta=incoming.speed-out.speed;if(energyGain<=0)return null;const urgency=out.energy<40?'긴급':out.energy<55?'주의':'관리';const minutes=Math.max(0,90-m.minute);const score=energyGain*1.2+Math.max(0,primaryDelta)*.55+Math.max(0,speedDelta)*.2+(out.energy<40?18:out.energy<55?7:0);const reason=out.name+' 체력 '+Math.round(out.energy)+' → '+incoming.name+' 투입 시 +'+energyGain+' · 남은 '+minutes+'분';return {out:person(out),incoming:person(incoming),energyGain,primaryDelta,speedDelta,urgency,minutes,score,reason};}).filter(Boolean).sort((a,b)=>b.score-a.score||b.energyGain-a.energyGain||b.primaryDelta-a.primaryDelta||a.out.id.localeCompare(b.out.id,'en')).slice(0,3);
+   options=lineup.filter(p=>p.energy<70).map(out=>{const incoming=Object.values(m.players).filter(p=>p.pos===out.pos&&!m.lineup.includes(p.id)&&!m.out.includes(p.id)&&F.isAvailable(p)).sort((a,b)=>b.energy-a.energy||b[primaryKeys[b.pos]]-a[primaryKeys[a.pos]]||b.speed-a.speed||a.id.localeCompare(b.id,'en'))[0];if(!incoming)return null;const energyGain=Math.round(incoming.energy-out.energy),primaryDelta=incoming[primaryKeys[incoming.pos]]-out[primaryKeys[out.pos]],speedDelta=incoming.speed-out.speed;if(energyGain<=0)return null;const urgency=out.energy<40?'긴급':out.energy<55?'주의':'관리';const minutes=Math.max(0,F.clockLimits(m).full-m.minute);const score=energyGain*1.2+Math.max(0,primaryDelta)*.55+Math.max(0,speedDelta)*.2+(out.energy<40?18:out.energy<55?7:0);const reason=out.name+' 체력 '+Math.round(out.energy)+' → '+incoming.name+' 투입 시 +'+energyGain+' · 남은 '+minutes+'분';return {out:person(out),incoming:person(incoming),energyGain,primaryDelta,speedDelta,urgency,minutes,score,reason};}).filter(Boolean).sort((a,b)=>b.score-a.score||b.energyGain-a.energyGain||b.primaryDelta-a.primaryDelta||a.out.id.localeCompare(b.out.id,'en')).slice(0,3);
    const best=options[0];if(best)suggestion=best;
   }
   const averageEnergy=lineup.reduce((sum,p)=>sum+p.energy,0)/lineup.length,tiredCount=lineup.filter(p=>p.energy<50).length,flow=momentum(m);

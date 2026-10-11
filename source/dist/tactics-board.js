@@ -6,10 +6,10 @@
  const invalid=reason=>({valid:false,reason,fingerprint:null});
  function read(s,{coachPause65=true}={}){
   const m=s?.match;if(!m)return invalid('현재 준비할 경기가 없습니다.');
-  const active=runningWindows[m.phase],window=active||windows[m.phase];if(!window)return invalid('작전판은 경기 전이나 경기를 잠시 멈춘 뒤 확인할 수 있어요.');
+  const limits=F.clockLimits(m),phases={prep:[0,limits.half],half:[limits.half,limits.late],late:[limits.late,limits.full],first:[0,limits.half],second:[limits.half,limits.late],third:[limits.late,limits.full]},active=runningWindows[m.phase]?phases[m.phase]:null,window=active||phases[m.phase];if(!window)return invalid('작전판은 경기 전이나 경기를 잠시 멈춘 뒤 확인할 수 있어요.');
   if(active&&m.paused!==true)return invalid('전술 보드를 보려면 경기를 잠시 멈추세요.');
   if(!Number.isInteger(m.minute)||(active?(m.minute<window[0]||m.minute>=window[1]):m.minute!==window[0]))return invalid('현재 경기 시간과 작전 시간이 맞지 않습니다.');
-  const forecastEnd=['half','second'].includes(m.phase)&&coachPause65===false?90:window[1];
+  const forecastEnd=['half','second'].includes(m.phase)&&coachPause65===false?limits.full:window[1];
   try{
    if(!F.formations[m.formation]||!Array.isArray(m.lineup)||m.lineup.length!==11||new Set(m.lineup).size!==11||m.lineup.some(id=>!m.players[id]||!F.isAvailable(m.players[id])||s.squad[id]?.identity!==m.players[id].identity||!Number.isFinite(m.players[id].energy)||m.players[id].energy<0||m.players[id].energy>100))return invalid('출전 가능한 현재 선수 11명으로 선발을 구성하세요.');
    if(new Set(m.lineup.map(id=>m.players[id].identity)).size!==11)return invalid('서로 다른 현재 선수 11명으로 선발을 구성하세요.');

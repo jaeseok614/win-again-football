@@ -4,7 +4,7 @@
  const blank=()=>({chances:0,blocked:0,shots:0,goals:0});
  function routeFor(event){if(event.setPiece)return Object.hasOwn(routes,event.setPiece)&&['corner','freeKick'].includes(event.setPiece)?event.setPiece:null;return Object.hasOwn(routes,event.action)&&!['corner','freeKick'].includes(event.action)?event.action:null;}
  function read(match,{pendingEvent=null}={}){
-  if(!match||!Array.isArray(match.logs)||!Number.isInteger(match.minute)||match.minute<0||match.minute>90)return {valid:false};
+  if(!match||!Array.isArray(match.logs)||!Number.isInteger(match.minute)||match.minute<0||match.minute>103)return {valid:false};
   const origin=Math.max(0,match.statisticsOriginMinute||0),pending=match.logs.includes(pendingEvent)&&['goal','shot','chance'].includes(pendingEvent?.type)&&[0,1].includes(pendingEvent.team)?pendingEvent:null;
   const rows=Object.entries(routes).map(([id,label])=>({id,label,teams:[blank(),blank()]})),byId=new Map(rows.map(r=>[r.id,r])),totals=[blank(),blank()],unclassified=[0,0],wide=[{left:0,right:0},{left:0,right:0}];
   for(const event of match.logs){

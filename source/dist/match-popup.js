@@ -21,7 +21,7 @@ function renderMatchPopup(){
  // The pitch always stays visible behind a dialog. Hidden popup sections stay cheap.
  $('matchday-live').hidden=false;
  $('match-popup-title').textContent=matchPopupActive==='roster'&&state.phase==='prep'?'선발 · 후보':matchPopupNames[matchPopupActive]||'경기 메뉴';
- $('match-popup-status').textContent=state.minute+'′ · '+(F.running(state)?'경기 일시 정지 · 닫은 뒤 직접 이어가세요.':{prep:'킥오프 전',half:'하프타임',late:'작전 시간',full:'경기 종료'}[state.phase]||'');
+ $('match-popup-status').textContent=F.clockLabel(state)+'′ · '+(F.running(state)?'경기 일시 정지 · 닫은 뒤 직접 이어가세요.':{prep:'킥오프 전',half:'하프타임',late:'작전 시간',full:'경기 종료'}[state.phase]||'');
  for(const [kind] of Object.entries(matchPopupNames)){
   const section=$('match-popup-'+kind);section.hidden=matchPopupActive!==kind;
   const button=dialog.querySelector('[data-match-popup="'+kind+'"]');button?.setAttribute('aria-pressed',String(matchPopupActive===kind));

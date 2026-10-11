@@ -22,7 +22,7 @@
   if(dismissed.length)add('red','퇴장 뒤 간격 점검','현재 필드에 '+rows.length+'명입니다. 비어 있는 배치와 수비 간격을 확인하세요.','tactics');
   if(tired.length)add('fatigue','체력과 교체 여유',tired[0].name+' 체력 '+Math.round(tired[0].energy)+' · '+(remainingSubs?'남은 교체 '+remainingSubs+'회'+(substitution.windowLimit===null?'':' · 기회 '+Math.max(0,substitution.windowLimit-substitution.windows)+'회')+'. 후보의 포지션과 컨디션을 비교하세요.':'교체 가능 인원을 모두 사용했습니다. 전술의 추가 체력 소모를 비교하세요.'),remainingSubs?'roster':'analysis');
   if(m.minute&&recent.shots[1]>recent.shots[0])add('pressure','최근 상대 슈팅이 더 많습니다',from+'–'+m.minute+'분 슈팅 '+recent.shots[0]+':'+recent.shots[1]+'. 이 기록과 현재 체력을 함께 보고 지시를 비교하세요.','analysis');
-  if(m.minute>=65&&m.score[0]<m.score[1])add('chase','남은 시간과 만회 준비','현재 '+m.score.join(':')+' · '+(90-m.minute)+'분 남았습니다. 압박의 체력 소모와 공격 지표를 먼저 비교하세요.','analysis');
+  if(m.minute>=65&&m.score[0]<m.score[1])add('chase','남은 시간과 만회 준비','현재 '+m.score.join(':')+' · '+(F.clockLimits(m).full-m.minute)+'분 남았습니다. 압박의 체력 소모와 공격 지표를 먼저 비교하세요.','analysis');
   if(shape.isolated.length)add('space','가까운 지원 위치가 없습니다',shape.isolated.map(p=>p.name).join(', ')+' 주변 '+radius+' 좌표 단위 안에 필드 동료가 없습니다. 배치판에서 거리를 점검하세요.','tactics');
   if(crowded.length)add('crowded','선수 배치가 겹칩니다',crowded[0].first+' / '+crowded[0].second+'의 간격이 8 좌표 단위 미만입니다. 의도한 배치인지 확인하세요.','tactics');
   const promise=Number.isInteger(s.year)&&s.squad&&Array.isArray(s.results)&&Array.isArray(s.history)?Story?.read(s).promises.find(p=>p.current&&p.status==='active'):null;if(promise)add('promise','출전 약속 확인',promise.name+' · 다음 리그 '+promise.remainingGames+'경기에서 '+promise.remainingMinutes+'분 필요. 현재 진행 중인 미확정 경기는 아직 집계하지 않습니다.','roster');

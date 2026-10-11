@@ -51,11 +51,11 @@
   }
   const identities=new Set(Object.values(s.squad).map(p=>p.identity));for(const e of entries)if(e.type==='transfer'){identities.add(e.incoming);identities.add(e.outgoing);}
   const baselineIds=Object.keys(c.baselines),minuteIds=Object.keys(c.minutes);if(baselineIds.length!==identities.size||minuteIds.length!==identities.size||baselineIds.some(id=>!identities.has(id))||minuteIds.some(id=>!identities.has(id)))fail();
-  const completed=matchesThrough(s,s.round);let minutes=0;for(const identity of identities){const profile=F.identityProfile(identity),base=c.baselines[identity],played=c.minutes[identity];if(!profile||profile.identity!==identity||!positions.includes(profile.pos)||!Number.isInteger(base)||base<0||base>99||!Number.isInteger(played)||played<0||played>completed*90)fail();minutes+=played;}
+  const completed=matchesThrough(s,s.round);let minutes=0;for(const identity of identities){const profile=F.identityProfile(identity),base=c.baselines[identity],played=c.minutes[identity];if(!profile||profile.identity!==identity||!positions.includes(profile.pos)||!Number.isInteger(base)||base<0||base>99||!Number.isInteger(played)||played<0||played>completed*103)fail();minutes+=played;}
   const receiptIds=new Set(entries.filter(e=>['match','cup','europe'].includes(e.type)).map(e=>e.id));
   const tracked=(s.statistics?.records||[]).filter(r=>receiptIds.has(r.id));
-  const lost=tracked.reduce((sum,r)=>sum+(r.cards||[]).filter(e=>e.team===0&&e.card==='red').reduce((n,e)=>n+90-e.minute,0),0);
-  if(minutes!==completed*990-lost)fail();
+  const lost=tracked.reduce((sum,r)=>sum+(r.cards||[]).filter(e=>e.team===0&&e.card==='red').reduce((n,e)=>n+F.clockLimits(r).full-e.minute,0),0);
+  if(minutes!==completed*990+tracked.reduce((n,r)=>n+(F.clockLimits(r).full-90)*11,0)-lost)fail();
   // When every career match is tracked, check each identity, including sold players.
   if(tracked.length===completed)for(const identity of identities){const actual=tracked.reduce((n,r)=>n+r.players.filter(p=>p.identity===identity).reduce((v,p)=>v+p.minutes,0),0);if(c.minutes[identity]!==actual)fail();}
   const current=progress(s);if(Object.keys(c.missions).length!==3||boards.length!==Object.values(c.missions).filter(r=>r!==null).length)fail();
@@ -63,9 +63,9 @@
    const earned=c.missions[task],entry=boards.find(e=>e.id==='board-'+s.year+'-'+task);
    const coached=task==='growth'?coachedWeeks(s,earned===null?s.round+1:earned):new Set(),lastWeek=clock(s,s.year,earned===null?s.round:earned-1),bonus=coached.has(lastWeek)?1:0;
    if(earned===null){if(entry||current[task]>=rule.threshold&&(task!=='growth'||s.competition!=='league'||!s.match||s.trained!=='technique'||current.growth>rule.threshold+1+bonus))fail();continue;}
-   if(!Number.isInteger(earned)||earned<c.originRound||earned===c.originRound&&nonLeagueMatchesThrough(s,earned)===0||earned>s.round||!entry||entry.task!==task||entry.round!==earned||entry.amount!==rule.amount||!Number.isInteger(entry.progress)||entry.progress<rule.threshold||entry.progress>=rule.threshold+rule.increment+bonus||entry.progress>current[task])fail();
+   if(!Number.isInteger(earned)||earned<c.originRound||earned===c.originRound&&nonLeagueMatchesThrough(s,earned)===0||earned>s.round||!entry||entry.task!==task||entry.round!==earned||entry.amount!==rule.amount||!Number.isInteger(entry.progress)||entry.progress<rule.threshold||entry.progress>=rule.threshold+rule.increment+(task==='youth'?13:0)+bonus||entry.progress>current[task])fail();
    if(task==='wins'&&(entry.progress!==winsThrough(s,earned)||winsThrough(s,earned-1)>=rule.threshold))fail();
-   if(task==='growth'&&entry.progress>(earned-c.originRound)*3+coached.size+nonLeagueMatchesThrough(s,earned)||task==='youth'&&entry.progress>matchesThrough(s,earned)*90)fail();
+   if(task==='growth'&&entry.progress>(earned-c.originRound)*3+coached.size+nonLeagueMatchesThrough(s,earned)||task==='youth'&&entry.progress>matchesThrough(s,earned)*103)fail();
   }
   return s;
  }

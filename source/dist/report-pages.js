@@ -1,5 +1,5 @@
 // Presentation-only pages: move original controls without changing campaign data.
-const reportPagesState={player:'기본 능력',opponent:'능력 비교',tactics:'배치',analysis:'전개 보기'};
+const reportPagesState={player:'전체 능력',opponent:'능력 비교',tactics:'배치',analysis:'전개 보기'};
 function reportDeck(host,entries,key,before){
  const control=document.createElement('select');control.className='report-page-select';control.setAttribute('aria-label','보고서 항목 선택');
  const body=document.createElement('div');body.className='report-page-body';
@@ -11,10 +11,9 @@ function reportDeck(host,entries,key,before){
 function playerReportPages(){
  const host=$('player-detail-dialog').querySelector('.player-detail-content');if(!host)return;
  host.classList.add('report-screen');const q=s=>host.querySelector(s),all=s=>[...host.querySelectorAll(s)],entries=[];
- entries.push(['기본 능력',[q('.detail-skills'),q('.detail-condition')]],['선수 소개',[q('.detail-intro'),q('.detail-quote'),q('.detail-summary')]],['주발 · 컨디션',[q('.player-traits-top')]]);
+ entries.push(['전체 능력',[q('.detail-condition'),q('.detail-skills'),q('.scouting-role-selector'),q('.scouting-role-note'),...all('.fm-attribute-groups>section').map(group=>{group.classList.add('report-attributes');return group;})]],['선수 소개',[q('.detail-intro'),q('.detail-quote'),q('.detail-summary')]],['주발 · 컨디션',[q('.player-traits-top')]]);
  for(const group of all('.player-position-groups>div'))entries.push(['포지션 · '+group.querySelector('h4').textContent,[group]]);
- for(const group of all('.fm-attribute-groups>section')){const title=group.querySelector('h4').textContent,rows=[...group.querySelectorAll(':scope>div')];for(let i=0;i<rows.length;i+=6){const part=document.createElement('section');part.className='report-attributes';const heading=document.createElement('h3');heading.textContent=title+' · 1–20'+(rows.length>6?' · '+(i/6+1)+'/2':'');part.append(heading,...rows.slice(i,i+6));entries.push([title+(rows.length>6?' '+(i/6+1):''),[part]]);}}
- entries.push(['플레이 유형',[q('.scouting-profile>header'),q('.scouting-radar')]],['역할 평가',[q('.scouting-role-selector'),q('.scouting-role-note'),q('.scouting-use')]],['시즌 기록',[q('.detail-records')]],['성장 · 훈련',[q('.detail-growth')]],['평가 기준',[q('.scouting-disclosure'),q('.fm-attributes>p:last-child'),q('.player-traits-report>p')]]);
+ entries.push(['플레이 유형',[q('.scouting-profile>header'),q('.scouting-radar')]],['역할 평가',[q('.scouting-use')]],['시즌 기록',[q('.detail-records')]],['성장 · 훈련',[q('.detail-growth')]],['평가 기준',[q('.scouting-disclosure'),q('.fm-attributes>p:last-child'),q('.player-traits-report>p')]]);
  const basis=entries.find(e=>e[0]==='평가 기준');basis[1].push(q('.detail-skills>p'),q('.detail-records>p'));
  const nav=q('.detail-navigation');reportDeck(host,entries,'player',nav);
  for(const node of all(':scope>.scouting-profile,:scope>.player-traits-report,:scope>.fm-attributes,:scope>.detail-columns'))node.remove();

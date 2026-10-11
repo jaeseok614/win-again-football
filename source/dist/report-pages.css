@@ -53,3 +53,10 @@
  #match-popup.focused-tactics .tactical-pitch button b,#match-popup.focused-tactics .tactical-pitch button>.tactical-short-name{background:#192e3b;border-radius:3px;width:100%;margin:0}
  #match-popup.focused-tactics .tactical-pitch button[aria-pressed=true]{border-color:#d4f577}
 }
+
+/* Full attributes may scroll, while identity, close and navigation stay fixed. */
+#player-detail-dialog .report-page[aria-label="전체 능력"]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}#player-detail-dialog .report-page[aria-label="전체 능력"]>[class*="condition"],#player-detail-dialog .report-page[aria-label="전체 능력"]>.scouting-role-selector,#player-detail-dialog .report-page[aria-label="전체 능력"]>.scouting-role-note{grid-column:1/-1}.report-attributes{min-width:0}.report-attributes>div{gap:8px}.report-attributes h4{margin-top:10px}@media(max-width:400px){#player-detail-dialog .report-page[aria-label="전체 능력"]{grid-template-columns:1fr 1fr;gap:8px}.report-attributes>div{padding:6px 2px;font-size:12px}}
+
+.tactical-zones{position:absolute;inset:0 0 20%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:33fr 27fr 20fr;pointer-events:none}.tactical-zones>span{border:1px dashed #cde9b94a;text-align:left;padding:3px;font-size:10px;color:#c5dfc7aa;background:#102e2114}.tactical-zones>span.active{background:#c8f36e33;color:white;border:2px solid #c8f36e}.tactical-keeper-zone{position:absolute;left:0;right:0;bottom:0;height:20%;border-top:2px solid #e1be6955;text-align:left;padding:4px;font-size:9px;color:#e1be69aa;pointer-events:none}.tactical-pitch>button{z-index:2}.tactical-pitch .support-map{z-index:1}.tactical-direction{display:none!important}
+
+#player-detail-dialog .report-page[aria-label="전체 능력"]>.detail-skills{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px}.report-page[aria-label="전체 능력"] .detail-skills h3{grid-column:1/-1;font-size:13px;margin:0}.report-page[aria-label="전체 능력"] .detail-skills .detail-stat{margin:0;padding:4px 0}.report-page[aria-label="전체 능력"] .scouting-role-selector:before{content:"세부 능력 1–20 · 코치 평가";display:block;margin-bottom:6px;color:#b4c5d1;font-size:12px}

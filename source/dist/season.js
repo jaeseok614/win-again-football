@@ -172,7 +172,7 @@
  function participation(s,m,recovery){const changes=[];for(const p of Object.values(s.squad)){const played=m.players[p.id];p.energy=clamp(played.energy+recovery,0,100);const beforeXp=Math.floor(p.xp/270);p.xp+=played.minutes;const growth=Math.floor(p.xp/270)-beforeXp,key=primaryKey(p),before=p[key];p[key]=clamp(p[key]+growth,0,p.potential);const gained=p[key]-before;if(gained)changes.push({id:p.id,identity:p.identity,name:p.name,key,gained});}s.plan={...s.plan,formation:m.formation,tactic:m.tactic,lineup:[...m.lineup]};return changes;}
  function orient(result,key){return result.home===own?copy(result[key]):[copy(result[key][1]),copy(result[key][0])];}
  function settle(s){
-  if(!s.match||s.match.phase!=='full'||s.match.minute!==90||s.results.length!==s.round*gamesPerRound(s)||!['league','cup','europe'].includes(s.competition)||s.competition==='league'&&s.round>=roundCount(s))throw Error('현재 경기를 끝낸 뒤 결과를 확정하세요.');
+  if(!s.match||s.match.phase!=='full'||s.match.minute!==F.clockLimits(s.match).full||s.results.length!==s.round*gamesPerRound(s)||!['league','cup','europe'].includes(s.competition)||s.competition==='league'&&s.round>=roundCount(s))throw Error('현재 경기를 끝낸 뒤 결과를 확정하세요.');
   const next=copy(s),m=next.match,f=fixtureFor(next);
   if(next.competition==='cup'||next.competition==='europe'){
    const competition=next.competition,tournament=competition==='cup'?P:U,result=tournament.preview(next,m),cashflow=competition==='cup'?E.applyCup(next,result):E.applyEurope(next,result),changes=participation(next,m,20);tournament.settle(next,m);ST.afterMatch(next,m,{competition,round:next.round,stage:result.stage});C.advance(next,m,{cup:true});H.afterMatch(next,m);const rank=standings(next).find(c=>c.id===own);

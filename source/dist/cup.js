@@ -1,5 +1,6 @@
 (function(root){
  'use strict';
+ const F=root.Football||(typeof require==='function'?require('./engine.js'):null);
  const own='brynwell',clubIds=['brynwell','aldermere','norhaven','bellwick','redmere','montevaro','selcanto','falkenruh'],stageNames=['8강','준결승','결승'],gates=[4,8,12];
  const profiles={brynwell:[70,70],aldermere:[78,84],norhaven:[84,78],bellwick:[75,68],redmere:[79,74],montevaro:[87,81],selcanto:[77,70],falkenruh:[79,75]},copy=x=>JSON.parse(JSON.stringify(x));
  const step=n=>(Math.imul(n,1664525)+1013904223)>>>0;
@@ -16,7 +17,7 @@
  function shootout(seed,rng){let random=(seed^rng^2654435769)>>>0,score=[0,0],kicks=[[],[]];for(let round=0;round<20;round++){for(let team=0;team<2;team++){random=step(random);let goal=random/4294967296<.75;if(round===19)goal=team===0;kicks[team].push(goal);score[team]+=Number(goal);}if(round>=4&&score[0]!==score[1])return {penalties:score,kicks};}throw Error('승부차기를 결정할 수 없어요.');}
  function resultFor(s,f,goals){const seed=seedFor(s,f),penalty=goals[0]===goals[1]?shootout(seed,fullRng(seed)):{penalties:null,kicks:[[],[]]},score=penalty.penalties||goals;return {...f,goals:[...goals],...penalty,winner:score[0]>score[1]?f.home:f.away,week:gateFor(s,f.stage)};}
  function aiResult(s,f){let rng=seedFor(s,f),goals=[0,0];const attributes=id=>{const c=root.Season?.club(id);return c?[c.attack,c.defense]:profiles[id];},a=attributes(f.home),b=attributes(f.away);for(let minute=0;minute<90;minute++){rng=step(rng);if(rng/4294967296<(1.35+(a[0]-b[1])*.028)/90)goals[0]++;rng=step(rng);if(rng/4294967296<(1.22+(b[0]-a[1])*.028)/90)goals[1]++;}return resultFor(s,f,goals);}
- function preview(s,match){const f=fixtureFor(s);if(!f||!match||match.phase!=='full'||match.minute!==90||match.seed!==seedFor(s,f)||match.rng!==fullRng(match.seed)||!Array.isArray(match.score)||match.score.length!==2||match.score.some(g=>!Number.isInteger(g)||g<0||g>90))throw Error('현재 컵 경기를 끝낸 뒤 결과를 확인하세요.');const goals=f.home===own?match.score:[match.score[1],match.score[0]];return resultFor(s,f,goals);}
+ function preview(s,match){const f=fixtureFor(s);if(!f||!match||match.phase!=='full'||match.minute!==F.clockLimits(match).full||match.seed!==seedFor(s,f)||match.rng!==rngFor(s,f,match.minute)||!Array.isArray(match.score)||match.score.length!==2||match.score.some(g=>!Number.isInteger(g)||g<0||g>90))throw Error('현재 컵 경기를 끝낸 뒤 결과를 확인하세요.');const goals=f.home===own?match.score:[match.score[1],match.score[0]];return resultFor(s,f,goals);}
  function completeStage(s,results){s.cup.results.push(...results);s.cup.stage++;if(s.cup.stage===3)s.cup.champion=results[0].winner;return s;}
  function settle(s,match){const result=preview(s,match),results=fixturesFor(s).map(f=>f.index===result.index?result:aiResult(s,f));return completeStage(s,results);}
  function advanceAI(s){if(!due(s)||fixtureFor(s))throw Error('감독의 컵 경기를 먼저 진행하세요.');const results=fixturesFor(s).map(f=>aiResult(s,f));return completeStage(s,results);}

@@ -20,7 +20,7 @@
  }
  function riskFor(m,p){
   if(!p||!Number.isFinite(p.minutes)||p.minutes<30||!Number.isFinite(p.energy))return 0;
-  const pressMinutes=(Array.isArray(m?.segments)?m.segments:[]).filter(segment=>segment.tactic==='press'&&segment.lineup?.includes(p.id)).reduce((sum,segment)=>sum+Math.max(0,Math.min(segment.end??m.minute,m.discipline?.events.find(e=>e.team===0&&e.id===p.id&&e.card==='red')?.minute??90)-segment.start),0);
+  const pressMinutes=(Array.isArray(m?.segments)?m.segments:[]).filter(segment=>segment.tactic==='press'&&segment.lineup?.includes(p.id)).reduce((sum,segment)=>sum+Math.max(0,Math.min(segment.end??m.minute,m.discipline?.events.find(e=>e.team===0&&e.id===p.id&&e.card==='red')?.minute??m.minute)-segment.start),0);
   return Math.min(.20,Math.max(0,(.01+Math.max(0,60-p.energy)*.0025+pressMinutes/90*.02)*(p.minutes/90)));
  }
  function randomFor(s,m,identity,game,salt){
@@ -28,7 +28,7 @@
   hash^=hash>>>16;hash=Math.imul(hash,0x85ebca6b)>>>0;hash^=hash>>>13;hash=Math.imul(hash,0xc2b2ae35)>>>0;hash^=hash>>>16;return (hash>>>0)/4294967296;
  }
  function afterMatch(s,m){
-  const h=s.health,game=h?.playedGames+1;if(!h||h.year!==s.year||!Number.isInteger(h.playedGames)||!m||m.phase!=='full'||m.minute!==90||completed(s)!==game||!['league','cup','europe'].includes(s.competition))throw Error('완료한 경기의 건강 기록만 반영할 수 있어요.');
+  const h=s.health,game=h?.playedGames+1;if(!h||h.year!==s.year||!Number.isInteger(h.playedGames)||!m||m.phase!=='full'||m.minute!==F.clockLimits(m).full||completed(s)!==game||!['league','cup','europe'].includes(s.competition))throw Error('완료한 경기의 건강 기록만 반영할 수 있어요.');
   for(const p of Object.values(s.squad)){const played=m.players?.[p.id];if(!played||played.identity!==p.identity||p.injury&&played.minutes>0)throw Error('출전 선수의 건강 기록을 확인할 수 없어요.');}
   const recovered=[];
   for(const p of Object.values(s.squad))if(p.injury){p.injury.remaining--;if(p.injury.remaining===0){p.injury=null;recovered.push(canonical(p.id,p.identity));}}

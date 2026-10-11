@@ -59,7 +59,12 @@
    const cycleTime=routeTime%cycleMs,cycle=cycleTime/cycleMs,stage=Math.floor(cycleTime/passing.segment),segmentLocal=(cycleTime%passing.segment)/passing.segment,attack=Math.sin(cycle*Math.PI*2),press=match.tactic==='press'?5:match.tactic==='counter'?-3:match.tactic==='lowBlock'?-7:0,width=match.tactic==='press'?1.13:match.tactic==='lowBlock'?.78:1,side=Math.floor(routeTime/cycleMs)%2===0?'left':'right';
    // Select routes from the stable formation/custom placement, before display
    // swaying. A winger/fullback can be wider than a central midfielder.
-   const routeIds=[...buildRoute(own,side).slice(0,4),...buildRoute(opponent,side).slice(0,4)].map(p=>p.id);
+   const ownRoute=buildRoute(own,side).slice(0,4),oppRoute=buildRoute(opponent,side).slice(0,4);
+   // The receiver of a turnover is the defender in this lane, not a fixed CB.
+   const nearest=(team,carrier)=>team.filter(p=>p.pos!=='GK').sort((a,b)=>Math.hypot(a.x-carrier.x,a.y-carrier.y)-Math.hypot(b.x-carrier.x,b.y-carrier.y)||a.id.localeCompare(b.id))[0];
+   oppRoute[0]=nearest(opponent,ownRoute[3]);ownRoute[0]=nearest(own,buildRoute(opponent,side==='left'?'right':'left')[3]);
+   const nextRecoveryId=nearest(own,oppRoute[3]).id;
+   const routeIds=[...ownRoute,...oppRoute].map(p=>p.id);
    for(let i=0;i<own.length;i++){
     const p=own[i],amplitude={GK:1.5,DEF:7,MID:12,FW:8}[p.pos]||8,side=p.pos==='GK'?2:5;
     p.x=clamp(50+(p.x-50)*width+Math.sin(time/1900+i*.8)*side+attack*(p.x<50?2:-2),10,90);
@@ -82,7 +87,7 @@
      if(sum)p.x=clamp(lerp(p.x,lane/sum,pressure*.18),10,90);
     }
    }
-   const route=routeIds.map(id=>[...own,...opponent].find(p=>p.id===id)||role(own,'MID')),from=route[stage],to=route[(stage+1)%route.length],pass=clamp((segmentLocal-passing.release)/(passing.arrival-passing.release),0,1);
+   const route=routeIds.map(id=>[...own,...opponent].find(p=>p.id===id)||role(own,'MID')),from=route[stage],to=stage===7?own.find(p=>p.id===nextRecoveryId):route[(stage+1)%route.length],pass=clamp((segmentLocal-passing.release)/(passing.arrival-passing.release),0,1);
    if(stage%4!==3){const invite=smooth(segmentLocal/.35)*(1-smooth((segmentLocal-.76)/.24)),dx=from.x-to.x,dy=from.y-to.y,length=Math.hypot(dx,dy)||1,direction=stage<4?-1:1;
     to.x=clamp(to.x+dx/length*2.4*invite,10,90);to.y=clamp(to.y+dy/length*2.4*invite,10,90);
     for(const p of stage<4?own:opponent)if(p.id!==from.id&&p.id!==to.id&&['MID','FW'].includes(p.pos)){p.x=clamp(p.x+(p.x<50?-1:1)*1.2*invite,10,90);p.y=clamp(p.y+direction*(p.pos==='FW'?2.4:1)*invite,10,90);}

@@ -160,3 +160,18 @@ or overwrite unexpected remote changes.
 All player-facing menus, headings, guidance, loading messages and club names use Korean as the primary language. Keep English IDs and source reference names internal; familiar football position abbreviations and terms may remain. Render English club references through EnglishPyramid.koreanName without changing campaign IDs, ratings or save history.
 
 Match viewing uses a visible 0.5x/1x/2x/4x speed picker, with start/pause/resume instead of a five-minute skip. Keep the same pattern in practice. Speed changes never advance minutes, alter RNG, or resume a pause. Major live build-ups display at at most 2x; decisive controls, shots and outcomes display at at most 1x so the ball/keeper sequence stays readable. Bench alerts use actual energy, discipline and visible score; decisions are explicit, respect substitution rules, and never announce an undisplayed goal. New match stories require confirmed complete records.
+
+Permanent owner feedback (2026-10-11): restrict tactical dragging to nine labelled
+field zones and a fixed keeper-only area; moving a field player changes the
+assigned role, never their registration identity. Pick routine ball recoverers
+from the local attacking lane on both teams and preserve cycle continuity.
+Keep both teams' compact names visible during live play. Require an opponent
+briefing before every kickoff. Show kickoff, halftime and full-time ceremonies;
+wait for the last visible action, and never run the clock behind a ceremony.
+Player detail is an explicit exception to the earlier no-scroll report rule:
+show all technical, mental and physical attributes together with internal scroll,
+fixed identity/close/navigation, and role-based highlighting rather than hiding
+non-selected attributes. Optional v10 stoppage activates at the next kickoff,
+plays actual engine ticks, and is recorded in player minutes and settlements.
+Existing in-progress matches keep their saved duration. Halftime substitutions
+use the actual halftime boundary (45 plus first-half added time).
