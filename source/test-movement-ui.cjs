@@ -48,9 +48,9 @@ test('a real full-time event animates briefly without changing the full-time mod
  h.untilAge(T.impact+400);assert.equal(h.snapshot().frame.phase,'goal');assert.deepEqual(copy(h.context.season),before);
  h.untilAge(T.end);assert.equal(h.context.movementShouldAnimate(),false);assert.equal(h.snapshot().frame.phase,'static');assert.deepEqual(copy(h.context.season),before);
 });
-test('preview stops after twelve display seconds and effects off cancels preview immediately',()=>{
- const h=harness(),before=copy(h.context.season);h.preview();for(let i=1;i<=150;i++)h.frame(i*80);assert.equal(h.snapshot().preview,false);assert.equal(h.context.movementShouldAnimate(),false);assert.deepEqual(copy(h.context.season),before);
- h.preview();assert.equal(h.snapshot().preview,true);h.env.effects=false;h.frame(12080);assert.equal(h.snapshot().preview,false);assert.equal(h.snapshot().frame.phase,'static');assert.deepEqual(copy(h.context.season),before);
+test('preview stops after twenty-four display seconds including a restart and effects off cancels preview immediately',()=>{
+ const h=harness(),before=copy(h.context.season);h.preview();for(let i=1;i<=300;i++)h.frame(i*80);assert.equal(h.snapshot().preview,false);assert.equal(h.context.movementShouldAnimate(),false);assert.deepEqual(copy(h.context.season),before);
+ h.preview();assert.equal(h.snapshot().preview,true);h.env.effects=false;h.frame(24080);assert.equal(h.snapshot().preview,false);assert.equal(h.snapshot().frame.phase,'static');assert.deepEqual(copy(h.context.season),before);
 });
 test('drawMotionActors places active own players and draws eleven opposing jerseys and a ball',()=>{
  const h=harness();F.begin(h.context.state);let numbers=0,arcs=0;const noop=()=>{},canvas=new Proxy({fillText(){numbers++;},arc(){arcs++;}},{get(target,key){return key in target?target[key]:noop;},set(target,key,value){target[key]=value;return true;}});
@@ -77,9 +77,9 @@ test('stalled frames cannot skip a visible shot or age a newly found event early
  h.untilAge(T.shot);const shot=h.snapshot();h.frame(h.env.time+9000);assert.equal(h.snapshot().frame.phase,'shot');assert.equal(h.snapshot().eventAgeMs-shot.eventAgeMs,80);assert.ok(h.snapshot().eventAgeMs<T.impact);
  h.untilAge(T.end);assert.equal(h.snapshot().frame.phase,'static');assert.equal(h.context.movementShouldAnimate(),false);assert.deepEqual(copy(h.context.season),before);
 });
-test('slow 900ms preview frames still stop after twelve wall-clock seconds and preserve the season',()=>{
- const h=harness(),before=copy(h.context.season);h.preview();for(let i=1;i<=13;i++)h.frame(i*900);assert.equal(h.snapshot().preview,true);
- h.frame(12600);assert.equal(h.snapshot().preview,false);assert.equal(h.snapshot().frame.phase,'static');assert.equal(h.context.movementShouldAnimate(),false);assert.deepEqual(copy(h.context.season),before);
+test('slow 900ms preview frames still stop after twenty-four wall-clock seconds and preserve the season',()=>{
+ const h=harness(),before=copy(h.context.season);h.preview();for(let i=1;i<=26;i++)h.frame(i*900);assert.equal(h.snapshot().preview,true);
+ h.frame(24300);assert.equal(h.snapshot().preview,false);assert.equal(h.snapshot().frame.phase,'static');assert.equal(h.context.movementShouldAnimate(),false);assert.deepEqual(copy(h.context.season),before);
 });
 test('moment cards wait for ball arrival and pause preserves the pending result',()=>{
  const h=harness();F.begin(h.context.state);const event={type:'goal',team:1,minute:7};h.context.lastEvent=event;let presented=0;h.context.pendingMatchMoment={event,moment:{kind:'concede'}};h.context.presentMoment=()=>presented++;
@@ -88,7 +88,7 @@ test('moment cards wait for ball arrival and pause preserves the pending result'
 });
 test('live commentary survives tick rendering and only announces a goal after arrival',()=>{
  const h=harness(),paragraph={textContent:''},minute={textContent:''};h.nodes.set('commentary',{querySelector:selector=>selector==='p'?paragraph:minute});F.begin(h.context.state);
- h.frame(80);assert.ok(paragraph.textContent.includes('전개'));paragraph.textContent='킥오프';h.frame(160);assert.notEqual(paragraph.textContent,'킥오프');
+ h.frame(80);assert.ok(paragraph.textContent.includes('→'));paragraph.textContent='킥오프';h.frame(160);assert.notEqual(paragraph.textContent,'킥오프');
  h.context.lastEvent={type:'goal',team:1,minute:9};h.context.lastEventAt=240;h.frame(240);assert.ok(paragraph.textContent.includes('공을 확보'));assert.ok(!paragraph.textContent.includes('골입니다'));
  h.frame(1000);h.untilAge(T.impact);assert.ok(paragraph.textContent.includes('골!'));assert.ok(paragraph.textContent.includes(h.snapshot().frame.performerName.split(/\s+/).at(-1)));
 });

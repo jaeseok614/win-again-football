@@ -5,7 +5,7 @@ function test(name,fn){fn();groups++;console.log('PASS '+name);}
 function active(formation='442',tactic='balanced'){const match=F.create(20260930);F.setFormation(match,formation);F.setTactic(match,tactic);F.begin(match);return match;}
 function bounds(value){
  assert.equal(value.own.length,11);assert.equal(value.opponent.length,11);
- for(const p of [...value.own,...value.opponent])for(const key of ['x','y'])assert.ok(Number.isFinite(p[key])&&p[key]>=10&&p[key]<=90,JSON.stringify(p));
+ for(const p of [...value.own,...value.opponent])for(const key of ['x','y'])assert.ok(Number.isFinite(p[key])&&p[key]>=(value.deadBall?.takerId===p.id&&key==='x'?6:10)&&p[key]<=(value.deadBall?.takerId===p.id&&key==='x'?94:90),JSON.stringify(p));
  for(const p of [value.ball,...value.trail])for(const key of ['x','y'])assert.ok(Number.isFinite(p[key])&&p[key]>=4&&p[key]<=96,JSON.stringify(p));
  for(const team of [value.own,value.opponent])assert.equal(new Set(team.map(p=>p.id)).size,11);
 }

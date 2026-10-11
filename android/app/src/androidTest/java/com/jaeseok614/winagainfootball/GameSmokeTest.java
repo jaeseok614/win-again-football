@@ -380,7 +380,7 @@ public final class GameSmokeTest {
             tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
             if ("true".equals(evaluate(scenario, "state.phase!=='full'"))) {
                 tapWebElement(scenario, ".match-quick-menu [data-match-popup='tactics']");
-                awaitTrue(scenario, "document.querySelectorAll('#tactical-editor input[type=range]').length===0&&document.querySelectorAll('[data-mobile-formation]').length===12");
+                awaitTrue(scenario, "document.querySelectorAll('#tactical-editor input[type=range]').length===0&&document.querySelector('#formation').options.length===12&&document.querySelectorAll('.formation-quick-orders [data-instruction-select]').length===2");
                 dragTacticalForward(scenario);
                 screenshot(scenario, "android-drag-position.png");
                 assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
