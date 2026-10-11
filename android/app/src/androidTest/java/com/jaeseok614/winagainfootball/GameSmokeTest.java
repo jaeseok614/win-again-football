@@ -47,9 +47,13 @@ public final class GameSmokeTest {
         return value.get();
     }
     private void awaitReady(ActivityScenario<MainActivity> scenario) throws Exception {
+        android.util.Log.i("GameSmoke", "offline-game:await-ready");
         long until = System.nanoTime() + TimeUnit.SECONDS.toNanos(45);
         while (System.nanoTime() < until) {
-            if ("true".equals(evaluate(scenario, "!!(window.WinAgainAndroid && typeof season !== 'undefined' && document.getElementById('primary'))"))) return;
+            if ("true".equals(evaluate(scenario, "!!(window.WinAgainAndroid && typeof season !== 'undefined' && document.getElementById('primary'))"))) {
+                android.util.Log.i("GameSmoke", "offline-game:ready");
+                return;
+            }
             Thread.sleep(100);
         }
         fail("Bundled offline game did not initialize");
@@ -75,6 +79,7 @@ public final class GameSmokeTest {
         fail("App window was covered or unfocused; active package: " + (window == null ? "unknown" : window.getPackageName()));
     }
     private void awaitWebViewFrame(ActivityScenario<MainActivity> scenario) throws Exception {
+        android.util.Log.i("GameSmoke", "web-frame:await");
         CountDownLatch drawn = new CountDownLatch(1);
         scenario.onActivity(activity -> {
             WebView web = activity.gameViewForTest();
@@ -101,6 +106,7 @@ public final class GameSmokeTest {
             });
         });
         assertTrue("The updated WebView frame was never drawn", drawn.await(15, TimeUnit.SECONDS));
+        android.util.Log.i("GameSmoke", "web-frame:drawn");
     }
     private void assertVisibleWebText(ActivityScenario<MainActivity> scenario, String selector, String text) throws Exception {
         assertEquals("Requested screen text must be visible: " + text, "true", evaluate(scenario,
@@ -149,6 +155,7 @@ public final class GameSmokeTest {
         return state;
     }
     private void tapWebElement(ActivityScenario<MainActivity> scenario, String selector) throws Exception {
+        android.util.Log.i("GameSmoke", "tap:" + selector);
         String quotedSelector = JSONObject.quote(selector);
         evaluate(scenario, "document.querySelector(" + quotedSelector + ").scrollIntoView({block:'center',behavior:'instant'});true");
         awaitWebViewFrame(scenario); awaitAppWindowFocus(scenario);
@@ -264,7 +271,9 @@ public final class GameSmokeTest {
     }
 
     @Test public void titleMenuHomeAndCompactLiveMatch() throws Exception {
+        android.util.Log.i("GameSmoke", "title-test:launch");
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            android.util.Log.i("GameSmoke", "title-test:activity-launched");
             awaitReady(scenario);
             // Independently exercise first arrival even when another test saved a campaign.
             evaluate(scenario, "(()=>{season=S.create(4092);state=season.match;managerIntroBypass=false;localStorage.removeItem(managerGuideKey);render();return true;})()");

@@ -71,6 +71,11 @@ jobs:
             adb shell am force-stop com.google.android.apps.nexuslauncher
             # The APK is already compiled. Leave RAM for the emulator and UTP.
             free -m
+            mkdir -p app/build/outputs/emulator-diagnostics
+            # Preserve the guest's last test stage even if UTP loses the device.
+            adb logcat -b all -v threadtime > app/build/outputs/emulator-diagnostics/guest.log 2>&1 &
+            logcat_pid=$!
+            trap 'kill "$logcat_pid" 2>/dev/null || true' EXIT
             bash ./gradlew --no-daemon --max-workers=1 -Dorg.gradle.jvmargs="-Xmx1024m -Dfile.encoding=UTF-8" connectedDebugAndroidTest
       - name: Capture emulator host diagnostics
         if: always()
