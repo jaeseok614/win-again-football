@@ -69,6 +69,10 @@ jobs:
             # Disable that unrelated launcher only; app ANRs still fail the tests.
             adb shell pm disable-user --user 0 com.google.android.apps.nexuslauncher
             adb shell am force-stop com.google.android.apps.nexuslauncher
+            # Keep a phone-sized dp viewport with fewer pixels for software rendering.
+            # Pixel 6: 1080/420 ~= 720/280; no UI assertions are relaxed.
+            adb shell wm size 720x1600
+            adb shell wm density 280
             # The APK is already compiled. Leave RAM for the emulator and UTP.
             free -m
             mkdir -p app/build/outputs/emulator-diagnostics
