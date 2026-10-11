@@ -1,4 +1,4 @@
-self.WIN_AGAIN_CACHE_REVISION = "d4c1f603bc1a";
+self.WIN_AGAIN_CACHE_REVISION = "10a8a72466c9";
 self.WIN_AGAIN_ASSETS = [
   "./style.css?v=22",
   "./coach-guide.css?v=22",
@@ -188,6 +188,9 @@ self.WIN_AGAIN_ASSETS = [
   "./match-report.css?v=1",
   "./match-report.js?v=1",
   "./match-report-ui.js?v=1",
+  "./rebirth-review.css?v=1",
+  "./rebirth-review.js?v=1",
+  "./rebirth-review-ui.js?v=1",
   "./assets/player-faces-v19.webp?v=19",
   "./assets/player-faces-v17.webp?v=17",
   "./assets/player-faces-v18.webp?v=18",

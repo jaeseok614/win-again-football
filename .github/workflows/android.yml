@@ -56,6 +56,7 @@ jobs:
           target: google_apis
           profile: pixel_6
           ram-size: 3072M
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none -feature -Vulkan
           working-directory: android
           disable-animations: true
           script: |
@@ -63,7 +64,15 @@ jobs:
             # Disable that unrelated launcher only; app ANRs still fail the tests.
             adb shell pm disable-user --user 0 com.google.android.apps.nexuslauncher
             adb shell am force-stop com.google.android.apps.nexuslauncher
-            bash ./gradlew --no-daemon connectedDebugAndroidTest
+            # The APK is already compiled. Leave RAM for the emulator and UTP.
+            free -m
+            bash ./gradlew --no-daemon --max-workers=1 -Dorg.gradle.jvmargs="-Xmx1024m -Dfile.encoding=UTF-8" connectedDebugAndroidTest
+      - name: Capture emulator host diagnostics
+        if: always()
+        run: |
+          mkdir -p android/app/build/outputs/emulator-diagnostics
+          free -m > android/app/build/outputs/emulator-diagnostics/host-memory.log
+          sudo dmesg --ctime | tail -80 > android/app/build/outputs/emulator-diagnostics/host-kernel.log
       - name: Upload emulator verification and screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -73,5 +82,6 @@ jobs:
             android/app/build/reports/androidTests/
             android/app/build/outputs/androidTest-results/
             android/app/build/outputs/connected_android_test_additional_output/
+            android/app/build/outputs/emulator-diagnostics/
           if-no-files-found: warn
           retention-days: 30

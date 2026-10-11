@@ -467,6 +467,21 @@ public final class GameSmokeTest {
         }
     }
 
+    @Test public void lifeReviewRetainsTheActualPromiseAndEveryRecordPage() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());season=S.create(82,{rebirth:true});while(season.round<9){if(Rebirth.read(season).pending)season=Rebirth.choose(season,'bold');state=season.match;while(state.phase!=='full'){if(!F.running(state))F.begin(state);F.finishSegment(state);}season=S.settle(season);}state=season.match;appSessionStarted=true;view='club';render();openRebirth();return true;})()");
+            String before = evaluate(scenario, "JSON.stringify(season)");
+            tapWebElement(scenario, "[data-rebirth='review']");
+            awaitTrue(scenario, "document.getElementById('life-review-tab')&&document.getElementById('rebirth-title').textContent.includes('돌아보기')");
+            assertEquals("Actual promise and every review page must fit without changing the campaign", "[]", evaluate(scenario,
+                "(()=>{const failures=[],select=document.getElementById('life-review-tab'),body=document.querySelector('#rebirth-dialog .rebirth-body');for(const tab of ['성적표','약속','경기']){select.value=tab;select.dispatchEvent(new Event('change'));do{if(body.scrollHeight>body.clientHeight+1||body.scrollWidth>body.clientWidth+1)failures.push(tab+':'+rebirthReviewPage);const next=document.querySelector('[data-life-review-page=\"1\"]');if(!next||next.disabled)break;next.click();}while(true);}select.value='약속';select.dispatchEvent(new Event('change'));if(!body.textContent.includes('6득점 이상')||!body.textContent.includes('실제 0 득점'))failures.push('actual missed promise');return failures;})()"));
+            screenshot(scenario, "android-life-review.png");
+            assertEquals(before, evaluate(scenario, "JSON.stringify(season)"));
+            scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
     @Test public void nativeOriginValidationRejectsConfusableAndFileUrls() {
         assertTrue(MainActivity.isGameDocument(Uri.parse(MainActivity.GAME_URL + "#match")));
         assertFalse(MainActivity.isGameDocument(Uri.parse("https://appassets.androidplatform.net.evil.test/assets/game/index.html")));
