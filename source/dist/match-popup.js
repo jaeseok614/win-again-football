@@ -4,6 +4,7 @@ const matchPopupNames={roster:'선수 교체',lineup:'코치 선발 제안',tact
 function syncMatchScreenMode(){document.body.classList.toggle('match-view',appSessionStarted&&view==='match'&&!!state);if(view!=='match')closeMatchPopup();}
 function openMatchPopup(kind,opener=document.activeElement){
  if(!Object.hasOwn(matchPopupNames,kind)||view!=='match'||!state)return;
+ if(kind==='brief'&&state.phase==='half'&&typeof showMatchCeremony==='function'){closeMatchPopup();showMatchCeremony('half');return;}
  const dialog=$('match-popup');if(!dialog)return;
  if(!dialog.open)matchPopupOpener=opener;
  pauseForPlanning();matchPopupActive=kind;save();render();

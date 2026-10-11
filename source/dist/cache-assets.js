@@ -1,4 +1,4 @@
-self.WIN_AGAIN_CACHE_REVISION = "1b0dd58881d3";
+self.WIN_AGAIN_CACHE_REVISION = "314e0378af6b";
 self.WIN_AGAIN_ASSETS = [
   "./style.css?v=22",
   "./coach-guide.css?v=22",
@@ -172,6 +172,7 @@ self.WIN_AGAIN_ASSETS = [
   "./management-hub.js?v=2",
   "./report-pages.css?v=6",
   "./report-pages.js?v=3",
+  "./halftime.js?v=1",
   "./match-ceremony-ui.js?v=1",
   "./tactical-instructions.js?v=1",
   "./tactical-instructions.css?v=1",
