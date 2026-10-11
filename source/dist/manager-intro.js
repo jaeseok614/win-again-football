@@ -4,17 +4,28 @@ const managerGuideKey='win-again-manager-guide-v1';
 const managerGuideSteps=[
  ['눈을 뜨니, 감독실이었다','마지막 실점 장면을 보며 잠든 밤. 눈을 뜨니 낡은 감독실입니다. 책상에는 토투넘 핫스퍼의 계약서와 전임 감독의 사직서가 놓여 있습니다.\n\n수석 코치가 문을 엽니다. “구단주가 기다립니다. 오늘부터 이 팀은 감독님 팀입니다.”','구단주실로'],
  ['추락한 구단, 남아 있는 사람들','1부의 함성은 사라졌습니다. 토투넘은 이제 5부, 내셔널 리그에서 뛰어야 합니다.\n\n구단주가 46경기 일정표를 펼칩니다. “24팀 중 상위 두 팀이 승격합니다. 네 번 올라가야 집으로 돌아갈 수 있어요. 첫 시즌부터 함께 버텨 주시겠습니까?”','면담 시작'],
- ['1. 내 선수 알아보기','전체 선수단의 종합 능력·체력·컨디션을 비교하세요. 이름을 누르면 주발·세부 포지션·성격과 코치의 6축 리포트가 나옵니다. 기술·신체는 1–20으로 비교하고, 충성도와 압박 대처는 감독의 말에 대한 반응을 바꿉니다. 역할을 골라 어울리는 능력을 확인해 보세요. 선수단 명단을 닫으면 다음 안내로 넘어갑니다.','전체 선수단 보기'],
- ['2. 경기 전 전술 준비','12개 포메이션에서 경기 지시를 고르고, 배치판의 유니폼을 끌어 놓아 위치를 정하세요. 위치에 따라 ST·윙·공격형 미드필더 등 배치 포지션이 바뀝니다. 선발·후보의 코치 제안에서는 위치 적합도·능력·체력 안배를 비교한 뒤 직접 확정할 수 있습니다. 준비가 되면 전술 창을 닫아 보세요.','전술 창 열기'],
- ['3. 선수에게 한마디','격려·칭찬·분발 요구·침착하게 중 하나를 고르세요. 선수마다 반응이 다릅니다. 한 구간에서 한 번만 말할 수 있으며 경기 전·하프타임·65분에 기회가 있습니다. 반응을 확인하고 창을 닫으세요.','선수 대화 열기'],
- ['4. 첫 경기 시작','경기는 자동으로 흐릅니다. 일시 정지와 0.5·1·2·4배속으로 관전 속도를 고르세요. 교체·전술·선수 대화는 팝업에서 정하고, 닫은 뒤 직접 이어갑니다. 경기 기록에서는 실제 공격 장면을 다시 보고 크로스·침투 등 공격 경로를 비교할 수 있습니다. 상대 분석의 선수 이름을 누르면 우리 선수와 비교합니다. 종료 후 결과를 확정하면 다음 일정으로 넘어갑니다.','직접 킥오프 준비']
+ ['1. 내 선수 알아보기','수석 코치: “먼저 함께 뛸 선수부터 만나시죠.”\n\n종합은 선수의 능력, 체력은 남은 힘, 컨디션은 현재 상태입니다. 이름을 눌러 세부 능력과 성격을 살펴보세요.\n\n화면 아래 ‘다음: 전술’로 이어갑니다.','전체 선수단 보기'],
+ ['2. 경기 전 전술 준비','수석 코치: “처음부터 전부 바꿀 필요는 없습니다.”\n\n포메이션의 기본 배치를 살펴보고, 공격 방식에서 크로스·돌파·패스 연계를 고를 수 있습니다. 유니폼은 표시된 9구역 안에서 옮깁니다.\n\n확인만 해도 괜찮습니다. 아래 ‘다음: 대화’를 누르세요.','전술 창 열기'],
+ ['3. 선수에게 한마디','수석 코치: “같은 말도 선수마다 다르게 받아들입니다.”\n\n격려·칭찬·분발 요구·침착하게 중 하나를 선택하면 실제 반응이 공개됩니다. 경기 전·하프타임·65분에 한 번씩 말할 수 있습니다.\n\n지금 말하지 않아도 ‘다음: 경기’로 넘어갈 수 있습니다.','선수 대화 열기'],
+ ['4. 첫 경기 준비 완료','킥오프를 누르면 양 팀 선발과 핵심 선수를 먼저 확인합니다. 상대 확인 뒤에 경기가 시작됩니다.\n\n0.5·1·2·4배속으로 관전하고, 전술·교체를 열면 잠시 멈춥니다. 전반 종료에는 라커룸에서 다시 판단하세요.\n\n종료 후 ‘결과 확정’으로 다음 일정에 도전합니다.','안내 완료 · 경기 화면으로']
 ];
 function guideSeen(){try{return localStorage.getItem(managerGuideKey)==='done';}catch{return false;}}
 function rememberGuide(){try{localStorage.setItem(managerGuideKey,'done');}catch{}}
 function offerManagerIntro(){if(managerIntroBypass)return false;const first=season.year===1&&season.round===0&&state?.phase==='prep',arrival=typeof ClubStory!=='undefined'?ClubStory.read(season).pending.some(e=>e.key==='arrival'):!restoredSave.payload&&!launchHasCampaign;if(!first||!arrival)return false;openManagerGuide(0);return true;}
-function renderManagerGuide(){const [title,copy,label]=managerGuideSteps[managerGuideStep];$('manager-guide-title').textContent=title;$('manager-guide-copy').textContent=copy;$('manager-guide-next').textContent=label;$('manager-guide-skip').hidden=managerGuideStep<2;$('manager-guide-progress').textContent=managerGuideStep<2?'첫 출근 · '+(managerGuideStep+1)+' / 2':'조작 안내 · '+(managerGuideStep-1)+' / 4';$('manager-guide-title').focus({preventScroll:true});}
-function openManagerGuide(step=2){pauseForPlanning();managerGuideStep=step;managerGuideWaiting=null;managerGuideActive=true;renderManagerGuide();if(!$('manager-guide').open)$('manager-guide').showModal();}
-function finishManagerGuide(){if(managerGuideStep<2)return;managerGuideActive=false;managerGuideWaiting=null;managerIntroBypass=true;rememberGuide();$('manager-guide').close();if(!appSessionStarted)enterManagerHome();else $('primary')?.focus({preventScroll:true});}
+function renderManagerGuide(){const [title,copy,label]=managerGuideSteps[managerGuideStep];$('manager-guide-title').textContent=title;$('manager-guide-copy').textContent=copy;$('manager-guide-next').textContent=label;$('manager-guide-skip').hidden=managerGuideStep<2;$('manager-guide-back').hidden=managerGuideStep<3;$('manager-guide-progress').textContent=managerGuideStep<2?'첫 출근 · '+(managerGuideStep+1)+' / 2':'조작 안내 · '+(managerGuideStep-1)+' / 4';$('manager-guide-title').focus({preventScroll:true});}
+function openManagerGuide(step=2){pauseForPlanning();managerGuideStep=step;managerGuideWaiting=null;managerGuideActive=true;renderManagerGuide();if(!$('manager-guide').open)$('manager-guide').showModal();$('manager-guide-title').focus({preventScroll:true});}
+function clearManagerGuideControls(){for(const id of ['squad-overview-dialog','match-popup']){const host=$(id);host.classList.remove('manager-guided');host.querySelector('.manager-guide-rail')?.remove();}}
+function closeManagerGuideReport(){const id=managerGuideWaiting==='squad'?'squad-overview-dialog':managerGuideWaiting==='match'?'match-popup':null;managerGuideWaiting=null;clearManagerGuideControls();if(id&&$(id).open)$(id).close();}
+function finishManagerGuide(){if(managerGuideStep<2)return;managerGuideActive=false;closeManagerGuideReport();managerIntroBypass=true;rememberGuide();$('manager-guide').close();if(!appSessionStarted)enterManagerHome();else{if(managerGuideStep===5){view='match';render();}$('primary')?.focus({preventScroll:true});}}
+function backManagerGuide(){if(!managerGuideActive||managerGuideStep<2)return;const step=Math.max(2,managerGuideStep-1);closeManagerGuideReport();openManagerGuide(step);}
+function advanceManagerGuideReport(){if(!managerGuideActive||!['squad','match'].includes(managerGuideWaiting))return;const step=managerGuideStep;closeManagerGuideReport();openManagerGuide(Math.min(5,step+1));}
+function mountManagerGuideControls(){
+ const host=$(managerGuideWaiting==='squad'?'squad-overview-dialog':'match-popup'),footer=host.querySelector('footer');if(!footer)return;
+ clearManagerGuideControls();host.classList.add('manager-guided');const rail=document.createElement('div');rail.className='manager-guide-rail';rail.setAttribute('aria-label','조작 안내 진행');
+ const prompts={2:'이름을 누르면 능력과 성격을 볼 수 있어요.',3:'기본 배치를 확인하세요. 변경은 선택입니다.',4:'선택 후 반응 공개 · 말하지 않아도 다음으로'};
+ rail.innerHTML='<p>안내 '+(managerGuideStep-1)+'/4 · '+prompts[managerGuideStep]+'</p><div><button type="button" data-guide-back>이전</button><button type="button" class="primary" data-guide-forward>다음: '+({2:'전술',3:'대화',4:'경기'}[managerGuideStep])+' →</button><button type="button" data-guide-skip>건너뛰기</button></div>';
+ footer.append(rail);rail.querySelector('[data-guide-back]').onclick=backManagerGuide;rail.querySelector('[data-guide-forward]').onclick=advanceManagerGuideReport;rail.querySelector('[data-guide-skip]').onclick=finishManagerGuide;
+}
 function completeManagerArrival(){managerGuideWaiting=null;managerGuideStep=2;if(guideSeen())finishManagerGuide();else openManagerGuide(2);}
 function nextManagerGuide(){
  if(managerGuideStep===0){managerGuideStep=1;renderManagerGuide();return;}
@@ -23,11 +34,12 @@ function nextManagerGuide(){
  const step=managerGuideStep;$('manager-guide').close();managerGuideWaiting=step===2?'squad':'match';
  if(step===2){openSquadOverview($('launch-continue'));}
  else{view='match';render();openMatchPopup(step===3?'tactics':'talk',$('primary'));}
+ mountManagerGuideControls();
 }
-function continueManagerGuide(){if(!managerGuideActive||!managerGuideWaiting||managerGuideWaiting==='home')return;if(managerGuideStep===4&&!state.decisions.some(d=>d.type==='talk'&&d.minute===state.minute)&&['prep','half','late'].includes(state.phase)){managerGuideWaiting=null;renderManagerGuide();$('manager-guide').showModal();return;}managerGuideWaiting=null;managerGuideStep++;renderManagerGuide();$('manager-guide').showModal();}
-const managerGuideDialog=document.createElement('dialog');managerGuideDialog.id='manager-guide';managerGuideDialog.setAttribute('aria-labelledby','manager-guide-title');managerGuideDialog.innerHTML='<p class="eyebrow">토투넘 · 감독의 첫 출근 <span id="manager-guide-progress"></span></p><h2 id="manager-guide-title" tabindex="-1"></h2><p id="manager-guide-copy"></p><div class="manager-guide-actions"><button id="manager-guide-next" type="button" class="primary"></button><button id="manager-guide-skip" type="button" class="secondary">건너뛰기</button></div><small>취임 면담 뒤에는 조작 안내를 건너뛸 수 있습니다. 설정에서 조작 안내를 다시 볼 수 있습니다.</small>';document.body.append(managerGuideDialog);
-$('manager-guide-next').onclick=nextManagerGuide;$('manager-guide-skip').onclick=finishManagerGuide;
-managerGuideDialog.addEventListener('cancel',event=>{if(managerGuideStep<2){event.preventDefault();return;}managerGuideActive=false;managerGuideWaiting=null;managerIntroBypass=true;rememberGuide();});
+function continueManagerGuide(){if(!managerGuideActive||!['squad','match'].includes(managerGuideWaiting))return;const host=$(managerGuideWaiting==='squad'?'squad-overview-dialog':'match-popup');if(host.open)return;managerGuideWaiting=null;clearManagerGuideControls();renderManagerGuide();$('manager-guide').showModal();}
+const managerGuideDialog=document.createElement('dialog');managerGuideDialog.id='manager-guide';managerGuideDialog.setAttribute('aria-labelledby','manager-guide-title');managerGuideDialog.innerHTML='<p class="eyebrow">토투넘 · 감독의 첫 출근 <span id="manager-guide-progress"></span></p><h2 id="manager-guide-title" tabindex="-1"></h2><p id="manager-guide-copy"></p><div class="manager-guide-actions"><button id="manager-guide-back" type="button" class="secondary">이전 단계</button><button id="manager-guide-next" type="button" class="primary"></button><button id="manager-guide-skip" type="button" class="secondary">건너뛰기</button></div><small>취임 면담 뒤에는 조작 안내를 건너뛸 수 있습니다. 설정에서 조작 안내를 다시 볼 수 있습니다.</small>';document.body.append(managerGuideDialog);
+$('manager-guide-back').onclick=backManagerGuide;$('manager-guide-next').onclick=nextManagerGuide;$('manager-guide-skip').onclick=finishManagerGuide;
+managerGuideDialog.addEventListener('cancel',event=>{event.preventDefault();if(managerGuideStep>=2)finishManagerGuide();});
 $('squad-overview-dialog').addEventListener('close',()=>{if(managerGuideWaiting==='squad')continueManagerGuide();});$('match-popup').addEventListener('close',()=>{if(managerGuideWaiting==='match')continueManagerGuide();});
 // Replay belongs to settings; ordinary first play offers the tour automatically.
 const guideHelp=document.createElement('button');guideHelp.type='button';guideHelp.id='manager-help';guideHelp.textContent='처음 안내 다시 보기';guideHelp.onclick=()=>{closeMatchPopup();openManagerGuide(2);};$('match-popup-settings').append(guideHelp);

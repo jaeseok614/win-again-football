@@ -33,6 +33,8 @@ test('owned routing resolves identity again after a player moves to a different 
  const before=JSON.stringify(s);h.nodes.get('player-detail-route').onclick();assert.equal(h.context.individualTrainingSlot,'f4');assert.equal(h.context.individualTrainingFocus,'technique');assert.equal(h.context.individualTrainingNote,'');assert.equal(h.context.squadTab,'training');assert.deepEqual(h.views,['squad']);assert.equal(h.document.activeElement.id,'individual-training-player');assert.equal(h.dialog.open,false);unchanged(h,before);
 });
 
+test('leaving the tour for individual training removes its footer and preserves gameplay',()=>{let cleared=0;const s=S.create(1332),h=harness(s,{managerGuideActive:true,managerGuideWaiting:'squad',clearManagerGuideControls(){cleared++;}}),overview={open:true,close(){this.open=false;}};h.nodes.set('squad-overview-dialog',overview);h.context.openPlayerDetails('sp_f2',h.opener('sp_f2'));const before=JSON.stringify(s);h.context.routePlayerDetails();assert.equal(cleared,1);assert.equal(h.context.managerGuideActive,false);assert.equal(h.context.managerGuideWaiting,null);assert.equal(overview.open,false);assert.deepEqual(h.views,['squad']);unchanged(h,before);});
+
 test('removed squad identities and undiscovered youth cannot open or route to a replacement player',()=>{
  let s=S.create(1333);const h=harness(s),hidden=F.youthCandidates(s.seed,s.year,1,'FW')[0].identity;
  h.context.openPlayerDetails(hidden,h.opener(hidden));h.context.openPlayerDetails('missing',h.opener('missing'));assert.equal(h.dialog.open,false);assert.equal(h.dialog.showCount,undefined);

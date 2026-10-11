@@ -80,6 +80,12 @@ The first campaign automatically presents two short arrival scenes and the actua
 two-choice owner conversation before management. Do not hide this behind a story
 button or let an old guide preference skip it. Completed arrivals do not replay on
 restore. The subsequent controls tour remains optional with skip and settings replay.
+During the controls tour, keep visible Previous / Next / Skip actions inside the
+actual squad, tactics and talk dialogs. Closing a report returns to its current
+explanation; only explicit Next advances the tour. A team-talk choice is optional.
+Do not apply tactics, talk effects, substitutions or kickoff for a tutorial step.
+Reserve space for the guide controls without covering the tactical pitch, and
+remove them on completion, skip or deliberate navigation outside the tour.
 The scoreboard, clock, live pitch, commentary and essential match buttons fit one
 phone viewport. Controls occupy two filled rows on portrait phones in prep, running, paused and
 full states. Short landscape screens place these groups side by side to leave room
