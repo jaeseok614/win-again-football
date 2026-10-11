@@ -34,7 +34,7 @@
    const descriptions={results:'다음 리그 '+rules.games+'경기에서 '+rules.target+'점 · 달성 신뢰 +8 / 미달성 −5',youth:'선택한 유소년에게 다음 리그 '+minutes.games+'경기 합계 '+minutes.target+'분 · 달성 +10 / 미달성 −5',protect:'무리한 약속 대신 선수 보호 방침을 보고합니다. 신뢰 변화 없음.',investment:'신뢰 60 이상 · £20,000 즉시 투자 · 신뢰 −10 · 시즌당 한 번'};
    return {id,label,description:s.round===rounds(s)&&['results','youth'].includes(id)?'다음 시즌의 리그 준비 때 새 약속을 시작할 수 있습니다.':descriptions[id],available:!blocked,reason:blocked};
   });
-  return {trust:r.trust,confidence:confidence(s,r.trust),relationship:r.trust>=60?'신뢰를 쌓고 있습니다':r.trust<40?'성과로 답할 때입니다':'서로를 알아가는 중',active:r.active?copy(r.active):null,recent:copy(r.rows.slice(-5).reverse()),youth,options,reason,available:!reason};
+  return {personality:(root.StoryPressure||(typeof require==='function'?require('./story-pressure.js'):null))?.profile(s)||null,trust:r.trust,confidence:confidence(s,r.trust),relationship:r.trust>=60?'신뢰를 쌓고 있습니다':r.trust<40?'성과로 답할 때입니다':'서로를 알아가는 중',active:r.active?copy(r.active):null,recent:copy(r.rows.slice(-5).reverse()),youth,options,reason,available:!reason};
  }
  function meet(s,choice,identity=null){
   const status=read(s),option=status.options.find(o=>o.id===choice);if(!option?.available)throw Error(option?.reason||'면담 주제를 선택하세요.');
