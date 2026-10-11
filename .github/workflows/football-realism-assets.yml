@@ -6,7 +6,7 @@ permissions:
   contents: write
 jobs:
   update:
-    if: github.head_repo.full_name == github.repository && github.head_ref == 'codex/football-realism-20261012'
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/football-realism-20261012'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
