@@ -444,7 +444,7 @@ public final class GameSmokeTest {
             tapWebElement(scenario, "#squad-overview-close");
             awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===2");
             tapWebElement(scenario, "#manager-guide-next");
-            awaitTrue(scenario, "document.getElementById('squad-overview-dialog').open&&document.querySelector('[data-guide-forward]')");
+            awaitTrue(scenario, "document.getElementById('squad-overview-dialog').open&&!!document.querySelector('[data-guide-forward]')");
             tapWebElement(scenario, "[data-guide-forward]");
             awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===3");
             evaluate(scenario, "(()=>{managerGuideActive=false;managerGuideWaiting=null;document.getElementById('manager-guide').close();setView('market');return true;})()");
@@ -491,7 +491,7 @@ public final class GameSmokeTest {
             tapWebElement(scenario, "[data-rebirth='review']");
             awaitTrue(scenario, "document.getElementById('life-review-tab')&&document.getElementById('rebirth-title').textContent.includes('돌아보기')");
             assertEquals("Actual promise and every review page must fit without changing the campaign", "[]", evaluate(scenario,
-                "(()=>{const failures=[],select=document.getElementById('life-review-tab'),body=document.querySelector('#rebirth-dialog .rebirth-body');for(const tab of ['성적표','약속','경기']){select.value=tab;select.dispatchEvent(new Event('change'));do{if(body.scrollHeight>body.clientHeight+1||body.scrollWidth>body.clientWidth+1)failures.push(tab+':'+rebirthReviewPage);const next=document.querySelector('[data-life-review-page=\"1\"]');if(!next||next.disabled)break;next.click();}while(true);}select.value='약속';select.dispatchEvent(new Event('change'));if(!body.textContent.includes('6득점 이상')||!body.textContent.includes('실제 0 득점'))failures.push('actual missed promise');return failures;})()"));
+                "(()=>{const failures=[],choose=tab=>{const select=document.getElementById('life-review-tab');select.value=tab;select.dispatchEvent(new Event('change'));};for(const tab of ['성적표','약속','경기']){choose(tab);let pages=0;do{const body=document.querySelector('#rebirth-dialog .rebirth-body');if(body.scrollHeight>body.clientHeight+1||body.scrollWidth>body.clientWidth+1)failures.push(tab+':'+rebirthReviewPage);const next=document.querySelector('[data-life-review-page=\"1\"]');if(!next||next.disabled)break;if(++pages>100){failures.push('unbounded review');break;}next.click();}while(true);}choose('약속');const promise=RebirthReview.read(season).promises.at(-1),body=document.querySelector('#rebirth-dialog .rebirth-body'),goals=promise&&promise.games.reduce((n,g)=>n+g.score[0],0);if(!promise||promise.metric!=='goals'||promise.success||promise.value!==goals||!body.textContent.includes(promise.target)||!body.textContent.includes('실제 '+goals+' 득점')||!body.textContent.includes('미달성')||!promise.games.every(g=>body.textContent.includes(g.year+'시즌 '+g.round+'R · '+g.score.join(' : '))))failures.push('actual missed promise');return failures;})()"));
             screenshot(scenario, "android-life-review.png");
             assertEquals(before, evaluate(scenario, "JSON.stringify(season)"));
             scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));

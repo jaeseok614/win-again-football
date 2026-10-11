@@ -159,10 +159,14 @@
   return {code:side?side+'W':'ST',label:side?(left?'왼쪽':'오른쪽')+' 윙어':'스트라이커',line:'FW'};
  }
  // IFAB Law 11: use the ball and the second-last defender at release.
+ function offsideLine(ballY,defenderYs,team){
+  if(![0,1].includes(team)||!Number.isFinite(ballY)||!Array.isArray(defenderYs)||defenderYs.length<2||defenderYs.some(y=>!Number.isFinite(y)))return null;
+  const line=[...defenderYs].sort((a,b)=>team===0?a-b:b-a)[1];
+  return team===0?Math.min(50,ballY,line):Math.max(50,ballY,line);
+ }
  function offsidePosition(receiverY,ballY,defenderYs,team){
-  if(![0,1].includes(team)||!Number.isFinite(receiverY)||!Number.isFinite(ballY)||!Array.isArray(defenderYs)||defenderYs.length<2||defenderYs.some(y=>!Number.isFinite(y)))return false;
-  const sorted=[...defenderYs].sort((a,b)=>team===0?a-b:b-a),line=sorted[1];
-  return team===0?receiverY<50&&receiverY<ballY&&receiverY<line:receiverY>50&&receiverY>ballY&&receiverY>line;
+  const line=offsideLine(ballY,defenderYs,team);
+  return Number.isFinite(receiverY)&&line!==null&&(team===0?receiverY<line:receiverY>line);
  }
  // This minute-based engine approximates defender positions; no additional RNG.
  function offsideAtPass(action,kind,team,runRoll){
@@ -255,6 +259,12 @@
  function setPieceKind(s,roll,lineup=null,team=0){const kind=roll<.1?'corner':roll<.16?'freeKick':null;return kind&&team===0&&lineup&&!lineup.some(id=>s.players[id]?.pos!=='GK')?null:kind;}
  function legacyActionForRoll(s,roll,tactic,kind=setPieceKind(s,roll),team=0,minute=s.minute){if(kind)return kind==='corner'?'cross':'combination';const focus=team===0?attackFocus(s,minute,false):'balanced',weights={cross:[.62,.80,.88,.92],dribble:[.12,.24,.36,.88],combination:[.12,.24,.38,.48]}[focus],value=(roll-.16)/.84;if(!weights)return eventAction(value,tactic);return value<weights[0]?'cross':value<weights[1]?'cutback':value<weights[2]?'through_ball':value<weights[3]?'dribble':'combination';}
  function actionForRoll(s,roll,tactic,kind=setPieceKind(s,roll),team=0,minute=s.minute){const original=legacyActionForRoll(s,roll,tactic,kind,team,minute);return !kind&&roll>=.90?'long_shot':original;}
+ // A distance attempt is harder than finishing inside the box. This is the
+ // game's calibrated chance model, not a claim of measured real-world xG.
+ function openPlayExpectedGoals(r,team,action){
+  const base=team===0?r.ourGoal:r.oppGoal;
+  return action==='long_shot'?clamp(base*.55,.025,.26):clamp(base*({cross:.9,cutback:1.1,through_ball:1,dribble:1.06,combination:1.04}[action]||1),.04,.48);
+ }
  function setPiecePlayer(s,active,role){const preferred=s.setPieces?.[role];if(preferred&&active.includes(preferred))return s.players[preferred];const fallback=bestSetPiecePlayer(s,active,role);return fallback?s.players[fallback]:null;}
  function setPieceExpectedGoals(s,team,kind,kicker,target){if(team===0){if(kind==='corner')return clamp(.018+kicker.passing*.00028+setPieceScore(target,'target')*.00042,.025,.13);return clamp(.035+kicker.attack*.00055+kicker.passing*.00025,.035,.16);}const profile=s.opponent||{attack:65,middle:65};if(kind==='corner')return clamp(.018+profile.middle*.00028+profile.attack*.00032,.025,.13);return clamp(.035+profile.attack*.00055+profile.middle*.00025,.035,.16);}
  function tickModern(s){
@@ -268,7 +278,7 @@
    let type='chance',prob=0,text;
    const offside=rolls[4]<stopRate&&offsideAtPass(action,kind,team,rolls[7]);
    if(offside)text=team===0?scorer.name+'의 침투가 너무 빨랐습니다. 오프사이드! 상대 간접 프리킥입니다.':s.opponentName+' 공격수가 오프사이드에 걸렸습니다. 우리 팀 간접 프리킥입니다.';
-   else if(rolls[4]>=stopRate){s.shots[team]++;segment.shots[team]++;prob=kind?setPieceExpectedGoals(s,team,kind,kicker||{attack:s.opponent.attack,passing:s.opponent.middle},target||{attack:s.opponent.attack}):clamp((team===0?r.ourGoal:r.oppGoal)*modifiers[legacyAction],.04,.48);s.xg[team]+=prob;segment.xg[team]+=prob;
+   else if(rolls[4]>=stopRate){s.shots[team]++;segment.shots[team]++;prob=kind?setPieceExpectedGoals(s,team,kind,kicker||{attack:s.opponent.attack,passing:s.opponent.middle},target||{attack:s.opponent.attack}):openPlayExpectedGoals(r,team,action);s.xg[team]+=prob;segment.xg[team]+=prob;
     if(rolls[5]<prob){s.score[team]++;segment.goals[team]++;type='goal';text=kind?(kind==='corner'?team===0?'골! '+kicker.name+'의 코너킥을 '+target.name+'이(가) 헤더로 마무리합니다.':s.opponentName+'의 코너킥이 헤더로 연결됩니다.':team===0?'골! '+kicker.name+'의 직접 프리킥이 골망을 흔듭니다.':s.opponentName+'의 직접 프리킥이 골로 이어집니다.'):team===0?'골! '+shooter+'이(가) '+({cross:'크로스',cutback:'컷백',through_ball:'침투 패스',dribble:'드리블',combination:'패스 연계',long_shot:'중거리 슈팅'}[action])+' 뒤 마무리합니다.':s.opponentName+'이(가) '+({cross:'크로스',cutback:'컷백',through_ball:'침투 패스',dribble:'돌파',combination:'패스 연계',long_shot:'중거리 슈팅'}[action])+'로 골을 만듭니다.';}
     else{type='shot';text=kind?(kind==='corner'?team===0?target.name+'의 코너킥 헤더! 상대 골키퍼가 막아냅니다.':s.opponentName+'의 코너킥 헤더를 골키퍼가 잡습니다.':team===0?kicker.name+'의 직접 프리킥! 골키퍼가 쳐냅니다.':s.opponentName+'의 직접 프리킥을 골키퍼가 막아냅니다.'):team===0?shooter+'의 '+({cross:'크로스 공격 마무리',cutback:'컷백 슈팅',through_ball:'침투 패스 슈팅',dribble:'돌파 슈팅',combination:'연계 슈팅',long_shot:'중거리 슈팅'}[action])+'! 상대 골키퍼가 막아냅니다.':s.opponentName+'의 '+({cross:'크로스 공격',cutback:'컷백',through_ball:'침투 패스',dribble:'돌파',combination:'패스 연계',long_shot:'중거리 슈팅'}[action])+'에 이은 슈팅! '+s.players[s.lineup.find(id=>s.players[id].pos==='GK')].name+'의 선방입니다.';}
    }else text=kind?(kind==='corner'?team===0?kicker.name+'의 코너킥을 수비가 걷어냅니다.':s.opponentName+'의 코너킥을 수비가 걷어냅니다.':team===0?kicker.name+'의 프리킥이 수비벽에 막힙니다.':s.opponentName+'의 프리킥이 수비벽에 막힙니다.'):team===0?source.name+'의 '+({cross:'크로스가 수비에 막힙니다.',cutback:'컷백 패스가 차단됩니다.',through_ball:'침투 패스가 끊깁니다.',dribble:'돌파가 수비에 막힙니다.',combination:'패스 연계가 끊깁니다.',long_shot:'중거리 슈팅 길이 막힙니다.'}[action]):s.opponentName+'의 '+({cross:'크로스가 수비에 막힙니다.',cutback:'컷백 패스가 차단됩니다.',through_ball:'침투 패스가 끊깁니다.',dribble:'돌파가 수비에 막힙니다.',combination:'패스 연계가 끊깁니다.',long_shot:'중거리 슈팅 길이 막힙니다.'}[action]);
@@ -421,5 +431,5 @@
   let rng=s.seed>>>0;for(let draw=0;draw<s.minute*8;draw++)rng=(Math.imul(rng,1664525)+1013904223)>>>0;if(s.rng!==rng)fail();
   s.homeName=typeof s.homeName==='string'&&s.homeName.length<60?s.homeName:'브린웰 로버스';s.opponentName=typeof s.opponentName==='string'&&s.opponentName.length<60?s.opponentName:'팔켄루 04';s.paused=running(s);return s;
  }
- const api={offsidePosition,offsideAtPass,attackFocuses,attackFocus,setAttackFocus,clockLimits,clockLabel,enableStoppage,roster,startingRoster,mentalProfile,detailedAttributes,market,youthProfile, youthCandidates,identityProfile,profileForSlot,legacyName,personality,displayText,roleKey,formations,formationPositions,assignedPosition,placementPoint,boundedPlacement,isAvailable,fitLineup,syncSetPieces,create,substitutionRules,setFormation,swap,setTactic,setPieceRoleNames,setPieceScore,defaultSetPieces,assignSetPieceRole,setPieceExpectedGoals,opponentPlan,opponentPlanLabels,begin,tick,finishSegment,ratings,restore,running,goalAttributions,teamTalk,talkChoices,talkReactions,temperament};root.Football=api;if(typeof module!=='undefined')module.exports=api;
+ const api={openPlayExpectedGoals,offsideLine,offsidePosition,offsideAtPass,attackFocuses,attackFocus,setAttackFocus,clockLimits,clockLabel,enableStoppage,roster,startingRoster,mentalProfile,detailedAttributes,market,youthProfile, youthCandidates,identityProfile,profileForSlot,legacyName,personality,displayText,roleKey,formations,formationPositions,assignedPosition,placementPoint,boundedPlacement,isAvailable,fitLineup,syncSetPieces,create,substitutionRules,setFormation,swap,setTactic,setPieceRoleNames,setPieceScore,defaultSetPieces,assignSetPieceRole,setPieceExpectedGoals,opponentPlan,opponentPlanLabels,begin,tick,finishSegment,ratings,restore,running,goalAttributions,teamTalk,talkChoices,talkReactions,temperament};root.Football=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

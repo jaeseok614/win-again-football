@@ -68,8 +68,10 @@ test('older qualifying saves stay inactive this season and preserve their exact 
 });
 
 test('the final international fixture blocks next year until confirmed and records its champion once',()=>{
- let s=boost(S.create(43));F.setFormation(s.match,'433');F.setTactic(s.match,'press');s=require('./current-test-helper.cjs').qualify();assert(s.europe.enabled);
- let finalSeen=false;while(s.match){if(s.competition==='europe'&&s.europe.stage===7){finalSeen=true;assert.equal(s.round,14);rejectAtomic(s,x=>S.nextSeason(x));finish(s.match);const resume=S.restore(copy(s));assert.deepEqual(resume.match,s.match);const a=S.settle(s),b=S.settle(resume);assert.deepEqual(a,b);s=a;}else s=play(s);}
+ let s=copy(qualified);assert(s.europe.enabled);
+ // Actual balanced European fixtures reach the final with the distance-shot
+ // model. This test verifies settlement, rather than guaranteeing press wins.
+ let finalSeen=false;while(s.match){if(s.competition==='europe'&&s.match.phase==='prep')F.setTactic(s.match,'balanced');if(s.competition==='europe'&&s.europe.stage===7){finalSeen=true;assert.equal(s.round,14);rejectAtomic(s,x=>S.nextSeason(x));finish(s.match);const resume=S.restore(copy(s));assert.deepEqual(resume.match,s.match);const a=S.settle(s),b=S.settle(resume);assert.deepEqual(a,b);s=a;}else s=play(s);}
  assert(finalSeen,'the actual seeded campaign must reach the final');assert(S.ready(s));const next=S.nextSeason(s);assert.equal(next.history.at(-1).europeChampion,s.europe.champion);assert.equal(next.finance.balance,s.finance.balance);assert.equal(next.europe.stage,0);assert.deepEqual(next.europe.results,[]);assert.deepEqual(S.restore(copy(next)),next);
  const bad=copy(next);bad.history.at(-1).europeChampion='unknown';assert.throws(()=>S.restore(bad));
 });

@@ -151,11 +151,17 @@
   const team=event.team===0?frozen.own:frozen.opponent,defenders=event.team===0?frozen.opponent:frozen.own,people=event.team===0?result.own:result.opponent,opponents=event.team===0?result.opponent:result.own,direction=event.team===0?-1:1;
   const exact=event.team===0?team.find(p=>p.id===(event.actorId||event.scorerId)):null,named=event.team===0?team.find(p=>p.name&&String(event.text||'').includes(p.name)):null;
   const shooter=exact||named||role(team,'FW',Number.isInteger(event.actorIndex)?event.actorIndex:finite(event.minute)%2),keeper=role(defenders,'GK'),side=event.side|| (shooter.x<50?'left':'right'),wide=event.setPiece!=='freeKick'&&['cross','cutback'].includes(event.action),dribble=event.action==='dribble',longShot=event.action==='long_shot',corner=event.setPiece==='corner',freeKick=event.setPiece==='freeKick';
-  const source=dribble||freeKick?shooter:team.find(p=>p.id===(event.sourceId||event.assistId))||widePlayer(team,side,shooter.id),origin={...frozen.ball},lost=frozen.ownerTeam!==event.team;
+  const central=team.filter(p=>p.pos!=='GK'&&p.id!==shooter.id).sort((a,b)=>(Math.abs(a.baseX-50)+(a.pos==='MID'?0:30))-(Math.abs(b.baseX-50)+(b.pos==='MID'?0:30))||a.id.localeCompare(b.id))[0];
+  const source=dribble||freeKick?shooter:team.find(p=>p.id===(event.sourceId||event.assistId))||(['through_ball','combination','long_shot'].includes(event.action)?central:null)||widePlayer(team,side,shooter.id),origin={...frozen.ball},lost=frozen.ownerTeam!==event.team;
   const recoverer=team.filter(p=>p.pos!=='GK'&&p.id!==source.id&&p.id!==shooter.id).sort((a,b)=>Math.hypot(a.x-origin.x,a.y-origin.y)-Math.hypot(b.x-origin.x,b.y-origin.y))[0]||source;
   const receive={x:wide?(side==='left'?13:87):clamp(source.x,25,75),y:event.team===0?Math.max(source.y,longShot?57:48):Math.min(source.y,longShot?43:52)};
   const carryEnd={x:wide?(side==='left'?11:89):clamp(receive.x+(receive.x<50?9:-9),22,78),y:event.team===0?(wide?19:dribble?28:longShot?52:37):(wide?81:dribble?72:longShot?48:63)};
   const strike={x:freeKick?clamp(shooter.x,32,68):dribble?carryEnd.x:clamp(shooter.x,38,62),y:freeKick?(event.team===0?33:67):corner?(event.team===0?18:82):dribble?carryEnd.y:longShot?(event.team===0?46:54):event.team===0?31:69};
+  // Read the visible second-last opponent and ball at release. The recorded
+  // outcome remains authoritative; the footage must show the same timing.
+  const throughBall=!event.setPiece&&event.action==='through_ball',defenceReady=defenders.map(p=>({...p,y:p.pos==='GK'?p.y:event.team===0?Math.max(34,p.y):Math.min(66,p.y)})),releaseLine=throughBall?engine.offsideLine(carryEnd.y+1.2,defenceReady.map(p=>p.y),event.team):null;
+  const passReady=throughBall?{x:clamp(shooter.x,25,75),y:clamp((releaseLine??50)+direction*(event.offside?4:-3),12,88)}:null;
+  if(throughBall&&!event.offside)strike.y=clamp((releaseLine??50)+direction*6,28,72);
   const firstTouch=!corner&&!freeKick&&!dribble,receiveStrike=firstTouch?{x:strike.x+(side==='left'?-.9:.9),y:strike.y-direction*1.6}:strike;
   const cornerSpot={x:side==='left'?10:90,y:event.team===0?10:90};
   const nearPost=strike.x<45?43:strike.x>55?57:50,targetX=event.type==='goal'?clamp(nearPost+(finite(event.minute)%3-1)*2,42,58):nearPost,catchPoint={x:targetX,y:event.team===0?14:86},end=event.type==='goal'?{x:targetX,y:event.team===0?4:96}:catchPoint;
@@ -168,8 +174,8 @@
   const runners=team.filter(p=>p.pos!=='GK'&&![source.id,shooter.id,recoverer.id].includes(p.id));
   for(const [index,p] of runners.entries()){const style=movementStyle(p),near=clamp(1-Math.abs(p.baseX-source.baseX)/95,.2,1),progress=u(timing.secure+style.delay+(p.pos==='DEF'?200:0),timing.delivery+style.delay),distance=p.pos==='DEF'?52:p.pos==='MID'?34:29,travel=(p.pos==='DEF'?2+near*2:p.pos==='MID'?6+near*5:10+near*4)*style.response,targetY=event.team===0?Math.max(distance,p.y-travel):Math.min(100-distance,p.y+travel),lane=clamp(p.baseX,24,76),targetX=p.pos==='FW'?(Math.abs(lane-strike.x)<7?strike.x+(lane<strike.x?-9:9):lane):p.pos==='MID'?clamp(p.x+(p.x<50?5:-5)*near,24,76):p.x;place(people,p.id,{x:lerp(p.x,targetX,progress)+Math.sin(Math.PI*progress)*(index%2?1:-1)*2,y:lerp(p.y,targetY,progress)});}
   const receiverMove=u(timing.secure,timing.delivery);if(shooter.id!==source.id){
-    const passReady=event.action==='through_ball'?{x:shooter.x,y:event.team===0?(event.offside?23:32):(event.offside?77:68)}:receiveStrike;
-    const ready=age<timing.carry?mixPoint(shooter,passReady,u(timing.secure,timing.carry)):mixPoint(passReady,receiveStrike,u(timing.carry,timing.delivery));
+    const readySpot=passReady||receiveStrike;
+    const ready=age<timing.carry?mixPoint(shooter,readySpot,u(timing.secure,timing.carry)):mixPoint(readySpot,event.offside?readySpot:receiveStrike,u(timing.carry,timing.delivery));
     place(people,shooter.id,age<timing.delivery?ready:mixPoint(receiveStrike,strike,u(timing.delivery,timing.shot)));
    }
   place(people,source.id,age<timing.outlet?mixPoint(source,sourceReceive,u(0,timing.outlet)):movingSource);
@@ -190,17 +196,42 @@
   if(boxMarker){place(opponents,boxMarker.id,mixPoint(boxMarker,{x:strike.x+(strike.x<50?-2:2),y:strike.y-direction*4},support));result.boxMarkerId=boxMarker.id;}
   const coverTarget=age<timing.outlet?mixPoint(origin,sourceReceive,u(timing.win,timing.outlet)):age<(dribble?timing.delivery:timing.carry)?movingSource:dribble?strike:mixPoint(sourceFinish,strike,u(timing.carry,timing.delivery));
   coverUnit(opponents,coverTarget,u(timing.win,timing.delivery),event.team===0?12:88,[keeper.id,blocker.id,boxMarker?.id,result.dispossessedId]);
+  if(throughBall){
+   // Hold defensive depth until the passer releases, then turn and chase.
+   // This snapshot is also the line against which the receiving run is shown.
+   const turn=u(timing.carry,timing.delivery);
+   for(const p of opponents){const original=defenders.find(q=>q.id===p.id),ready=defenceReady.find(q=>q.id===p.id);if(original)p.y=age<=timing.carry?lerp(original.y,ready.y,u(timing.win,timing.carry)):lerp(ready.y,p.y,turn);}
+   result.passRelease={team:event.team,line:releaseLine,ballY:carryEnd.y+1.2,receiverY:passReady.y,offside:!!event.offside};
+  }
   result.attributed=!!(exact||named);result.scorerId=exact?.id||named?.id||null;result.performerId=shooter.id;result.keeperId=keeper.id;result.eventType=event.type;result.action=event.action;result.performerName=shooter.name;result.sourceId=source.id;result.recovererId=recoverer.id;result.crossSourceName=source.name;result.crossTargetName=shooter.name;result.outcomeAt=impactAge(event);
   result.trail=[];result.ownerTeam=age<timing.win&&!corner&&!freeKick?frozen.ownerTeam:event.team;
   function flight(a,b,t){result.ball=mixPoint(a,b,t);result.trail=[.12,.24,.36].map(lag=>mixPoint(a,b,Math.max(0,t-lag)));result.carrierId=t===0?source.id:null;}
    if(event.offside&&age>=timing.carry){
-    const target=foot({x:clamp(shooter.x,25,75),y:event.team===0?23:77}),from=deliveryFrom,t=u(timing.carry,timing.delivery);
+    const target=foot(passReady),from=deliveryFrom,t=u(timing.carry,timing.delivery);
     result.ball=age<timing.delivery?passingPoint(from,target,t):target;
     result.trail=age<timing.delivery?[.12,.24,.36].map(lag=>passingPoint(from,target,Math.max(0,t-lag))):[];
     result.receiverId=shooter.id;result.carrierId=null;
     if(age<timing.delivery){result.phase='through';result.label='스루패스 · 침투 시작';result.ownerTeam=event.team;}
     else{result.phase='offside';result.label='오프사이드 · 간접 프리킥';result.ownerTeam=1-event.team;result.restart='indirect-free-kick';}
-    place(people,shooter.id,{x:target.x-1.3,y:target.y-1.2});
+    place(people,shooter.id,passReady);
+    result.outcomeAt=timing.delivery;
+    if(age>=timing.delivery){
+     // An indirect free kick keeps the ball at the offence, rather than
+     // teleporting back to routine circulation or awarding an attacking shot.
+     const taker=defenders.filter(p=>p.pos!=='GK').sort((a,b)=>Math.hypot(a.x-target.x,a.y-target.y)-Math.hypot(b.x-target.x,b.y-target.y))[0]||keeper;
+     place(opponents,taker.id,mixPoint(opponents.find(p=>p.id===taker.id),passReady,u(timing.delivery,timing.hold)));
+     result.deadBall={kind:'indirect-free-kick',team:1-event.team,spot:target,takerId:taker.id};
+     result.focusId=taker.id;result.focusName=taker.name||'';
+     if(age>=timing.hold){
+      const blend=u(timing.hold,timing.end),release=timing.hold+(timing.end-timing.hold)*.48,pass=smooth((age-release)/(timing.end-release));
+      for(const [list,base] of [[result.own,baseOwn],[result.opponent,baseOpp]])for(const p of list){const q=base.find(q=>q.id===p.id);if(q)Object.assign(p,mixPoint(p,q,blend));}
+      const liveTaker=opponents.find(p=>p.id===taker.id),held=foot(liveTaker);
+      result.ball=mixPoint(held,baseBall,pass);result.carrierId=age<release?taker.id:null;result.sourceId=taker.id;
+      result.phase=age<release?'offside':'outlet';result.label=age<release?'오프사이드 · 간접 프리킥 준비':'간접 프리킥 · 동료에게 연결';
+      const receiver=[...baseOwn,...baseOpp].find(p=>p.id===(event.team===0?baseOpp:baseOwn).reduce((a,b)=>Math.hypot(a.x+1.3-baseBall.x,a.y+1.2-baseBall.y)<Math.hypot(b.x+1.3-baseBall.x,b.y+1.2-baseBall.y)?a:b).id);
+      result.receiverId=receiver?.id||null;
+     }
+    }
     return;
    }
   if(corner||freeKick){
@@ -374,6 +405,9 @@
   const people=[...value.own,...value.opponent],ring=(p,color,dashed=false)=>{if(!p)return;ctx.strokeStyle=color;ctx.setLineDash(dashed?[3,3]:[]);ctx.beginPath();ctx.ellipse(w*p.x/100,h*p.y/100+8,11,5,0,0,Math.PI*2);ctx.stroke();};
   ctx.save();ctx.lineWidth=1.5;ring(people.find(p=>p.id===value.carrierId),'#fff1aa');if(value.receiverId!==value.carrierId&&!['shot','goal','saved','save'].includes(value.phase))ring(people.find(p=>p.id===value.receiverId),'#9de9f0',true);
   if(value.kickSpot){ctx.strokeStyle='#fff1aa';ctx.setLineDash([2,3]);ctx.beginPath();ctx.arc(w*value.kickSpot.x/100,h*value.kickSpot.y/100,7,0,Math.PI*2);ctx.stroke();}
+  if(value.passRelease&&['through','offside'].includes(value.phase)){
+   ctx.strokeStyle=value.passRelease.offside?'#ffb29cbb':'#ffe28a99';ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(w*.08,h*value.passRelease.line/100);ctx.lineTo(w*.92,h*value.passRelease.line/100);ctx.stroke();
+  }
   ctx.restore();
  }
  // Every on-field player stays named. Resolve crowded labels independently of

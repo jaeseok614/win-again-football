@@ -28,7 +28,7 @@ test('new through-ball offsides stop before goals while saving deterministic mat
  }
  assert.ok(n>0);assert.ok(shots>0&&goals>=0);
 });
-test('mid-range shots appear with lower expected chance and real goal-directed footage',()=>{
+test('mid-range shots use lower expected chance and real goal-directed footage',()=>{
  let sample=null;
  for(let seed=1;seed<=260&&!sample;seed++){
   const m=F.create(seed);while(m.phase!=='full'){if(!F.running(m))F.begin(m);m.paused=false;F.finishSegment(m);}
@@ -43,5 +43,18 @@ test('mid-range shots appear with lower expected chance and real goal-directed f
  assert.equal(v.phase,'shot');assert.equal(v.action,'long_shot');
  assert.match(M.broadcast(sample.event,sample.m,[],v),/중거리 슈팅/);
  assert.ok(v.ball.x>=4&&v.ball.x<=96);
+ for(const team of [0,1])for(const quality of [.06,.15,.3,.48])assert.ok(F.openPlayExpectedGoals({ourGoal:quality,oppGoal:quality},team,'long_shot')<F.openPlayExpectedGoals({ourGoal:quality,oppGoal:quality},team,'combination'));
+});
+test('actual long shots add distance-adjusted expected goals and survive current saves',()=>{
+ let shots=0;
+ for(let seed=1;seed<=40;seed++){
+  const m=F.create(seed);
+  while(m.phase!=='full'){
+   if(!F.running(m))F.begin(m);const r=F.ratings(m),old=[...m.xg],events=F.tick(m);
+   for(const e of events.filter(e=>e.action==='long_shot'&&e.type!=='chance')){shots++;assert.ok(Math.abs((m.xg[e.team]-old[e.team])-F.openPlayExpectedGoals(r,e.team,e.action))<1e-10);}
+  }
+  const before=JSON.stringify(m),restored=F.restore(JSON.parse(before));assert.deepEqual(restored.xg,m.xg);assert.deepEqual(restored.score,m.score);assert.equal(JSON.stringify(m),before);
+ }
+ assert.ok(shots>0);
 });
 console.log('Validated '+checks+' football realism groups.');
