@@ -362,5 +362,23 @@
   if(value.kickSpot){ctx.strokeStyle='#fff1aa';ctx.setLineDash([2,3]);ctx.beginPath();ctx.arc(w*value.kickSpot.x/100,h*value.kickSpot.y/100,7,0,Math.PI*2);ctx.stroke();}
   ctx.restore();
  }
- return {frame,locomotion,paintGuides,commentary,liveCommentary,broadcast,sequence,timing,passing,playbackRate,impactAge};
+ // Every on-field player stays named. Resolve crowded labels independently of
+ // simulation state, with leader lines back to the actual player positions.
+ function nameLabels(value,w,h,measure){
+  const people=[...value.own.map(p=>({...p,team:0})),...value.opponent.map(p=>({...p,team:1}))],placed=[],height=14,overlap=(a,b)=>Math.max(0,Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+height,b.y+b.height)-Math.max(a.y,b.y));
+  const bodies=people.map(p=>({x:w*p.x/100-10,y:h*p.y/100-15,width:20,height:30}));
+  for(const p of people){const short=shortName(p.name),name=people.some(q=>q.id!==p.id&&shortName(q.name)===short)?p.name:short,width=Math.min(w-4,measure(name)+8),px=w*p.x/100,py=h*p.y/100;let best=null,score=Infinity;
+   for(const dy of [-30,19,-45,34,-60,49,-75,64])for(const dx of [0,-width/2-5,width/2+5,-width-8,width+8]){const box={x:clamp(px-width/2+dx,2,w-width-2),y:clamp(py+dy,2,h-height-2),width,height};const cost=placed.reduce((s,q)=>s+overlap(box,q)*100,0)+bodies.reduce((s,q)=>s+overlap(box,q)*3,0)+Math.abs(dy+30)*.4+Math.abs(dx);if(cost<score){score=cost;best=box;}if(cost===0)break;}
+   if(placed.some(q=>overlap(best,q)>0)){let free=null,distance=Infinity;for(let y=2;y<=h-height-2;y+=height+1)for(let x=2;x<=w-width-2;x+=8){const box={x,y,width,height};if(placed.some(q=>overlap(box,q)>0))continue;const cost=Math.hypot(x+width/2-px,y+7-py)+bodies.reduce((s,q)=>s+overlap(box,q)*3,0);if(cost<distance){distance=cost;free=box;}}if(free)best=free;}
+   placed.push({...best,id:p.id,name,fullName:p.name,team:p.team,px,py,active:p.id===value.carrierId});
+  }return placed;
+ }
+ function paintNames(ctx,value,w,h){
+  ctx.save();ctx.font='bold '+(w<360?9:10)+'px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+  const labels=nameLabels(value,w,h,name=>ctx.measureText?.(name)?.width||name.length*10);
+  for(const p of labels){const x=p.x+p.width/2,y=p.y+7;ctx.strokeStyle=p.team?'#d8e4ef88':'#dafaac88';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(p.px,p.py);ctx.lineTo(x,y);ctx.stroke();}
+  for(const p of labels){ctx.fillStyle=p.team?'#102632ed':'#16311eed';ctx.fillRect(p.x,p.y,p.width,14);ctx.fillStyle=p.active?'#fff2a0':p.team?'#e2efff':'#e3ffca';ctx.fillText(p.name,p.x+p.width/2,p.y+7);}
+  ctx.restore();return labels;
+ }
+ return {frame,locomotion,paintGuides,nameLabels,paintNames,commentary,liveCommentary,broadcast,sequence,timing,passing,playbackRate,impactAge};
 });

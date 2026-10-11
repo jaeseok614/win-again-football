@@ -61,6 +61,14 @@ ball contact, local recovery, pause, replay and RNG/score continuity.
 
 ## Presentation and performance
 
+Permanent owner requirement (2026-10-11, reaffirmed): ALL on-field players on
+BOTH teams must have readable names by default throughout live matches AND
+replays, including off-ball play, set pieces, pause and reduced-motion mode.
+Never gate names behind possession, focus, hover, a setting or a small-screen
+breakpoint. Use compact names without ellipses, separate crowded labels with
+leader lines, and keep the ball above them. Full identities remain accessible.
+This is a continuing requirement for every later feature, not an optional mode.
+
 Consider mobile performance in every change. Hidden dashboards do no work during
 live ticks. Cache immutable derived structures and invalidate previews when inputs
 change. For perceptible operations immediately show loading/progress, prevent
