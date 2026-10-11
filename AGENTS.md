@@ -33,6 +33,18 @@ cup/European fixtures have separate receipts and statistics. Keep deterministic
 fixture, RNG, history and financial validation. Europe qualification uses the
 previous first-division top two. Cups take priority at shared calendar gates.
 
+## Reincarnation loop direction (2026-10-11)
+
+Prioritize a focused failure/retry loop over endless management features. New app
+campaigns enable the optional v10 rebirth rules: confirmed league pressure,
+six-game promises, a three-game warning before dismissal, free reincarnation with
+one chosen memory, and a first-division-return ending. Preserve valid existing
+campaigns; offer explicit opt-in from their current point, never retroactive losses.
+Do not restart or consume a continuation on viewing/dismissing a dialog. Keep the
+pre-rebirth full backup and handle storage failure atomically. The current one-use
+appeal from life two onward is free; real billing is not integrated. Local JSON
+history is not payment entitlement proof. Read docs/REBIRTH_LOOP_2026-10-11.md.
+
 ## Presentation and performance
 
 Consider mobile performance in every change. Hidden dashboards do no work during

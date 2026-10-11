@@ -48,6 +48,7 @@ const managementShellRender=renderAppShell;renderAppShell=function(){managementS
  if(!appSessionStarted)document.body.classList.remove('management-view');
  if(!appSessionStarted||launchBusy||view!=='club'||managerGuideActive||season.round===0||managementMeetingQueued||document.querySelector('dialog[open]'))return;
  const key=season.seed+':'+season.year+':'+season.round;if(key===managementMeetingKey)return;
+ if(typeof Rebirth!=='undefined'&&season.rebirth){const run=Rebirth.read(season);if(run.status!=='active'||run.pending||run.warning)return;}
  const next=storyInboxPriority(ClubStory.read(season).pending).find(e=>e.round===season.round&&e.key!=='arrival');if(!next)return;
  managementMeetingQueued=true;requestAnimationFrame(()=>{managementMeetingQueued=false;if(view!=='club'||!appSessionStarted||document.querySelector('dialog[open]'))return;managementMeetingKey=key;openClubStory(next.id,$('mobile-match-action'));});
 };
