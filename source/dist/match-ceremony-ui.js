@@ -1,6 +1,6 @@
 // Match entrances and whistles are explicit pauses; no elapsed match time is skipped.
 var matchCeremonyHold=false,ceremonyPending=null,ceremonyMatch=null,ceremonyTimer=0;
-var ceremonyPreview=null,ceremonyTeam=1,ceremonyPage=[0,0],ceremonyRoster=false;
+var ceremonyPreview=null,ceremonyTeam=1,ceremonyPage=[0,0],ceremonyRoster=false,ceremonyCoach=false;
 function ceremonySquadsMarkup(){
  const esc=escapeText;
  return '<nav class="preview-tabs" aria-label="브리핑 팀 선택">'+ceremonyPreview.teams.map((t,i)=>'<button type="button" data-preview-team="'+i+'" aria-pressed="'+(ceremonyTeam===i)+'">'+(i?'상대 · ':'우리 · ')+esc(t.club.short)+'</button>').join('')+'</nav><div class="preview-teams" data-team="'+ceremonyTeam+'">'+ceremonyPreview.teams.map((t,i)=>{
@@ -11,9 +11,23 @@ function ceremonySquadsMarkup(){
  }).join('')+'</div><button type="button" id="ceremony-roster">'+(ceremonyRoster?'포메이션 보기':'전체 이름 · 선발/후보 명단')+'</button>';
 }
 function renderCeremonySquads(){
+ ceremonyDialog.dataset.coach=String(ceremonyCoach);
+ if(ceremonyCoach){renderCeremonyPreparation();return;}
+ $('match-ceremony-title').textContent='양 팀 선발과 핵심 선수';
+ $('ceremony-coach').textContent='코치의 작전';
+ $('ceremony-squads').classList.remove('coach-preparation-open');
  $('ceremony-squads').innerHTML=ceremonySquadsMarkup();
  $('ceremony-roster').onclick=()=>{ceremonyRoster=!ceremonyRoster;ceremonyPage=[0,0];renderCeremonySquads();$('ceremony-roster').focus({preventScroll:true});};
  $('ceremony-squads').onclick=e=>{const team=e.target.closest('[data-preview-team]'),page=e.target.closest('[data-preview-page]');if(team){ceremonyTeam=Number(team.dataset.previewTeam);ceremonyPage=[0,0];}else if(page){ceremonyTeam=Number(page.dataset.previewSide);ceremonyPage[ceremonyTeam]=Math.max(0,ceremonyPage[ceremonyTeam]+Number(page.dataset.previewPage));}else return;renderCeremonySquads();const next=$('ceremony-squads').querySelector(team?'[data-preview-team="'+ceremonyTeam+'"]':'[data-side="'+ceremonyTeam+'"] [data-preview-page="'+page.dataset.previewPage+'"]');next?.focus({preventScroll:true});};
+}
+function renderCeremonyPreparation(){
+ const host=$('ceremony-squads'),d=MatchPreparation.read(season,typeof positions==='function'?positions():[]),esc=escapeText;
+ host.classList.add('coach-preparation-open');$('match-ceremony-title').textContent='코치의 경기 준비';$('ceremony-coach').textContent='양 팀 선발';
+ if(!d.valid){host.innerHTML='<p>'+esc(d.reason)+'</p>';return;}
+ const form=d.form.length?d.form.map(g=>'<span data-result="'+g.result+'" title="'+g.year+'시즌 '+g.round+'R · '+g.score.join(' : ')+'">'+g.result+' '+g.score.join(':')+'</span>').join(''):'<span>아직 확정 리그 기록이 없습니다.</span>';
+ const context=d.context,attr=context.kind==='opponent'?'data-opponent-player="'+esc(context.player.identity)+'"':'data-preparation-action="rebirth"',action='<button type="button" '+attr+'><b>'+esc(context.title+(context.kind==='opponent'?' · '+context.label:''))+' →</b><small>'+esc(context.text)+'</small></button>';
+ host.innerHTML='<article class="coach-preparation"><header><small>수석 코치 · '+esc(d.opponent.short)+'전</small><p>'+esc(d.opponent.formation.split('').join('–')+' · '+d.opponent.label)+'</p></header><div class="preparation-checks">'+d.checks.map(c=>'<div><small>'+esc(c.label)+'</small><b>'+esc(c.value)+'</b></div>').join('')+'</div><section class="preparation-priority"><small>먼저 확인할 한 가지</small><h3>'+esc(d.priority.title)+'</h3><p>'+esc(d.priority.text)+'</p><button type="button" data-preparation-action="'+d.priority.action+'">'+esc(d.priority.label)+' →</button></section><section class="preparation-context">'+action+'</section><div class="preparation-form"><small>최근 확정 리그</small><div>'+form+'</div></div><p class="preparation-current">현재 지시: '+esc(d.instruction)+' · '+esc(d.tactic)+'</p><small class="preparation-note">'+esc(d.footnote)+'</small></article>';
+ host.onclick=e=>{const b=e.target.closest('[data-preparation-action]');if(!b||state!==ceremonyMatch)return;const target=b.dataset.preparationAction;closeCeremony();if(target==='rebirth'){openRebirth('current',b);return;}if(d.priority.playerId&&target==='roster')selected=d.priority.playerId;openMatchPopup(target,$('primary'));};
 }
 const ceremonyDialog=document.createElement('dialog');ceremonyDialog.id='match-ceremony';ceremonyDialog.setAttribute('aria-labelledby','match-ceremony-title');document.body.append(ceremonyDialog);
 function closeCeremony(){clearTimeout(ceremonyTimer);ceremonyDialog.close();matchCeremonyHold=false;matchClock.reset();movementStamp=performance.now();$('primary')?.focus({preventScroll:true});}
@@ -29,7 +43,7 @@ function showMatchCeremony(kind){
  const esc=escapeText,score=esc(S.club(S.own).short)+' '+state.score.join(' : ')+' '+esc(S.opponentFor(season).short);
  const summary='<strong class="ceremony-score">'+score+'</strong><p>'+(half?'선수들의 체력과 전반 흐름을 확인하고 후반을 준비하세요.':full?'추가시간까지 끝났습니다. 기록을 확인한 뒤 결과를 확정해 주세요.':'관중의 함성 속에서 경기가 시작됩니다.')+'</p>';
  ceremonyDialog.innerHTML='<div class="ceremony-content"><small>'+esc(season.competition==='cup'?'국내컵':season.competition==='europe'?'유럽 대회':S.divisionInfo(season.league.division).name||'리그')+' · '+(pre?'경기 전 브리핑':F.clockLabel(state)+'′')+'</small><h2 id="match-ceremony-title">'+title+'</h2>'+summary+'<div class="ceremony-actions">'+(pre?'<button id="ceremony-lineup">상대 선발 자세히</button><button id="ceremony-ready" class="primary">상대 확인 · 킥오프</button>':'<button id="ceremony-ready" class="primary">'+(half?'라커룸으로':full?'경기 기록 보기':'경기 보기')+'</button>')+'</div></div>';
- if(pre){ceremonyPreview=Opposition.preview(season,typeof positions==='function'?positions():[]);ceremonyTeam=1;ceremonyPage=[0,0];ceremonyRoster=false;ceremonyDialog.innerHTML='<div class="ceremony-content"><header class="preview-heading"><h2 id="match-ceremony-title">'+title+'</h2><button id="ceremony-close" type="button">닫기</button></header><div id="ceremony-squads"></div><div class="ceremony-actions"><button id="ceremony-lineup">상대 전술 보고서</button><button id="ceremony-ready" class="primary">확인 · 킥오프</button></div></div>';renderCeremonySquads();$('ceremony-close').onclick=closeCeremony;}
+ if(pre){ceremonyPreview=Opposition.preview(season,typeof positions==='function'?positions():[]);ceremonyTeam=1;ceremonyPage=[0,0];ceremonyRoster=false;ceremonyCoach=false;ceremonyDialog.innerHTML='<div class="ceremony-content"><header class="preview-heading"><h2 id="match-ceremony-title">'+title+'</h2><button id="ceremony-close" type="button">닫기</button></header><div id="ceremony-squads"></div><div class="ceremony-actions"><button id="ceremony-coach">코치의 작전</button><button id="ceremony-lineup">상대 보고서</button><button id="ceremony-ready" class="primary">확인 · 킥오프</button></div></div>';renderCeremonySquads();$('ceremony-close').onclick=closeCeremony;$('ceremony-coach').onclick=()=>{ceremonyCoach=!ceremonyCoach;renderCeremonySquads();$('ceremony-coach').focus({preventScroll:true});};}
  if(half){ceremonyDialog.innerHTML=halftimeMarkup(score);$('ceremony-close').onclick=closeCeremony;$('halftime-return').onclick=closeCeremony;for(const [id,tab] of [['halftime-priority',Halftime.read(season).advice.action],['halftime-tactics','tactics'],['halftime-roster','roster']])$(id).onclick=()=>{if(state!==match)return closeCeremony();closeCeremony();openMatchPopup(tab);};}
  if(!ceremonyDialog.open)ceremonyDialog.showModal();ceremonyDialog.dataset.kind=kind;$('ceremony-ready').focus({preventScroll:true});
  $('ceremony-ready').onclick=()=>{if(state!==match)return closeCeremony();closeCeremony();if(pre){F.enableStoppage(state);const from=state.logs.length;F.begin(state);presentMatchEvents(state.logs.slice(from),true);save();render();showMatchCeremony('kickoff');ceremonyTimer=setTimeout(()=>{if(ceremonyDialog.open&&ceremonyMatch===match&&ceremonyDialog.dataset.kind==='kickoff')closeCeremony();},motionEnabled()?1800:400);}else if(half)openMatchPopup('talk');else if(full)openMatchPopup('stats');};

@@ -274,9 +274,12 @@ public final class GameSmokeTest {
             tapWebElement(scenario, "#launch-continue");
             awaitTrue(scenario, "appSessionStarted||document.getElementById('manager-guide').open");
             if ("true".equals(evaluate(scenario, "document.getElementById('manager-guide').open"))) {
-                assertEquals("true", evaluate(scenario, "document.getElementById('manager-guide-copy').textContent.includes('토투넘')"));
+                assertEquals("First arrival introduces the contract before the club's fall", "true", evaluate(scenario,
+                    "managerGuideStep===0&&document.getElementById('manager-guide-copy').textContent.includes('감독직 계약서')"));
                 assertEquals("true", evaluate(scenario, "document.getElementById('manager-guide-skip').hidden"));
                 tapWebElement(scenario, "#manager-guide-next");
+                assertEquals("Second arrival explains the actual fifth-tier challenge before the owner meeting", "true", evaluate(scenario,
+                    "managerGuideStep===1&&document.getElementById('manager-guide-copy').textContent.includes('토투넘')&&document.getElementById('manager-guide-copy').textContent.includes('24팀, 46경기')&&document.getElementById('manager-guide-skip').hidden"));
                 tapWebElement(scenario, "#manager-guide-next");
                 awaitTrue(scenario, "document.getElementById('club-story-dialog').open&&clubStoryRequired");
                 evaluate(scenario, "WinAgainAndroid.handleBack()");
@@ -390,6 +393,10 @@ public final class GameSmokeTest {
             evaluate(scenario, "(()=>{while(state.phase!=='full'){if(!F.running(state))F.begin(state);state.paused=false;F.finishSegment(state);}render();openMatchPopup('stats');return true;})()");
             awaitTrue(scenario, "document.getElementById('match-replay-open')&&!document.getElementById('match-replay-entry').hidden");
             String replayBefore = evaluate(scenario, "JSON.stringify(season)");
+            assertEquals("Every compact match report page keeps full names, records and controls inside the phone", "[]", evaluate(scenario,
+                "(()=>{const failures=[],select=document.getElementById('match-report-select'),body=document.querySelector('.match-popup-body');for(const tab of ['핵심 기록','팀 비교','선수 평점','주요 장면']){select.value=tab;select.dispatchEvent(new Event('change'));do{if(body.scrollHeight>body.clientHeight+1||body.scrollWidth>body.clientWidth+1)failures.push(tab+':'+matchReportPage);const next=document.querySelector('[data-match-report-page=\"1\"]');if(!next||next.disabled)break;next.click();}while(true);}select.value='핵심 기록';select.dispatchEvent(new Event('change'));return failures;})()"));
+            assertEquals(replayBefore, evaluate(scenario, "JSON.stringify(season)"));
+            screenshot(scenario, "android-compact-match-report.png");
             tapWebElement(scenario, "#match-replay-open");
             awaitTrue(scenario, "document.getElementById('match-replay-dialog').open");
             assertEquals("Actual event replay fits with a visible ball and touch controls", "true", evaluate(scenario,
@@ -419,7 +426,11 @@ public final class GameSmokeTest {
             evaluate(scenario, "WinAgainAndroid.handleBack()");
             awaitTrue(scenario, "!document.getElementById('player-detail-dialog').open&&document.getElementById('squad-overview-dialog').open&&managerGuideStep===2");
             tapWebElement(scenario, "#squad-overview-close");
-            awaitTrue(scenario, "managerGuideStep===3");
+            awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===2");
+            tapWebElement(scenario, "#manager-guide-next");
+            awaitTrue(scenario, "document.getElementById('squad-overview-dialog').open&&document.querySelector('[data-guide-forward]')");
+            tapWebElement(scenario, "[data-guide-forward]");
+            awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===3");
             evaluate(scenario, "(()=>{managerGuideActive=false;managerGuideWaiting=null;document.getElementById('manager-guide').close();setView('market');return true;})()");
             tapWebElement(scenario, "[data-management-open='transfer-search-panel']");
             assertEquals("true", evaluate(scenario, "document.getElementById('management-dialog').open&&document.getElementById('management-content').contains(document.getElementById('market-overview'))"));
