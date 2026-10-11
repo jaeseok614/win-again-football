@@ -27,7 +27,7 @@ function drawMatchReplay(){
 }
 function matchReplayTick(now){
  matchReplayRAF=null;if(!matchReplayDialog.open||document.hidden){stopMatchReplay();return;}if(!matchReplayPlaying)return;
- if(matchReplayClock!==null&&now-matchReplayClock<33){matchReplayRAF=requestAnimationFrame(matchReplayTick);return;}if(matchReplayClock!==null)matchReplayAge=Math.min(matchReplayClip.duration,matchReplayAge+Math.min(150,now-matchReplayClock)*Math.min(matchReplaySpeed,Movement.playbackRate('rapid',matchReplayAge)));matchReplayClock=now;drawMatchReplay();
+ if(matchReplayClock!==null&&now-matchReplayClock<33){matchReplayRAF=requestAnimationFrame(matchReplayTick);return;}if(matchReplayClock!==null)matchReplayAge=Math.min(matchReplayClip.duration,matchReplayAge+Math.min(150,now-matchReplayClock)*Math.min(matchReplaySpeed,Movement.playbackRate('rapid',matchReplayAge,matchReplayPhase?.split(':')[0]||'')));matchReplayClock=now;drawMatchReplay();
  if(matchReplayAge>=matchReplayClip.duration)stopMatchReplay();else matchReplayRAF=requestAnimationFrame(matchReplayTick);
 }
 function selectMatchReplay(id){

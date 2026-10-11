@@ -14,6 +14,7 @@
  // A receiving step and off-ball support settle back at segment boundaries.
  // The shared path is used by the ball and its trail, including the first touch.
  function passingPoint(a,b,t){const eased=smooth(t),p=mixPoint(a,b,eased),dx=b.x-a.x,dy=b.y-a.y,length=Math.hypot(dx,dy)||1,bend=Math.sin(Math.PI*t)**2*Math.min(1.1,length*.025);return {x:p.x-dy/length*bend,y:p.y+dx/length*bend};}
+ function aerialPoint(a,b,t,bend=0,lift=.75,landing=0){const p=mixPoint(a,b,t);return {...p,y:p.y+Math.sin(Math.PI*t)*bend,height:Math.sin(Math.PI*t)*lift+landing*t};}
  function locomotion(current,previous,deltaMs){
   const dt=clamp(finite(deltaMs),0,320),blend=1-Math.exp(-dt/85),old=new Map([...(previous?.own||[]),...(previous?.opponent||[])].map(p=>[p.id,p]));
   const pose=p=>{const prior=old.get(p.id),rest={stride:0,lean:0,travel:0},last=prior?.gait||rest;if(!prior||current.phase==='static')return {...p,gait:rest};if(!dt)return {...p,gait:{...last}};const dx=p.x-prior.x,dy=p.y-prior.y,distance=Math.hypot(dx,dy),speed=distance*1000/dt,travel=last.travel+Math.min(distance,8)*.8;return {...p,gait:{travel,stride:lerp(last.stride,Math.sin(travel)*Math.min(2,speed*.12),blend),lean:lerp(last.lean,clamp(dx*1000/dt*.3,-8,8),blend)}};};
@@ -25,7 +26,7 @@
  const playbackRates=Object.freeze({slow:.5,normal:1,fast:2,rapid:4});
  // Routine circulation is brisk; the decisive touch, flight and outcome stay
  // readable even when the viewer selects a fast match clock.
- function playbackRate(speed,age=Infinity,phase=''){const selected=Object.hasOwn(playbackRates,speed)?playbackRates[speed]:1;return ['contest','duel','tackle','intercept','recovery','ball-out','restart-setup','restart-pass'].includes(phase)||age>=timing.delivery&&age<timing.hold?Math.min(selected,1):age<timing.end?Math.min(selected,2):selected;}
+ function playbackRate(speed,age=Infinity,phase=''){const selected=Object.hasOwn(playbackRates,speed)?playbackRates[speed]:1;return ['contest','duel','tackle','intercept','recovery','ball-out','restart-setup','restart-pass','cross','header','corner-run'].includes(phase)||age>=timing.delivery&&age<timing.hold?Math.min(selected,1):age<timing.end?Math.min(selected,2):selected;}
  const engine=typeof module==='object'&&module.exports?require('./engine.js'):globalThis.Football;
  const bases=engine.formationPositions;
  const oppBase=[[50,12,'GK'],[16,31,'DEF'],[39,27,'DEF'],[61,27,'DEF'],[84,31,'DEF'],[16,54,'MID'],[39,51,'MID'],[61,51,'MID'],[84,54,'MID'],[37,78,'FW'],[63,78,'FW']];
@@ -154,11 +155,11 @@
   const recoverer=team.filter(p=>p.pos!=='GK'&&p.id!==source.id&&p.id!==shooter.id).sort((a,b)=>Math.hypot(a.x-origin.x,a.y-origin.y)-Math.hypot(b.x-origin.x,b.y-origin.y))[0]||source;
   const receive={x:wide?(side==='left'?13:87):clamp(source.x,25,75),y:event.team===0?Math.max(source.y,48):Math.min(source.y,52)};
   const carryEnd={x:wide?(side==='left'?11:89):clamp(receive.x+(receive.x<50?9:-9),22,78),y:event.team===0?(wide?19:dribble?28:37):(wide?81:dribble?72:63)};
-  const strike={x:freeKick?clamp(shooter.x,32,68):dribble?carryEnd.x:clamp(shooter.x,38,62),y:freeKick?(event.team===0?33:67):dribble?carryEnd.y:event.team===0?31:69};
+  const strike={x:freeKick?clamp(shooter.x,32,68):dribble?carryEnd.x:clamp(shooter.x,38,62),y:freeKick?(event.team===0?33:67):corner?(event.team===0?18:82):dribble?carryEnd.y:event.team===0?31:69};
   const firstTouch=!corner&&!freeKick&&!dribble,receiveStrike=firstTouch?{x:strike.x+(side==='left'?-.9:.9),y:strike.y-direction*1.6}:strike;
   const cornerSpot={x:side==='left'?10:90,y:event.team===0?10:90};
   const nearPost=strike.x<45?43:strike.x>55?57:50,targetX=event.type==='goal'?clamp(nearPost+(finite(event.minute)%3-1)*2,42,58):nearPost,catchPoint={x:targetX,y:event.team===0?14:86},end=event.type==='goal'?{x:targetX,y:event.team===0?4:96}:catchPoint;
-  const duelTarget=wide?carryEnd:strike,blocker=defenders.filter(p=>p.pos!=='GK').sort((a,b)=>Math.hypot(a.x-duelTarget.x,a.y-duelTarget.y)-Math.hypot(b.x-duelTarget.x,b.y-duelTarget.y)||a.id.localeCompare(b.id))[0]||keeper;
+  const duelTarget=corner?strike:wide?carryEnd:strike,blocker=defenders.filter(p=>p.pos!=='GK').sort((a,b)=>Math.hypot(a.x-duelTarget.x,a.y-duelTarget.y)-Math.hypot(b.x-duelTarget.x,b.y-duelTarget.y)||a.id.localeCompare(b.id))[0]||keeper;
   const u=(from,to)=>smooth((age-from)/(to-from)),place=(list,id,point)=>{const p=list.find(p=>p.id===id);if(p)Object.assign(p,{x:clamp(point.x,10,90),y:clamp(point.y,10,90)});},foot=p=>({x:clamp(p.x+1.3,4,96),y:clamp(p.y+1.2,4,96)});
   const sourceReceive=corner?cornerSpot:freeKick?strike:receive,sourceFinish=corner?cornerSpot:freeKick?strike:carryEnd,run=u(timing.outlet,dribble?timing.delivery:timing.carry),movingSource={...mixPoint(sourceReceive,sourceFinish,run),x:clamp(lerp(sourceReceive.x,sourceFinish.x,run)+(wide?(side==='left'?-2:2):sourceReceive.x<50?3:-3)*Math.sin(Math.PI*run),10,90)},strikeBall=foot(strike),deliveryFrom=foot(sourceFinish);
   // Stagger supporting runs by identity and role. Far-side defenders hold
@@ -177,7 +178,7 @@
   const recoverySpot={x:origin.x-1.3,y:origin.y-1.2};
   if(!corner&&!freeKick&&recoverer.id!==source.id){const cover={x:recoverer.x,y:event.team===0?Math.max(recoverer.y,38):Math.min(recoverer.y,62)};place(people,recoverer.id,age<timing.outlet?mixPoint(recoverer,recoverySpot,u(0,timing.win)):mixPoint(recoverySpot,cover,u(timing.outlet,timing.carry)));}
   if(lost&&!corner&&!freeKick){const holder=defenders.find(p=>p.id===frozen.carrierId);if(holder&&holder.pos!=='GK'){const contact=mixPoint(holder,recoverySpot,u(0,timing.win)),retreat={x:holder.x,y:holder.y-direction*4};place(opponents,holder.id,age<timing.secure?contact:mixPoint(recoverySpot,retreat,u(timing.secure,timing.outlet)));result.dispossessedId=holder.id;}}
-  const chaseStart=wide?timing.outlet:timing.secure,chaseEnd=dribble?timing.delivery:timing.carry,duel=wide||dribble?carryEnd:strike;
+  const chaseStart=wide?timing.outlet:timing.secure,chaseEnd=dribble?timing.delivery:timing.carry,duel=corner?strike:wide||dribble?carryEnd:strike;
   const blocked=event.type==='chance',chase={x:duel.x+(blocked?0:side==='left'?-3:3),y:duel.y+(blocked?(freeKick?direction*8:0):-direction*6)};
   const wingCover=wide&&!blocked&&age>=timing.carry?mixPoint(chase,{x:strike.x+(side==='left'?-5:5),y:strike.y-direction*6},u(timing.carry,timing.delivery)):chase;
   place(opponents,blocker.id,mixPoint(blocker,wingCover,u(chaseStart,chaseEnd)));result.duelId=blocker.id;
@@ -203,7 +204,7 @@
   }
   if(age>=timing.carry&&!dribble&&!freeKick){
    const t=u(timing.carry,timing.delivery),destination=blocked?foot(chase):foot(receiveStrike);
-   if(age<timing.delivery){flight(deliveryFrom,destination,t);result.receiverId=blocked?blocker.id:shooter.id;result.phase=event.action==='cross'?'cross':event.action==='cutback'?'cutback':'through';result.label={cross:'문전으로 크로스!',cutback:'골라인에서 컷백!',through_ball:'수비 뒷공간으로 침투 패스',combination:'동료에게 연결 · 문전 침투'}[event.action]||'문전으로 연결';if(event.action==='cross')result.ballHeight=Math.sin(Math.PI*t)*(corner?1:.75);}
+   if(age<timing.delivery){flight(deliveryFrom,destination,t);result.receiverId=blocked?blocker.id:shooter.id;result.phase=event.action==='cross'?'cross':event.action==='cutback'?'cutback':'through';result.label={cross:'문전으로 크로스!',cutback:'골라인에서 컷백!',through_ball:'수비 뒷공간으로 침투 패스',combination:'동료에게 연결 · 문전 침투'}[event.action]||'문전으로 연결';if(event.action==='cross'){const path=t=>aerialPoint(deliveryFrom,destination,t,direction*2);const ball=path(t);result.ball={x:ball.x,y:ball.y};result.ballHeight=ball.height;result.trail=[.36,.24,.12].map(lag=>path(Math.max(0,t-lag)));}}
    else{result.ball=destination;result.trail=[];result.carrierId=blocked?blocker.id:shooter.id;}
   }
   if(dribble&&blocked&&age>=timing.carry&&age<timing.delivery+350){result.tacklerId=blocker.id;result.tackleProgress=Math.sin(Math.PI*clamp((age-timing.carry)/1050,0,1));result.phase=age<timing.delivery?'duel':'tackle';result.label=age<timing.delivery?'돌파 선수에게 수비가 접근':'태클로 돌파 저지';}
@@ -216,6 +217,25 @@
   // The keeper advances to narrow the angle, sets, and meets the ball on its
   // flight. Both crossing and dribbling use the same save path and arrival time.
   if(!blocked){const ready={x:lerp(keeper.x,nearPost,.65),y:catchPoint.y},set=u(timing.outlet,timing.shot),dive=u(timing.shot,timing.impact),point=age<timing.shot?mixPoint(keeper,ready,set):mixPoint(ready,catchPoint,dive);place(opponents,keeper.id,point);result.keeperRush=set;result.saveProgress=age>=timing.shot?dive:null;result.keeperPose=age<timing.delivery?'rush':age<timing.shot?'set':age<timing.hold?'dive':'recover';result.keeperDive=(nearPost<50?-1:1)*Math.sin(Math.PI*clamp((age-timing.shot)/(timing.hold-timing.shot),0,1));}
+  if(corner){
+   // A corner has time for box positioning, a fixed ball and a longer aerial
+   // delivery. The recorded taker/target remain the actors throughout the scene.
+   const release=timing.outlet+450,stance={x:cornerSpot.x+(side==='left'?2:-2),y:cornerSpot.y-direction*3},staging={x:strike.x+(side==='left'?4:-4),y:strike.y-direction*14},rush=u(release-250,timing.delivery),attackPose=age<timing.outlet?mixPoint(shooter,staging,u(0,timing.outlet)):mixPoint(staging,strike,rush);
+   result.setPiece='corner';place(people,shooter.id,attackPose);
+   const follow={x:cornerSpot.x+(side==='left'?5:-5),y:cornerSpot.y-direction*3};place(people,source.id,age<timing.outlet?mixPoint(source,stance,u(0,timing.outlet)):age<release?mixPoint(stance,cornerSpot,u(release-350,release)):mixPoint(cornerSpot,follow,u(release,timing.delivery)));
+   // One marker follows the actual aerial target; two other runners attack
+   // separate lanes at identity-specific times, with distinct nearby markers.
+   const marked={x:attackPose.x+(side==='left'?3:-3),y:attackPose.y+direction*2},contest=blocked?strike:{x:strike.x+(side==='left'?3:-3),y:strike.y+direction*2};
+   place(opponents,blocker.id,age<timing.outlet?mixPoint(blocker,{x:staging.x+(side==='left'?3:-3),y:staging.y+direction*2},u(0,timing.outlet)):mixPoint(marked,contest,u(release,timing.delivery)));result.aerialMarkerId=blocker.id;
+   const supporting=team.filter(p=>p.pos!=='GK'&&![source.id,shooter.id].includes(p.id)).sort((a,b)=>({FW:0,MID:1,DEF:2}[a.pos]-{FW:0,MID:1,DEF:2}[b.pos])||Math.abs(a.x-strike.x)-Math.abs(b.x-strike.x)).slice(0,2),used=new Set([blocker.id,keeper.id]);result.cornerRunnerIds=[shooter.id,...supporting.map(p=>p.id)];
+   for(const [i,p] of supporting.entries()){const lane=i===0?(strike.x<50?64:36):Math.abs(strike.x-50)<6?(strike.x<50?36:64):50,start={x:lane,y:strike.y-direction*(i===0?13:20)},end={x:lane,y:strike.y-direction*(i===0?4:12)},progress=u(release-150+movementStyle(p).delay*.3,timing.delivery),pose=age<timing.outlet?mixPoint(p,start,u(0,timing.outlet)):mixPoint(start,end,progress);place(people,p.id,pose);const marker=defenders.filter(q=>q.pos!=='GK'&&!used.has(q.id)).sort((a,b)=>Math.hypot(a.x-start.x,a.y-start.y)-Math.hypot(b.x-start.x,b.y-start.y))[0];if(marker){used.add(marker.id);place(opponents,marker.id,mixPoint(marker,{x:pose.x+(i===0?-2.5:2.5),y:pose.y+direction*2},u(0,timing.outlet)));}}
+   if(age<release){result.ball=age<timing.outlet?mixPoint(origin,deliveryFrom,u(0,timing.outlet)):deliveryFrom;result.carrierId=null;result.receiverId=source.id;result.kickSpot=deliveryFrom;result.phase=age<release-350?'set-piece':'corner-run';result.label=age<timing.outlet?'코너킥 · 문전 자리 잡기':age<release-350?'코너킥 · 키커가 동료를 확인합니다':'코너킥 · 도움닫기';}
+   else if(age<timing.delivery){const t=clamp((age-release)/(timing.delivery-release),0,1),destination=blocked?foot(strike):strikeBall,path=t=>aerialPoint(deliveryFrom,destination,t,direction*3,.6,blocked?0:.55),ball=path(t);result.ball={x:ball.x,y:ball.y};result.ballHeight=ball.height;result.trail=[.36,.24,.12].map(lag=>path(Math.max(0,t-lag)));result.carrierId=t===0?source.id:null;result.receiverId=shooter.id;result.phase='cross';result.label='코너킥 · '+((side==='left')===(strike.x<50)?'가까운':'반대')+' 골대 쪽으로!';}
+   if(!blocked&&age>=timing.delivery&&age<timing.impact){const lift=Math.sin(Math.PI*clamp((age-timing.delivery)/900,0,1)),contactLift=Math.sin(Math.PI*(timing.shot-timing.delivery)/900);result.headerId=shooter.id;result.headerLift=lift;if(age<timing.shot){result.ballHeight=.55+.35*lift;result.label='문전 공중 경합 · 헤더!';}else{const t=(age-timing.shot)/(timing.impact-timing.shot),height=t=>(.55+.35*contactLift)*(1-t);result.ballHeight=height(t);result.trail=[.36,.24,.12].map(lag=>{const q=Math.max(0,t-lag);return {...mixPoint(strikeBall,end,q),height:height(q)};});result.label='헤더 슈팅 · 골문을 향합니다!';}}
+   // Both outcomes use identical keeper preparation until the delivery arrives.
+   if(age<timing.delivery){const ready={x:lerp(keeper.x,nearPost,.65),y:catchPoint.y};place(opponents,keeper.id,mixPoint(keeper,ready,u(timing.outlet,timing.shot)));}
+   if(blocked&&age>=timing.delivery){result.label='문전에서 코너킥 차단 · 수비가 공 확보';const ready={x:lerp(keeper.x,nearPost,.65),y:catchPoint.y},at=smooth((timing.delivery-timing.outlet)/(timing.shot-timing.outlet));place(opponents,keeper.id,mixPoint(mixPoint(keeper,ready,at),keeper,u(timing.delivery,timing.hold)));}
+  }
   if(freeKick){
    // The same setup precedes every outcome. The placed ball stays still while
    // the taker steps back and approaches; three actual defenders form the wall.
@@ -282,7 +302,7 @@
  }
  function liveCommentaryText(value){
   const people=[...value.own,...value.opponent],from=people.find(p=>p.id===value.sourceId)||people.find(p=>p.id===value.carrierId),to=people.find(p=>p.id===value.receiverId),name=from?.name||to?.name;
-  if(value.deadBall||value.setPiece==='freeKick'&&['set-piece','free-kick-run','shot'].includes(value.phase))return value.label+'.';
+  if(value.deadBall||(value.setPiece==='freeKick'&&['set-piece','free-kick-run','shot'].includes(value.phase)||value.setPiece==='corner'&&['set-piece','corner-run','cross','shot'].includes(value.phase)))return value.label+'.';
   if(value.passKind&&from&&to)return from.name+' → '+to.name+' · '+(value.carrierId===to.id?'첫 터치로 공을 받습니다.':value.passKind==='switch'?'반대편으로 크게 전환합니다.':'발밑으로 빠르게 연결합니다.');
   if(value.transitionTeam!==undefined&&['save','saved','intercept'].includes(value.phase))return named(people.find(p=>p.id===value.carrierId)?.name||'수비수')+' 공을 확보합니다. 동료는 패스 길을 벌리고 상대는 수비로 복귀합니다.';
   if(value.phase==='secure')return named(people.find(p=>p.id===value.recovererId)?.name||'선수')+' 공을 확보합니다. 동료가 전진할 때까지 전개 방향을 살핍니다.';
@@ -308,7 +328,7 @@
  }
  const shortName=name=>String(name||'선수').trim().split(/\s+/).at(-1);
  function liveCommentary(value,compact=false){
-  if(!compact||value.setPiece==='freeKick'&&['set-piece','free-kick-run','shot'].includes(value.phase))return liveCommentaryText(value);
+  if(!compact||(value.setPiece==='freeKick'&&['set-piece','free-kick-run','shot'].includes(value.phase)||value.setPiece==='corner'&&['set-piece','corner-run','cross','shot'].includes(value.phase)))return liveCommentaryText(value);
   if(value.transitionTeam!==undefined&&['save','saved','intercept'].includes(value.phase))return shortName([...value.own,...value.opponent].find(p=>p.id===value.carrierId)?.name)+' 공 확보. 동료는 벌리고 상대는 복귀합니다.';
   const people=[...value.own,...value.opponent],person=id=>shortName(people.find(p=>p.id===id)?.name),source=person(value.sourceId||value.carrierId),receiver=person(value.receiverId),recoverer=person(value.recovererId),shooter=shortName(value.performerName);
   const texts={turnover:named(recoverer)+' 압박합니다. 먼저 공을 확보해야 합니다.',secure:recoverer+' 공 확보. 동료들이 앞으로 움직입니다.',outlet:receiver+'에게 첫 패스. 공격 전개를 시작합니다.',carry:named(source)+' 공을 운반하며 동료의 침투를 봅니다.','wing-run':source+' 측면 돌파! 앞서 나가 크로스를 준비합니다.',sprint:person(value.runnerId)+' 전력 질주! 수비를 뒤에 두고 전진합니다.',duel:named(person(value.tacklerId))+' 따라붙습니다. 공을 두고 경합합니다.',tackle:person(value.tacklerId)+(value.carrierId?' 태클! 돌파를 저지하고 공을 확보합니다.':' 태클! 흘러나온 공을 두고 경합합니다.'),cross:source+' 크로스! '+named(receiver)+' 문전으로 쇄도합니다.',cutback:source+' 컷백! '+named(receiver)+' 슈팅을 준비합니다.',through:source+' 전진 패스! '+named(receiver)+' 뒷공간으로 침투합니다.',control:shooter+' 슈팅 준비. 골키퍼가 나와 각도를 좁힙니다.',header:shooter+' 헤더! 공이 골문을 향합니다.',shot:shooter+' 슈팅! 공이 골문을 향합니다.',intercept:named(person(value.carrierId))+' 공격을 끊고 공을 확보합니다.',contest:named(receiver)+' 접근합니다. 공을 두고 경합합니다.',recovery:recoverer+' 공 확보. 동료와 다시 전개합니다.',restart:value.label+'.','set-piece':value.label+'.'};
@@ -329,6 +349,7 @@
  // Only describe the frame being displayed, never the event's future outcome.
  function sequence(value){
   if(!value||![0,1].includes(value.ownerTeam))return null;
+  if(value.setPiece==='corner'&&['set-piece','corner-run','cross','header','shot'].includes(value.phase))return {stage:2,team:value.ownerTeam,label:{'set-piece':'코너킥 준비','corner-run':'도움닫기',cross:'문전 투입',header:'공중 경합',shot:'헤더 슈팅'}[value.phase]};
   if(value.setPiece==='freeKick'&&['set-piece','free-kick-run','shot'].includes(value.phase))return {stage:2,team:value.ownerTeam,label:value.phase==='shot'?'프리킥 슈팅':value.phase==='free-kick-run'?'도움닫기':'프리킥 준비'};
   const stage=['turnover','secure','intercept','tackle','recovery'].includes(value.phase)?0:['outlet','carry','wing-run','sprint','through','build-up','wide','transition'].includes(value.phase)?1:['cross','cutback','control','shot','header','set-piece'].includes(value.phase)?2:-1;
   return stage<0?null:{stage,team:value.ownerTeam,label:['확보','전진','문전'][stage]};
