@@ -41,3 +41,4 @@ const rebirthLaunch=renderAppShell;renderAppShell=function(){rebirthLaunch();if(
 const rebirthGuide=renderManagerGuide;renderManagerGuide=function(){rebirthGuide();if(!season.rebirth)return;const r=Rebirth.read(season);if(managerGuideStep===0&&r.attempt>1){const intro=StoryRebirth.opening(season);$('manager-guide-title').textContent=intro.title;$('manager-guide-copy').textContent=intro.text;}if(managerGuideStep===1)$('manager-guide-copy').textContent+='\n\n구단주: “이사회 여유가 바닥나면 마지막 세 경기입니다. 기회를 놓치면 경질이지요.”\n경질 뒤에는 기억 하나를 품고 무료로 다시 시작합니다.';};
 
 const rebirthAction=action;action=function(fn){if(season.rebirth&&state===season.match&&Rebirth.read(season).status!=='active'){openRebirth();return snapshot();}return rebirthAction(fn);};
+if(!appSessionStarted)renderAppShell();

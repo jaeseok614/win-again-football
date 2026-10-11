@@ -56,7 +56,7 @@ jobs:
           target: google_apis
           profile: pixel_6
           ram-size: 3072M
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none -feature -Vulkan
+          emulator-options: -no-window -gpu software -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none -feature -Vulkan
           working-directory: android
           disable-animations: true
           script: |
