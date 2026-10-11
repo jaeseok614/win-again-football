@@ -45,3 +45,5 @@
 .match-popup-ready #players .celebrating .player-face-marker{filter:drop-shadow(0 0 4px #edff97)}
 
 .match-popup-ready #players .player-head{position:absolute;top:-4px;left:50%;width:5px;height:5px;border-radius:50%;transform:translateX(-50%);background:var(--player-skin,#d5b18f);box-shadow:0 1px 1px #00140e66;pointer-events:none}
+
+.match-popup-ready #players .wall-player .player-name{top:calc(8px + var(--wall-label-y));bottom:auto}

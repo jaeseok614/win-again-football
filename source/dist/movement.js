@@ -149,7 +149,7 @@
   result.own=frozen.own.map(p=>({...p}));result.opponent=frozen.opponent.map(p=>({...p}));
   const team=event.team===0?frozen.own:frozen.opponent,defenders=event.team===0?frozen.opponent:frozen.own,people=event.team===0?result.own:result.opponent,opponents=event.team===0?result.opponent:result.own,direction=event.team===0?-1:1;
   const exact=event.team===0?team.find(p=>p.id===(event.actorId||event.scorerId)):null,named=event.team===0?team.find(p=>p.name&&String(event.text||'').includes(p.name)):null;
-  const shooter=exact||named||role(team,'FW',Number.isInteger(event.actorIndex)?event.actorIndex:finite(event.minute)%2),keeper=role(defenders,'GK'),side=event.side|| (shooter.x<50?'left':'right'),wide=['cross','cutback'].includes(event.action),dribble=event.action==='dribble',corner=event.setPiece==='corner',freeKick=event.setPiece==='freeKick';
+  const shooter=exact||named||role(team,'FW',Number.isInteger(event.actorIndex)?event.actorIndex:finite(event.minute)%2),keeper=role(defenders,'GK'),side=event.side|| (shooter.x<50?'left':'right'),wide=event.setPiece!=='freeKick'&&['cross','cutback'].includes(event.action),dribble=event.action==='dribble',corner=event.setPiece==='corner',freeKick=event.setPiece==='freeKick';
   const source=dribble||freeKick?shooter:team.find(p=>p.id===(event.sourceId||event.assistId))||widePlayer(team,side,shooter.id),origin={...frozen.ball},lost=frozen.ownerTeam!==event.team;
   const recoverer=team.filter(p=>p.pos!=='GK'&&p.id!==source.id&&p.id!==shooter.id).sort((a,b)=>Math.hypot(a.x-origin.x,a.y-origin.y)-Math.hypot(b.x-origin.x,b.y-origin.y))[0]||source;
   const receive={x:wide?(side==='left'?13:87):clamp(source.x,25,75),y:event.team===0?Math.max(source.y,48):Math.min(source.y,52)};
@@ -216,6 +216,20 @@
   // The keeper advances to narrow the angle, sets, and meets the ball on its
   // flight. Both crossing and dribbling use the same save path and arrival time.
   if(!blocked){const ready={x:lerp(keeper.x,nearPost,.65),y:catchPoint.y},set=u(timing.outlet,timing.shot),dive=u(timing.shot,timing.impact),point=age<timing.shot?mixPoint(keeper,ready,set):mixPoint(ready,catchPoint,dive);place(opponents,keeper.id,point);result.keeperRush=set;result.saveProgress=age>=timing.shot?dive:null;result.keeperPose=age<timing.delivery?'rush':age<timing.shot?'set':age<timing.hold?'dive':'recover';result.keeperDive=(nearPost<50?-1:1)*Math.sin(Math.PI*clamp((age-timing.shot)/(timing.hold-timing.shot),0,1));}
+  if(freeKick){
+   // The same setup precedes every outcome. The placed ball stays still while
+   // the taker steps back and approaches; three actual defenders form the wall.
+   const wallSpot={x:strike.x,y:strike.y+direction*8},wall=[blocker,...defenders.filter(p=>p.pos!=='GK'&&p.id!==blocker.id).sort((a,b)=>Math.hypot(a.x-wallSpot.x,a.y-wallSpot.y)-Math.hypot(b.x-wallSpot.x,b.y-wallSpot.y)).slice(0,2)],stance={x:strike.x+(side==='left'?-2.5:2.5),y:strike.y-direction*4};
+   result.setPiece='freeKick';result.wallIds=wall.map(p=>p.id);result.wallLift=age>=timing.shot&&age<timing.impact?Math.sin(Math.PI*clamp((age-timing.shot)/(timing.impact-timing.shot),0,1)):0;
+   for(const [i,p] of wall.entries()){const spot={x:wallSpot.x+(i===0?0:i===1?-4:4),y:wallSpot.y},generic=opponents.find(q=>q.id===p.id),target=blocked&&p.id===blocker.id?spot:generic;place(opponents,p.id,age<timing.impact?mixPoint(p,spot,u(0,timing.outlet)):mixPoint(spot,target,u(timing.impact,timing.hold)));}
+   if(age<timing.shot){place(people,shooter.id,age<timing.outlet?mixPoint(shooter,stance,u(0,timing.outlet)):mixPoint(stance,strike,u(timing.delivery,timing.shot)));result.ball=age<timing.outlet?mixPoint(origin,strikeBall,u(0,timing.outlet)):strikeBall;result.carrierId=null;result.receiverId=shooter.id;result.phase=age<timing.delivery?'set-piece':'free-kick-run';result.label=age<timing.outlet?'프리킥 · 공을 놓고 수비벽 정렬':age<timing.delivery?'프리킥 · 키커가 골문을 살핍니다':'프리킥 · 도움닫기';result.kickSpot=strikeBall;}
+   // A shared curved path also supplies height-aware trail points. Its endpoints
+   // remain the engine event's wall contact, keeper catch or goal destination.
+   if(age>=timing.shot&&age<timing.impact){const t=(age-timing.shot)/(timing.impact-timing.shot),target=blocked?foot(wallSpot):end,bend=(side==='left'?-1:1)*(blocked?.5:4),path=t=>{const p=mixPoint(strikeBall,target,t);return {...p,x:p.x+Math.sin(Math.PI*t)*bend,height:Math.sin(Math.PI*t)*(blocked?.12:.8)};};const ball=path(t);result.ball={x:ball.x,y:ball.y};result.ballHeight=ball.height;result.trail=[.36,.24,.12].map(lag=>path(Math.max(0,t-lag)));result.shotTarget=target;}
+   if(age>=timing.impact)result.ballHeight=0;
+   const ready={x:clamp(strike.x<50?53:47,42,58),y:catchPoint.y},dive=u(timing.shot,timing.impact),point=age<timing.shot?mixPoint(keeper,ready,u(0,timing.outlet)):blocked?mixPoint(ready,keeper,u(timing.impact,timing.hold)):mixPoint(ready,catchPoint,dive);
+   place(opponents,keeper.id,point);result.keeperRush=u(0,timing.outlet);result.saveProgress=age>=timing.shot&&!blocked?dive:null;result.keeperPose=age<timing.shot?'set':blocked?'set':age<timing.hold?'dive':'recover';result.keeperDive=blocked?0:(catchPoint.x<ready.x?-1:1)*Math.sin(Math.PI*clamp((age-timing.shot)/(timing.hold-timing.shot),0,1));
+  }
   if(event.type==='goal'&&age>=timing.impact&&age<timing.hold){result.celebrantIds=team.filter(p=>p.pos!=='GK'&&(p.id===shooter.id||p.id===source.id||p.pos==='FW')).map(p=>p.id);result.celebrationLift=Math.sin(Math.PI*u(timing.impact,timing.hold));}
   if(age===0){result.ball=origin;result.ownerTeam=frozen.ownerTeam;result.carrierId=frozen.carrierId;}
   // React only after visible possession is secured. The winner stays on the
@@ -268,7 +282,7 @@
  }
  function liveCommentaryText(value){
   const people=[...value.own,...value.opponent],from=people.find(p=>p.id===value.sourceId)||people.find(p=>p.id===value.carrierId),to=people.find(p=>p.id===value.receiverId),name=from?.name||to?.name;
-  if(value.deadBall)return value.label+'.';
+  if(value.deadBall||value.setPiece==='freeKick'&&['set-piece','free-kick-run','shot'].includes(value.phase))return value.label+'.';
   if(value.passKind&&from&&to)return from.name+' → '+to.name+' · '+(value.carrierId===to.id?'첫 터치로 공을 받습니다.':value.passKind==='switch'?'반대편으로 크게 전환합니다.':'발밑으로 빠르게 연결합니다.');
   if(value.transitionTeam!==undefined&&['save','saved','intercept'].includes(value.phase))return named(people.find(p=>p.id===value.carrierId)?.name||'수비수')+' 공을 확보합니다. 동료는 패스 길을 벌리고 상대는 수비로 복귀합니다.';
   if(value.phase==='secure')return named(people.find(p=>p.id===value.recovererId)?.name||'선수')+' 공을 확보합니다. 동료가 전진할 때까지 전개 방향을 살핍니다.';
@@ -294,7 +308,7 @@
  }
  const shortName=name=>String(name||'선수').trim().split(/\s+/).at(-1);
  function liveCommentary(value,compact=false){
-  if(!compact)return liveCommentaryText(value);
+  if(!compact||value.setPiece==='freeKick'&&['set-piece','free-kick-run','shot'].includes(value.phase))return liveCommentaryText(value);
   if(value.transitionTeam!==undefined&&['save','saved','intercept'].includes(value.phase))return shortName([...value.own,...value.opponent].find(p=>p.id===value.carrierId)?.name)+' 공 확보. 동료는 벌리고 상대는 복귀합니다.';
   const people=[...value.own,...value.opponent],person=id=>shortName(people.find(p=>p.id===id)?.name),source=person(value.sourceId||value.carrierId),receiver=person(value.receiverId),recoverer=person(value.recovererId),shooter=shortName(value.performerName);
   const texts={turnover:named(recoverer)+' 압박합니다. 먼저 공을 확보해야 합니다.',secure:recoverer+' 공 확보. 동료들이 앞으로 움직입니다.',outlet:receiver+'에게 첫 패스. 공격 전개를 시작합니다.',carry:named(source)+' 공을 운반하며 동료의 침투를 봅니다.','wing-run':source+' 측면 돌파! 앞서 나가 크로스를 준비합니다.',sprint:person(value.runnerId)+' 전력 질주! 수비를 뒤에 두고 전진합니다.',duel:named(person(value.tacklerId))+' 따라붙습니다. 공을 두고 경합합니다.',tackle:person(value.tacklerId)+(value.carrierId?' 태클! 돌파를 저지하고 공을 확보합니다.':' 태클! 흘러나온 공을 두고 경합합니다.'),cross:source+' 크로스! '+named(receiver)+' 문전으로 쇄도합니다.',cutback:source+' 컷백! '+named(receiver)+' 슈팅을 준비합니다.',through:source+' 전진 패스! '+named(receiver)+' 뒷공간으로 침투합니다.',control:shooter+' 슈팅 준비. 골키퍼가 나와 각도를 좁힙니다.',header:shooter+' 헤더! 공이 골문을 향합니다.',shot:shooter+' 슈팅! 공이 골문을 향합니다.',intercept:named(person(value.carrierId))+' 공격을 끊고 공을 확보합니다.',contest:named(receiver)+' 접근합니다. 공을 두고 경합합니다.',recovery:recoverer+' 공 확보. 동료와 다시 전개합니다.',restart:value.label+'.','set-piece':value.label+'.'};
@@ -315,8 +329,17 @@
  // Only describe the frame being displayed, never the event's future outcome.
  function sequence(value){
   if(!value||![0,1].includes(value.ownerTeam))return null;
+  if(value.setPiece==='freeKick'&&['set-piece','free-kick-run','shot'].includes(value.phase))return {stage:2,team:value.ownerTeam,label:value.phase==='shot'?'프리킥 슈팅':value.phase==='free-kick-run'?'도움닫기':'프리킥 준비'};
   const stage=['turnover','secure','intercept','tackle','recovery'].includes(value.phase)?0:['outlet','carry','wing-run','sprint','through','build-up','wide','transition'].includes(value.phase)?1:['cross','cutback','control','shot','header','set-piece'].includes(value.phase)?2:-1;
   return stage<0?null:{stage,team:value.ownerTeam,label:['확보','전진','문전'][stage]};
  }
- return {frame,locomotion,commentary,liveCommentary,broadcast,sequence,timing,passing,playbackRate,impactAge};
+ // Ground cues stay below jerseys and never show a future shot destination.
+ function paintGuides(ctx,value,w,h){
+  if(value.phase==='static')return;
+  const people=[...value.own,...value.opponent],ring=(p,color,dashed=false)=>{if(!p)return;ctx.strokeStyle=color;ctx.setLineDash(dashed?[3,3]:[]);ctx.beginPath();ctx.ellipse(w*p.x/100,h*p.y/100+8,11,5,0,0,Math.PI*2);ctx.stroke();};
+  ctx.save();ctx.lineWidth=1.5;ring(people.find(p=>p.id===value.carrierId),'#fff1aa');if(value.receiverId!==value.carrierId&&!['shot','goal','saved','save'].includes(value.phase))ring(people.find(p=>p.id===value.receiverId),'#9de9f0',true);
+  if(value.kickSpot){ctx.strokeStyle='#fff1aa';ctx.setLineDash([2,3]);ctx.beginPath();ctx.arc(w*value.kickSpot.x/100,h*value.kickSpot.y/100,7,0,Math.PI*2);ctx.stroke();}
+  ctx.restore();
+ }
+ return {frame,locomotion,paintGuides,commentary,liveCommentary,broadcast,sequence,timing,passing,playbackRate,impactAge};
 });
