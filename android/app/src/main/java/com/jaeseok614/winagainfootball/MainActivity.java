@@ -496,13 +496,22 @@ public final class MainActivity extends ComponentActivity {
         io.shutdown(); super.onDestroy();
     }
     WebView gameViewForTest() { return gameView; }
+    boolean gameReadyForTest() {
+        return gameView != null && !verificationRunning && gameView.getProgress() == 100
+            && loading.getVisibility() == View.GONE;
+    }
     List<String> consoleErrorsForTest() { return consoleErrors; }
     // Instrumentation can preview the real loading layout without delaying startup
     // or inventing a progress percentage. These methods do nothing in release builds.
     void showLoadingPreviewForTest() { if (BuildConfig.DEBUG) showLoading("게임 파일을 확인하는 중…", true); }
     void hideLoadingPreviewForTest() { if (BuildConfig.DEBUG) loading.setVisibility(View.GONE); }
+    boolean loadingBrandLaidOutForTest() {
+        return loading.getVisibility() == View.VISIBLE && loading.isLaidOut() && !loading.isLayoutRequested()
+            && loadingContent.isLaidOut() && !loadingContent.isLayoutRequested()
+            && loading.getWidth() > 0 && loading.getHeight() > 0 && loadingContent.getHeight() > 0;
+    }
     boolean loadingBrandFitsForTest() {
-        return loading.getVisibility() == View.VISIBLE && progress.isIndeterminate()
+        return loadingBrandLaidOutForTest() && progress.isIndeterminate()
             && loadingTitle.getText().toString().equals(getString(R.string.loading_title))
             && loadingContent.getTop() >= 0 && loadingContent.getBottom() <= loading.getHeight();
     }

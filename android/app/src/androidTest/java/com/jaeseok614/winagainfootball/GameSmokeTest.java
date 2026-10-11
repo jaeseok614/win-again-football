@@ -51,8 +51,12 @@ public final class GameSmokeTest {
         long until = System.nanoTime() + TimeUnit.SECONDS.toNanos(45);
         while (System.nanoTime() < until) {
             if ("true".equals(evaluate(scenario, "!!(window.WinAgainAndroid && typeof season !== 'undefined' && document.getElementById('primary'))"))) {
-                android.util.Log.i("GameSmoke", "offline-game:ready");
-                return;
+                AtomicReference<Boolean> nativeReady = new AtomicReference<>(false);
+                scenario.onActivity(activity -> nativeReady.set(activity.gameReadyForTest()));
+                if (nativeReady.get()) {
+                    android.util.Log.i("GameSmoke", "offline-game:ready");
+                    return;
+                }
             }
             Thread.sleep(100);
         }
@@ -65,6 +69,16 @@ public final class GameSmokeTest {
             Thread.sleep(100);
         }
         fail("Timed out verifying: " + script);
+    }
+    private void awaitLoadingLayout(ActivityScenario<MainActivity> scenario) throws Exception {
+        long until = System.nanoTime() + TimeUnit.SECONDS.toNanos(10);
+        while (System.nanoTime() < until) {
+            AtomicReference<Boolean> laidOut = new AtomicReference<>(false);
+            scenario.onActivity(activity -> laidOut.set(activity.loadingBrandLaidOutForTest()));
+            if (laidOut.get()) return;
+            Thread.sleep(50);
+        }
+        fail("Loading preview never reached a measured native layout");
     }
     private void awaitAppWindowFocus(ActivityScenario<MainActivity> scenario) throws Exception {
         long until = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
@@ -296,9 +310,13 @@ public final class GameSmokeTest {
                 assertEquals("true", evaluate(scenario, "document.getElementById('club-story-dialog').open"));
                 screenshot(scenario, "android-first-owner-meeting.png");
                 tapWebElement(scenario, "#club-story-dialog [data-story-page=next]");
+                awaitTrue(scenario, "ClubStory.scene(season,clubStoryEvent).step===0&&clubStoryPage===1&&!document.querySelector('#club-story-dialog .story-choices').hidden");
                 tapWebElement(scenario, "#club-story-dialog [data-story-choice]");
+                awaitTrue(scenario, "ClubStory.scene(season,clubStoryEvent).step===1&&clubStoryPage===0");
                 tapWebElement(scenario, "#club-story-dialog [data-story-page=next]");
+                awaitTrue(scenario, "ClubStory.scene(season,clubStoryEvent).step===1&&clubStoryPage===1&&!document.querySelector('#club-story-dialog .story-choices').hidden");
                 tapWebElement(scenario, "#club-story-dialog [data-story-choice]");
+                awaitTrue(scenario, "ClubStory.scene(season,clubStoryEvent).step===2&&!!document.querySelector('#club-story-dialog .story-complete')");
                 tapWebElement(scenario, "#club-story-dialog [data-story-close]");
                 awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===2");
                 tapWebElement(scenario, "#manager-guide-skip");
@@ -526,13 +544,13 @@ public final class GameSmokeTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
             scenario.onActivity(activity -> activity.showLoadingPreviewForTest());
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+            awaitLoadingLayout(scenario);
             scenario.onActivity(activity -> assertTrue("Portrait title or gauge was clipped", activity.loadingBrandFitsForTest()));
             screenshot(scenario, "android-loading-portrait.png");
             scenario.onActivity(activity -> activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));
             awaitOrientation(scenario, Configuration.ORIENTATION_LANDSCAPE); awaitReady(scenario);
             scenario.onActivity(activity -> activity.showLoadingPreviewForTest());
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+            awaitLoadingLayout(scenario);
             scenario.onActivity(activity -> assertTrue("Landscape title or gauge was clipped", activity.loadingBrandFitsForTest()));
             screenshot(scenario, "android-loading-landscape.png");
             scenario.onActivity(activity -> { activity.hideLoadingPreviewForTest(); activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); });
