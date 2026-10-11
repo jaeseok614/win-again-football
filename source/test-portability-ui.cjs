@@ -134,6 +134,10 @@ async function main(){
  });
  await test('queued export failure clears preparation, preserves the club and enables retry',()=>{
   const h=harness(S.create(2293)),before=JSON.stringify(h.context.season);h.context.openPortability();const original=h.context.CampaignFile;h.context.CampaignFile={...original,stringify(){throw Error('저장 검사 실패');}};h.context.requestCampaignExport();h.scheduled[0].fn();assert.equal(h.downloads.length,0);assert.equal(h.read('portabilityExportBusy'),false);assert.equal(h.get('campaign-file-progress').hidden,true);assert.match(h.get('campaign-import-error').textContent,/저장 검사 실패/);assert.equal(h.find('[data-portable="export"]').disabled,false);assert.equal(h.get('campaign-file-status').textContent,'');h.context.CampaignFile=original;h.context.requestCampaignExport();h.scheduled[1].fn();assert.equal(h.downloads.length,1);unchanged(h,before);
- }); console.log('Validated '+groups+' campaign portability UI groups with actual campaign restoration.');
+ });
+ await test('rebirth backup previews and filenames identify the life without changing the saved campaign',()=>{
+  const current=S.create(2300,{rebirth:true}),h=harness(current),before=JSON.stringify(current);h.context.openPortability();assert.match(h.dialog.innerHTML,/1번째 삶 · 도전 중 · 첫 번째 삶/);h.context.exportCampaign();assert.equal(h.downloads[0].download,'win-again-life1-1season-1round.json');h.context.previewCampaignText(CampaignFile.stringify({season:current}));assert.match(h.get('campaign-import-preview').innerHTML,/1번째 삶 · 도전 중/);assert.equal(JSON.stringify(h.context.season),before);noGameActions(h);
+ });
+ console.log('Validated '+groups+' campaign portability UI groups with actual campaign restoration.');
 }
 main().catch(error=>{console.error(error);process.exitCode=1;});

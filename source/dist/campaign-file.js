@@ -62,8 +62,8 @@
   if(!plain(envelope)||envelope.format!==format)throw Error('이번엔 우승한다 구단 백업 파일이 아니에요.');
   if(envelope.version!==version)throw Error('현재 게임에서 지원하지 않는 백업 버전이에요.');
   if(Object.keys(envelope).some(key=>!['format','version','createdAt','payload'].includes(key)))throw Error('백업 파일의 형식을 확인할 수 없어요.');timestamp(envelope.createdAt);
-  const payload=normalize(envelope.payload),s=payload.season,me=S.standings(s).find(c=>c.id===S.own);
-  return {payload,summary:{year:s.year,round:s.round+1,competition:s.competition,...(s.competition==='europe'?{stage:s.europe.stage}:{}),phase:s.match?.phase??'season-complete',minute:s.match?.minute??null,club:S.club(S.own).name,rank:me.rank,points:me.points,balance:s.finance.balance,playerCount:Object.keys(s.squad).length}};
+  const payload=normalize(envelope.payload),s=payload.season,me=S.standings(s).find(c=>c.id===S.own),run=root.Rebirth?.read(s);
+  return {payload,summary:{...(run?.enabled?{rebirth:{attempt:run.attempt,status:run.status,memory:run.memoryInfo.name}}:{}),year:s.year,round:s.round+1,competition:s.competition,...(s.competition==='europe'?{stage:s.europe.stage}:{}),phase:s.match?.phase??'season-complete',minute:s.match?.minute??null,club:S.club(S.own).name,rank:me.rank,points:me.points,balance:s.finance.balance,playerCount:Object.keys(s.squad).length}};
  }
  const api={create,stringify,read,maxBytes};root.CampaignFile=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
