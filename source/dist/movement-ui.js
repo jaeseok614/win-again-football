@@ -10,7 +10,7 @@ function motionFrame(now=performance.now()){
  const rawDelta=Math.max(0,now-movementStamp),visualDelta=Math.min(80,rawDelta);movementStamp=now;
  const eventChanged=movementEvent!==lastEvent;if(eventChanged){movementEventOrigin=lastMotionFrame;movementEvent=lastEvent;movementEventElapsed=movementElapsed;movementEventAge=lastEvent?(typeof lastEventFast!=='undefined'&&lastEventFast?Movement.impactAge(lastEvent):0):Infinity;}
  const visible=view==='match'&&!document.hidden,enabled=motionEnabled();if(movementDemo&&(!enabled||state.phase!=='prep'))cancelMovementPreview();
- const playing=visible&&enabled&&!(typeof matchCeremonyHold!=='undefined'&&matchCeremonyHold)&&!state.paused&&(F.running(state)||movementEventAge<Movement.timing.end),demo=visible&&enabled&&movementDemo;
+ const playing=visible&&enabled&&!(typeof goalSceneHold!=='undefined'&&goalSceneHold)&&!(typeof matchCeremonyHold!=='undefined'&&matchCeremonyHold)&&!state.paused&&(F.running(state)||movementEventAge<Movement.timing.end),demo=visible&&enabled&&movementDemo;
  const speed=typeof playbackPrefs==='undefined'?'normal':playbackPrefs.speed,rate=demo?1:Movement.playbackRate(speed,movementEventAge,lastMotionFrame?.phase);
  // Use the same bounded display delta for players and event actors. A stalled
  // frame must not skip a complete shot or reveal a goal that was never shown.
