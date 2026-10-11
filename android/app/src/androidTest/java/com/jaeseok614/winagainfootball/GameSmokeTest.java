@@ -161,6 +161,7 @@ public final class GameSmokeTest {
         awaitWebViewFrame(scenario); awaitAppWindowFocus(scenario);
         String pointJson = evaluate(scenario,
             "(()=>{const r=document.querySelector(" + quotedSelector + ").getBoundingClientRect();return JSON.stringify([r.x+r.width/2,r.y+r.height/2,devicePixelRatio])})()");
+        assertNotEquals("Tap target disappeared before dispatch: " + selector, "null", pointJson);
         JSONArray point = new JSONArray(new JSONTokener(pointJson).nextValue().toString());
         int[] origin = new int[2]; int[] size = new int[2];
         scenario.onActivity(activity -> {
@@ -318,12 +319,18 @@ public final class GameSmokeTest {
             String storyBefore = evaluate(scenario, "JSON.stringify(season)");
             int storyPages = Integer.parseInt(evaluate(scenario, "clubStoryPages(ClubStory.scene(season,clubStoryEvent)).length"));
             while (!"true".equals(evaluate(scenario, "document.querySelector('[data-story-page=previous]').disabled"))) {
-                tapWebElement(scenario, "[data-story-page=previous]");
+                int fromPage = Integer.parseInt(evaluate(scenario, "clubStoryPage"));
+                tapWebElement(scenario, "#club-story-dialog [data-story-page=previous]");
+                awaitTrue(scenario, "document.getElementById('club-story-dialog').open&&clubStoryPage===" + (fromPage - 1));
             }
             for (int page = 0; page < storyPages; page++) {
+                assertEquals("The physical touch must reach the requested story page", String.valueOf(page), evaluate(scenario, "clubStoryPage"));
                 assertEquals("Narrative page " + page + " must stay inside the phone dialog", "true", evaluate(scenario,
                     "(()=>{const d=document.getElementById('club-story-dialog'),buttons=[...d.querySelectorAll('button')].filter(b=>b.getClientRects().length);return d.open&&ClubStory.scene(season,clubStoryEvent).step===2&&d.scrollHeight<=d.clientHeight+1&&buttons.length>=3&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;})&&getComputedStyle(d.querySelector('.story-art')).backgroundImage.includes('data:image/webp');})()"));
-                if (page < storyPages - 1) tapWebElement(scenario, "[data-story-page=next]");
+                if (page < storyPages - 1) {
+                    tapWebElement(scenario, "#club-story-dialog [data-story-page=next]");
+                    awaitTrue(scenario, "document.getElementById('club-story-dialog').open&&clubStoryPage===" + (page + 1));
+                }
             }
             assertEquals("Reading every story page must preserve the campaign", storyBefore, evaluate(scenario, "JSON.stringify(season)"));
             screenshot(scenario, "android-story-chapter.png");
