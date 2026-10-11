@@ -5,11 +5,11 @@
  const Conflicts=root.StoryConflicts||(typeof require==='function'?require('./story-conflicts.js'):null);
  const Community=root.StoryCommunity||(typeof require==='function'?require('./story-community.js'):null);
  const catalog=[
-  ['arrival',0,'구단주','5부 리그 감독직 계약서','한때 1부 무대를 누빈 토투넘의 문장은 이제 5부 리그 구장 한편에 걸려 있다. 구단주가 계약서와 얇은 선수단 명단을 건넨다.','다섯 단계 아래에서 다시 시작하는 이 구단을 어디까지 데려가고 싶습니까?',['선수와 팬의 이야기를 먼저 듣겠습니다','네 번의 승격으로 1부에 돌아가겠습니다','재정과 선수 성장을 지키며 한 계단씩 오르겠습니다'],['듣는 감독이라… 오래 기다린 말입니다.','네 번의 승격은 긴 여정입니다. 어려운 날에도 책임질 수 있겠습니까?','큰 약속보다 오래 가는 계획을 택했군요. 함께 살펴보겠습니다.'],'board'],
-  ['shape',0,'수석 코치','새벽의 전술 회의','훈련장 불이 켜지기도 전에 코치가 전술판을 펼친다.','빠른 공격진을 어떻게 살리실 생각입니까?',['공을 가진 선수에게 패스 선택지를 만들죠','앞에서 압박하고 빠르게 공격하죠','상대가 올라오면 뒤의 공간을 노리죠'],['동료가 가까이 도와주면 무리한 패스가 줄어들죠.','공을 뺏은 뒤에도 첫 패스를 침착하게 해야 합니다.','빠른 선수를 살리되 수비 간격이 벌어지지 않게 합시다.'],'coach'],
-  ['captain',1,'주장','주장이 남긴 훈련복','다른 선수들이 떠난 뒤, 주장은 훈련복 한 벌을 더 개어 놓는다.','결과가 어땠든, 선수들이 감독님 말을 기다리고 있습니다.',['각자 어떤 마음인지 듣고 싶어요','우리는 더 높은 곳까지 갈 수 있어요','이번 경기에서 바꿀 한 가지부터 찾죠'],['말을 아끼던 선수들도 얘기할 수 있겠네요.','큰 꿈을 말하면 누군가는 힘을 얻고 누군가는 부담을 느낍니다.','다음 훈련에서 무엇을 바꿀지 분명해졌네요.'],'captain'],
+  ['arrival',0,'구단주','5부 리그 감독직 계약서','구단주가 계약서 위에 펜을 놓는다. 창밖에서는 낡은 골대의 그물을 꿰매고 있다.\n\n속으로 생각한다. ‘5부 리그. 화면 밖에서라면 쉽게 훈수했겠지. 그런데 이제 내 이름으로 책임져야 한다.’','돌아오겠다는 말은 많이 들었습니다. 감독님은 이 구단에서 무엇부터 하실 겁니까?',['선수와 팬의 이야기를 먼저 듣겠습니다','네 번의 승격으로 1부에 돌아가겠습니다','재정과 선수 성장을 지키며 한 계단씩 오르겠습니다'],['구단주는 펜에서 손을 뗀다. “듣겠다는 말은 좋습니다. 듣기 싫은 말도 있을 텐데요.”','“네 번.” 구단주가 되묻는다. “그 말을 기다렸습니다. 그래서 더 쉽게 믿을 수가 없군요.”','“내일도 문을 열 수 있는 구단이라….” 구단주가 계약서 옆의 장부를 당겨 놓는다.'],'board'],
+  ['shape',0,'수석 코치','새벽의 전술 회의','코치가 전술판의 자석 하나를 밀어 놓는다.\n\n‘화면에서는 선 하나면 됐다. 여기서는 그 거리를 사람이 뛰어야 한다.’ 감독은 지시를 쓰려던 손을 멈춘다.','공 가진 선수만 쳐다보면 늦습니다. 나머지 선수들은 어디서 도와주게 할까요?',['공을 가진 선수에게 패스 선택지를 만들죠','앞에서 압박하고 빠르게 공격하죠','상대가 올라오면 뒤의 공간을 노리죠'],['“좋습니다. 받으러 오는 선수까지 막히면 누가 다음 길을 열죠?” 코치가 옆 자석을 집는다.','“뺏으면 짧게, 빠르게. 그런데 첫 압박을 벗겨지면요?” 코치는 수비 쪽을 가리킨다.','“상대를 끌어내는 거군요. 공을 뺏은 다음에도 뛰기만 해서는 연결이 안 됩니다.”'],'coach'],
+  ['captain',1,'주장','주장이 남긴 훈련복','주장은 마지막 훈련복을 개고도 나가지 않는다. 감독도 문고리에서 손을 뗀다.\n\n‘보고서에는 적히지 않는 표정이다. 이번에는 먼저 묻자.’','감독님. 경기 끝나고 조용한 애들이 있죠. 괜찮아서 조용한 건 아닐 수도 있습니다.',['각자 어떤 마음인지 듣고 싶어요','우리는 더 높은 곳까지 갈 수 있어요','이번 경기에서 바꿀 한 가지부터 찾죠'],['“제가 대신 말해도 되는 것과 직접 들어야 하는 게 있습니다.” 주장이 의자를 당긴다.','“저도 올라가고 싶습니다. 다만 같은 말을 들어도 누군가는 자기 자리가 걱정될 겁니다.”','“한 가지라면 따라올 수 있겠네요. 실수한 사람 하나를 고르는 건 아니죠?”'],'captain'],
   ['rookie',2,'유망주','벤치 끝의 작은 노트','어린 선수가 훈련 때 적은 움직임을 조심스럽게 내민다.','경기에 나가고 싶습니다. 제가 준비할 수 있는 걸 알려주세요.',['어떤 역할이 자신 있는지 먼저 듣자','기회를 받으면 팀을 바꿀 수 있겠니?','먼저 체력과 현재 능력을 함께 보자'],['긴장했는데, 제 말을 들어 주셔서 감사합니다.','믿어 주시면 좋지만… 기대를 감당할 준비도 하겠습니다.','보고서만 보지 않고 직접 훈련에서도 확인해 주세요.'],'rookie'],
-  ['fans',3,'팬 대표','비 오는 날의 사인회','훈련장 문 앞에 어린 팬들이 비닐로 감싼 유니폼을 들고 서 있다.','팬들이 선수들을 가까이 만나고 싶어 합니다. 어떤 행사를 할까요?',['작은 사인회에서 팬들의 말을 듣죠','공개 훈련으로 우리가 준비한 축구를 보여주죠','짧게 만나고 선수들의 회복 시간을 지키죠'],['한 장의 사인보다 대화 한마디를 오래 기억할 겁니다.','팬들도 이 팀이 향하는 방향을 직접 볼 수 있겠네요.','응원도 선수들의 건강 위에서 이어져야겠죠.'],'fans'],
+  ['fans',3,'팬 대표','비 오는 날의 사인회','팬 대표가 젖은 목도리를 접는다. 문밖의 아이는 비닐에 싼 유니폼을 꼭 쥐고 있다.\n\n‘순위표 아래에도 누군가의 주말은 남아 있다.’ 감독은 창가에서 물러난다.','저 아이가 묻더군요. 지금도 선수들을 만나러 와도 되느냐고요. 뭐라고 답할까요?',['작은 사인회에서 팬들의 말을 듣죠','공개 훈련으로 우리가 준비한 축구를 보여주죠','짧게 만나고 선수들의 회복 시간을 지키죠'],['“그럼 사인보다 먼저 이름을 물어봐 주세요. 오늘 왔다는 걸 기억해 주면 됩니다.”','“지는 날에도 보여줄 수 있는 훈련이면 좋겠습니다. 멋있는 장면만 필요한 건 아니에요.”','“짧아도 괜찮습니다. 기다려도 되는 건지, 그것만 알려 주세요.”'],'fans'],
   ['medical',5,'수석 코치','의무실 옆의 커피','코치는 두 개의 종이컵과 선수 컨디션 보고서를 가져온다.','일정이 쌓입니다. 피곤한 선수와 기회를 기다리는 선수가 함께 있습니다.',['선수들에게 몸 상태를 솔직히 말하게 하죠','핵심 선수를 믿고 중요한 순간을 맡기죠','교체와 훈련 계획을 다시 나눠 봅시다'],['말할 수 있는 분위기가 있으면 무리하는 선수를 먼저 발견하죠.','믿음과 무리한 출전은 다릅니다. 체력부터 확인합시다.','후보의 주 포지션과 컨디션까지 같이 보겠습니다.'],'coach'],
   ['window',6,'구단주','영입 명단과 계산기','책상 한쪽에는 스카우트 보고서, 다른 쪽에는 주급 명세서가 놓였다.','새 선수가 필요한 자리와 이미 가진 선수의 가능성 중 무엇부터 볼까요?',['현재 선수들의 요구부터 듣겠습니다','당장 부족한 자리에 즉시 전력을 찾겠습니다','이적료보다 계약 후 주급까지 비교하겠습니다'],['기존 선수를 지나치지 않는다는 메시지가 되겠군요.','결과를 위해 움직이되 거래는 직접 확인해야 합니다.','계산기까지 쓰는 감독이라… 적어도 급한 결정은 줄겠군요.'],'board'],
   ['halfway',7,'주장','일정표의 절반','주장은 끝난 경기의 날짜를 하나씩 지운다. 아직 절반이 남아 있다.','선수들은 지금 우리가 어디쯤 왔는지 알고 싶어 합니다.',['좋았던 점과 힘들었던 점을 함께 듣죠','목표를 잊지 말고 더 힘을 내자고 하죠','남은 경기마다 작은 목표를 잡읍시다'],['숫자로 보이지 않던 고민도 꺼낼 수 있겠네요.','누구에게는 힘이 되겠지만 어린 선수에겐 부담일 수 있어요.','다음 경기부터 무엇을 준비할지 설명하기 좋겠습니다.'],'captain'],
@@ -123,12 +123,41 @@
   const minutes=games.reduce((n,g)=>n+(g.minutes||0),0),due=played(s,e.year)>=end;
   return {identity:last.actor,minutes,target:30,start,end,games,year:e.year,status:minutes>=30?'fulfilled':due?'missed':'active'};
  }
+ // Only a recorded first answer selects the next exchange. No extra promise or
+ // simulation mutation: existing commit/honest receipts retain their meaning.
+ function dialogueTurn(e,index){
+  if(index<0||e.followQuestion||e.followOptions||e.finalReplies)return null;
+  const turns={
+   arrival:[
+    ['팬이 당장 이기라고 하고 선수가 지쳤다고 하면요. 누구에게 먼저 답하시겠습니까?',['둘 다 듣고, 최종 결정은 제가 책임지겠습니다','지금 약속할 수 있는 것부터 솔직하게 말하겠습니다'],['“제 뒤에 숨지는 않겠다는 말로 듣겠습니다. 선수들에게도 직접 전하세요.”','“좋습니다. 모르는 걸 모른다고 말하는 감독인지, 지켜보겠습니다.”']],
+    ['첫 패배 뒤에도 그 목표를 말할 수 있습니까?',['패배한 날에도 선수들 앞에 서겠습니다','목표는 지키되, 당장 승리를 보장하진 않겠습니다'],['“그날도 이 방의 문은 열려 있습니다. 좋은 소식만 가져올 필요는 없습니다.”','구단주가 고개를 끄덕인다. “목표와 보장은 다르다. 그 말은 기억해 두죠.”']],
+    ['당장 성적이 급해도 무리한 영입을 멈출 수 있겠습니까?',['급할수록 선수단과 주급부터 확인하겠습니다','필요한 보강은 하되, 감당할 범위를 설명하겠습니다'],['“그럼 계약서보다 장부를 먼저 보셔야 할 날도 있겠군요. 도망가지는 마십시오.”','“돈을 안 쓰겠다는 말보다 낫군요. 필요하다면 이유를 들고 오세요.”']]
+   ],
+   shape:[
+    ['가까이 받으러 갈 선수와 폭을 지킬 선수, 전술 창에서 나눠 보시겠습니까?',['배치와 패스 연계부터 직접 확인하죠','상대 배치를 보고 결정하겠습니다'],['“그럼 자석부터 옮겨 보시죠. 아직 선수들에게 지시가 전달된 건 아닙니다.”','“좋습니다. 상대를 보고 나서 간격을 정하죠. 전술은 그때 직접 바꾸시면 됩니다.”']],
+    ['압박에 쓸 체력과 뒤에서 커버할 자리도 함께 보시겠습니까?',['선발 체력과 수비 간격부터 확인하죠','상대와 체력을 보고 압박 여부를 정하죠'],['“그 정도 준비는 하고 뛰게 합시다. 전술 창에서 직접 확인하시죠.”','“앞에서 뛰는 것만 용기는 아니니까요. 상대 보고서를 먼저 봅시다.”']],
+    ['역습 첫 패스를 받을 자리부터 살펴볼까요?',['측면과 공격수의 연결을 직접 확인하죠','상대가 공간을 주는지 먼저 보겠습니다'],['“달릴 선수 옆에 받아 줄 선수도 필요합니다. 배치를 보면서 정하시죠.”','“좋습니다. 기다리는 것과 아무것도 안 하는 건 다르니까요.”']]
+   ],
+   captain:[
+    ['말을 꺼낸 선수가 불리해지지는 않겠죠?',['의견을 말했다고 선발에서 빼지는 않겠습니다','선발은 몸 상태와 역할로 판단하겠습니다'],['주장이 문 쪽을 본다. “그 말, 제가 옮기는 것보다 감독님이 직접 해 주셨으면 합니다.”','“기준을 알면 저도 설명할 수 있습니다. 듣는 자리부터 만들어 주세요.”']],
+    ['목표에 못 따라오는 선수가 있어도 기다려 주실 겁니까?',['어디서 막히는지 먼저 같이 보겠습니다','기회는 살피겠지만 선발 자리는 보장 못 합니다'],['“그럼 저도 재촉만 하지는 않겠습니다. 먼저 얘기해 보죠.”','“경쟁을 없애 달라는 뜻은 아닙니다. 이유를 모른 채 밀려나지만 않게 해 주세요.”']],
+    ['잘못한 장면을 볼 때 이름부터 부르지는 않으실 거죠?',['누구 탓보다 주변 움직임부터 보겠습니다','제 지시부터 함께 돌아보겠습니다'],['“그렇게 시작하면 고개를 들고 볼 수 있을 겁니다. 저부터 같이 보겠습니다.”','주장이 훈련복을 내려놓는다. “감독님 것도 보는 거라면, 저희도 피할 이유가 없죠.”']]
+   ],
+   fans:[
+    ['좋은 말만 하지는 못할 겁니다. 그래도 들어 주시겠어요?',['불편한 말도 직접 듣겠습니다','답할 수 있는 일과 어려운 일을 나누어 말하겠습니다'],['“그럼 저도 목소리부터 높이지 않겠습니다. 얼굴 보고 이야기하죠.”','“바로 바뀌지 않아도 됩니다. 못 들은 척만 하지 말아 주세요.”']],
+    ['잘 안 풀리는 훈련도 팬들 앞에서 보여주실 건가요?',['배워 가는 모습까지 보여드리고 싶습니다','선수들의 준비를 먼저 확인하겠습니다'],['팬 대표가 목도리를 편다. “완성된 팀만 응원하러 온 건 아닙니다.”','“선수들도 사람이니까요. 준비가 되면 그때 알려 주세요.”']],
+    ['그럼 만나기 어려운 날에는 미리 말해 주시겠어요?',['기다리게 하기 전에 이유를 전하겠습니다','일정을 보고 가능한 만남부터 정하겠습니다'],['“그거면 됩니다. 아무 설명 없이 닫힌 문이 제일 서운하거든요.”','“날짜를 여기서 억지로 정하지는 말죠. 선수들도 웃으며 만났으면 좋겠습니다.”']]
+   ]
+  };
+  const turn=turns[e.key]?.[index];return turn?{question:turn[0],options:turn[1],replies:turn[2]}:null;
+ }
  function scene(s,event){
   const lookup=eventLookup(s),year=Number(String(event).split(':')[0]),e=lookup(year).find(e=>e.id===event);if(!e)return null;const answered=records(s).filter(r=>r.event===event),step=answered.length,actor=answered[0]?.actor||actorFor(s,e),profile=F.identityProfile(actor),name=profile?.name||e.speaker,relation=relationships(s,lookup)[e.relation],first=answered[0],index=first?['listen','bold','practical'].indexOf(first.choice):-1;
-  const reaction=first?e.replies[index]+(profile&&!e.conflict?(F.mentalProfile(profile).loyalty>=16?' “감독님과 오래 함께하고 싶습니다.”':F.mentalProfile(profile).pressure<=8&&first.choice==='bold'?' “솔직히 그 기대는 조금 무섭습니다.”':''):''):null;
-  const followup=e.key.startsWith('promise-'),commitLabel=e.followOptions?.[0]||(e.key==='rookie'?'두 경기 안에 30분 출전을 약속한다':followup?'훈련과 출전 계획을 함께 점검하겠다고 한다':'이 방향을 지켜 나가겠다고 약속한다'),honestLabel=e.followOptions?.[1]||(e.key==='rookie'?'출전은 보장하지 않고 준비 기준을 설명한다':followup?'새 출전 보장 없이 경쟁 기준을 설명한다':'결과를 보장하지 않고 함께 점검하자고 한다');
-  const final=answered[1],promise=mission(s,e,answered),reply=final?(e.finalReplies?e.finalReplies[final.choice==='commit'?0:1]:followup?(final.choice==='commit'?'“이번에는 준비할 기준을 함께 확인할게요. 제 훈련도 지켜봐 주세요.”':'“출전 보장과 준비 기준은 다르다는 걸 알겠습니다. 제 역할부터 준비할게요.”'):(final.choice==='commit'?'“그 말을 기억하겠습니다. 다음 행동을 기다릴게요.”':'“조건까지 솔직하게 말해 주셔서 감사합니다. 함께 확인하죠.”')):null;
-  return {...e,impact:step===2?root.StoryMood?.describe(s,event):null,step,actor,name,relationScore:relation,answered:copy(answered),reaction,reply,finalLabel:final?(final.choice==='commit'?commitLabel:honestLabel):null,mission:promise,question:step===0?e.question:e.followQuestion?e.followQuestion:e.key==='rookie'?'다음 리그 두 경기에서 제가 30분 이상 뛸 기회를 주실 수 있나요?':followup?'다음에는 제가 준비할 기준과 출전 계획을 함께 확인해 주시겠어요?':'감독님, 오늘의 답을 다음 행동에서도 이어갈 수 있을까요?',choices:year!==s.year?[]:step===0?['listen','bold','practical'].map((id,i)=>({id,label:e.options[i]})):step===1?[{id:'commit',disabled:e.key==='rookie'&&(s.competition!=='league'||s.match?.phase!=='prep'||s.round>(root.Season?.roundCountForYear?.(s,year)||46)-2),reason:e.key==='rookie'&&s.round>(root.Season?.roundCountForYear?.(s,year)||46)-2?'약속할 리그 두 경기가 남아 있지 않습니다.':null,label:commitLabel},{id:'honest',label:honestLabel}]:[],memory:relation>=6?'이전 대화에서 쌓은 신뢰가 느껴집니다.':relation<0?'이전의 부담스러운 말을 아직 기억하고 있습니다.':'서로의 생각을 알아가는 중입니다.'};
+  const turn=dialogueTurn(e,index);
+  const reaction=first?e.replies[index]+(profile&&!e.conflict&&!turn?(F.mentalProfile(profile).loyalty>=16?' “감독님과 오래 함께하고 싶습니다.”':F.mentalProfile(profile).pressure<=8&&first.choice==='bold'?' “솔직히 그 기대는 조금 무섭습니다.”':''):''):null;
+  const followup=e.key.startsWith('promise-'),commitLabel=turn?.options[0]||e.followOptions?.[0]||(e.key==='rookie'?'두 경기 안에 30분 출전을 약속한다':followup?'훈련과 출전 계획을 함께 점검하겠다고 한다':'이 방향을 지켜 나가겠다고 약속한다'),honestLabel=turn?.options[1]||e.followOptions?.[1]||(e.key==='rookie'?'출전은 보장하지 않고 준비 기준을 설명한다':followup?'새 출전 보장 없이 경쟁 기준을 설명한다':'결과를 보장하지 않고 함께 점검하자고 한다');
+  const final=answered[1],promise=mission(s,e,answered),reply=final?(turn?turn.replies[final.choice==='commit'?0:1]:e.finalReplies?e.finalReplies[final.choice==='commit'?0:1]:followup?(final.choice==='commit'?'“이번에는 준비할 기준을 함께 확인할게요. 제 훈련도 지켜봐 주세요.”':'“출전 보장과 준비 기준은 다르다는 걸 알겠습니다. 제 역할부터 준비할게요.”'):(final.choice==='commit'?'“그 말을 기억하겠습니다. 다음 행동을 기다릴게요.”':'“조건까지 솔직하게 말해 주셔서 감사합니다. 함께 확인하죠.”')):null;
+  return {...e,impact:step===2?root.StoryMood?.describe(s,event):null,step,actor,name,relationScore:relation,answered:copy(answered),reaction,reply,finalLabel:final?(final.choice==='commit'?commitLabel:honestLabel):null,mission:promise,question:step===0?e.question:turn?turn.question:e.followQuestion?e.followQuestion:e.key==='rookie'?'다음 리그 두 경기에서 제가 30분 이상 뛸 기회를 주실 수 있나요?':followup?'다음에는 제가 준비할 기준과 출전 계획을 함께 확인해 주시겠어요?':'감독님, 오늘의 답을 다음 행동에서도 이어갈 수 있을까요?',choices:year!==s.year?[]:step===0?['listen','bold','practical'].map((id,i)=>({id,label:e.options[i]})):step===1?[{id:'commit',disabled:e.key==='rookie'&&(s.competition!=='league'||s.match?.phase!=='prep'||s.round>(root.Season?.roundCountForYear?.(s,year)||46)-2),reason:e.key==='rookie'&&s.round>(root.Season?.roundCountForYear?.(s,year)||46)-2?'약속할 리그 두 경기가 남아 있지 않습니다.':null,label:commitLabel},{id:'honest',label:honestLabel}]:[],memory:relation>=6?'이전 대화에서 쌓은 신뢰가 느껴집니다.':relation<0?'이전의 부담스러운 말을 아직 기억하고 있습니다.':'서로의 생각을 알아가는 중입니다.'};
  }
  function fingerprint(s){return JSON.stringify([s.seed,s.year,s.round,s.competition,s.match?.seed,s.match?.minute,s.match?.paused,Object.values(s.squad).map(p=>p.identity),records(s)]);}
  function choose(s,event,step,choice,expected){
