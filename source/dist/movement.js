@@ -72,6 +72,8 @@
   return start;
  }
  function frame(input={}){
+  if(input.match?.continuousSetup&&input.continuousFrame)return input.continuousFrame;
+  if(input.match?.continuousSetup)return (globalThis.Football||(typeof require==='function'?require('./engine.js'):null)).continuousFrame(input.match);
   const match=input.match||{},own=ownBase(match,input.positions),layout=bases[input.opponentFormation],shape=layout?[[50,12,'GK'],...Object.entries(layout).flatMap(([pos,points])=>points.map(([x,y])=>[x,100-y,pos]))]:oppBase,opponent=shape.map(([x,y,pos],i)=>({id:'opp'+i,no:i+1,pos,x,y,baseX:x,baseY:y})).filter(p=>!input.dismissedOpponent?.includes(p.id));
   for(const player of opponent){const rosterPlayer=input.opponentRoster?.find(p=>p.id===player.id||p.no===player.no);player.name=rosterPlayer?.name||'';player.identity=rosterPlayer?.identity||player.id;}
   const result={own,opponent,ball:{x:50,y:50},trail:[],carrierId:null,receiverId:null,ownerTeam:null,phase:'static',label:{prep:'경기 준비',half:'하프타임',late:'65분 작전 시간',full:'경기 종료'}[match.phase]||'경기 준비',attributed:false};
@@ -139,7 +141,7 @@
   if(cinematic){const frozen=input.eventOrigin||frame({...input,event:null,elapsedMs:input.eventElapsedMs??Math.max(0,finite(input.elapsedMs)-age)});if(event.spatial)applySpatialEvent(result,match,event,age,frozen);else applyEvent(result,match,event,age,frozen);}
   return result;
  }
- function impactAge(event){return event?.type==='chance'&&event.setPiece!=='freeKick'?timing.delivery:timing.impact;}
+ function impactAge(event){if(Number.isInteger(event?.tick))return 0;return event?.type==='chance'&&event.setPiece!=='freeKick'?timing.delivery:timing.impact;}
  const spatialScenes=new WeakMap();
  function applySpatialEvent(result,match,event,age,frozen){
   let scene=spatialScenes.get(event);if(!scene){scene=engine.spatialAttack(match,event);if(!scene)return applyEvent(result,match,event,age,frozen);spatialScenes.set(event,scene);}

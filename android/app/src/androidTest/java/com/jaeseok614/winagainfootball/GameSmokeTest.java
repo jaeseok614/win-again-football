@@ -525,6 +525,29 @@ public final class GameSmokeTest {
         }
     }
 
+    @Test public void continuousKickoffAndPhysicalReplaySurviveNativeRelaunch() throws Exception {
+        String physical;
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeGoalScene();matchCeremonyHold=false;ceremonyPending=null;managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;setView('match');return true;})()");
+            tapWebElement(scenario, "#primary");
+            tapWebElement(scenario, "#ceremony-ready");
+            awaitTrue(scenario, "state.continuousSetup?.version===1 && state.continuous.tick>20");
+            assertEquals("The native live field uses the actual ball and all 22 names", "true", evaluate(scenario,
+                "(()=>{state.paused=true;drawField();return document.getElementById('match-names')._labels.length===22 && Math.hypot(lastMotionFrame.ball.x-F.continuousFrame(state).ball.x,lastMotionFrame.ball.y-F.continuousFrame(state).ball.y)<0.01 && document.documentElement.scrollHeight<=innerHeight+1;})()"));
+            assertEquals("Replays read the same physical engine without changing the live match", "true", evaluate(scenario,
+                "(()=>{state.paused=false;for(let i=0;i<20&&!state.logs.some(e=>e.type==='shot');i++)F.advanceContinuous(state,600);state.paused=true;const e=state.logs.find(e=>e.type==='shot');if(!e)return false;const before=JSON.stringify(state),clip=MatchReplay.prepare(season,state.logs.indexOf(e));save();return clip.valid&&clip.physical.frames.length>20&&JSON.stringify(state)===before;})()"));
+            physical=evaluate(scenario, "JSON.stringify({world:state.continuous,logs:state.logs,commands:state.continuousCommands})");
+            SystemClock.sleep(300);
+            assertEquals(physical,evaluate(scenario,"JSON.stringify({world:state.continuous,logs:state.logs,commands:state.continuousCommands})"));
+        }
+        try (ActivityScenario<MainActivity> reopened = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(reopened);
+            assertEquals("A resumed native match must stay paused", "true", evaluate(reopened,"state.paused===true"));
+            assertEquals(physical,evaluate(reopened,"JSON.stringify({world:state.continuous,logs:state.logs,commands:state.continuousCommands})"));
+        }
+    }
+
     @Test public void nativeOriginValidationRejectsConfusableAndFileUrls() {
         assertTrue(MainActivity.isGameDocument(Uri.parse(MainActivity.GAME_URL + "#match")));
         assertFalse(MainActivity.isGameDocument(Uri.parse("https://appassets.androidplatform.net.evil.test/assets/game/index.html")));

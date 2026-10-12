@@ -1,4 +1,5 @@
 function pendingVisibleMatchEvent(){
+ if(state?.continuousSetup)return null;
  if(!state||typeof lastEvent==='undefined'||!lastEvent||!motionEnabled()||typeof lastEventFast!=='undefined'&&lastEventFast||!MatchVisibility.pending(state,lastEvent))return null;
  return movementEvent!==lastEvent||movementEventAge<Movement.impactAge(lastEvent)?lastEvent:null;
 }

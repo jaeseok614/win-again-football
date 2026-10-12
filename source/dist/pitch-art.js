@@ -5,6 +5,7 @@
  function createRenderer(makeCanvas){
   let surface=null,key='';
   function draw(ctx,w,h,dpr,division=5){
+   if(!(w>0&&h>0&&dpr>0))return;
    division=Number.isInteger(division)&&division>=1&&division<=5?division:5;
    const next=[Math.round(w*dpr),Math.round(h*dpr),dpr,division].join(':');
    if(!surface)surface=makeCanvas();

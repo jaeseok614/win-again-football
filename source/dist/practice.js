@@ -8,11 +8,12 @@
  const seeds={comeback:29,protect:16},starts=new Map(),copy=value=>JSON.parse(JSON.stringify(value)),equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
  const tacticText={balanced:{label:'균형',description:'공격과 수비의 균형을 유지해요.'},press:{label:'전방 압박',description:'공격 기회를 늘리는 대신 상대 공격 기회와 체력 소모도 늘어요.'},lowBlock:{label:'로우 블록',description:'수비 간격을 좁혀 상대 기회를 줄여요. 우리 공격 기회도 줄어듭니다.'},counter:{label:'빠른 역습',description:'공격 기회와 상대 기회가 함께 줄어요. 공격수가 더 빠르면 역습 슈팅이 유리해요.'}};
  function scenarioFor(id){return scenarios.find(scenario=>scenario.id===id)||null;}
- function startingMatch(scenario){
-  if(starts.has(scenario.id))return copy(starts.get(scenario.id));
-  const match=F.create(seeds[scenario.id],{players:Object.fromEntries(F.startingRoster.map(p=>[p.id,p])),homeName:'토투넘',opponentName:'팔켄루 04'});
+ function startingMatch(scenario,continuous=false){
+  const key=scenario.id+(continuous?':continuous':'');if(starts.has(key))return copy(starts.get(key));
+  const match=F.create(continuous?({comeback:9,protect:1}[scenario.id]):seeds[scenario.id],{players:Object.fromEntries(F.startingRoster.map(p=>[p.id,p])),homeName:'토투넘',opponentName:'팔켄루 04'});
+  if(continuous)F.enableContinuous(match);
   while(match.minute<scenario.startMinute){if(!F.running(match))F.begin(match);F.tick(match);}
-  match.paused=true;starts.set(scenario.id,copy(match));return match;
+  match.paused=true;starts.set(key,copy(match));return match;
  }
  function metadata(match){return {startMinute:match.minute,startScore:[...match.score],startChances:[...match.chances],startShots:[...match.shots],startXg:[...match.xg],startEnergy:Object.fromEntries(Object.values(match.players).map(player=>[player.id,player.energy])),startPlayerMinutes:Object.fromEntries(Object.values(match.players).map(player=>[player.id,player.minutes])),startDecisionCount:match.decisions.length,startSubs:match.subs};}
  function create(id){
@@ -20,11 +21,12 @@
   const match=startingMatch(scenario);return {id,match,...metadata(match)};
  }
  function invalid(reason){return {valid:false,reason};}
- function read(session){
+ function createContinuous(id){const scenario=scenarioFor(id);if(!scenario)throw Error('연습 경기를 선택하세요.');const match=startingMatch(scenario,true);return {id,continuousVersion:1,match,...metadata(match)};}
+ function read(session,{trusted=false}={}){
   const scenario=scenarioFor(session?.id);if(!scenario)return invalid('연습 경기를 선택하세요.');
   if(!session.match)return invalid('연습 경기 정보를 읽을 수 없어요.');
-  let match;try{match=F.restore(session.match);}catch{return invalid('연습 경기 정보를 읽을 수 없어요.');}
-  const start=startingMatch(scenario),expected=metadata(start);
+  let match;try{match=trusted&&session.continuousVersion===1?copy(session.match):F.restore(session.match);}catch{return invalid('연습 경기 정보를 읽을 수 없어요.');}
+  const start=startingMatch(scenario,session.continuousVersion===1),expected=metadata(start);
   if(match.seed!==start.seed||match.minute<scenario.startMinute||!['third','full'].includes(match.phase)||match.formation!==start.formation||match.homeName!==start.homeName||match.opponentName!==start.opponentName||!equal(match.opponent,start.opponent))return invalid('선택한 연습 경기와 일치하지 않아요.');
   for(const key of Object.keys(expected))if(!equal(session[key],expected[key]))return invalid('연습 시작 정보와 일치하지 않아요.');
   if(!equal(match.logs.slice(0,start.logs.length),start.logs)||!equal(match.segments.slice(0,2),start.segments.slice(0,2)))return invalid('연습 이전 경기 기록과 일치하지 않아요.');
@@ -43,5 +45,5 @@
   const players=Object.values(match.players).map(player=>({id:player.id,identity:player.identity,name:player.name,pos:player.pos,minutes:player.minutes-start.players[player.id].minutes,startEnergy:start.players[player.id].energy,energy:player.energy,energySpent:Math.max(0,start.players[player.id].energy-player.energy),onField:match.lineup.includes(player.id),onFieldAtStart:start.lineup.includes(player.id)}));
   return {valid:true,reason:null,id:scenario.id,title:scenario.title,objective:scenario.objective,seed:match.seed,startMinute:scenario.startMinute,minute:match.minute,remainingMinutes:90-match.minute,startScore:[...start.score],score:[...match.score],status:fulltime?'fulltime':match.minute===scenario.startMinute?'ready':'playing',fulltime,objectiveAchieved,goals:deltas.score,chances:deltas.chances,shots:deltas.shots,xg:deltas.xg,decisions,subsUsed:match.subs-start.subs,players,events:copy(match.logs.filter(event=>event.minute>scenario.startMinute&&['goal','chance','shot'].includes(event.type))),tactic:{id:match.tactic,...tacticText[match.tactic]}};
  }
- const api={scenarios,create,read,summary:read};root.Practice=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
+ const api={scenarios,create,createContinuous,read,summary:read};root.Practice=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

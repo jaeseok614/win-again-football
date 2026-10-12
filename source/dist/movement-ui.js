@@ -17,10 +17,10 @@ function motionFrame(now=performance.now()){
  if(playing||demo){movementElapsed+=visualDelta*rate;if(Number.isFinite(movementEventAge)&&!eventChanged)movementEventAge+=visualDelta*rate;if(demo){movementDemoElapsed+=rawDelta;if(movementDemoElapsed>=24000)cancelMovementPreview();}}
  const match=movementDemo?{...state,phase:'first',paused:false}:state;
  const shapeKey=state.formation+':'+state.tactic+':'+F.opponentPlan(state);if(movementShapeKey!==shapeKey){movementShapeFrom=F.running(state)?lastMotionFrame:null;movementShapeAge=movementShapeFrom?0:650;movementShapeKey=shapeKey;}else if(playing||demo)movementShapeAge=Math.min(650,movementShapeAge+visualDelta*rate);
- const previousMotion=lastMotionFrame;lastMotionFrame=Movement.frame({match,eventOrigin:movementEventOrigin,opponentRoster:movementOpponentRoster,eventElapsedMs:movementEventElapsed,opponentFormation:movementOpponentFormation,dismissedOpponent:typeof Discipline!=='undefined'?Discipline.dismissed(state,1):[],positions:positions().filter(row=>typeof Discipline==='undefined'||!Discipline.dismissed(state).includes(row.id)),elapsedMs:movementElapsed,event:movementDemo?null:movementEvent,eventAgeMs:movementEventAge,motion:enabled});
+ const previousMotion=lastMotionFrame;lastMotionFrame=Movement.frame({match,continuousFrame:state.continuousSetup&&typeof continuousVisualFrame==='function'?continuousVisualFrame(state):null,eventOrigin:movementEventOrigin,opponentRoster:movementOpponentRoster,eventElapsedMs:movementEventElapsed,opponentFormation:movementOpponentFormation,dismissedOpponent:typeof Discipline!=='undefined'?Discipline.dismissed(state,1):[],positions:positions().filter(row=>typeof Discipline==='undefined'||!Discipline.dismissed(state).includes(row.id)),elapsedMs:movementElapsed,event:movementDemo?null:movementEvent,eventAgeMs:movementEventAge,motion:enabled});
  // Tactical instructions take effect in the engine immediately; the paused pitch
  // holds its previous shape and shows players finding their new positions on resume.
- if(enabled&&movementShapeFrom&&movementShapeAge<650&&F.running(match)&&movementEventAge>=Movement.timing.end){const raw=movementShapeAge/650,t=raw*raw*(3-2*raw);for(const [people,oldPeople] of [[lastMotionFrame.own,movementShapeFrom.own],[lastMotionFrame.opponent,movementShapeFrom.opponent]])for(const player of people){const old=oldPeople.find(p=>p.id===player.id);if(old){player.x=old.x+(player.x-old.x)*t;player.y=old.y+(player.y-old.y)*t;}}lastMotionFrame.ball={x:movementShapeFrom.ball.x+(lastMotionFrame.ball.x-movementShapeFrom.ball.x)*t,y:movementShapeFrom.ball.y+(lastMotionFrame.ball.y-movementShapeFrom.ball.y)*t};lastMotionFrame.trail=[];lastMotionFrame.carrierId=null;lastMotionFrame.phase='shape-change';lastMotionFrame.label='전술 변화 · 위치 재정비';}
+ if(!state.continuousSetup&&enabled&&movementShapeFrom&&movementShapeAge<650&&F.running(match)&&movementEventAge>=Movement.timing.end){const raw=movementShapeAge/650,t=raw*raw*(3-2*raw);for(const [people,oldPeople] of [[lastMotionFrame.own,movementShapeFrom.own],[lastMotionFrame.opponent,movementShapeFrom.opponent]])for(const player of people){const old=oldPeople.find(p=>p.id===player.id);if(old){player.x=old.x+(player.x-old.x)*t;player.y=old.y+(player.y-old.y)*t;}}lastMotionFrame.ball={x:movementShapeFrom.ball.x+(lastMotionFrame.ball.x-movementShapeFrom.ball.x)*t,y:movementShapeFrom.ball.y+(lastMotionFrame.ball.y-movementShapeFrom.ball.y)*t};lastMotionFrame.trail=[];lastMotionFrame.carrierId=null;lastMotionFrame.phase='shape-change';lastMotionFrame.label='전술 변화 · 위치 재정비';}
  lastMotionFrame=Movement.locomotion(lastMotionFrame,previousMotion,(playing||demo)?visualDelta*rate:0);
  const playLabel=movementEventAge>=Movement.timing.outlet&&movementEventAge<Movement.timing.hold&&lastMotionFrame.focusName?lastMotionFrame.focusName+' · '+lastMotionFrame.label:lastMotionFrame.label;
  const text=movementDemo?'미리보기 · '+playLabel:state.paused?'일시 정지 · '+playLabel:playLabel;
@@ -33,6 +33,7 @@ function motionFrame(now=performance.now()){
  return lastMotionFrame;
 }
 function syncMovementCommentary(){
+ if(state?.continuousSetup){const host=$('commentary');if(view==='match'&&host){const recent=state.logs.at(-1),text=recent&&state.continuous.tick-(recent.tick||0)<20?recent.text:(lastMotionFrame?.focusName?lastMotionFrame.focusName+' · ':'')+(lastMotionFrame?.label||'경기 중계'),p=host.querySelector('p');if(p&&p.textContent!==text)p.textContent=text;const clock=host.querySelector('.minute-label');if(clock)clock.textContent=F.clockLabel(state);const scoreClock=$('clock');if(scoreClock&&F.running(state))scoreClock.textContent=F.clockLabel(state);}return;}
  const commentary=$('commentary'),visible=view==='match'&&!document.hidden,enabled=motionEnabled();
  if(commentary&&visible&&enabled&&!movementDemo&&lastMotionFrame&&(F.running(state)||movementEventAge<Movement.timing.end)){
   const key=movementEventAge<Movement.timing.end?'event:'+lastEventAt+':'+lastMotionFrame.phase+':'+lastMotionFrame.label:'pass:'+lastMotionFrame.carrierId+':'+lastMotionFrame.receiverId+':'+lastMotionFrame.phase;
@@ -74,7 +75,7 @@ function movementShouldAnimate(){return (typeof appSessionStarted==='undefined'|
 function movementSnapshot(){return {preview:movementDemo,elapsedMs:movementElapsed,eventAgeMs:Number.isFinite(movementEventAge)?movementEventAge:null,frame:lastMotionFrame};}
 document.addEventListener('visibilitychange',()=>{movementStamp=performance.now();if(document.hidden)cancelMovementPreview();});
 
-function movementHighlightPending(){return !!lastMotionFrame?.deadBall||!!lastEvent&&(movementEvent!==lastEvent||movementEventAge<Movement.timing.end);}
+function movementHighlightPending(){if(typeof state!=='undefined'&&state?.continuousSetup)return false;return !!lastMotionFrame?.deadBall||!!lastEvent&&(movementEvent!==lastEvent||movementEventAge<Movement.timing.end);}
 
 function syncMovementSequence(frame){
  const node=$('live-sequence');if(!node)return;

@@ -32,7 +32,7 @@
    else if(m.version>=9&&F.opponentPlan(m)==='chase'&&counter.paceBonus>0){tactic='counter';rule='opponent-chase';reason='상대 감독이 공격 숫자를 늘려 뒷공간을 내줍니다. 현재 공격진 속도로 역습 보너스를 얻을 수 있습니다. 예상 찬스와 체력도 비교하세요.';}
    else if(m.version>=9&&F.opponentPlan(m)==='protect'&&m.score[0]<=m.score[1]){tactic='press';rule='opponent-protect';reason='상대 감독이 리드를 지키려고 수비를 좁힙니다. 체력이 충분하다면 전방 압박으로 공격 기회를 늘려보세요.';}
    else if(counter.paceBonus>0){tactic='counter';rule='pace';reason='현재 공격진의 체력을 반영한 속도가 상대보다 높아 역습 보너스가 생깁니다. 찬스 횟수 지표가 줄어드는 점도 함께 비교하세요.';}
-   return {valid:true,reason:null,fingerprint,context,segment,lineup,condition,current:{rating,comparisons},previews,recommendation:{tactic,label:labels[tactic],reason,rule},assumption:'현재 활동 선수와 미리보기 전술을 유지하고 추가 교체·퇴장이 없다고 가정합니다. 찬스 지표는 현재 체력·전술의 분당 찬스 비율 × 다음 구간 시간입니다. 실제 경기는 매분 체력과 능력 지표가 변하므로 확정 찬스 수나 예상 스코어를 뜻하지 않습니다.'};
+   return {valid:true,continuous:!!m.continuousSetup,reason:null,fingerprint,context,segment,lineup,condition,current:{rating,comparisons},previews,recommendation:{tactic,label:labels[tactic],reason,rule},assumption:'현재 활동 선수와 미리보기 전술을 유지하고 추가 교체·퇴장이 없다고 가정합니다. 찬스 지표는 현재 체력·전술의 분당 찬스 비율 × 다음 구간 시간입니다. 실제 경기는 매분 체력과 능력 지표가 변하므로 확정 찬스 수나 예상 스코어를 뜻하지 않습니다.'};
   }catch{return invalid('현재 선발과 전술 지표를 읽을 수 없습니다.');}
  }
  const api={read};root.TacticsBoard=api;if(typeof module!=='undefined')module.exports=api;
