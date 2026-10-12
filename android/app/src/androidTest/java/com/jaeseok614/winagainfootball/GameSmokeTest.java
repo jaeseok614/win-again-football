@@ -36,6 +36,10 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 
 @RunWith(AndroidJUnit4.class)
 public final class GameSmokeTest {
+    private void assertManagerArrivalFits(ActivityScenario<MainActivity> scenario) throws Exception {
+        assertEquals("Manager image, complete prose and next action fit the actual phone", "true", evaluate(scenario,
+            "(()=>{const d=document.getElementById('manager-guide'),copy=document.getElementById('manager-guide-copy'),art=d.querySelector('.manager-art'),next=document.getElementById('manager-guide-next'),a=art.getBoundingClientRect(),b=next.getBoundingClientRect();return d.open&&!document.getElementById('manager-guide-art').hidden&&getComputedStyle(art).backgroundImage.includes('data:image/webp')&&a.height>=120&&d.scrollHeight<=d.clientHeight+1&&copy.scrollHeight<=copy.clientHeight+1&&b.height>=44&&b.bottom<=innerHeight;})()"));
+    }
     private String evaluate(ActivityScenario<MainActivity> scenario, String script) throws Exception {
         CountDownLatch ready = new CountDownLatch(1);
         AtomicReference<String> value = new AtomicReference<>("null");
@@ -299,11 +303,16 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "appSessionStarted||document.getElementById('manager-guide').open");
             if ("true".equals(evaluate(scenario, "document.getElementById('manager-guide').open"))) {
                 assertEquals("First arrival introduces the contract before the club's fall", "true", evaluate(scenario,
-                    "managerGuideStep===0&&document.getElementById('manager-guide-copy').textContent.includes('감독직 계약서')"));
+                    "managerGuideStep===0&&document.getElementById('manager-guide-copy').textContent.includes('계약서')"));
+                evaluate(scenario, "(()=>{window.managerArtDecoded=false;const image=new Image();image.src=ClubArt.managerAsset;image.decode().then(()=>window.managerArtDecoded=image.naturalWidth===1536&&image.naturalHeight===1024);return true;})()");
+                awaitTrue(scenario, "window.managerArtDecoded===true");
+                assertManagerArrivalFits(scenario);
+                screenshot(scenario, "android-manager-first-arrival.png");
                 assertEquals("true", evaluate(scenario, "document.getElementById('manager-guide-skip').hidden"));
                 tapWebElement(scenario, "#manager-guide-next");
                 assertEquals("Second arrival explains the actual fifth-tier challenge before the owner meeting", "true", evaluate(scenario,
-                    "managerGuideStep===1&&document.getElementById('manager-guide-copy').textContent.includes('토투넘')&&document.getElementById('manager-guide-copy').textContent.includes('24팀, 46경기')&&document.getElementById('manager-guide-skip').hidden"));
+                    "managerGuideStep===1&&(document.getElementById('manager-guide-title').textContent+document.getElementById('manager-guide-copy').textContent).includes('토투넘')&&document.getElementById('manager-guide-copy').textContent.includes('24팀, 46경기')&&document.getElementById('manager-guide-skip').hidden"));
+                assertManagerArrivalFits(scenario);
                 tapWebElement(scenario, "#manager-guide-next");
                 awaitTrue(scenario, "document.getElementById('club-story-dialog').open&&clubStoryRequired");
                 evaluate(scenario, "WinAgainAndroid.handleBack()");
