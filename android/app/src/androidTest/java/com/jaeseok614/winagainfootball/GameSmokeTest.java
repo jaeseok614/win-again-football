@@ -183,6 +183,7 @@ public final class GameSmokeTest {
     private void tapWebElement(ActivityScenario<MainActivity> scenario, String selector) throws Exception {
         android.util.Log.i("GameSmoke", "tap:" + selector);
         String quotedSelector = JSONObject.quote(selector);
+        awaitTrue(scenario,"(()=>{const element=document.querySelector("+quotedSelector+");if(!element)return false;const r=element.getBoundingClientRect();return r.width>0&&r.height>0;})()");
         evaluate(scenario, "document.querySelector(" + quotedSelector + ").scrollIntoView({block:'center',behavior:'instant'});true");
         awaitWebViewFrame(scenario); awaitAppWindowFocus(scenario);
         String pointJson = evaluate(scenario,
@@ -349,8 +350,10 @@ public final class GameSmokeTest {
                 "(()=>{const rows=Opposition.roster(S.opponentFor(season)),indices=rows.map(p=>Portraits.index(p));return new Set(indices).size===11&&rows.every(p=>Portraits.html(p).includes('--portrait-size:800% 800%'));})()"));
             screenshot(scenario, "android-home-media.png");
             tapWebElement(scenario, "[data-management-open='club-story-panel']");
-            tapWebElement(scenario, "#club-story-panel > details > summary");
-            tapWebElement(scenario, ".story-history [data-story-event]");
+            awaitTrue(scenario, "document.getElementById('manager-notebook').open&&!!notebookRows");
+            tapWebElement(scenario, "#manager-notebook [data-notebook-tab='complete']");
+            tapWebElement(scenario, "#manager-notebook [data-notebook-event='1:arrival']");
+            awaitTrue(scenario, "document.getElementById('club-story-dialog').open&&clubStoryEvent==='1:arrival'");
             String storyBefore = evaluate(scenario, "JSON.stringify(season)");
             int storyPages = Integer.parseInt(evaluate(scenario, "clubStoryPages(ClubStory.scene(season,clubStoryEvent)).length"));
             while (!"true".equals(evaluate(scenario, "document.querySelector('[data-story-page=previous]').disabled"))) {
@@ -370,7 +373,7 @@ public final class GameSmokeTest {
             assertEquals("Reading every story page must preserve the campaign", storyBefore, evaluate(scenario, "JSON.stringify(season)"));
             screenshot(scenario, "android-story-chapter.png");
             tapWebElement(scenario, "#club-story-dialog [data-story-close]");
-            tapWebElement(scenario, "#management-close");
+            awaitTrue(scenario, "!document.getElementById('club-story-dialog').open&&!document.getElementById('manager-notebook').open");
 
             tapWebElement(scenario, "#mobile-match-action");
             awaitTrue(scenario, "view==='match'&&!document.getElementById('match-pane').hidden");
