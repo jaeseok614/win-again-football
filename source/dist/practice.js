@@ -10,7 +10,7 @@
  function scenarioFor(id){return scenarios.find(scenario=>scenario.id===id)||null;}
  function startingMatch(scenario,continuous=0){
   const key=scenario.id+(continuous?':continuous:'+continuous:'');if(starts.has(key))return copy(starts.get(key));
-  const match=F.create(continuous?((continuous>=7?{comeback:8,protect:21}:continuous>=6?{comeback:1,protect:2}:continuous>=5?{comeback:42,protect:2}:continuous>=4?{comeback:28,protect:36}:continuous>=3?{comeback:4,protect:7}:{comeback:9,protect:1})[scenario.id]):seeds[scenario.id],{players:Object.fromEntries(F.startingRoster.map(p=>[p.id,p])),homeName:'토투넘',opponentName:'팔켄루 04',...(continuous>=6?{opponent:{attack:79,defense:75,middle:80,speed:75,energy:94}}:{})});
+  const match=F.create(continuous?((continuous>=7?{comeback:4,protect:5}:continuous>=6?{comeback:1,protect:2}:continuous>=5?{comeback:42,protect:2}:continuous>=4?{comeback:28,protect:36}:continuous>=3?{comeback:4,protect:7}:{comeback:9,protect:1})[scenario.id]):seeds[scenario.id],{players:Object.fromEntries(F.startingRoster.map(p=>[p.id,p])),homeName:'토투넘',opponentName:'팔켄루 04',...(continuous>=6?{opponent:{attack:79,defense:75,middle:80,speed:75,energy:94}}:{})});
   if(continuous)F.enableContinuous(match,{ruleVersion:continuous});
   while(match.minute<scenario.startMinute){if(!F.running(match))F.begin(match);F.tick(match);}
   match.paused=true;starts.set(key,copy(match));return match;
