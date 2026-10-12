@@ -1,8 +1,8 @@
 'use strict';
 // Optional deterministic benchmark. Prints aggregates; never reads personal saves.
 const F=require('./dist/engine.js'),S=require('./dist/season.js'),O=require('./dist/opposition.js'),C=require('./dist/continuous-football.js'),CM=require('./dist/continuous-match.js');
-const version=Number(process.argv.find(a=>a.startsWith('--version='))?.split('=')[1]||4);
-if(![1,2,3,4].includes(version))throw Error('Use --version=1, 2, 3 or 4.');
+const version=Number(process.argv.find(a=>a.startsWith('--version='))?.split('=')[1]||5);
+if(![1,2,3,4,5].includes(version))throw Error('Use --version=1, 2, 3, 4 or 5.');
 const tactics=['balanced','press','counter','lowBlock'],starter=[],matched=[],matchedSeeds=process.argv.includes('--extended')?Array.from({length:20},(_,i)=>41+i):[41,42,43,44];
 const mean=a=>a.reduce((n,v)=>n+v,0)/a.length;
 function row(seed,tactic,w,teamOnly){const field=w.players.filter(p=>p.pos!=='GK'&&(!teamOnly||p.team===0));return {seed,tactic,ownGoals:w.score[0],conceded:w.score[1],won:Number(w.score[0]>w.score[1]),draw:Number(w.score[0]===w.score[1]),goals:w.score[0]+w.score[1],shots:w.stats.shots[0]+w.stats.shots[1],passes:w.stats.passes[0]+w.stats.passes[1],completion:(w.stats.completed[0]+w.stats.completed[1])/Math.max(1,w.stats.passes[0]+w.stats.passes[1]),possession:w.stats.possession[0]/Math.max(1,w.stats.possession[0]+w.stats.possession[1]),energy:mean(field.map(p=>p.energy)),distance:mean(field.map(p=>p.distance))};}

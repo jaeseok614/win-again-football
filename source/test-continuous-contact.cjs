@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),P=require('./dist/continuous-contact.js'),C=require('./dist/continuous-football.js'),T=require('./dist/continuous-tactics.js'),F=require('./dist/engine.js'),S=require('./dist/season.js'),O=require('./dist/opposition.js'),crypto=require('node:crypto');
 const copy=C.copy;let checks=0;function test(name,fn){fn();checks++;console.log('PASS '+name);}
-function world(ids=[]){const m=F.create(17);F.enableContinuous(m);const w=copy(m.continuous);w.restart=null;w.tactics=['balanced','balanced'];w.focuses=['balanced','balanced'];for(const p of w.players){p.active=ids.includes(p.id);p.decisionAt=999999;}return w;}
+function world(ids=[]){const m=F.create(17);F.enableContinuous(m,{ruleVersion:4});const w=copy(m.continuous);w.restart=null;w.tactics=['balanced','balanced'];w.focuses=['balanced','balanced'];for(const p of w.players){p.active=ids.includes(p.id);p.decisionAt=999999;}return w;}
 const get=(w,id)=>w.players.find(p=>p.id===id);
 function ball(w,{x=34,y=50,z=0,vx=0,vy=0,vz=0,kicker='f1',team=0,kind=null}={}){w.ball={x,y,z,vx,vy,vz,owner:null,lastTouch:kicker,flight:kind?{kind,team,kicker,receiver:null,released:0,offside:[],action:'combination',setPiece:null}:null};}
 function finish(m){while(m.phase!=='full'){if(!F.running(m))F.begin(m);F.finishSegment(m);}return m;}
