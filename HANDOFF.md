@@ -5,7 +5,8 @@
 - 공개 spatial1 저장8개와continuous1/2/3 각3개의 전체 상태/정산 정확 일치. version3의3개 SHA256을 영구 회귀로 고정하고 새 물리/판정24그룹을 추가했습니다. 최종 로컬159 suites/1215 checks, 공개 PWA14와Android 오프라인11그룹 통과. 로그 work/v4-final-tests.log, v4-pwa-final.log, v4-android-final.log. 새12포메이션·컵/유럽·부분 틱 저장/변조·초기 UI 없는 복원 포함.
 - 공개3과 새4 각각104경기를 비교했습니다. 같은 능력20씨드×4전술에서 역습 우리 평균득점1.80→1.10, 승률60→40%; 새4 균형1.05/50%, 압박1.15/50%, 로우 블록0.30/15%. 현재 첫 상대6씨드×4에서는 역습 총득점9.50→4.33입니다. 실제 능력차/고정 표본이며 실축 평균 보증이나 강제 득점 상한은 아닙니다. 재현 source/measure-continuous-balance.cjs --version=3/4 --extended.
 - 실제8화면320×568~1280×900 모든 이름/한 화면 넘침0/44px/독립연습/JS 오류0. 실제 표시 scheduler97분6:0(슈팅17:4), 하프/후반 작전·물리 리플레이·명시적 정산/앱 완전 재실행의 전체 세계·로그·체력·RNG·지시 정확 일치. 표시 시계를 가속한 조작 검사이며97분 벽시계 관전으로 부르지 마세요. 원본 사진/기록은 ignored work에 있습니다.
-- PWA4,238,810바이트/shell642036419653, Android 오프라인4,238,203바이트/SHA256cc4087a220e261087aee9302124b5e7b2586831af0594e12482726e5876325b8. 접촉/판정 코드20KB 여유만 늘려 shell상한4,245,000; 얼굴atlas상한은 유지합니다. 현재 로컬 검증 완료이고 새 커밋의 원격 소스·Android14/15 실제 네이티브9개·APK/AAB/lint 결과는 게시 후 확인해 기록합니다. PR25 draft/main 자동 병합 없음.
+- PWA4,238,810바이트/shell642036419653, Android 오프라인4,238,203바이트/SHA256cc4087a220e261087aee9302124b5e7b2586831af0594e12482726e5876325b8. 접촉/판정 코드20KB 여유만 늘려 shell상한4,245,000; 얼굴atlas상한은 유지합니다. 코드 **c9cb31fb1a27ecc28042d9b60e2fecc2da4b5078**의 [원격 소스159/1215·PWA14·생성 공개 파일 일치](https://github.com/jaeseok614/win-again-football/actions/runs/38203975672)와 [Android14/15 각각 실제 네이티브9/9·APK/AAB/lint](https://github.com/jaeseok614/win-again-football/actions/runs/38203975678)가 모두 성공했습니다. PR merge060b2804(code c9cb31f + main3af6f7c)에서 검사했고 원격 자산SHA256은 위 로컬값과 정확히 일치합니다. 최종 검증 문서는 코드 변경 없이 [skip ci]로 중복 실행을 생략합니다. PR25 draft/main 자동 병합 없음.
+- 최신 휴대폰 시험 설치 ZIP: https://github.com/jaeseok614/win-again-football/actions/runs/38203975678/artifacts/11726731469 . 안의 app-debug.apk를 설치합니다. AAB는 서명 전 Play 준비 파일입니다. API34 APK 아티팩트11726337607, 검증 로그 API34/35 각각11727275102/11726442763.
 
 # 최신 개발 — 2026-10-12 전술 AI와 경기 균형 version3
 
