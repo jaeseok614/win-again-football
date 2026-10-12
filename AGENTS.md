@@ -48,7 +48,7 @@ history is not payment entitlement proof. Read docs/REBIRTH_LOOP_2026-10-11.md.
 ## Full continuous engine direction (2026-10-12, supersedes hybrid notes below)
 
 The owner requested whole-match continuous football. New confirmed kickoffs use
-continuousSetup.version=7, a shared 100ms physical world for the actual two elevens.
+continuousSetup.version=8, a shared 100ms physical world for the actual two elevens.
 The minute opportunity sampler is not used for those matches. Live and replay read
 the same physical coordinates, contacts and recorded statistics. Preserve valid v10
 running/confirmed matches and the released spatial version1 solver. Never change a
@@ -62,7 +62,7 @@ docs/CONTINUOUS_CONTACT_AND_BALANCE_2026-10-12.md for version4 swept contacts,
 whole-ball lines, restarts, offside rebounds and balanced recovery/keeper reactions.
 Read docs/CONTINUOUS_PASSING_FLOW_2026-10-12.md for version5 bounded pass
 lead, physical ball arrival, first touches, diagonal support and opponent response.
-Read docs/CONTINUOUS_PRESS_AND_DEFENCE_2026-10-12.md for version7 trigger-based double pressing, compact goal-side cover, actual-speed exertion and low-block outlets. Preserve published version6 practice seeds/parameters too. The benchmark defaults to actual halftime reset; --half-reset false is only for reproducing historical diagnostics. Read docs/CONTINUOUS_DECISIONS_2026-10-12.md for version6 local carry/attack choices, moving-carrier interception, complementary press screens, carrying speed cost and explicit remaining tactic balance. Read docs/NOTEBOOK_STORY_2026-10-12.md for original record-driven notebook scenes and shared cast art. Use the new engine in new practice sessions too, show preparation before expensive
+Read docs/CONTINUOUS_PRESS_AND_DEFENCE_2026-10-12.md for version7 trigger-based double pressing, compact goal-side cover, actual-speed exertion and low-block outlets. Preserve published version6/7 practice seeds/parameters too. Read docs/MOBILE_MATCH_FEEDBACK_2026-10-13.md for version8 formation lanes, limited close support, stable challenger selection and formation-only arrival easing. The benchmark defaults to actual halftime reset; --half-reset false is only for reproducing historical diagnostics. Read docs/CONTINUOUS_DECISIONS_2026-10-12.md for version6 local carry/attack choices, moving-carrier interception, complementary press screens, carrying speed cost and explicit remaining tactic balance. Read docs/NOTEBOOK_STORY_2026-10-12.md for original record-driven notebook scenes and shared cast art. Use the new engine in new practice sessions too, show preparation before expensive
 replay/practice work, and keep all current names/ball/core controls on one viewport.
 Latest owner feedback (2026-10-12): no player-name connector lines in live matches,
 replays or practice. Keep names near the markers and simplify the pitch. Default
@@ -82,9 +82,7 @@ Keep the first title and mandatory arrival pages visually anchored to the bundle
 original Korean manager image, with no internal prose scroll on supported phones.
 
 The mandatory kickoff briefing shows both actual selected elevens, formation,
-calculated strength/energy and three role-based key players. Wide screens compare
-both pitches; phones switch teams without a long page. Player buttons open the
-existing own/opponent detail dialogs over the briefing. Full names and our reserves
+calculated strength/energy and three role-based key players. Both actual elevens and each team’s average ability remain simultaneously visible on phones and wide screens in compact readable comparison columns. An explicit detailed roster opens the existing own/opponent player dialogs over the briefing. Full names and our reserves
 are available in six-player pages. Closing any report never starts the match.
 Use the current custom placements and suspension replacements, not a parallel XI.
 Our overall matches TouchlinePlan’s role-weighted formula; opponent overall uses Opposition.
@@ -117,7 +115,7 @@ button or let an old guide preference skip it. Completed arrivals do not replay 
 restore. The subsequent controls tour remains optional with skip and settings replay.
 During the controls tour, keep visible Previous / Next / Skip actions inside the
 actual squad, tactics and talk dialogs. Closing a report returns to its current
-explanation; only explicit Next advances the tour. A team-talk choice is optional.
+explanation; Next alone advances each explanation. Squad/tactics/talk opening uses a separate optional button. Completed mandatory arrival replies also have an explicit Next to the controls tour; no extra team-talk action is required. A team-talk choice is optional.
 Do not apply tactics, talk effects, substitutions or kickoff for a tutorial step.
 Reserve space for the guide controls without covering the tactical pitch, and
 remove them on completion, skip or deliberate navigation outside the tour.
@@ -250,3 +248,6 @@ non-selected attributes. Optional v10 stoppage activates at the next kickoff,
 plays actual engine ticks, and is recorded in player minutes and settlements.
 Existing in-progress matches keep their saved duration. Halftime substitutions
 use the actual halftime boundary (45 plus first-half added time).
+
+## Specific placement and pacing feedback (2026-10-13)
+Use distinct LS/RS, left/right midfield/defence and wingback slots in the tactics editor. Dropping onto an occupied location swaps both placement coordinates atomically, preserving identities and natural registrations. Avoid the retired nine-zone scattering UI. Keep recorded continuous1–7/spatial1 receipts exact. New rule8 movement eases only formation targets; receivers, carriers, pressing, goalkeeping and restarts must still physically reach contact. Selected playback speed also affects shooting: key shots 2× selected speed, bounded at4×; attack4× selected bounded12×; routine48× selected. Full viewing has separate readable rates. These are presentation rates, never score/clock/RNG edits.

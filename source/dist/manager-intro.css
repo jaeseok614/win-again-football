@@ -61,3 +61,5 @@
  #squad-overview-dialog.manager-guided .squad-overview-list{grid-row:3}
  #squad-overview-dialog.manager-guided footer{grid-column:1/-1;grid-row:4}
 }
+
+#manager-guide .manager-guide-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}#manager-guide-open{grid-column:1/-1}#manager-guide-next{grid-column:1/-1}#manager-guide-back:not([hidden])~#manager-guide-next{grid-column:2}#manager-guide-skip{grid-column:1/-1;color:#b8c8b7;background:transparent}

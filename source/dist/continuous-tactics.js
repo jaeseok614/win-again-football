@@ -52,10 +52,14 @@
   if(!w.ai)w.ai={builtAt:-5,ownerTeam:team,transitionTick:w.tick,signature:'',targets:[]};
   if(w.ai.ownerTeam!==team){w.ai.ownerTeam=team;w.ai.transitionTick=w.tick;w.ai.builtAt=-5;}
   if(w.tick-w.ai.builtAt<5&&w.ai.signature===signature)return w.ai.targets;
-  const rows=[],active=w.players.filter(p=>p.active),flight=w.ball.flight,transition=w.tick-(w.version>=4?(w.transitionTick??-10000):w.ai.transitionTick)<(w.version>=4?40:70);
+  const previous=w.version>=8?w.ai.targets:[],rows=[],active=w.players.filter(p=>p.active),flight=w.ball.flight,transition=w.tick-(w.version>=4?(w.transitionTick??-10000):w.ai.transitionTick)<(w.version>=4?40:70);
   for(const t of [0,1]){
    const own=team===t,tactic=w.tactics[t],at=progress(w,t,w.ball.y),field=active.filter(p=>p.team===t&&p.pos!=='GK'),opponents=active.filter(p=>p.team!==t),width=own?(tactic==='counter'?.9:1):(tactic==='lowBlock'?.62:tactic==='press'?.84:.72);
-   const ranked=field.map(p=>({p,...intercept(w,p)})).sort((a,b)=>a.eta-b.eta||a.p.id.localeCompare(b.p.id));
+   const ranked=field.map(p=>({p,...intercept(w,p)})).sort((a,b)=>{
+    if(w.version<8)return a.eta-b.eta||a.p.id.localeCompare(b.p.id);
+    const score=r=>r.eta+(previous.some(q=>q.id===r.p.id&&['press','intercept','press-screen'].includes(q.role))?0:.65)+Math.abs((w.half===1?r.p.homeX:W-r.p.homeX)-w.ball.x)*.012;
+    return Math.round((score(a)-score(b))*1e8)||a.p.id.localeCompare(b.p.id);
+   });
    // Prefer a nearby midfielder to leave the last line covering the goal.
    if(!own&&tactic!=='press'&&ranked[0]?.p.pos==='DEF'){const cover=ranked.find(r=>r.p.pos!=='DEF'&&r.eta<=ranked[0].eta+.65);if(cover)ranked.splice(0,0,...ranked.splice(ranked.indexOf(cover),1));}
    // Rule7 doubles up on a reachable pressing trigger, not every settled possession.
@@ -66,13 +70,16 @@
    // Reserve one outlet without stealing the presser or the goal-side shield.
    const outletForward=w.version>=7&&!own&&tactic==='lowBlock'?field.filter(p=>(p.role||p.pos)==='FW'&&!chasing.some(c=>c.p.id===p.id)).sort((a,b)=>progress(w,t,b.y)-progress(w,t,a.y)||a.id.localeCompare(b.id))[0]:null;
    const shield=w.version>=7&&!own&&carrier&&at<55&&chasing.length<2?ranked.find(r=>r.p.id!==outletForward?.id&&!chasing.some(c=>c.p.id===r.p.id)&&distance(r.p,carrier)<18&&r.p.burst>15):null;
+   const supporters=w.version>=8&&own&&carrier?field.filter(p=>p.id!==carrier.id&&(p.role||p.pos)==='MID').sort((a,b)=>Math.round((distance(a,carrier)-distance(b,carrier))*1e8)||a.id.localeCompare(b.id)).slice(0,2).map(p=>p.id):[];
    const defenderLine=own?clamp(at-(tactic==='counter'?30:24),18,tactic==='lowBlock'?43:57):w.version>=7?clamp(at-(tactic==='lowBlock'?13:10),8,tactic==='press'?48:tactic==='lowBlock'?36:42):clamp(at-12,12,tactic==='press'?48:tactic==='lowBlock'?30:40);
    const backLine=opponents.map(p=>progress(w,t,p.y)).sort((a,b)=>b-a)[1]??H,legalLine=Math.max(H/2,at,backLine)-1.3;
    const threats=opponents.filter(p=>p.pos!=='GK').sort((a,b)=>progress(w,t,a.y)-progress(w,t,b.y)||a.id.localeCompare(b.id)),marked=new Set();
    for(const p of field){
     const position=p.role||p.pos,homeX=w.half===1?p.homeX:W-p.homeX,wideHome=Math.abs(homeX-W/2)>19,wideBall=Math.abs(w.ball.x-W/2)>20,near=distance(p,w.ball),line=position==='DEF'?defenderLine:position==='MID'?defenderLine+(own?14:w.version>=7?(tactic==='lowBlock'?8:10):12):own?clamp(at+15,57,98):w.version>=7?Math.max(tactic==='counter'?48:tactic==='lowBlock'?30:36,defenderLine+(tactic==='lowBlock'?18:22)):Math.max(tactic==='counter'?54:38,defenderLine+24);
     let x=clamp(W/2+(homeX-W/2)*width+(w.ball.x-W/2)*.15,3,W-3),depth=line,sprint=false,role=own?'support':'cover';
-    const chase=chasing.find(r=>r.p.id===p.id);
+    const sameLine=w.version>=8?field.filter(q=>(q.role||q.pos)===position):null,homeDepth=q=>progress(w,t,w.half===1?q.homeY:H-q.homeY),offset=sameLine?clamp(homeDepth(p)-sameLine.reduce((n,q)=>n+homeDepth(q),0)/sameLine.length,-10,10):0;
+    if(w.version>=8)depth+=offset;
+    const shapeX=x,shapeDepth=depth,chase=chasing.find(r=>r.p.id===p.id);
     if(chase){x=chase.point.x;depth=progress(w,t,chase.point.y)-.4;sprint=true;role=w.ball.owner?'press':'intercept';if(w.version>=6&&!own&&carrier&&chasing[1]?.p.id===p.id){const screen=A.screen(w,p,carrier,opponents);x=screen.x;depth=progress(w,t,screen.y);role=w.version>=7?'press-screen':'screen';sprint=distance(p,screen)>3&&p.burst>25;}}
     else if(p.id===carrier?.id){const close=opponents.filter(q=>q.pos!=='GK').sort((a,b)=>distance(a,p)-distance(b,p))[0],blocked=close&&distance(close,p)<3;
      x=clamp(p.x+(blocked?(p.x<close.x?-2:2):wideBall&&w.focuses[t]!=='cross'?(W/2-p.x)*.12:0),1,W-1);depth=progress(w,t,p.y)+(blocked?1.6:4);sprint=!blocked&&p.speed>65&&(tactic==='counter'&&transition||!close||distance(close,p)>5);role='carry';
@@ -98,6 +105,17 @@
      if(p.id===outletForward?.id){depth=Math.max(depth,at<30?42:48);x=clamp(homeX,8,W-8);role='outlet';}
      if(shield?.p.id===p.id&&p.id!==outletForward?.id){const side=p.x<carrier.x?-1:p.x>carrier.x?1:direction(w,t);x=clamp(carrier.x+side*2.3,3,W-3);depth=at-3.8;role='screen';}
      else if(position==='MID'&&at<55){depth=Math.min(depth,at-6);x=clamp(x*.7+w.ball.x*.3,homeX-12,homeX+12);role='goal-cover';}
+    }
+    // Rule8 retains formation lanes; only two near-ball midfielders offer close support.
+    if(w.version>=8&&!chase&&p.id!==carrier?.id){
+     if(own&&position==='MID'&&!(wideHome&&w.focuses[t]==='cross')&&role!=='return-run'){
+      if(!supporters.includes(p.id)){x=shapeX;depth=shapeDepth;role='hold-shape';sprint=false;}
+      else{x=clamp(x,shapeX-8,shapeX+8);depth=Math.min(legalLine,supporters[0]===p.id?Math.max(shapeDepth,progress(w,t,carrier.y)+7):Math.min(shapeDepth,progress(w,t,carrier.y)-7));role=supporters[0]===p.id?'advance-support':'support';sprint=supporters[0]===p.id&&transition&&tactic==='counter'&&p.energy>45;}
+     }
+     if(!own&&position==='MID'&&role!=='screen'){x=shapeX;depth=clamp(depth+offset,shapeDepth-6,shapeDepth+3);role='goal-cover';}
+     if(!own&&position==='DEF'){x=clamp(x,shapeX-8,shapeX+8);depth=clamp(depth+offset,shapeDepth-6,shapeDepth+6);}
+     const old=previous.find(q=>q.id===p.id);
+     if(old&&old.role===role&&!transition){x=old.x+(x-old.x)*.35;depth=progress(w,t,old.y)+(depth-progress(w,t,old.y))*.35;}
     }
     if(w.version>=5&&p.id===carrier?.id&&w.tick-(p.receptionAt??-10000)<6){x=p.x;depth=progress(w,t,p.y);sprint=false;role='first-touch';}
     if(w.version>=4&&!own&&!chase){const goalSide=progress(w,t,p.y)-depth;sprint=(goalSide>3&&(at<40||transition))||(role==='mark'&&goalSide>1.5&&at<35);}

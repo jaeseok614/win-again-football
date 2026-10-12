@@ -470,7 +470,7 @@ public final class GameSmokeTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
             evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());season=S.create(4088);state=season.match;appSessionStarted=true;view='club';render();openManagerGuide(2);return true;})()");
-            tapWebElement(scenario, "#manager-guide-next");
+            tapWebElement(scenario, "#manager-guide-open");
             awaitTrue(scenario, "document.getElementById('squad-overview-dialog').open&&document.querySelectorAll('[data-squad-detail]').length===18");
             assertEquals("true", evaluate(scenario, "(()=>{const d=document.getElementById('squad-overview-dialog').getBoundingClientRect(),list=document.querySelector('.squad-overview-list');return d.top>=0&&d.bottom<=innerHeight&&d.width<=innerWidth&&list.clientHeight>80;})()"));
             screenshot(scenario, "android-whole-squad.png");
@@ -481,7 +481,7 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "!document.getElementById('player-detail-dialog').open&&document.getElementById('squad-overview-dialog').open&&managerGuideStep===2");
             tapWebElement(scenario, "#squad-overview-close");
             awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===2");
-            tapWebElement(scenario, "#manager-guide-next");
+            tapWebElement(scenario, "#manager-guide-open");
             awaitTrue(scenario, "document.getElementById('squad-overview-dialog').open&&!!document.querySelector('[data-guide-forward]')");
             tapWebElement(scenario, "[data-guide-forward]");
             awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===3");
@@ -543,7 +543,7 @@ public final class GameSmokeTest {
             evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeGoalScene();matchCeremonyHold=false;ceremonyPending=null;managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;customPositions={};tacticalRoles={};setView('match');return true;})()");
             tapWebElement(scenario, "#primary");
             tapWebElement(scenario, "#ceremony-ready");
-            awaitTrue(scenario, "state.continuousSetup?.version===7 && state.continuous.tick>20");
+            awaitTrue(scenario, "state.continuousSetup?.version===8 && state.continuous.tick>20");
             assertEquals("The native live field uses the actual ball and all 22 names", "true", evaluate(scenario,
                 "(()=>{state.paused=true;drawField();return document.getElementById('match-names')._labels.length===22 && Math.hypot(lastMotionFrame.ball.x-F.continuousFrame(state).ball.x,lastMotionFrame.ball.y-F.continuousFrame(state).ball.y)<0.01 && document.documentElement.scrollHeight<=innerHeight+1;})()"));
             String replayProof = evaluate(scenario,

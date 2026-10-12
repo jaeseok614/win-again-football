@@ -24,7 +24,7 @@
  function choose(w,p,{laneRisk}){
   const opponents=w.players.filter(q=>q.active&&q.team!==p.team),at=progress(w,p.team,p.y),wide=Math.abs(p.x-W/2)>20,focus=w.focuses[p.team],route=carrying(w,p,opponents),shot=shotQuality(w,p,opponents),line=Math.max(H/2,progress(w,p.team,w.ball.y),opponents.map(q=>progress(w,p.team,q.y)).sort((a,b)=>b-a)[1]??H);
   const spaceValue=route.near<2?.045:route.space<1.8?.075:.11+Math.min(6,route.space)*.013;
-  let best={kind:'carry',value:spaceValue+(focus==='dribble'?.035:0)-(p.energy<30?.015:0),receiver:null};
+  let best={kind:'carry',value:spaceValue+(w.version>=8&&p.pos!=='GK'&&route.space>3&&route.near>3?.045:0)+(focus==='dribble'?.035:0)-(p.energy<30?.015:0),receiver:null};
   if(p.pos!=='GK'&&shot.d<29&&!wide&&shot.quality>((p.role||p.pos)==='FW'?.09:.12)){
    const value=shot.quality*1.6+.09+(shot.d<18?.04:.02)+(route.space<2?.025:0)-laneRisk(w,p,{x:34,y:direction(w,p.team)<0?0:H},true)*.027;
    if(value>best.value)best={kind:'shot',value,receiver:null};

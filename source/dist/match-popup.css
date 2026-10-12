@@ -186,3 +186,18 @@ body.match-popup-ready.match-view:not(.launch-mode){height:100dvh;overflow:hidde
 #match-ceremony .preparation-current{font-size:11px;margin:0;line-height:1.4}.preparation-note{font-size:10px;color:#b7cebd;line-height:1.4}.coach-preparation button:focus-visible{outline:3px solid #f0df91;outline-offset:2px}
 @media(max-height:650px){.coach-preparation{gap:5px}.preparation-priority{padding:7px}.preparation-checks>div{padding:3px}.preparation-context>button{padding:5px 7px!important}#match-ceremony .preparation-priority h3{font-size:14px}.coach-preparation header small{font-size:10px}}
 @media(max-height:450px) and (min-width:640px){.coach-preparation{max-width:none;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:5px 12px}.coach-preparation>header{grid-column:1;grid-row:1}.preparation-checks{grid-column:2;grid-row:1}.preparation-priority{grid-column:1;grid-row:2/5}.preparation-context{grid-column:2;grid-row:2}.preparation-form{grid-column:2;grid-row:3}.preparation-current{grid-column:2;grid-row:4}.preparation-note{grid-column:1/-1;grid-row:5}#match-ceremony .coach-preparation small{grid-column:auto}}
+/* Both actual elevens stay visible together on phones. Detail buttons open full profiles. */
+#match-ceremony .preview-teams{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+#match-ceremony .preview-team[data-side]{display:flex;min-width:0}
+#match-ceremony .preview-team header h3{font-size:13px;line-height:18px}
+#match-ceremony .preview-team header>span{font-size:10px;line-height:14px;min-height:28px}
+.preview-lineup{flex:1;min-height:0;display:grid;grid-template-rows:repeat(11,minmax(0,1fr));gap:2px}
+#match-ceremony .preview-lineup .preview-player{position:static;transform:none;display:grid;grid-template-columns:22px minmax(0,1fr) 29px;align-items:center;width:100%;min-width:0;min-height:0;height:auto;text-align:left;padding:2px 3px;background:#1e392f;border:0;border-radius:3px;color:#edf6e7;gap:2px;line-height:12px}
+.preview-lineup .preview-player span{font-size:10px;line-height:12px;white-space:normal;overflow-wrap:anywhere;word-break:keep-all}
+.preview-lineup .preview-player small{font-size:9px;color:#b8ccbe}
+.preview-lineup .preview-player b{position:static;font-size:10px;text-align:right;color:#d9eeaf}
+.preview-lineup .is-key{box-shadow:inset 2px 0 #d4e990}
+#match-ceremony .preview-team .preview-keys{display:none}
+@media(max-height:450px){#match-ceremony[data-kind="preview"] #ceremony-squads:not(.coach-preparation-open){display:flex;flex-direction:column;gap:3px}#match-ceremony .preview-lineup{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr))}#match-ceremony .preview-team header>span{min-height:14px}#ceremony-roster{flex-basis:44px}}
+
+@media(max-height:450px){#match-ceremony[data-kind="preview"] #ceremony-squads:not(.coach-preparation-open){height:auto;min-height:0}#match-ceremony .preview-teams{height:auto;min-height:0}#match-ceremony .preview-lineup{min-height:0}}
