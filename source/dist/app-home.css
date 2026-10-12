@@ -1,4 +1,20 @@
 /* Native-feeling title menu and a visible, compact news dashboard. */
+.launch-manager{position:absolute;inset:0;z-index:-1;background-size:cover;background-position:68% 35%}
+.launch-manager:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#07130c22 0%,#06120b18 27%,#06120bc9 54%,#06120bf7 100%)}
+@media(max-height:450px) and (min-width:600px){
+ #launch-screen{height:100dvh;min-height:0}
+ #launch-screen .launch-manager{background-size:auto 100%;background-position:right center}
+ #launch-screen .launch-manager:after{background:linear-gradient(90deg,#06120bf7 0%,#06120bc9 36%,#06120b18 72%)}
+ #launch-screen .launch-top{padding:10px 20px;font-size:9px}
+ #launch-screen .launch-content{width:310px;max-width:48%;margin:auto 0 auto 20px;padding:0}
+ #launch-screen .launch-ball{display:none}
+ #launch-screen h1{font-size:23px;line-height:1.2;letter-spacing:-1px;margin:8px 0}
+ #launch-screen .launch-copy{margin:8px 0;font-size:11px;line-height:1.5}
+ #launch-screen .launch-actions{gap:6px}
+ #launch-screen .launch-actions button{min-height:44px;font-size:12px;padding:7px}
+ #launch-screen .launch-campaign{margin:5px 0 0;font-size:9px}
+ #launch-screen .launch-footer{padding:7px 20px;font-size:9px;text-align:left}
+}
 [hidden]{display:none!important}
 body.launch-mode{padding:0;background:#06130f}
 .launch-mode>.app,.launch-mode>#coach-next-action{display:none!important}

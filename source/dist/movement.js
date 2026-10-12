@@ -136,10 +136,46 @@
     result.phase=segmentLocal<.55?'contest':segmentLocal<.8?'tackle':'recovery';result.label=segmentLocal<.55?'수비가 따라붙습니다':segmentLocal<.8?'태클 · 흘러나온 공 경합':'수비가 공을 회수합니다';
    }
   }
-  if(cinematic){const frozen=input.eventOrigin||frame({...input,event:null,elapsedMs:input.eventElapsedMs??Math.max(0,finite(input.elapsedMs)-age)});applyEvent(result,match,event,age,frozen);}
+  if(cinematic){const frozen=input.eventOrigin||frame({...input,event:null,elapsedMs:input.eventElapsedMs??Math.max(0,finite(input.elapsedMs)-age)});if(event.spatial)applySpatialEvent(result,match,event,age,frozen);else applyEvent(result,match,event,age,frozen);}
   return result;
  }
  function impactAge(event){return event?.type==='chance'&&event.setPiece!=='freeKick'?timing.delivery:timing.impact;}
+ const spatialScenes=new WeakMap();
+ function applySpatialEvent(result,match,event,age,frozen){
+  let scene=spatialScenes.get(event);if(!scene){scene=engine.spatialAttack(match,event);if(!scene)return applyEvent(result,match,event,age,frozen);spatialScenes.set(event,scene);}
+  const routineBall={...result.ball},S=typeof module==='object'&&module.exports?require('./spatial-play.js'):globalThis.SpatialPlay,blocked=event.type==='chance',contactAt=blocked?timing.delivery:timing.shot;
+  const phaseTime=age<timing.carry?scene.releaseTime*clamp((age-timing.outlet)/(timing.carry-timing.outlet),0,1):scene.releaseTime+(scene.contactTime-scene.releaseTime)*clamp((age-timing.carry)/(contactAt-timing.carry),0,1),sample=S.sample(scene,phaseTime);
+  const initial=smooth(age/timing.outlet),old=new Map([...frozen.own,...frozen.opponent].map(p=>[p.id,p])),base=new Map([...result.own,...result.opponent].map(p=>[p.id,p])),people=[];
+  for(const point of sample.players){const p=old.get(point.id)||base.get(point.id)||{id:point.id,...match.players[point.id]},start=old.get(point.id)||point;people.push({...p,x:lerp(start.x,point.x,initial),y:lerp(start.y,point.y,initial)});}
+  result.own=people.filter(p=>!p.id.startsWith('opp'));result.opponent=people.filter(p=>p.id.startsWith('opp'));
+  const receipt=event.spatial,source=people.find(p=>p.id===receipt.sourceId),receiver=people.find(p=>p.id===receipt.receiverId),defender=people.find(p=>p.id===receipt.defenderId),keeper=(event.team===0?result.opponent:result.own).find(p=>p.pos==='GK'),direction=event.team===0?-1:1;
+  result.ball=mixPoint(frozen.ball,sample.ball,initial);result.ballHeight=sample.height;result.trail=[];result.ownerTeam=event.team;result.attributed=true;result.performerId=receiver?.id;result.performerName=receiver?.name||'';result.sourceId=source?.id;result.crossSourceName=source?.name||'';result.receiverId=receiver?.id;result.keeperId=keeper?.id;result.focusId=source?.id;result.carrierId=age<timing.carry?source?.id:null;
+  result.phase=age<timing.outlet?'build-up':age<timing.carry?(['cross','cutback'].includes(event.action)?'wing-run':event.action==='dribble'?'sprint':'carry'):event.action==='through_ball'?'through':event.action==='cross'?'cross':event.action==='cutback'?'cutback':'pass';
+  result.label=age<timing.outlet?'동료가 패스 출구를 만듭니다':age<timing.carry?(['cross','cutback'].includes(event.action)?'측면 전진 · 수비가 따라붙습니다':event.action==='dribble'?'공을 몰고 수비 사이로 전진':'공간을 보며 전개합니다'):'공의 경로를 읽으며 침투합니다';
+  if(scene.receiveTime!==null&&phaseTime>=scene.receiveTime&&age<contactAt){result.carrierId=receiver?.id;result.focusId=receiver?.id;result.phase='sprint';result.label='첫 터치 · 공을 몰고 골문으로 전진';}
+  if(receipt.release){result.passRelease={team:event.team,line:receipt.release.line,ballY:receipt.release.source.y,receiverY:receipt.release.receiver.y,offside:receipt.offside};}
+  if(age>=contactAt){
+   result.ball={...receipt.contact.point};result.ballHeight=0;result.focusId=receiver?.id;result.carrierId=receiver?.id;
+   if(blocked){result.ownerTeam=1-event.team;result.carrierId=receipt.offside?null:defender?.id;result.receiverId=defender?.id;result.focusId=defender?.id||receiver?.id;result.recovererId=defender?.id;result.phase=receipt.offside?'offside':'intercept';result.label=receipt.offside?'오프사이드 · 간접 프리킥':defender?'패스 경로를 읽은 수비가 차단합니다':'패스가 길었습니다 · 수비가 회수합니다';}
+   else{
+    const from={...receipt.contact.point},target={x:46+(event.minute%9),y:event.team===0?3:97},save={x:target.x,y:event.team===0?11:89},t=clamp((age-timing.shot)/(timing.impact-timing.shot),0,1);
+    result.shotFrom=from;result.shotTarget=target;result.ball=mixPoint(from,event.type==='goal'?target:save,smooth(t));result.trail=t>0&&t<1?[.08,.16,.24].map(lag=>mixPoint(from,event.type==='goal'?target:save,smooth(Math.max(0,t-lag)))):[];result.phase='shot';result.label=event.action==='cross'?'크로스를 헤더로 골문에 연결합니다':'첫 터치 뒤 골문으로 슈팅';result.carrierId=t===0?receiver?.id:null;
+    if(keeper){const k0=sample.players.find(p=>p.id===keeper.id);Object.assign(keeper,mixPoint(k0||keeper,save,smooth(t)));result.keeperDive=Math.sin(Math.PI*t);}
+    if(age>=timing.impact){result.phase=event.type==='goal'?'goal':event.team===1?'save':'saved';result.label=event.type==='goal'?'골!':'골키퍼가 슈팅 방향으로 움직여 선방합니다';result.ownerTeam=event.type==='goal'?event.team:1-event.team;result.carrierId=event.type==='goal'?null:keeper?.id;result.focusId=event.type==='goal'?receiver?.id:keeper?.id;}
+   }
+  }
+  if(event.action==='cross'&&!blocked&&Math.abs(age-contactAt)<220)result.headerLift=Math.max(0,1-Math.abs(age-contactAt)/220);
+  const restartPlayer=receipt.offside?(event.team===0?result.opponent:result.own).filter(p=>p.pos!=='GK').sort((a,b)=>Math.hypot(a.x-receipt.contact.point.x,a.y-receipt.contact.point.y)-Math.hypot(b.x-receipt.contact.point.x,b.y-receipt.contact.point.y))[0]:null;
+  if(restartPlayer&&age>=contactAt&&age<timing.hold)Object.assign(restartPlayer,mixPoint(restartPlayer,receipt.contact.point,smooth((age-contactAt)/(timing.hold-contactAt))));
+  if(age>=timing.hold){const blend=smooth((age-timing.hold)/(timing.end-timing.hold));
+   for(const p of people){const end=base.get(p.id);if(end)Object.assign(p,mixPoint(p,end,blend));}
+   const winner=restartPlayer||(blocked?(defender||keeper):keeper),receiverOut=(event.team===0?result.opponent:result.own).filter(p=>p.pos!=='GK').sort((a,b)=>Math.hypot(a.x-routineBall.x,a.y-routineBall.y)-Math.hypot(b.x-routineBall.x,b.y-routineBall.y))[0];
+   const start=receipt.offside?receipt.contact.point:winner?{x:winner.x,y:winner.y}:receipt.contact.point,end=routineBall;
+   result.ball=mixPoint(start,end,blend);result.ownerTeam=1-event.team;result.phase=receipt.offside?'indirect-free-kick':event.type==='goal'?'restart':'outlet';result.label=receipt.offside?'위반 지점 간접 프리킥 · 다시 전개':event.type==='goal'?'실점 팀 킥오프 준비':'공을 확보한 뒤 동료에게 연결';result.carrierId=blend===0?winner?.id:null;result.sourceId=winner?.id;result.receiverId=receiverOut?.id;result.trail=[];
+   if(event.type==='goal')result.ball=mixPoint(receipt.contact.point,routineBall,blend);
+  }
+  result.focusName=people.find(p=>p.id===result.focusId)?.name||'';
+ }
  function applyEvent(result,match,event,age,frozen){
   const baseBall={...result.ball},baseOwn=result.own.map(p=>({...p})),baseOpp=result.opponent.map(p=>({...p}));
   // A recorded scene owns its poses and phase; routine circulation can be in a

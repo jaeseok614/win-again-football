@@ -47,6 +47,16 @@ history is not payment entitlement proof. Read docs/REBIRTH_LOOP_2026-10-11.md.
 
 ## Pre-match squad and movement direction (2026-10-11)
 
+2026-10-12 explicit user request authorizes actual engine changes inspired by
+reference engines. New kickoffs enable optional v10 `spatialSetup.version=1`:
+fixed-step open-play paths decide pass contact/offside and affect future shots/xG.
+Preserve existing running matches and confirmed records. Rendering remains read-only
+and must reuse that recorded attack's shared solver, with all active names shown.
+Do not change the released version1 solver underneath saved version1 receipts;
+future physics changes need explicit rule versioning and preservation of those records.
+Keep the first title and mandatory arrival pages visually anchored to the bundled
+original Korean manager image, with no internal prose scroll on supported phones.
+
 The mandatory kickoff briefing shows both actual selected elevens, formation,
 calculated strength/energy and three role-based key players. Wide screens compare
 both pitches; phones switch teams without a long page. Player buttons open the
