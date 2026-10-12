@@ -46,3 +46,5 @@
 .notebook-card p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;flex-shrink:0}
 
 #manager-notebook .notebook-loading{grid-column:1/-1;grid-row:2/-1;display:flex;align-items:center;justify-content:center}
+
+@media(max-height:360px) and (min-width:500px){#club-story-dialog .story-speaker .player-portrait,#club-story-dialog .story-speaker .narrative-portrait{width:36px;height:36px;flex-basis:36px}#club-story-dialog .story-conversation>.memory-art{width:90px;height:40px;min-height:40px;max-height:40px;aspect-ratio:2.25}}

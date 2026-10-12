@@ -17,22 +17,22 @@ function openClubStory(event,opener=document.activeElement,required=false){
  if(!ClubStory.scene(season,event))return;pauseForPlanning();save();clubStoryEvent=event;clubStoryOpener=opener;clubStoryRequired=required;clubStoryPageStamp=null;renderClubStoryDialog();$('club-story-dialog').showModal();
 }
 function storyIllustration(d){if(d.art)return d.art;if(d.key.startsWith('memory-'))return d.key==='memory-warning'?'office':'rebirth';if(d.key==='tier')return /강등|다시 도전/.test(d.title)?'rain':'growth';return {arrival:'office',captain:'locker',rookie:'locker',fans:'rain',community:'arrival','three-losses':'rain','bounce-back':'locker'}[d.key]||null;}
-function storySceneCards(text){const chunks=String(text).split(/\n\n+/).filter(Boolean);return chunks.length?chunks.map(t=>({speaker:'장면',text:t})): [{speaker:'장면',text}];}
+function storySceneCards(text,compact=false){const chunks=String(text).split(compact?/\n+/:/\n\n+/).filter(Boolean);return chunks.length?chunks.map(t=>({speaker:'장면',text:t})): [{speaker:'장면',text}];}
 function clubStoryPages(d){
- if(d.step===0)return [...storySceneCards(d.scene),{speaker:d.questionSpeaker||d.name,text:d.question}];
+ if(d.step===0)return [...storySceneCards(d.scene,d.key.startsWith('notebook-')),{speaker:d.questionSpeaker||d.name,text:d.question}];
  if(d.step===1)return [{speaker:d.name,text:d.reaction},{speaker:d.name,text:d.question}];
  const original=ClubStory.events(season,d.year).find(e=>e.id===d.id),first=d.answered[0];
- return [...storySceneCards(d.scene),{speaker:original.questionSpeaker||d.name,text:original.question},{speaker:'감독',text:d.options[['listen','bold','practical'].indexOf(first.choice)]},{speaker:d.name,text:d.reaction},{speaker:d.name,text:d.question},{speaker:'감독',text:d.finalLabel},{speaker:d.name,text:d.reply},...(d.impact?[{speaker:'경기력 반영',text:d.impact}]:[])];
+ return [...storySceneCards(d.scene,d.key.startsWith('notebook-')),{speaker:original.questionSpeaker||d.name,text:original.question},{speaker:'감독',text:d.options[['listen','bold','practical'].indexOf(first.choice)]},{speaker:d.name,text:d.reaction},{speaker:d.name,text:d.question},{speaker:'감독',text:d.finalLabel},{speaker:d.name,text:d.reply},...(d.impact?String(d.impact).split(d.key.startsWith('notebook-')?/\n+/:/$^/).filter(Boolean).map(text=>({speaker:'경기력 반영',text})):[])];
 }
 function renderStoryPage(d){
  const host=$('club-story-dialog'),pages=clubStoryPages(d),stamp=d.id+':'+d.step;
- if(stamp!==clubStoryPageStamp){clubStoryPageStamp=stamp;clubStoryPage=d.step===2?pages.length-(d.impact?2:1):0;}
+ if(stamp!==clubStoryPageStamp){clubStoryPageStamp=stamp;clubStoryPage=d.step===2?Math.max(0,pages.findLastIndex(p=>p.speaker===d.name&&p.text===d.reply)):0;}
  clubStoryPage=Math.max(0,Math.min(pages.length-1,clubStoryPage));const page=pages[clubStoryPage],last=clubStoryPage===pages.length-1;
  host.dataset.storyPageKind=page.speaker==='장면'?'scene':'dialogue';
  const sceneArt=storyIllustration(d),speakerRow=host.querySelector('.story-speaker');
  if(speakerRow){const manager=page.speaker==='감독',profile=!manager?F.identityProfile(d.actor):null;speakerRow.innerHTML=(profile?Portraits.html(profile):ClubArt.voice(manager?'manager':d.relation))+'<div><b>'+escapeText(manager?'감독':d.name)+'</b><small>'+escapeText(manager?'내가 남긴 대답':d.speaker+' · '+(d.context||d.memory))+'</small></div>';}
 
- host.querySelector('.story-conversation').innerHTML=(page.speaker==='장면'&&sceneArt?ClubArt.memory(sceneArt):'')+'<p class="story-bubble story-current" aria-live="polite"><b>'+escapeText(page.speaker)+'</b>'+escapeText(page.text)+'</p><nav class="story-page-nav" aria-label="대화 장면 이동"><button type="button" data-story-page="previous" '+(clubStoryPage===0?'disabled':'')+'>이전</button><span>장면 '+(clubStoryPage+1)+' / '+pages.length+'</span><button type="button" data-story-page="next" '+(last?'disabled':'')+'>'+(clubStoryPage===pages.length-2&&d.step<2&&!d.readOnly?'대답하기':d.step===2&&d.impact&&clubStoryPage===pages.length-2?'경기력 반영 보기':'다음')+'</button></nav>'+(d.mission&&last?'<p class="story-mission">'+escapeText(storyMissionText(d.mission))+'</p>':'');
+ host.querySelector('.story-conversation').innerHTML=(page.speaker==='장면'&&sceneArt&&clubStoryPage===0?ClubArt.memory(sceneArt):'')+'<p class="story-bubble story-current" aria-live="polite"><b>'+escapeText(page.speaker)+'</b>'+escapeText(page.text)+'</p><nav class="story-page-nav" aria-label="대화 장면 이동"><button type="button" data-story-page="previous" '+(clubStoryPage===0?'disabled':'')+'>이전</button><span>장면 '+(clubStoryPage+1)+' / '+pages.length+'</span><button type="button" data-story-page="next" '+(last?'disabled':'')+'>'+(clubStoryPage===pages.length-2&&d.step<2&&!d.readOnly?'대답하기':d.step===2&&pages[clubStoryPage+1]?.speaker==='경기력 반영'?'경기력 반영 보기':'다음')+'</button></nav>'+(d.mission&&last?'<p class="story-mission">'+escapeText(storyMissionText(d.mission))+'</p>':'');
  host.querySelector('.story-choices').hidden=!last;
  const complete=host.querySelector('.story-complete');if(complete)complete.hidden=!last;
  const action=host.querySelector('[data-story-action]');if(action)action.hidden=!last||clubStoryRequired;

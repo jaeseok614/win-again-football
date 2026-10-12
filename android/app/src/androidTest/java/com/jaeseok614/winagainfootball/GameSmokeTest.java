@@ -38,7 +38,7 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 public final class GameSmokeTest {
     private void assertManagerArrivalFits(ActivityScenario<MainActivity> scenario) throws Exception {
         assertEquals("Manager image, complete prose and next action fit the actual phone", "true", evaluate(scenario,
-            "(()=>{const d=document.getElementById('manager-guide'),copy=document.getElementById('manager-guide-copy'),art=d.querySelector('.manager-art'),next=document.getElementById('manager-guide-next'),a=art.getBoundingClientRect(),b=next.getBoundingClientRect();return d.open&&!document.getElementById('manager-guide-art').hidden&&getComputedStyle(art).backgroundImage.includes('data:image/webp')&&a.height>=120&&d.scrollHeight<=d.clientHeight+1&&copy.scrollHeight<=copy.clientHeight+1&&b.height>=44&&b.bottom<=innerHeight;})()"));
+            "(()=>{const d=document.getElementById('manager-guide'),copy=document.getElementById('manager-guide-copy'),art=d.querySelector('#manager-guide-art>.manager-art,#manager-guide-art>.memory-art'),next=document.getElementById('manager-guide-next'),a=art?.getBoundingClientRect(),b=next.getBoundingClientRect();return !!art&& d.open&&!document.getElementById('manager-guide-art').hidden&&getComputedStyle(art).backgroundImage.includes('data:image/webp')&&a.height>=120&&d.scrollHeight<=d.clientHeight+1&&copy.scrollHeight<=copy.clientHeight+1&&b.height>=44&&b.bottom<=innerHeight;})()"));
     }
     private String evaluate(ActivityScenario<MainActivity> scenario, String script) throws Exception {
         CountDownLatch ready = new CountDownLatch(1);
@@ -536,7 +536,7 @@ public final class GameSmokeTest {
             assertEquals("The native live field uses the actual ball and all 22 names", "true", evaluate(scenario,
                 "(()=>{state.paused=true;drawField();return document.getElementById('match-names')._labels.length===22 && Math.hypot(lastMotionFrame.ball.x-F.continuousFrame(state).ball.x,lastMotionFrame.ball.y-F.continuousFrame(state).ball.y)<0.01 && document.documentElement.scrollHeight<=innerHeight+1;})()"));
             assertEquals("Replays read the same physical engine without changing the live match", "true", evaluate(scenario,
-                "(()=>{state.paused=false;for(let i=0;i<20&&!state.logs.some(e=>e.type==='shot');i++)F.advanceContinuous(state,600);state.paused=true;const e=state.logs.find(e=>e.type==='shot');if(!e)return false;const before=JSON.stringify(state),clip=MatchReplay.prepare(season,state.logs.indexOf(e));save();return clip.valid&&clip.physical.frames.length>20&&JSON.stringify(state)===before;})()"));
+                "(()=>{state.paused=false;for(let i=0;i<20&&!state.logs.some(e=>['goal','shot','chance'].includes(e.type));i++)F.advanceContinuous(state,600);state.paused=true;const e=state.logs.find(e=>['goal','shot','chance'].includes(e.type));if(!e)return false;const before=JSON.stringify(state),clip=MatchReplay.prepare(season,state.logs.indexOf(e));save();return clip.valid&&clip.physical.frames.length>20&&JSON.stringify(state)===before;})()"));
             physical=evaluate(scenario, "JSON.stringify({world:state.continuous,logs:state.logs,commands:state.continuousCommands})");
             SystemClock.sleep(300);
             assertEquals(physical,evaluate(scenario,"JSON.stringify({world:state.continuous,logs:state.logs,commands:state.continuousCommands})"));
@@ -545,6 +545,43 @@ public final class GameSmokeTest {
             awaitReady(reopened);
             assertEquals("A resumed native match must stay paused", "true", evaluate(reopened,"state.paused===true"));
             assertEquals(physical,evaluate(reopened,"JSON.stringify({world:state.continuous,logs:state.logs,commands:state.continuousCommands})"));
+        }
+    }
+
+    @Test public void notebookAnswersAndOriginalArtSurviveNativeRelaunch() throws Exception {
+        String receipt;
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(734,{startingClub:true});while(season.match.phase!=='full'){if(!F.running(season.match))F.begin(season.match);F.finishSegment(season.match);}season=S.settle(season);state=season.match;setView('club');save();openManagerNotebook();return true;})()");
+            awaitTrue(scenario, "!!notebookRows&&notebookRows.some(d=>d.id==='1:notebook-first')");
+            String selector = "#manager-notebook [data-notebook-event='1:notebook-first']";
+            for (int page = 0; page < 12 && !"true".equals(evaluate(scenario, "!!document.querySelector(\"" + selector + "\")")); page++) {
+                tapWebElement(scenario, "#manager-notebook [data-notebook-page='1']");
+            }
+            String facts = evaluate(scenario,"JSON.stringify({statistics:season.statistics,finance:season.finance,year:season.year,round:season.round})");
+            tapWebElement(scenario, selector);
+            assertEquals("Original offline scene and player's actual identity appear together", "true", evaluate(scenario,
+                "(()=>{const d=document.getElementById('club-story-dialog'),art=d.querySelector('.memory-art'),r=d.getBoundingClientRect();return d.open&&!!art&&getComputedStyle(art).backgroundImage.includes('data:image/webp')&&!!d.querySelector('.player-portrait')&&r.top>=0&&r.bottom<=innerHeight;})()"));
+            for (int step = 0; step < 2; step++) {
+                for (int page = 0; page < 12 && !"true".equals(evaluate(scenario,"!document.querySelector('#club-story-dialog .story-choices').hidden")); page++) {
+                    assertEquals("The entire current prose and navigation fit without scrolling", "true", evaluate(scenario,
+                        "(()=>{const d=document.getElementById('club-story-dialog'),b=d.querySelector('.story-conversation');return d.scrollHeight<=d.clientHeight+1&&b.scrollHeight<=b.clientHeight+1;})()"));
+                    tapWebElement(scenario,"#club-story-dialog [data-story-page='next']");
+                }
+                tapWebElement(scenario, step == 0 ? "#club-story-dialog [data-story-choice='practical']" : "#club-story-dialog [data-story-choice='honest']");
+                awaitTrue(scenario,"ClubStory.scene(season,'1:notebook-first').step==="+(step+1));
+            }
+            assertEquals(facts,evaluate(scenario,"JSON.stringify({statistics:season.statistics,finance:season.finance,year:season.year,round:season.round})"));
+            receipt=evaluate(scenario,"JSON.stringify(season.clubStory.records.filter(r=>r.event==='1:notebook-first'))");
+            assertNotEquals("Both explicit dialogue choices must have a validated receipt", "null", receipt);
+            screenshot(scenario,"android-notebook-answer.png");
+            scenario.onActivity(activity -> assertTrue("Notebook generated JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+        }
+        try (ActivityScenario<MainActivity> reopened = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(reopened);
+            assertEquals(receipt,evaluate(reopened,"JSON.stringify(season.clubStory.records.filter(r=>r.event==='1:notebook-first'))"));
+            assertEquals("The same explicit answers restore into the completed scene", "true", evaluate(reopened,
+                "(()=>{const d=ClubStory.scene(season,'1:notebook-first');return d.step===2&&d.answered[0].choice==='practical'&&d.answered[1].choice==='honest'&&!!d.reply;})()"));
         }
     }
 
