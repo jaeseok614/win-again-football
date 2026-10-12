@@ -1,11 +1,11 @@
 'use strict';
 const assert=require('node:assert/strict'),T=require('./dist/continuous-tactics.js'),C=require('./dist/continuous-football.js'),F=require('./dist/engine.js'),S=require('./dist/season.js'),O=require('./dist/opposition.js'),crypto=require('node:crypto');let checks=0;const copy=C.copy;
 function test(name,fn){fn();checks++;console.log('PASS '+name);}
-function world(ids=[]){const m=F.create(17);F.enableContinuous(m);const w=copy(m.continuous);w.restart=null;w.tactics=['balanced','balanced'];w.focuses=['balanced','balanced'];for(const p of w.players){p.active=ids.includes(p.id);p.decisionAt=0;}return w;}
+function world(ids=[]){const m=F.create(17);F.enableContinuous(m,{ruleVersion:5});const w=copy(m.continuous);w.restart=null;w.tactics=['balanced','balanced'];w.focuses=['balanced','balanced'];for(const p of w.players){p.active=ids.includes(p.id);p.decisionAt=0;}return w;}
 const get=(w,id)=>w.players.find(p=>p.id===id);
 function loose(w,x,y,vx=0,vy=0,z=0,vz=0){w.ball={x,y,z,vx,vy,vz,owner:null,lastTouch:'m2',flight:null};}
 function finish(m){while(m.phase!=='full'){if(!F.running(m))F.begin(m);F.finishSegment(m);}}
-test('new kicks select version5 while each explicit published version remains selectable',()=>{assert.equal(world().version,5);for(const version of [1,2,3,4,5]){const m=F.create(17);F.enableContinuous(m,{ruleVersion:version});assert.equal(m.continuous.version,version);}});
+test('published version5 remains explicitly selectable while new kicks use version6',()=>{const newest=F.create(17);F.enableContinuous(newest);assert.equal(newest.continuous.version,6);assert.equal(world().version,5);for(const version of [1,2,3,4,5,6]){const m=F.create(17);F.enableContinuous(m,{ruleVersion:version});assert.equal(m.continuous.version,version);}});
 test('ground and bouncing ball forecasts match actual integrator coordinates and never mutate RNG',()=>{for(const [z,vz] of [[0,0],[2,-7],[.02,2]]){const w=world();loose(w,20,40,12,5,z,vz);const before=copy(w),predicted=T.forecast(w,1.2);assert.deepEqual(w,before);for(let i=0;i<12;i++)C.step(w);assert.ok(Math.hypot(predicted.x-w.ball.x,predicted.y-w.ball.y)<1e-9);assert.ok(Math.abs(predicted.z-w.ball.z)<1e-9);}});
 test('flight cache reacts to different ball state at the same tick',()=>{const w=world();loose(w,34,50,10,0);const a=T.forecast(w,.5);w.ball.vx=-10;const b=T.forecast(w,.5);assert.ok(a.x>34&&b.x<34);});
 test('standing receivers respect acceleration and high crosses wait for playable height',()=>{const w=world(['m1']),p=get(w,'m1');Object.assign(p,{x:34,y:46,vx:0,vy:0});loose(w,34,50,0,0);assert.ok(T.intercept(w,p).eta>.5);loose(w,34,46,0,0,3,0);w.ball.flight={kind:'cross'};assert.ok(T.intercept(w,p).point.z<=2.15);});

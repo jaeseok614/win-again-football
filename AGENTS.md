@@ -48,7 +48,7 @@ history is not payment entitlement proof. Read docs/REBIRTH_LOOP_2026-10-11.md.
 ## Full continuous engine direction (2026-10-12, supersedes hybrid notes below)
 
 The owner requested whole-match continuous football. New confirmed kickoffs use
-continuousSetup.version=5, a shared 100ms physical world for the actual two elevens.
+continuousSetup.version=6, a shared 100ms physical world for the actual two elevens.
 The minute opportunity sampler is not used for those matches. Live and replay read
 the same physical coordinates, contacts and recorded statistics. Preserve valid v10
 running/confirmed matches and the released spatial version1 solver. Never change a
@@ -57,12 +57,12 @@ versioning. Store and validate tick-level command journals, appearances, cards,
 segments and measured statistics. Read docs/CONTINUOUS_FOOTBALL_ENGINE_2026-10-12.md.
 Read docs/CONTINUOUS_TACTICAL_AI_2026-10-12.md for version3 arrival-based
 press/cover, fatigue, safe passing and goalkeeper containment. Preserve released
-continuous versions1/2/3/4 and their exact receipts too. Read
+continuous versions1/2/3/4/5 and their exact receipts too. Read
 docs/CONTINUOUS_CONTACT_AND_BALANCE_2026-10-12.md for version4 swept contacts,
 whole-ball lines, restarts, offside rebounds and balanced recovery/keeper reactions.
 Read docs/CONTINUOUS_PASSING_FLOW_2026-10-12.md for version5 bounded pass
 lead, physical ball arrival, first touches, diagonal support and opponent response.
-Use the new engine in new practice sessions too, show preparation before expensive
+Read docs/CONTINUOUS_DECISIONS_2026-10-12.md for version6 local carry/attack choices, moving-carrier interception, complementary press screens, carrying speed cost and explicit remaining tactic balance. Read docs/NOTEBOOK_STORY_2026-10-12.md for original record-driven notebook scenes and shared cast art. Use the new engine in new practice sessions too, show preparation before expensive
 replay/practice work, and keep all current names/ball/core controls on one viewport.
 
 ## Pre-match squad and movement direction (2026-10-11)

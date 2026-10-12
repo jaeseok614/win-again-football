@@ -32,14 +32,14 @@ for(const [group,entries] of Object.entries(managementGroups)){
  for(const [id] of entries){const node=$(id);if(node)node.dataset.managedPanel='true';}
  const hub=document.createElement('section');hub.id='management-hub-'+group;hub.className='management-hub';hub.setAttribute('aria-label',managementNames[group]+' 업무');
  hub.innerHTML='<header><h2>'+managementNames[group]+'</h2><p>필요한 업무를 열어 확인하세요.</p></header><div class="management-entries">'+entries.slice(0,group==='club'?4:entries.length).map(([id,label])=>'<button type="button" data-management-open="'+id+'"><strong>'+label+'</strong><span>열기 →</span></button>').join('')+'</div>'+(group==='cup'?'<button type="button" data-management-league>리그 순위 · 전 경기</button>':'');
- hub.onclick=e=>{const b=e.target.closest('[data-management-open]');if(b)openManagementPanel(b.dataset.managementOpen,b);if(e.target.closest('[data-management-league]'))openLeagueCentre();};$(group+'-pane').append(hub);
+ hub.onclick=e=>{const b=e.target.closest('[data-management-open]');if(b){if(b.dataset.managementOpen==='club-story-panel'&&typeof openManagerNotebook==='function')openManagerNotebook(b);else openManagementPanel(b.dataset.managementOpen,b);}if(e.target.closest('[data-management-league]'))openLeagueCentre();};$(group+'-pane').append(hub);
 }
 document.body.classList.add('management-hub-ready');
 $('market-overview').dataset.managedPanel='true';
 const managementOriginalRender=render;render=function(){
  if(managementActive&&managementActive!==view)managementDialog.close();managementOriginalRender();
  document.body.classList.toggle('management-view',appSessionStarted&&Object.hasOwn(managementGroups,view));
- if(view==='club'&&appSessionStarted){const toggle=$('mobile-dashboard-toggle');if(toggle){toggle.textContent='구단 상세';toggle.setAttribute('aria-expanded','false');toggle.onclick=()=>openManagementPanel('manager-journey',toggle);}const primary=$('mobile-match-action');if(primary&&S.ready(season))primary.onclick=()=>openManagementPanel('season-review-panel',primary);const news=$('management-hub-club').querySelector('[data-management-open="club-life-panel"] span'),headline=ClubLife.news(season)[0]?.headline;if(news){news.textContent=headline||'첫 소식을 기다립니다';news.className='management-headline';}}
+ if(view==='club'&&appSessionStarted){const notebook=$('management-hub-club').querySelector('[data-management-open="club-story-panel"]');if(notebook&&typeof StoryNotebook!=='undefined'){notebook.querySelector('strong').textContent='감독의 수첩';notebook.querySelector('span').textContent=StoryNotebook.chapter(season).attempt+'번째 삶 · 이야기';}const toggle=$('mobile-dashboard-toggle');if(toggle){toggle.textContent='구단 상세';toggle.setAttribute('aria-expanded','false');toggle.onclick=()=>openManagementPanel('manager-journey',toggle);}const primary=$('mobile-match-action');if(primary&&S.ready(season))primary.onclick=()=>openManagementPanel('season-review-panel',primary);const news=$('management-hub-club').querySelector('[data-management-open="club-life-panel"] span'),headline=ClubLife.news(season)[0]?.headline;if(news){news.textContent=headline||'첫 소식을 기다립니다';news.className='management-headline';}}
 };
 // Newly arrived dialogue appears once when returning home after a league round.
 // Reading does not select an answer or mutate the campaign.

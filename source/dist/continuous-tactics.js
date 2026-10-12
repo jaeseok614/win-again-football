@@ -1,6 +1,7 @@
 (function(root){
  'use strict';
  // Original bounded team planning. Forecasts advise movement; contacts decide outcomes.
+ const A=root.ContinuousDecision||(typeof require==='function'?require('./continuous-decision.js'):null);
  const W=68,H=105,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
  const direction=(w,t)=>(t===0?-1:1)*(w.half===1?1:-1),progress=(w,t,y)=>direction(w,t)<0?H-y:y,from=(w,t,p)=>direction(w,t)<0?H-p:p;
  const speed=p=>(4.7+p.speed*.036)*(.55+p.energy*.0045)*(.7+(p.burst??100)*.003)*p.focus;
@@ -34,7 +35,7 @@
  function intercept(w,p){
   if(w.version>=5&&!w.ball.owner)return meeting(w,p);
   let point={x:w.ball.x,y:w.ball.y},eta=distance(p,point)/Math.max(1,speed(p));
-  if(w.ball.owner){const q=w.players.find(q=>q.id===w.ball.owner);if(q)point={x:clamp(q.x+q.vx*.25,1,W-1),y:clamp(q.y+q.vy*.25,1,H-1)};return {point,eta:distance(p,point)/Math.max(1,speed(p))};}
+  if(w.ball.owner){const q=w.players.find(q=>q.id===w.ball.owner);if(q){if(w.version>=6)return A.meetCarrier(w,p,q,speed(p));point={x:clamp(q.x+q.vx*.25,1,W-1),y:clamp(q.y+q.vy*.25,1,H-1)};}return {point,eta:distance(p,point)/Math.max(1,speed(p))};}
   for(const time of [.2,.4,.7,1,1.4,1.9,2.6]){const q=forecast(w,time),reach=Math.max(0,speed(p)*time-.5)+.65;if(q.z>2.2||distance(p,q)>reach)continue;return {point:q,eta:time};}
   point=forecast(w,2.6);return {point,eta:2.6+distance(p,point)/Math.max(1,speed(p))};
  }
@@ -67,9 +68,10 @@
     const position=p.role||p.pos,homeX=w.half===1?p.homeX:W-p.homeX,wideHome=Math.abs(homeX-W/2)>19,wideBall=Math.abs(w.ball.x-W/2)>20,near=distance(p,w.ball),line=position==='DEF'?defenderLine:position==='MID'?defenderLine+(own?14:12):own?clamp(at+15,57,98):Math.max(tactic==='counter'?54:38,defenderLine+24);
     let x=clamp(W/2+(homeX-W/2)*width+(w.ball.x-W/2)*.15,3,W-3),depth=line,sprint=false,role=own?'support':'cover';
     const chase=chasing.find(r=>r.p.id===p.id);
-    if(chase){x=chase.point.x;depth=progress(w,t,chase.point.y)-.4;sprint=true;role=w.ball.owner?'press':'intercept';}
+    if(chase){x=chase.point.x;depth=progress(w,t,chase.point.y)-.4;sprint=true;role=w.ball.owner?'press':'intercept';if(w.version>=6&&!own&&carrier&&chasing[1]?.p.id===p.id){const screen=A.screen(w,p,carrier,opponents);x=screen.x;depth=progress(w,t,screen.y);role='screen';sprint=distance(p,screen)>3&&p.burst>25;}}
     else if(p.id===carrier?.id){const close=opponents.filter(q=>q.pos!=='GK').sort((a,b)=>distance(a,p)-distance(b,p))[0],blocked=close&&distance(close,p)<3;
      x=clamp(p.x+(blocked?(p.x<close.x?-2:2):wideBall&&w.focuses[t]!=='cross'?(W/2-p.x)*.12:0),1,W-1);depth=progress(w,t,p.y)+(blocked?1.6:4);sprint=!blocked&&p.speed>65&&(tactic==='counter'&&transition||!close||distance(close,p)>5);role='carry';
+     if(w.version>=6){const route=A.carrying(w,p,opponents);x=route.x;depth=progress(w,t,route.y);sprint=route.sprint;}
     }else if(own&&carrier){
      const cp=progress(w,t,carrier.y),side=homeX<W/2?-1:homeX>W/2?1:w.version>=5?direction(w,t):1;
      if(position==='MID'&&near<25){x=clamp(carrier.x+side*10,5,W-5);depth=cp+(p.homeX< W/2?-6:4);role='support';}
@@ -85,6 +87,7 @@
      const threat=threats.filter(q=>!marked.has(q.id)&&Math.abs(q.x-homeX)<18&&Math.abs(progress(w,t,q.y)-defenderLine)<20).sort((a,b)=>distance(p,a)-distance(p,b)||a.id.localeCompare(b.id))[0];
      if(threat){marked.add(threat.id);x=clamp(threat.x+(W/2-threat.x)*.08,homeX-11,homeX+11);depth=Math.min(defenderLine+8,Math.max(w.version>=4?1.5:8,progress(w,t,threat.y)-1.2));role='mark';}
     }
+    if(w.version>=6&&!own&&!chase&&position==='MID'&&at<40&&near<28){x=clamp(x*.65+w.ball.x*.35,homeX-12,homeX+12);depth=Math.min(depth,at-6);role='goal-cover';}
     if(w.version>=5&&p.id===carrier?.id&&w.tick-(p.receptionAt??-10000)<6){x=p.x;depth=progress(w,t,p.y);sprint=false;role='first-touch';}
     if(w.version>=4&&!own&&!chase){const goalSide=progress(w,t,p.y)-depth;sprint=(goalSide>3&&(at<40||transition))||(role==='mark'&&goalSide>1.5&&at<35);}
     rows.push({id:p.id,x:clamp(x,1,W-1),y:from(w,t,clamp(depth,1,H-1)),sprint,role});
@@ -94,6 +97,7 @@
  }
  function laneRisk(w,p,q,excludeKeeper=false){let risk=0;const dx=q.x-p.x,dy=q.y-p.y,n=dx*dx+dy*dy||1,travel=Math.sqrt(n)/(12+p.passing*.06);for(const d of w.players){if(!d.active||d.team===p.team||excludeKeeper&&d.pos==='GK')continue;const f=clamp(((d.x-p.x)*dx+(d.y-p.y)*dy)/n,0,1);if(f<.06||f>.97)continue;const point={x:p.x+dx*f,y:p.y+dy*f},arrival=distance(d,point)/Math.max(1,speed(d))+.18;if(arrival<travel*f+.18)risk+=1;else if(distance(d,point)<2)risk+=.5;}return risk;}
  function choose(w,p){
+  if(w.version>=6)return A.choose(w,p,{laneRisk});
   const opponents=w.players.filter(q=>q.active&&q.team!==p.team),near=opponents.reduce((n,q)=>q.pos==='GK'?n:Math.min(n,distance(p,q)),Infinity),goal=direction(w,p.team)<0?0:H,d=Math.abs(goal-p.y),wide=Math.abs(p.x-W/2)>20,focus=w.focuses[p.team],line=Math.max(H/2,progress(w,p.team,w.ball.y),opponents.map(q=>progress(w,p.team,q.y)).sort((a,b)=>b-a)[1]??H);
   const angle=Math.abs(Math.atan2(37.66-p.x,Math.max(1,d))-Math.atan2(30.34-p.x,Math.max(1,d))),quality=(.015+Math.exp(-d/15)*angle*.42*(.6+p.attack*.008))*(near<2?.65:1);
   let best={kind:'carry',value:near<3?.035:focus==='dribble'?.13:.11,receiver:null};
