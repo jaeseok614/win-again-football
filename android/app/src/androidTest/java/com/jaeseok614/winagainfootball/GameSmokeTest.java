@@ -540,14 +540,19 @@ public final class GameSmokeTest {
         String physical;
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
-            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeGoalScene();matchCeremonyHold=false;ceremonyPending=null;managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;setView('match');return true;})()");
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeGoalScene();matchCeremonyHold=false;ceremonyPending=null;managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;customPositions={};tacticalRoles={};setView('match');return true;})()");
             tapWebElement(scenario, "#primary");
             tapWebElement(scenario, "#ceremony-ready");
             awaitTrue(scenario, "state.continuousSetup?.version===7 && state.continuous.tick>20");
             assertEquals("The native live field uses the actual ball and all 22 names", "true", evaluate(scenario,
                 "(()=>{state.paused=true;drawField();return document.getElementById('match-names')._labels.length===22 && Math.hypot(lastMotionFrame.ball.x-F.continuousFrame(state).ball.x,lastMotionFrame.ball.y-F.continuousFrame(state).ball.y)<0.01 && document.documentElement.scrollHeight<=innerHeight+1;})()"));
-            assertEquals("Replays read the same physical engine without changing the live match", "true", evaluate(scenario,
-                "(()=>{state.paused=false;for(let i=0;i<20&&!state.logs.some(e=>['goal','shot','chance'].includes(e.type));i++)F.advanceContinuous(state,600);state.paused=true;const e=state.logs.find(e=>['goal','shot','chance'].includes(e.type));if(!e)return false;const before=JSON.stringify(state),clip=MatchReplay.prepare(season,state.logs.indexOf(e));save();return clip.valid&&clip.physical.frames.length>20&&JSON.stringify(state)===before;})()"));
+            String replayProof = evaluate(scenario,
+                "(()=>{state.paused=false;for(let i=0;i<45&&!state.logs.some(e=>['goal','shot','chance'].includes(e.type));i++)F.advanceContinuous(state,600);state.paused=true;const e=state.logs.find(e=>['goal','shot','chance'].includes(e.type));if(!e)return {found:false,minute:state.minute,tick:state.continuous.tick};const before=JSON.stringify(state),clip=MatchReplay.prepare(season,state.logs.indexOf(e));save();return {found:true,minute:e.minute,tick:e.tick,valid:clip.valid,frames:clip.physical?.frames?.length||0,unchanged:JSON.stringify(state)===before};})()");
+            JSONObject proof = new JSONObject(replayProof);
+            assertTrue("A real first-half event must exist: " + replayProof, proof.optBoolean("found"));
+            assertTrue("The recorded replay must be valid: " + replayProof, proof.optBoolean("valid"));
+            assertTrue("The recorded physical replay must contain its lead-in: " + replayProof, proof.optInt("frames") > 20);
+            assertTrue("Reading and saving the replay must preserve the live world: " + replayProof, proof.optBoolean("unchanged"));
             physical=evaluate(scenario, "JSON.stringify({world:state.continuous,logs:state.logs,commands:state.continuousCommands})");
             SystemClock.sleep(300);
             assertEquals(physical,evaluate(scenario,"JSON.stringify({world:state.continuous,logs:state.logs,commands:state.continuousCommands})"));
