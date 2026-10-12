@@ -31,7 +31,7 @@
   }
   for(const q of w.players){if(!q.active||q.team!==p.team||q.id===p.id)continue;const range=distance(p,q),gain=progress(w,p.team,q.y)-at;if(range<4||range>42||progress(w,p.team,q.y)>line+.05)continue;
    const free=Math.min(8,...opponents.map(a=>distance(a,q))),risk=laneRisk(w,p,q),repeat=w.lastPass?.from===q.id&&w.tick-w.lastPass.tick<100?.075:0,qShot=shotQuality(w,q,opponents),creates=q.pos!=='GK'&&qShot.d<25&&Math.abs(q.x-W/2)<17?Math.min(.14,qShot.quality*.75)+.035:0;
-   const value=.045+gain*.004+free*.007-risk*.13-repeat+creates+(focus==='combination'?.025:0)+(route.near<3?.08:0)+(w.tactics[p.team]==='counter'&&gain>10&&w.tick-(w.transitionTick??-10000)<40&&risk<1?.04:0)+(p.pos==='GK'?.3:0);
+   const value=.045+gain*.004+free*.007-risk*.13-repeat+creates+(focus==='combination'?.025:0)+(route.near<3?.08:0)+(w.tactics[p.team]==='counter'&&gain>10&&w.tick-(w.transitionTick??-10000)<40&&risk<1?.04:0)+(p.pos==='GK'?.3:0)+(w.version>=7&&w.tactics[p.team]==='lowBlock'&&w.tick-(w.transitionTick??-10000)<40&&gain>10&&q.pos==='FW'&&risk<1?.055:0);
    if(value>best.value)best={kind:'pass',receiver:q,value};
    if(wide&&shot.d<28&&q.pos!=='GK'&&progress(w,p.team,q.y)>H-24&&Math.abs(q.x-W/2)<15){const value=.14+q.attack*.001-risk*.027+(focus==='cross'?.10:0)-(focus==='dribble'?.07:0);if(value>best.value)best={kind:'cross',receiver:q,value};}
   }

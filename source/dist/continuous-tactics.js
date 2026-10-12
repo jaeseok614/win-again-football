@@ -58,17 +58,22 @@
    const ranked=field.map(p=>({p,...intercept(w,p)})).sort((a,b)=>a.eta-b.eta||a.p.id.localeCompare(b.p.id));
    // Prefer a nearby midfielder to leave the last line covering the goal.
    if(!own&&tactic!=='press'&&ranked[0]?.p.pos==='DEF'){const cover=ranked.find(r=>r.p.pos!=='DEF'&&r.eta<=ranked[0].eta+.65);if(cover)ranked.splice(0,0,...ranked.splice(ranked.indexOf(cover),1));}
-   const chasing=own?(w.ball.owner?[]:ranked.filter(r=>r.p.id===flight?.receiver).slice(0,1)):ranked.slice(0,tactic==='press'&&at>22&&field.length>7?2:1);
+   // Rule7 doubles up on a reachable pressing trigger, not every settled possession.
+   const pressTrigger=w.version>=7&&carrier&&carrier.team!==t&&ranked[0]&&distance(ranked[0].p,carrier)<14&&ranked[1]&&distance(ranked[1].p,carrier)<16&&ranked[1].p.energy>45&&ranked[1].p.burst>25&&(w.tick-(carrier.receptionAt??-10000)<6||Math.abs(carrier.x-W/2)>22||carrier.pos==='GK');
+   const chasing=own?(w.ball.owner?[]:ranked.filter(r=>r.p.id===flight?.receiver).slice(0,1)):ranked.slice(0,tactic==='press'&&at>22&&field.length>7&&(w.version<7||pressTrigger)?2:1);
    if(own&&!w.ball.owner&&!chasing.length&&ranked[0])chasing.push(ranked[0]);
    if(w.version>=5&&own&&!w.ball.owner&&ranked[0]&&chasing[0]?.eta>ranked[0].eta+.4){chasing.length=0;chasing.push(ranked[0]);}
-   const defenderLine=own?clamp(at-(tactic==='counter'?30:24),18,tactic==='lowBlock'?43:57):clamp(at-12,12,tactic==='press'?48:tactic==='lowBlock'?30:40);
+   // Reserve one outlet without stealing the presser or the goal-side shield.
+   const outletForward=w.version>=7&&!own&&tactic==='lowBlock'?field.filter(p=>(p.role||p.pos)==='FW'&&!chasing.some(c=>c.p.id===p.id)).sort((a,b)=>progress(w,t,b.y)-progress(w,t,a.y)||a.id.localeCompare(b.id))[0]:null;
+   const shield=w.version>=7&&!own&&carrier&&at<55&&chasing.length<2?ranked.find(r=>r.p.id!==outletForward?.id&&!chasing.some(c=>c.p.id===r.p.id)&&distance(r.p,carrier)<18&&r.p.burst>15):null;
+   const defenderLine=own?clamp(at-(tactic==='counter'?30:24),18,tactic==='lowBlock'?43:57):w.version>=7?clamp(at-(tactic==='lowBlock'?13:10),8,tactic==='press'?48:tactic==='lowBlock'?36:42):clamp(at-12,12,tactic==='press'?48:tactic==='lowBlock'?30:40);
    const backLine=opponents.map(p=>progress(w,t,p.y)).sort((a,b)=>b-a)[1]??H,legalLine=Math.max(H/2,at,backLine)-1.3;
    const threats=opponents.filter(p=>p.pos!=='GK').sort((a,b)=>progress(w,t,a.y)-progress(w,t,b.y)||a.id.localeCompare(b.id)),marked=new Set();
    for(const p of field){
-    const position=p.role||p.pos,homeX=w.half===1?p.homeX:W-p.homeX,wideHome=Math.abs(homeX-W/2)>19,wideBall=Math.abs(w.ball.x-W/2)>20,near=distance(p,w.ball),line=position==='DEF'?defenderLine:position==='MID'?defenderLine+(own?14:12):own?clamp(at+15,57,98):Math.max(tactic==='counter'?54:38,defenderLine+24);
+    const position=p.role||p.pos,homeX=w.half===1?p.homeX:W-p.homeX,wideHome=Math.abs(homeX-W/2)>19,wideBall=Math.abs(w.ball.x-W/2)>20,near=distance(p,w.ball),line=position==='DEF'?defenderLine:position==='MID'?defenderLine+(own?14:w.version>=7?(tactic==='lowBlock'?8:10):12):own?clamp(at+15,57,98):w.version>=7?Math.max(tactic==='counter'?48:tactic==='lowBlock'?30:36,defenderLine+(tactic==='lowBlock'?18:22)):Math.max(tactic==='counter'?54:38,defenderLine+24);
     let x=clamp(W/2+(homeX-W/2)*width+(w.ball.x-W/2)*.15,3,W-3),depth=line,sprint=false,role=own?'support':'cover';
     const chase=chasing.find(r=>r.p.id===p.id);
-    if(chase){x=chase.point.x;depth=progress(w,t,chase.point.y)-.4;sprint=true;role=w.ball.owner?'press':'intercept';if(w.version>=6&&!own&&carrier&&chasing[1]?.p.id===p.id){const screen=A.screen(w,p,carrier,opponents);x=screen.x;depth=progress(w,t,screen.y);role='screen';sprint=distance(p,screen)>3&&p.burst>25;}}
+    if(chase){x=chase.point.x;depth=progress(w,t,chase.point.y)-.4;sprint=true;role=w.ball.owner?'press':'intercept';if(w.version>=6&&!own&&carrier&&chasing[1]?.p.id===p.id){const screen=A.screen(w,p,carrier,opponents);x=screen.x;depth=progress(w,t,screen.y);role=w.version>=7?'press-screen':'screen';sprint=distance(p,screen)>3&&p.burst>25;}}
     else if(p.id===carrier?.id){const close=opponents.filter(q=>q.pos!=='GK').sort((a,b)=>distance(a,p)-distance(b,p))[0],blocked=close&&distance(close,p)<3;
      x=clamp(p.x+(blocked?(p.x<close.x?-2:2):wideBall&&w.focuses[t]!=='cross'?(W/2-p.x)*.12:0),1,W-1);depth=progress(w,t,p.y)+(blocked?1.6:4);sprint=!blocked&&p.speed>65&&(tactic==='counter'&&transition||!close||distance(close,p)>5);role='carry';
      if(w.version>=6){const route=A.carrying(w,p,opponents);x=route.x;depth=progress(w,t,route.y);sprint=route.sprint;}
@@ -87,7 +92,13 @@
      const threat=threats.filter(q=>!marked.has(q.id)&&Math.abs(q.x-homeX)<18&&Math.abs(progress(w,t,q.y)-defenderLine)<20).sort((a,b)=>distance(p,a)-distance(p,b)||a.id.localeCompare(b.id))[0];
      if(threat){marked.add(threat.id);x=clamp(threat.x+(W/2-threat.x)*.08,homeX-11,homeX+11);depth=Math.min(defenderLine+8,Math.max(w.version>=4?1.5:8,progress(w,t,threat.y)-1.2));role='mark';}
     }
-    if(w.version>=6&&!own&&!chase&&position==='MID'&&at<40&&near<28){x=clamp(x*.65+w.ball.x*.35,homeX-12,homeX+12);depth=Math.min(depth,at-6);role='goal-cover';}
+    if(w.version===6&&!own&&!chase&&position==='MID'&&at<40&&near<28){x=clamp(x*.65+w.ball.x*.35,homeX-12,homeX+12);depth=Math.min(depth,at-6);role='goal-cover';}
+    // Compact cover blocks the next route; sprinting remains physical and costs stamina.
+    if(w.version>=7&&!own&&!chase){
+     if(p.id===outletForward?.id){depth=Math.max(depth,at<30?42:48);x=clamp(homeX,8,W-8);role='outlet';}
+     if(shield?.p.id===p.id&&p.id!==outletForward?.id){const side=p.x<carrier.x?-1:p.x>carrier.x?1:direction(w,t);x=clamp(carrier.x+side*2.3,3,W-3);depth=at-3.8;role='screen';}
+     else if(position==='MID'&&at<55){depth=Math.min(depth,at-6);x=clamp(x*.7+w.ball.x*.3,homeX-12,homeX+12);role='goal-cover';}
+    }
     if(w.version>=5&&p.id===carrier?.id&&w.tick-(p.receptionAt??-10000)<6){x=p.x;depth=progress(w,t,p.y);sprint=false;role='first-touch';}
     if(w.version>=4&&!own&&!chase){const goalSide=progress(w,t,p.y)-depth;sprint=(goalSide>3&&(at<40||transition))||(role==='mark'&&goalSide>1.5&&at<35);}
     rows.push({id:p.id,x:clamp(x,1,W-1),y:from(w,t,clamp(depth,1,H-1)),sprint,role});
