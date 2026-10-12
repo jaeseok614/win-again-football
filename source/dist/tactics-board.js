@@ -21,6 +21,14 @@
    const fingerprint=JSON.stringify(signature),segment={start:m.minute,end:forecastEnd,minutes:forecastEnd-m.minute};
    const condition={averageEnergy:mean(lineup.map(p=>p.energy)),minimumEnergy:Math.min(...lineup.map(p=>p.energy)),tiredIds:lineup.filter(p=>p.energy<65).map(p=>p.id),criticalIds:lineup.filter(p=>p.energy<50).map(p=>p.id)};
    const rating=copy(F.ratings(m)),comparisons=[['attack','공격','attack'],['defense','수비','defense'],['middle','중원','middle'],['pace','공격진 속도','speed']].map(([key,label,opponentKey])=>({key,label,ours:rating[key],opponent:rating.opponent[opponentKey],delta:rating[key]-rating.opponent[opponentKey]}));
+   if(m.continuous?.version>=3){
+    const rival=m.continuous.tactics?.[1]||m.continuousSetup.opponentTactic;let tactic='balanced',rule='balance',reason='패스 출구와 골문 앞 커버를 함께 유지합니다.';
+    if(condition.averageEnergy<65||condition.minimumEnergy<50){rule='fatigue';reason='압박 전에 지친 선수의 교체를 확인하세요. 전력질주 뒤에는 회복할 시간이 필요합니다.';}
+    else if(m.minute>=70&&m.score[0]<m.score[1]){tactic='press';rule='chase';reason='남은 시간이 짧습니다. 두 명 압박으로 공을 되찾되 수비 뒷공간과 체력 소모를 확인하세요.';}
+    else if(m.minute>=75&&m.score[0]>m.score[1]){tactic='lowBlock';rule='protect';reason='골문 앞 수비 간격을 좁혀 리드를 지키세요. 공을 되찾은 뒤 연결할 선수도 필요합니다.';}
+    else if(rival==='press'&&rating.pace>rating.opponent.speed){tactic='counter';rule='opponent-chase';reason='상대 압박 뒤의 공간을 노릴 수 있습니다. 공을 되찾은 순간 빠른 공격수의 침투를 활용하세요.';}
+    return {valid:true,continuous:true,reason:null,fingerprint,context,segment,lineup,condition,current:{rating,comparisons},previews:Object.entries(labels).map(([tactic,label])=>({tactic,label})),recommendation:{tactic,label:labels[tactic],reason,rule},assumption:'현재 선수의 체력과 상대 지시를 읽은 코치 의견입니다. 실제 패스와 경합으로 결과가 결정됩니다.'};
+   }
    const previews=['balanced','press','counter',...(m.version>=7?['lowBlock']:[])].map(tactic=>{
     const rating=copy(F.ratings({...m,tactic})),energy=lineup.map(p=>{const costPer90=35*(1+(50-p.endurance)/250)+(tactic==='press'?8:0),rawCost=costPer90*segment.minutes/90,after=Math.max(0,p.energy-rawCost);return {id:p.id,identity:p.identity,before:p.energy,after,cost:p.energy-after,costPer90,rawCost};});
     return {tactic,label:labels[tactic],rating,expectedChances:{ours:rating.ourRate*segment.minutes,opponent:rating.oppRate*segment.minutes},goalChance:{ours:rating.ourGoal,opponent:rating.oppGoal},paceBonus:rating.paceBonus,energy,averageCost:mean(energy.map(p=>p.cost))};
