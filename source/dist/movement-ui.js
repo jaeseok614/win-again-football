@@ -78,7 +78,7 @@ document.addEventListener('visibilitychange',()=>{movementStamp=performance.now(
 function movementHighlightPending(){if(typeof state!=='undefined'&&state?.continuousSetup)return false;return !!lastMotionFrame?.deadBall||!!lastEvent&&(movementEvent!==lastEvent||movementEventAge<Movement.timing.end);}
 
 function syncMovementSequence(frame){
- if(state?.continuousSetup&&MatchFlow.watchMode(playbackPrefs)==='key'){const node=$('live-sequence');if(node){const phase=MatchFlow.viewingPhase(state),text=phase==='routine'?'핵심 관전':'주요 장면';if(node.textContent!==text)node.textContent=text;node.setAttribute('aria-label',text);}return;}
+ if(state?.continuousSetup&&MatchFlow.watchMode(playbackPrefs)==='key'){const node=$('live-sequence');if(node){const phase=MatchFlow.viewingPhase(state),key='watch:'+phase;if(node.dataset.sequence!==key){const text=phase==='routine'?'핵심 관전':'주요 장면';node.dataset.sequence=key;node.dataset.team='';node.dataset.stage='';node.textContent=text;node.setAttribute('aria-label',text);}}return;}
  const node=$('live-sequence');if(!node)return;
  const cue=Movement.sequence(frame),key=cue?cue.team+':'+cue.stage+':'+cue.label:'idle';if(node.dataset.sequence===key)return;
  node.dataset.sequence=key;node.dataset.team=cue?String(cue.team):'';node.dataset.stage=cue?String(cue.stage):'';
