@@ -74,7 +74,9 @@
  }
  // Read the actual selected eleven (including custom positions), never a second roster.
  function preview(s,positions=[]){
-  const d=read(s);if(!d.valid)return d;const S=root.Season,m=s.match,ownRating=p=>(root.TouchlinePlan||(typeof require==='function'?require('./touchline-plan.js'):null)).overall(p);
+  const d=read(s);if(!d.valid)return d;const S=root.Season,m=s.match;
+  // The same overall as TouchlinePlan, available before any UI module loads.
+  const ownRating=p=>Math.round(p[F.roleKey(p)]*.55+p.passing*.15+p.speed*.15+p.endurance*.15);
   function team(club,formation,lineup,ours){
    const counts={DEF:0,MID:0,FW:0},layout=F.formationPositions[formation];
    const players=lineup.map(p=>{const base=p.pos==='GK'?[50,88]:layout[p.pos][counts[p.pos]++],placed=ours&&positions.find(row=>row.id===p.id),x=placed?.x??base[0],y=placed?.y??base[1];return {...p,overall:ours?ownRating(p):overall(p),x,y,position:F.assignedPosition(x,y,p.pos).code};});

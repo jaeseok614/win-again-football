@@ -7,20 +7,20 @@
   const counts={DEF:0,MID:0,FW:0},layout=F.formationPositions[s.formation];
   const own=s.lineup.map(id=>{const p=s.players[id],base=p.pos==='GK'?[50,88]:layout[p.pos][counts[p.pos]++],pt=setup.placements[id]||base;return {id:p.id,identity:p.identity,name:p.name,no:p.no,pos:p.pos,role:F.assignedPosition(pt[0],pt[1],p.pos).line,team:0,homeX:pt[0]*C.W/100,homeY:pt[1]*C.H/100,...Object.fromEntries(['attack','defense','passing','speed','endurance','keeping','initialEnergy'].map(k=>[k,p[k]]))};});
   const opp=setup.opponentPlayers.map((p,i)=>({id:'opp'+i,identity:p.identity,name:p.name,no:p.no,pos:p.pos,role:p.pos,team:1,homeX:p.x*C.W/100,homeY:(100-p.y)*C.H/100,attack:p.attack,defense:p.defense,passing:p.passing,speed:p.speed,endurance:p.endurance,keeping:p.keeping,initialEnergy:p.energy}));
-  return {seed:s.seed,players:own.concat(opp)};
+  return {seed:s.seed,version:setup.version,players:own.concat(opp)};
  }
  function opponents(F,s,formation){
   const layout=F.formationPositions[formation],pts=[[50,94,'GK'],...Object.entries(layout).flatMap(([pos,points])=>points.map(([x,y])=>[x,y,pos]))];
   return pts.map(([x,y,pos],i)=>({identity:'rival_'+i,name:s.opponentName+' '+(i+1)+'번',no:i+1,pos,x,y,attack:Math.round(s.opponent.attack),defense:Math.round(s.opponent.defense),passing:Math.round(s.opponent.middle),speed:Math.round(s.opponent.speed),endurance:50,keeping:Math.round(s.opponent.defense),energy:s.opponent.energy}));
  }
- function enable(F,s,{opponentFormation='442',opponentPlayers=null,opponentTactic='balanced',positions=[]}={},legacyRestore){
+ function enable(F,s,{opponentFormation='442',opponentPlayers=null,opponentTactic='balanced',positions=[],ruleVersion=2}={},legacyRestore){
   if(s.phase!=='prep'||s.minute!==0||s.continuousSetup)throw Error('연속 경기 규칙은 새 킥오프 전에 준비합니다.');
-  if(!F.formations[opponentFormation]||!['balanced','press','counter','lowBlock'].includes(opponentTactic))fail();
+  if(![1,2].includes(ruleVersion)||!F.formations[opponentFormation]||!['balanced','press','counter','lowBlock'].includes(opponentTactic))fail();
   const placements={};for(const row of positions){if(!s.players[row.id]||!Number.isFinite(row.x)||!Number.isFinite(row.y))fail();placements[row.id]=F.boundedPlacement(row.x,row.y,s.players[row.id].pos);}
   const rows=(opponentPlayers||opponents(F,s,opponentFormation)).map(p=>Object.fromEntries(['identity','name','no','pos','x','y','attack','defense','passing','speed','endurance','keeping','energy'].map(k=>[k,p[k]])));
   validateOpponents(F,rows,opponentFormation);
   const baseline=copy(s);delete baseline.spatialSetup;legacyRestore(baseline);
-  delete s.spatialSetup;s.continuousSetup={version:1,baseline,opponentFormation,opponentTactic,opponentPlayers:rows,placements};s.continuous=C.create(config(F,s,s.continuousSetup));s.continuousCommands=[];s.discipline={version:2,events:[]};return s;
+  delete s.spatialSetup;s.continuousSetup={version:ruleVersion,baseline,opponentFormation,opponentTactic,opponentPlayers:rows,placements};s.continuous=C.create(config(F,s,s.continuousSetup));s.continuousCommands=[];s.discipline={version:2,events:[]};return s;
  }
  function validateOpponents(F,rows,formation){
   if(!Array.isArray(rows)||rows.length!==11||new Set(rows.map(p=>p.identity)).size!==11)fail();
@@ -68,9 +68,9 @@
   }return events;
  }
  function replay(F,setup,commands,tick,legacyRestore,{fromTick=null,onFrame=null}={}){
-  if(!setup||setup.version!==1||!Number.isInteger(tick)||tick<0||tick>61800||!Array.isArray(commands)||commands.length>400)fail();
+  if(!setup||![1,2].includes(setup.version)||!Number.isInteger(tick)||tick<0||tick>61800||!Array.isArray(commands)||commands.length>400)fail();
   const baseline=legacyRestore(setup.baseline);if(baseline.phase!=='prep'||baseline.minute!==0||baseline.continuousSetup)fail();
-  const s=copy(baseline);s.paused=false;enable(F,s,{...setup,positions:Object.entries(setup.placements).map(([id,[x,y]])=>({id,x,y}))},legacyRestore);if(!same(s.continuousSetup,setup))fail();
+  const s=copy(baseline);s.paused=false;enable(F,s,{...setup,ruleVersion:setup.version,positions:Object.entries(setup.placements).map(([id,[x,y]])=>({id,x,y}))},legacyRestore);if(!same(s.continuousSetup,setup))fail();
   let previous=-1;for(const command of commands){if(!command||!Number.isInteger(command.tick)||command.tick<previous||command.tick>tick||!['begin','swap','setTactic','setAttackFocus','teamTalk'].includes(command.op)||!Array.isArray(command.args)||command.args.length>(command.op==='swap'?2:command.op==='begin'?0:1))fail();
    while(s.continuous.tick<command.tick){if(!F.running(s))fail();advance(F,s,fromTick!==null&&s.continuous.tick>=fromTick-1?1:Math.min(600,command.tick-s.continuous.tick,fromTick!==null?Math.max(1,fromTick-1-s.continuous.tick):600));if(fromTick!==null&&s.continuous.tick>=fromTick)onFrame?.(C.frame(s.continuous));}F[command.op](s,...command.args);previous=command.tick;
   }

@@ -48,7 +48,7 @@ history is not payment entitlement proof. Read docs/REBIRTH_LOOP_2026-10-11.md.
 ## Full continuous engine direction (2026-10-12, supersedes hybrid notes below)
 
 The owner requested whole-match continuous football. New confirmed kickoffs use
-continuousSetup.version=1, a shared 100ms physical world for the actual two elevens.
+continuousSetup.version=2, a shared 100ms physical world for the actual two elevens.
 The minute opportunity sampler is not used for those matches. Live and replay read
 the same physical coordinates, contacts and recorded statistics. Preserve valid v10
 running/confirmed matches and the released spatial version1 solver. Never change a
@@ -76,7 +76,8 @@ both pitches; phones switch teams without a long page. Player buttons open the
 existing own/opponent detail dialogs over the briefing. Full names and our reserves
 are available in six-player pages. Closing any report never starts the match.
 Use the current custom placements and suspension replacements, not a parallel XI.
-Our overall uses TouchlinePlan; opponent overall uses Opposition consistently.
+Our overall matches TouchlinePlan’s role-weighted formula; opponent overall uses Opposition.
+Core restore/preview validation must work before late UI modules load.
 Keep individual movement timing keyed to identity, with near-ball support,
 far-side depth and limited centre-back drift. Avoid reintroducing the old shared
 large sine-wave displacement. Movement remains presentation-only and must preserve
