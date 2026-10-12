@@ -2,21 +2,14 @@
 var continuousVisualBefore=null,continuousVisualCurrent=null,continuousVisualContact=false;
 function continuousVisualFrame(match){if(match!==continuousMatch||continuousVisualCurrent?.tick!==match.continuous.tick||match.paused||!F.running(match)||continuousVisualContact)return F.continuousFrame(match);return ContinuousFootball.interpolate(continuousVisualBefore,continuousVisualCurrent,continuousBudget/100)||F.continuousFrame(match);}
 var continuousStamp=0,continuousBudget=0,continuousMatch=null,continuousSavedAt=0,continuousRenderAt=0,continuousRAF=null;
-function continuousDisplayRate(match){
- const speed={slow:.5,normal:1,fast:2,rapid:4}[playbackPrefs.speed]||1,w=match.continuous;
- if(w.ball.flight?.kind==='shot'||w.tick-w.cue.tick<12&&['save','parry','header','block','woodwork'].includes(w.cue.kind))return Math.min(1,speed);
- if(w.ball.flight?.kind==='cross'||w.ball.flight&&Math.min(w.ball.y,ContinuousFootball.H-w.ball.y)<30)return Math.min(2,speed);
- if(w.ball.flight)return Math.min(8,4*speed);
- if(w.cue.kind==='control'&&w.tick-w.cue.tick<4)return Math.min(2,speed);
- return 12*speed;
-}
+function continuousDisplayRate(match){return MatchFlow.displayRate(match,playbackPrefs);}
 function continuousDisplayTick(now){
  continuousRAF=requestAnimationFrame(continuousDisplayTick);
  const match=practiceSession?.match?.continuousSetup?practiceSession.match:state,practice=match===practiceSession?.match;
  const active=appSessionStarted&&match?.continuousSetup&&F.running(match)&&!match.paused&&!document.hidden&&(practice?$('practice-dialog').open:view==='match'&&!goalSceneHold&&!matchCeremonyHold);
  if(!active||continuousMatch!==match){continuousStamp=now;continuousBudget=0;continuousMatch=match;continuousVisualBefore=null;continuousVisualCurrent=null;continuousVisualContact=false;if(!active)return;}
  const delta=Math.min(50,Math.max(0,now-continuousStamp));continuousStamp=now;
- continuousBudget=Math.min(600,continuousBudget+delta*continuousDisplayRate(match));
+ continuousBudget=Math.min(1200,continuousBudget+delta*continuousDisplayRate(match));
  const oldMinute=match.minute,oldPhase=match.phase,events=[],started=performance.now();
  while(continuousBudget>=100&&F.running(match)&&performance.now()-started<6){
   const rate=continuousDisplayRate(match);continuousVisualBefore=F.continuousFrame(match);const rows=F.advanceContinuous(match,1);continuousVisualCurrent=F.continuousFrame(match);continuousVisualContact=rows.some(e=>['goal','shot','card'].includes(e.type));events.push(...rows);continuousBudget-=100;

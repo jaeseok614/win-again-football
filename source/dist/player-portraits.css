@@ -48,3 +48,11 @@
 
 #match-names{position:absolute;inset:0;width:100%;height:100%;z-index:8;pointer-events:none}
 #match-pane .pitch[data-name-overlay=true] #players .player-name{display:none!important}
+
+/* Small markers reserve the pitch for the ball and every player's name. */
+.match-popup-ready #match-pane .pitch[data-simple=true] #players .player-face-marker{position:absolute;left:50%;top:9px;margin:0;transform:translateX(-50%);width:14px;height:14px;clip-path:none;border-radius:50%;background:#e2eee7;border:1px solid #123a2c;box-sizing:border-box;filter:none;animation:none}
+.match-popup-ready #match-pane .pitch[data-simple=true] #players .player-face-marker[data-position=GK]{background:#85cbed}
+.match-popup-ready #match-pane .pitch[data-simple=true] #players .player-face-marker i{inset:0;height:12px;line-height:12px;font-size:8px;font-weight:700}
+.match-popup-ready #match-pane .pitch[data-simple=true] #players .player-head,.match-popup-ready #match-pane .pitch[data-simple=true] #players .player-legs,.match-popup-ready #match-pane .pitch[data-simple=true] #players .player-stamina,.match-popup-ready #match-pane .pitch[data-simple=true] #players .player-form{display:none}
+.match-popup-ready #match-pane .pitch[data-simple=true] #match-ball{box-shadow:0 0 0 2px #f7d268,0 2px 4px #00140ecc}
+.match-watch-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.match-watch-buttons button{min-height:44px;border:1px solid var(--line);border-radius:5px;background:#101c20;color:#d2ded5;font-size:13px}.match-watch-buttons button[aria-pressed=true]{color:var(--lime);border-color:var(--lime);background:#c8f36e0b}

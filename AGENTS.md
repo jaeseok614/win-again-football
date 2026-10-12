@@ -64,6 +64,10 @@ Read docs/CONTINUOUS_PASSING_FLOW_2026-10-12.md for version5 bounded pass
 lead, physical ball arrival, first touches, diagonal support and opponent response.
 Read docs/CONTINUOUS_PRESS_AND_DEFENCE_2026-10-12.md for version7 trigger-based double pressing, compact goal-side cover, actual-speed exertion and low-block outlets. Preserve published version6 practice seeds/parameters too. The benchmark defaults to actual halftime reset; --half-reset false is only for reproducing historical diagnostics. Read docs/CONTINUOUS_DECISIONS_2026-10-12.md for version6 local carry/attack choices, moving-carrier interception, complementary press screens, carrying speed cost and explicit remaining tactic balance. Read docs/NOTEBOOK_STORY_2026-10-12.md for original record-driven notebook scenes and shared cast art. Use the new engine in new practice sessions too, show preparation before expensive
 replay/practice work, and keep all current names/ball/core controls on one viewport.
+Latest owner feedback (2026-10-12): no player-name connector lines in live matches,
+replays or practice. Keep names near the markers and simplify the pitch. Default
+key viewing accelerates routine play while showing actual major action in order;
+full viewing remains selectable. Display filtering never removes saved contacts.
 
 ## Pre-match squad and movement direction (2026-10-11)
 
@@ -97,7 +101,7 @@ BOTH teams must have readable names by default throughout live matches AND
 replays, including off-ball play, set pieces, pause and reduced-motion mode.
 Never gate names behind possession, focus, hover, a setting or a small-screen
 breakpoint. Use compact names without ellipses, separate crowded labels with
-leader lines, and keep the ball above them. Full identities remain accessible.
+nearby collision-aware placement without connector lines, and keep the ball above them. Full identities remain accessible.
 This is a continuing requirement for every later feature, not an optional mode.
 
 Consider mobile performance in every change. Hidden dashboards do no work during
