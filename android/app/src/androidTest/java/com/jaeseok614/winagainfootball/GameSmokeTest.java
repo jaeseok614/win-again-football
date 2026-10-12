@@ -40,6 +40,14 @@ public final class GameSmokeTest {
         assertEquals("Manager image, complete prose and next action fit the actual phone", "true", evaluate(scenario,
             "(()=>{const d=document.getElementById('manager-guide'),copy=document.getElementById('manager-guide-copy'),art=d.querySelector('#manager-guide-art>.manager-art,#manager-guide-art>.memory-art'),next=document.getElementById('manager-guide-next'),a=art?.getBoundingClientRect(),b=next.getBoundingClientRect();return !!art&& d.open&&!document.getElementById('manager-guide-art').hidden&&getComputedStyle(art).backgroundImage.includes('data:image/webp')&&a.height>=120&&d.scrollHeight<=d.clientHeight+1&&copy.scrollHeight<=copy.clientHeight+1&&b.height>=44&&b.bottom<=innerHeight;})()"));
     }
+    private void reachStoryQuestion(ActivityScenario<MainActivity> scenario) throws Exception {
+        for (int page = 0; page < 16 && !"true".equals(evaluate(scenario,"!document.querySelector('#club-story-dialog .story-choices').hidden")); page++) {
+            assertEquals("Every story card and navigation must fit without scrolling", "true", evaluate(scenario,
+                "(()=>{const d=document.getElementById('club-story-dialog'),b=d.querySelector('.story-conversation'),r=d.getBoundingClientRect();return d.open&&r.top>=0&&r.bottom<=innerHeight&&d.scrollHeight<=d.clientHeight+1&&b.scrollHeight<=b.clientHeight+1;})()"));
+            tapWebElement(scenario,"#club-story-dialog [data-story-page='next']");
+        }
+        awaitTrue(scenario,"clubStoryPage===clubStoryPages(ClubStory.scene(season,clubStoryEvent)).length-1&&!document.querySelector('#club-story-dialog .story-choices').hidden");
+    }
     private String evaluate(ActivityScenario<MainActivity> scenario, String script) throws Exception {
         CountDownLatch ready = new CountDownLatch(1);
         AtomicReference<String> value = new AtomicReference<>("null");
@@ -318,12 +326,12 @@ public final class GameSmokeTest {
                 evaluate(scenario, "WinAgainAndroid.handleBack()");
                 assertEquals("true", evaluate(scenario, "document.getElementById('club-story-dialog').open"));
                 screenshot(scenario, "android-first-owner-meeting.png");
-                tapWebElement(scenario, "#club-story-dialog [data-story-page=next]");
-                awaitTrue(scenario, "ClubStory.scene(season,clubStoryEvent).step===0&&clubStoryPage===1&&!document.querySelector('#club-story-dialog .story-choices').hidden");
+                reachStoryQuestion(scenario);
+                awaitTrue(scenario, "ClubStory.scene(season,clubStoryEvent).step===0");
                 tapWebElement(scenario, "#club-story-dialog [data-story-choice]");
                 awaitTrue(scenario, "ClubStory.scene(season,clubStoryEvent).step===1&&clubStoryPage===0");
-                tapWebElement(scenario, "#club-story-dialog [data-story-page=next]");
-                awaitTrue(scenario, "ClubStory.scene(season,clubStoryEvent).step===1&&clubStoryPage===1&&!document.querySelector('#club-story-dialog .story-choices').hidden");
+                reachStoryQuestion(scenario);
+                awaitTrue(scenario, "ClubStory.scene(season,clubStoryEvent).step===1");
                 tapWebElement(scenario, "#club-story-dialog [data-story-choice]");
                 awaitTrue(scenario, "ClubStory.scene(season,clubStoryEvent).step===2&&!!document.querySelector('#club-story-dialog .story-complete')");
                 tapWebElement(scenario, "#club-story-dialog [data-story-close]");
@@ -335,7 +343,7 @@ public final class GameSmokeTest {
             assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display==='none'&&document.querySelectorAll('.media-review').length===3&&!!document.querySelector('.management-headline')"));
             assertEquals("New stadium illustration must be visible on the default home", "true", evaluate(scenario,
                 "(()=>{const art=document.querySelector('#mobile-command-center .club-growth-picture');return !!art&&art.getBoundingClientRect().width>0&&getComputedStyle(art).backgroundImage.includes('data:image/webp');})()"));
-            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset,ClubArt.storyAsset,ClubArt.momentAsset,ClubArt.deadballAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048&&widths[5]===2048&&widths[6]===1672&&widths[7]===960).catch(()=>window.newArtDecoded=false);return true;})()");
+            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset,ClubArt.storyAsset,ClubArt.momentAsset,ClubArt.deadballAsset,ClubArt.memoryAsset,ClubArt.voiceAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048&&widths[5]===2048&&widths[6]===1672&&widths[7]===960&&widths[8]===1536&&widths[9]===768).catch(()=>window.newArtDecoded=false);return true;})()");
             awaitTrue(scenario, "window.newArtDecoded===true");
             assertEquals("Opponent lineup must retain eleven distinct faces in the expanded atlas", "true", evaluate(scenario,
                 "(()=>{const rows=Opposition.roster(S.opponentFor(season)),indices=rows.map(p=>Portraits.index(p));return new Set(indices).size===11&&rows.every(p=>Portraits.html(p).includes('--portrait-size:800% 800%'));})()"));
@@ -353,7 +361,7 @@ public final class GameSmokeTest {
             for (int page = 0; page < storyPages; page++) {
                 assertEquals("The physical touch must reach the requested story page", String.valueOf(page), evaluate(scenario, "clubStoryPage"));
                 assertEquals("Narrative page " + page + " must stay inside the phone dialog", "true", evaluate(scenario,
-                    "(()=>{const d=document.getElementById('club-story-dialog'),buttons=[...d.querySelectorAll('button')].filter(b=>b.getClientRects().length);return d.open&&ClubStory.scene(season,clubStoryEvent).step===2&&d.scrollHeight<=d.clientHeight+1&&buttons.length>=3&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;})&&getComputedStyle(d.querySelector('.story-art')).backgroundImage.includes('data:image/webp');})()"));
+                    "(()=>{const d=document.getElementById('club-story-dialog'),buttons=[...d.querySelectorAll('button')].filter(b=>b.getClientRects().length);return d.open&&ClubStory.scene(season,clubStoryEvent).step===2&&d.scrollHeight<=d.clientHeight+1&&buttons.length>=3&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;})&&getComputedStyle(d.querySelector('.story-art,.memory-art')).backgroundImage.includes('data:image/webp');})()"));
                 if (page < storyPages - 1) {
                     tapWebElement(scenario, "#club-story-dialog [data-story-page=next]");
                     awaitTrue(scenario, "document.getElementById('club-story-dialog').open&&clubStoryPage===" + (page + 1));

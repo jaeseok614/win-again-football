@@ -1,7 +1,7 @@
 // Read-only pages derive from confirmed records and existing explicit dialogue receipts.
 var notebookPage=0,notebookTab='pending',notebookReturn=null,notebookRows=null,notebookGeneration=0;
 const notebookDialog=document.createElement('dialog');notebookDialog.id='manager-notebook';notebookDialog.setAttribute('aria-labelledby','notebook-title');document.body.append(notebookDialog);
-function notebookScenes(){const seen=new Set(),out=[];for(let year=1;year<=season.year;year++){for(const e of ClubStory.events(season,year)){const d=ClubStory.scene(season,e.id);if(!d||seen.has(d.id))continue;seen.add(d.id);out.push(d);}}return out.sort((a,b)=>b.year-a.year||b.round-a.round||a.id.localeCompare(b.id));}
+function notebookScenes(){if(typeof ClubStory.scenes==='function')return ClubStory.scenes(season).sort((a,b)=>b.year-a.year||b.round-a.round||a.id.localeCompare(b.id));const seen=new Set(),out=[];for(let year=1;year<=season.year;year++){for(const e of ClubStory.events(season,year)){const d=ClubStory.scene(season,e.id);if(!d||seen.has(d.id))continue;seen.add(d.id);out.push(d);}}return out.sort((a,b)=>b.year-a.year||b.round-a.round||a.id.localeCompare(b.id));}
 function prepareManagerNotebook(){
  const generation=++notebookGeneration;notebookRows=null;
  notebookDialog.innerHTML='<header><div><small>감독의 수첩</small><h2 id="notebook-title" tabindex="-1">함께 남긴 페이지</h2></div><button type="button" data-notebook-close aria-label="감독의 수첩 닫기">닫기</button></header><div class="notebook-cards notebook-loading"><p class="notebook-empty" role="status">지난 경기와 남긴 대답을 정리하고 있습니다…</p></div>';
