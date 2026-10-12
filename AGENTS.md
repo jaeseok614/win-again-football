@@ -251,3 +251,12 @@ use the actual halftime boundary (45 plus first-half added time).
 
 ## Specific placement and pacing feedback (2026-10-13)
 Use distinct LS/RS, left/right midfield/defence and wingback slots in the tactics editor. Dropping onto an occupied location swaps both placement coordinates atomically, preserving identities and natural registrations. Avoid the retired nine-zone scattering UI. Keep recorded continuous1–7/spatial1 receipts exact. New rule8 movement eases only formation targets; receivers, carriers, pressing, goalkeeping and restarts must still physically reach contact. Selected playback speed also affects shooting: key shots 2× selected speed, bounded at4×; attack4× selected bounded12×; routine48× selected. Full viewing has separate readable rates. These are presentation rates, never score/clock/RNG edits.
+
+## Browser-engine reference and display performance (2026-10-13)
+
+Read docs/BROWSER_ENGINE_REFERENCES_2026-10-13.md. Keep fixed physical ticks separate
+from rendering. Reuse consecutive physical display snapshots only within a single
+RAF callback; next callback reads fresh state. Project active players into team
+frames in one pass. Display optimization must not change journal, RNG or receipts.
+Do not infer a reusable football engine from a browser-port headline; inspect
+primary source and license before any source or asset reuse.
