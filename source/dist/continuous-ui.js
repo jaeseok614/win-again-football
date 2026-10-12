@@ -10,9 +10,9 @@ function continuousDisplayTick(now){
  if(!active||continuousMatch!==match){continuousStamp=now;continuousBudget=0;continuousMatch=match;continuousVisualBefore=null;continuousVisualCurrent=null;continuousVisualContact=false;if(!active)return;}
  const delta=Math.min(50,Math.max(0,now-continuousStamp));continuousStamp=now;
  continuousBudget=Math.min(1200,continuousBudget+delta*continuousDisplayRate(match));
- const oldMinute=match.minute,oldPhase=match.phase,events=[],started=performance.now();
+ const oldMinute=match.minute,oldPhase=match.phase,events=[],started=performance.now();let snapshot=null;
  while(continuousBudget>=100&&F.running(match)&&performance.now()-started<6){
-  const rate=continuousDisplayRate(match);continuousVisualBefore=F.continuousFrame(match);const rows=F.advanceContinuous(match,1);continuousVisualCurrent=F.continuousFrame(match);continuousVisualContact=rows.some(e=>['goal','shot','card'].includes(e.type));events.push(...rows);continuousBudget-=100;
+  const rate=continuousDisplayRate(match);continuousVisualBefore=snapshot||F.continuousFrame(match);const rows=F.advanceContinuous(match,1);continuousVisualCurrent=snapshot=F.continuousFrame(match);continuousVisualContact=rows.some(e=>['goal','shot','card'].includes(e.type));events.push(...rows);continuousBudget-=100;
   if(rate!==continuousDisplayRate(match)){continuousBudget=0;break;}
   if(rows.some(e=>['goal','shot','card','break'].includes(e.type))){continuousBudget=0;break;}
  }

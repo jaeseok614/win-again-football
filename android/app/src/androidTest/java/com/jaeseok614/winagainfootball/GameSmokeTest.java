@@ -142,7 +142,7 @@ public final class GameSmokeTest {
     private void dragTacticalForward(ActivityScenario<MainActivity> scenario) throws Exception {
         evaluate(scenario, "document.querySelector('.tactical-pitch').scrollIntoView({block:'center',behavior:'instant'});true");
         awaitWebViewFrame(scenario); awaitAppWindowFocus(scenario);
-        String encoded = evaluate(scenario, "(()=>{const a=document.querySelector('[data-tactical-player=f1]').getBoundingClientRect(),p=document.querySelector('.tactical-pitch').getBoundingClientRect();return JSON.stringify([a.x+a.width/2,a.y+a.height/2,p.x+p.width*.5,p.y+p.height*.34,devicePixelRatio]);})()");
+        String encoded = evaluate(scenario, "(()=>{const a=document.querySelector('[data-tactical-player=f1]').getBoundingClientRect(),p=document.querySelector('.tactical-pitch').getBoundingClientRect();return JSON.stringify([a.x+a.width/2,a.y+a.height/2,p.x+p.width*.5,p.y+p.height*.49,devicePixelRatio]);})()");
         JSONArray points = new JSONArray(new JSONTokener(encoded).nextValue().toString());
         int[] origin = new int[2];scenario.onActivity(activity -> activity.gameViewForTest().getLocationOnScreen(origin));
         float sx=origin[0]+(float)(points.getDouble(0)*points.getDouble(4)),sy=origin[1]+(float)(points.getDouble(1)*points.getDouble(4));
@@ -151,8 +151,8 @@ public final class GameSmokeTest {
         MotionEvent down=MotionEvent.obtain(start,start,MotionEvent.ACTION_DOWN,sx,sy,0);instrumentation.sendPointerSync(down);down.recycle();
         for(int step=1;step<=10;step++){SystemClock.sleep(20);MotionEvent move=MotionEvent.obtain(start,SystemClock.uptimeMillis(),MotionEvent.ACTION_MOVE,sx+(tx-sx)*step/10,sy+(ty-sy)*step/10,0);instrumentation.sendPointerSync(move);move.recycle();}
         MotionEvent up=MotionEvent.obtain(start,SystemClock.uptimeMillis(),MotionEvent.ACTION_UP,tx,ty,0);instrumentation.sendPointerSync(up);up.recycle();
-        // The central midfield zone snaps away from occupied cards; free pixel y=34 is retired.
-        awaitTrue(scenario,"(()=>{const p=customPositions[state.players.f1.identity];return p&&[41,50,59].includes(p[0])&&[40,46,52].includes(p[1])&&document.querySelector('[data-tactical-player=f1] em').textContent==='CM';})()");
+        // Native pointer drag targets the exact CM slot; occupied positions now swap.
+        awaitTrue(scenario,"(()=>{const p=customPositions[state.players.f1.identity];return p&&p[0]===50&&p[1]===49&&document.querySelector('[data-tactical-player=f1] em').textContent==='CM';})()");
     }
 
     private File verificationFolder() {
