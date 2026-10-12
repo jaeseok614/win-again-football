@@ -3,10 +3,14 @@
 - 피드백 반영:live/replay/practice 이름 연결선·상자0, 가까운 충돌 없는 이름 슬롯/22명 유지, live/replay 작은 팀색 원·등번호·단순 피치·최상단 공. 얼굴과 능력/체력 정보는 선수·교체 보고서에서 유지합니다. [설계·검증 범위](docs/MATCH_WATCH_EXPERIENCE_2026-10-13.md).
 - 기본 핵심/설정 전체 관전. 평범한 전개36×선택 속도, 실제 문전/크로스 최대2×, 슈팅/선방/리바운드/골 최대1×. 실제100ms 세계를 순서대로 진행하며 결과 예측/분 건너뛰기/기록 삭제 없음. continuous7/spatial1·원본 로그·통계·유효 저장 유지. 설정 변경/닫기/재실행이 정지 경기를 재개하지 않습니다.
 - 주요 중계2.4초/원본 로그의 추가분 캐시. 최근 목록에서는 평범한 패스/접촉 반복을 줄입니다. 전체 관전은 마지막 접촉 문장도 표시합니다.
-- 이름7/관전6/연속 표시5그룹 통과. 실제8크기320×568~1280×900의 모든 이름/44px/한 화면/독립 연습/오류0. 설정3크기의 양 방식 전환/일시정지 세계 정확 일치/전체 설정 저장 뒤 페이지 재실행 통과.
+- 이름7/관전6/중계 전환3/연속 표시5그룹 통과. 실제8크기320×568~1280×900의 모든 이름/44px/한 화면/독립 연습/오류0. 설정3크기의 양 방식 전환/일시정지 세계 정확 일치/전체 설정 저장 뒤 페이지 재실행 통과.
 - 표시 scheduler99분5:2(슈팅15:3)의 세계·로그·체력·RNG·지시 정확 일치, 하프타임/후반 점검/물리 리플레이/명시적 정산 통과. 같은 경기1배속 명목 표시시간 핵심334.36초/전체1433.28초는 처리·중단·골 의식·사용자 판단 제외입니다. 경기 사건 빈도 자체는 바꾸지 않았습니다.
-- 실제12초 데스크톱 Chrome721프레임/중앙16.7ms/95백분위16.9ms/최대18.1ms/긴 작업0/22명. 최종 PWA4,560,880바이트/shell f802449058f9, Android 오프라인4,560,273바이트/SHA256 fba3f422928a0123b5ab0e4a64d1101a1e0eb68efe2fd2b26849816c2f43842b. PWA14/Android 오프라인11그룹 통과.
-- 전체 소스 검사 진행 중입니다. 원격 코드·Android14/15 네이티브·APK는 새 코드 CI 완료 후 기록합니다. 이전 version7 APK는 이 표시 변경을 포함하지 않습니다. PR25 draft/main 자동 병합 없음.
+- 실제12초 데스크톱 Chrome721프레임/중앙16.7ms/95백분위16.8ms/최대17.4ms/긴 작업0/22명. 최종 PWA4,560,980바이트/shell 7ca62b2e1e69, Android 오프라인4,560,373바이트/SHA256 7cd9b20035c6bcafa8da98253910435cf24575ffe662f1b19545e80ce055d3fa. PWA14/Android 오프라인11그룹 통과.
+- 최종 코드7b540d66a18ff5d5dae2c1defb2e134adec2d614/PR merge c5be45d8936de1e552bc43dd5fa515032bcf9da0. 로컬 전체166 suites/1281 checks(work/spectator-all-tests-verified.log), [원격 전체·PWA14·공개 생성물 일치](https://github.com/jaeseok614/win-again-football/actions/runs/38316312658) 모두 통과.
+- [Android 실제 앱 검사](https://github.com/jaeseok614/win-again-football/actions/runs/38316312720) API35와 API34의 실제10/10·APK/AAB/lint 모두 통과했습니다. API34는 같은 코드·검사를 유지한 재실행에서 성공했습니다(원본 작업115033949893/재실행115036821244). API34 첫 시도는9/10: 취임 안내 마지막에 시스템 overlays와 CONFIG_ASSETS_PATHS(80000000)가 Activity를 재생성했습니다. [첫 실패 진단](https://github.com/jaeseok614/win-again-football/actions/runs/38316312720/artifacts/11777086275). 앱 crash/경기 검사 실패로 단정하지 않으며 검사 조건을 완화하지 않고 재실행했습니다. 원격 자산 SHA256은 로컬과 정확히 같습니다. [성공한 API34 검증](https://github.com/jaeseok614/win-again-football/actions/runs/38316312720/artifacts/11776838087), [API35 검증](https://github.com/jaeseok614/win-again-football/actions/runs/38316312720/artifacts/11777601095).
+- 검증된 API35 [APK/AAB/lint ZIP](https://github.com/jaeseok614/win-again-football/actions/runs/38316312720/artifacts/11777345207): ZIP SHA2567c3f4ce1f438499859f3bc7bc1925d27a75c8845bec3777ceba674883113c924. 안의 APK를 단독 추출하고 assets/game/index.html이 로컬 Android 파일과 바이트 단위로 일치함을 검사했습니다. APK5,542,501바이트/SHA2561458c7002586d8cf3af5d32c45a9c6fa8e96bd2a9108398c6201eeffaf6847ff.
+- APK만 [새 Google Drive 파일](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 올렸고 MIME/파일명/5,542,501바이트를 readback했습니다. 이전 Drive 파일은 갱신/재조회404와 검색 결과0으로 접근되지 않았고 새 파일을 만들었습니다. 업로드 자료에 AAB/ZIP/검사용 저장은 없습니다.
+- 이전 APK와 새 APK의 v2 인증서 SHA256은8dc5f422b70bda6a84da33fe6c607857e447438356bfbd49f75775cca18a06a3/6437ceb59c6237e581f81a98e10b3289fdf4ef3784e141452a0cdbe5e8e3d320으로 다릅니다. 기존 시험판 사용자는 구단 내보내기→기존 시험판 삭제→새 APK 설치→구단 가져오기. [설치·출시·서명 안내](docs/GOOGLE_PLAY_RELEASE.md). PR25 draft/main 자동 병합 없음.
 
 # 최신 개발 — 2026-10-12 압박·수비 version7
 
