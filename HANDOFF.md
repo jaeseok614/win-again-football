@@ -3,7 +3,8 @@
 - 실제 Android 14/15 첫9개 검사에서7/9 통과, 두 재실행 실패를 추적했습니다. Season.restore의 상대 선발 검증이 늦게 로드되는 TouchlinePlan UI에 의존하던 것이 원인이었습니다. 동일한 역할 가중 능력 계산을 코어로 옮겨 초기 복원을 독립시켰습니다. 실제 브라우저 새 브리핑→진행→저장→페이지 완전 재실행에서 전체 물리 상태와 지시/로그가 정확히 같고 paused=true, 복구 차단=false 확인. source의 초기 모듈 순서 VM 회귀도 추가합니다. 사용자 저장을 삭제하지 않았습니다.
 - 새 킥오프/연습은 continuous version2. 간접 프리킥 배달 오프사이드와 가까운 간접 프리킥 골키퍼 골라인 예외를 수정합니다. v1 세계/영수증/연습 기록도 그대로 재생하며 기존 3씨드 SHA256을 회귀로 고정했습니다. 이미 있던 긴 직접 프리킥 패스 판정도 보존합니다.
 - 최종 브라우저 전체96분2:0(슈팅11:7)/실제 경로 다시 보기/명시적 정산/직접 엔진 전체 일치 통과. 8크기320×568부터1280×900의 모든 이름/한 화면/44px 버튼/독립 연습/JS 오류0 통과. 새 재실행 정확 일치 회귀 로그는 ignored work/continuous-reload-proof.log.
-- 공개 PWA14그룹 통과. PWA4,210,560바이트/shell32605281960c, Android 오프라인4,209,953바이트/SHA256bbba34285708769ec06b725ad7f47056ebdae42b1c1feeca8076cd31edbd7b4a. 최종 소스 회귀와 Android14/15 네이티브9개 재검사는 진행 중이며 PR25 새 코드 커밋에서 결과를 확인합니다. 이전 실패를 성공으로 표시하지 마세요.
+- 전체 최종 **157 suites /1177 checks 통과**(work/continuous-final-v2-fixed-tests.log). 연속 엔진19/표시 scheduler5그룹, 이전 공간 저장8개와 공개 continuous v1 저장3개 전체 상태/정확한 정산 보존 확인. 공개 PWA14/Android 오프라인11그룹 통과. PWA4,210,560바이트/shell32605281960c, Android 오프라인4,209,953바이트/SHA256bbba34285708769ec06b725ad7f47056ebdae42b1c1feeca8076cd31edbd7b4a. 코드 커밋 **39de3ad13c2ae12844a9b23514510dea99362488**에서 GitHub 소스157/1177/PWA14/생성 공개 파일 일치 성공(actions/runs/38194336158). Android14/15 각각 네이티브9/9와 APK/AAB/lint 성공(actions/runs/38194336101). 실제 브리핑/경기 저장/물리 리플레이/앱 재실행 실패를 해결했습니다. 마지막 문서 결과 기록 커밋은 코드 변경 없이 [skip ci]로 중복 실행을 생략합니다. PR25는 draft이고 main을 자동 병합하지 않습니다.
+- 설치 파일: https://github.com/jaeseok614/win-again-football/actions/runs/38194336101/artifacts/11722312738 . ZIP 안 app-debug.apk가 휴대폰 시험 설치용이고 aab는 unsigned Play 배포 준비 파일입니다. 빌드 기준은 PR 테스트 merge9b9cfd11(code head39de3ad + main3af6f7c)이며 Android 자산 SHA256은 위 값으로 로컬과 정확히 일치합니다. 검증 로그/QA 원본은 ignored work에 보관합니다.
 
 # 최신 개발 — 2026-10-12 전체 연속 축구 엔진
 
