@@ -32,7 +32,7 @@ for(const [group,entries] of Object.entries(managementGroups)){
  for(const [id] of entries){const node=$(id);if(node)node.dataset.managedPanel='true';}
  const hub=document.createElement('section');hub.id='management-hub-'+group;hub.className='management-hub';hub.setAttribute('aria-label',managementNames[group]+' 업무');
  hub.innerHTML='<header><h2>'+managementNames[group]+'</h2><p>필요한 업무를 열어 확인하세요.</p></header><div class="management-entries">'+entries.slice(0,group==='club'?4:entries.length).map(([id,label])=>'<button type="button" data-management-open="'+id+'"><strong>'+label+'</strong><span>열기 →</span></button>').join('')+'</div>'+(group==='cup'?'<button type="button" data-management-league>리그 순위 · 전 경기</button>':'');
- hub.onclick=e=>{const b=e.target.closest('[data-management-open]');if(b){if(b.dataset.managementOpen==='club-story-panel'&&typeof openManagerNotebook==='function')openManagerNotebook(b);else openManagementPanel(b.dataset.managementOpen,b);}if(e.target.closest('[data-management-league]'))openLeagueCentre();};$(group+'-pane').append(hub);
+ hub.onclick=e=>{const b=e.target.closest('[data-management-open]');if(b){if(b.dataset.managementOpen==='squad-overview')openSquadOverview(b);else if(b.dataset.managementOpen==='club-story-panel'&&typeof openManagerNotebook==='function')openManagerNotebook(b);else openManagementPanel(b.dataset.managementOpen,b);}if(e.target.closest('[data-management-league]'))openLeagueCentre();};$(group+'-pane').append(hub);
 }
 document.body.classList.add('management-hub-ready');
 $('market-overview').dataset.managedPanel='true';
