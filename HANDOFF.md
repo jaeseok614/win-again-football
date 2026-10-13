@@ -1,3 +1,13 @@
+# 최신 완료 — 선수 상세와 소량 보고서의 한 화면 통합
+
+- [가로 선수 보고서와 신체 정보 출처](docs/PLAYER_REPORT_WORKSPACE_2026-10-13.md): 선수 신상/주발/선호 위치를 고정하고 기본6능력·기술/판단/신체 전체 능력을 동시에 표시합니다. 기준 이적료/주급/나이/키/국적/성장 한계/종합/체력/컨디션 포함. 기존18명 키 참조 추가, 후보/유소년의 미확인 키는 명시합니다. 새로 열면 전체 능력부터 표시하며 원래 선수 이동/훈련/이적 핸들러 및 현재 수치를 유지합니다. 상대 상태/체력/강점/역할/우리 선수 비교도 첫 화면에 통합합니다.
+- 로컬 전체171 suites/1320checks 성공. 최종 UI 보정 뒤 선수 모델6/선수 UI10/상대 UI4/PWA14/Android자산11 및 브라우저8크기×18명 모든 능력/신상 표시와 실제 선택/다시 열기/부모 복귀 성공. 상대11명×5크기, 기존 FM목록7크기·가로 읽기7크기·전술7크기×12포메이션 회귀도 성공. 새 기록 카드 높이는 실제 API34의364px 화면에서 보정했습니다.
+- 최종 기능50e65ae144a74dc49ce030c9afaed5fa27c5e096 / tree14494209e6168cad8b8135c497c4c3af34ee3158. [Android38373043544](https://github.com/jaeseok614/win-again-football/actions/runs/38373043544):API34 job115214488393, API35 job115214488044 모두10tests/skipped0/failed0, APK/AAB/lint 성공. API34 검증 ZIP11799478840/SHA2561a4bd523b26966e9d665f0bd668f1bc7b072a82a10a8df8984019bb5c2f502fb의 XML도10/0/0/0 확인. 실제 캡처 work/final-native-player-report-api34.png. PR merge534e1547be2278b5cccedf676580ae8f5db16b99.
+- [최종 원격 Source38373043442](https://github.com/jaeseok614/win-again-football/actions/runs/38373043442) job115214487046도 전체171/1320·PWA14·공개 자산 재생성 일치까지 completed/success 확인했습니다. 직전 be7826a Source38371230002/115208444945도 전체171/1320 성공.
+- PWA4,695,734바이트/shell f9770bd5a48e. Android4,695,127바이트/SHA256ca9f1f9d19defd58a84d9cb215e04076e6f9a346c27ab4a7162a55f9b0d09297. API34 APK artifact11800276114 ZIP SHA256dc63ff71e1e02c9ad6f748e43eb4e5d3c5a875178f032adfc929fc8709ce651a 검증, 내부 게임과 로컬 자산 바이트 동일.
+- APK5,580,661바이트/SHA256b8eb846ea07323b0855f1f99ee00a64d7e89c4b78335043c9d64af3e65417984만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261013-player-profile.apk로 교체하고 파일ID/이름/MIME/크기/부모 폴더를 재조회했습니다(09:08 UTC). ZIP/AAB/개인 저장 업로드 없음. 서명71a89b0dadf3b5d29050d5d858a1873652b6755866eb990584efd1cebbf77639→bfdcf6c3f81bbc7e48178ef72787f06715724718a7f4af9930b0843e379173f3 변경: 구단 내보내기→기존 앱 제거→새 APK설치→불러오기. 자동 삭제하지 않습니다. work/win-again-20261013-player-profile.apk / work/player-profile-apk-verification.json.
+- 중간 be7826a의 Android38371229961은 API35 10/10, API34 8/10였습니다. 시즌 기록 높이와 native 클릭 전 DOM 재확인을 보정한 뒤 최종 두 API가 모두 통과했습니다. 최종 게임 엔진/저장 규칙 변경 없음. draft PR25 유지, main 병합 없음. 아래 완료/진행/실패 기록은 이전 개발 단계입니다.
+
 # 최신 개발 — 가로 선수 상세와 소량 정보 통합
 
 [선수 보고서 설계와 출처](docs/PLAYER_REPORT_WORKSPACE_2026-10-13.md). 선수 신상·양발·선호 위치·기술/판단/신체 전체 능력을 첫 화면에 모으고 상대 선수 상태/역할/6능력 비교도 통합했습니다. 저장/물리 변경 없음. 검증 및 새 APK 진행 중, 아래 Drive는 직전 검증판입니다.
