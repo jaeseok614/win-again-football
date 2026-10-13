@@ -684,3 +684,7 @@
  #squad-overview-preview dl{gap:2px;margin:3px 0}
  #squad-overview-preview p{margin:3px 0}
 }
+
+#squad-overview-dialog [data-ability-band=elite]{--ability-color:#cfed98}#squad-overview-dialog [data-ability-band=strong]{--ability-color:#efdb86}#squad-overview-dialog [data-ability-band=steady]{--ability-color:#a2d5e9}#squad-overview-dialog [data-ability-band=developing]{--ability-color:#efa68f}
+#squad-overview-dialog b[data-ability-band],#squad-overview-preview dd{color:var(--ability-color)}
+#squad-overview-preview meter::-webkit-meter-optimum-value{background:var(--ability-color)}#squad-overview-preview meter::-moz-meter-bar{background:var(--ability-color)}
