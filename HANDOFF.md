@@ -2,13 +2,18 @@
 
 - 중계를 경기장 바로 위로 옮기고 세로/가로 두 줄14~15px, 시간44px 폭, 관중 보조 문구 숨김으로 한 화면 가독성을 개선했습니다. [세부 조건](docs/MATCH_VIEWING_PACE_2026-10-13.md).
 - 핵심 전개180×(이전144), 공격3×최대6 유지, 슈팅/선방2.25×최대4.5로 공격보다25%만 감속. 전체 관전 슈팅도 같은 비율. 물리9/공개1~8·저장·결과 보존. 동일 경기 명목140.345→124.327초.
-- 관전6/표시9그룹·8화면 중계가 경기장 위/시계와 본문 간격/14px 이상/모든 활성 이름/44px/넘침 없음 통과. 전체 소스·실제 전체 경기·새 APK 검증은 진행 중입니다. 이전 Drive APK에는 이번 위 중계 변경이 아직 없습니다.
+- 관전6/표시9그룹·8화면 중계가 경기장 위/시계와 본문 간격/14px 이상/모든 활성 이름/44px/넘침 없음 통과. 로컬 전체168 suites/1307 checks와 [원격38331831374](https://github.com/jaeseok614/win-again-football/actions/runs/38331831374) job115083070956 전체·PWA14·Android 자산·공개 생성물 일치 모두 성공했습니다.
+- 기능 커밋7bf3591f11a4702445ec509d9bba5697efddc8d7/트리2b859cee9f76a0697b9be0b39d437dac6f53b164. 실제 Chrome390×844 기본 핵심 관전은98분2:3/슈팅12:8을131.957초에 완료(직전149.481초). 하프타임/골 알림 자동 넘김·휴대폰 실측 아님. 전체 관전 직접 엔진 세계/RNG/로그/체력/지시 정확 일치·실제 리플레이·명시적 정산 통과.
+- [Android38331831214](https://github.com/jaeseok614/win-again-football/actions/runs/38331831214): API34 job115083070607/API35 job115083070402 각각10/10·skipped0/failed0·APK/AAB/lint 성공. PR merge3e1b98da3b36bc0b9844c3474b03395bba3610c6. PWA4,573,489바이트/shell4264a015f502. Android4,572,882바이트/SHA256d4b6be00ce26a785145e69810f9746f01f8da71642d5c600c12a5887c823bbbd.
+- 성공 API34 아티팩트11783117807 ZIP SHA256c38d55d87a871ce6dd3e42340fc58632043db708682c905f83fabb8dfee4318f 확인. APK5,546,897바이트/SHA256e531e01726ad59cf2d07aa9e2b0ab6aa08f6201bef20a0f765dcbecc34977fdb. 내부 assets/game/index.html과 로컬 바이트 동일·패키지/저장 키 유지.
+- APK만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 교체하고 win-again-20261013-top-commentary.apk/MIME application/vnd.android.package-archive/5,546,897바이트 재조회. 다른 파일·공유/폴더 설정은 변경하지 않았습니다.
+- 시험판 서명이4bbaef4880c37bae90554a10611b479e1b2d270768521ecd2d8decc70d16384d→9fc71cf2ea1cfd1c6f4667c37292d284aa6dd4f0eaea24a92fb38a47ad3a74fb로 바뀌어 구단 내보내기→앱 삭제→새 APK 설치→구단 가져오기 필요. 최종 후속은 검증 문서만 [skip ci]로 저장합니다. PR25 draft 유지/main 병합 없음.
 
 # 최신 개발 — 2026-10-13 선수 표시 속도와 경기 시계
 
 - [핵심 관전 개선](docs/MATCH_VIEWING_PACE_2026-10-13.md): 위치 요약/일반 전개144×, 공격3×/슈팅1.5×. 고배속 달리기를 제거하고 기본 공격·슈팅25% 감속. 같은 경기 명목193초→140초. 물리 규칙9와 기존 저장/점수/체력/판정은 그대로.
 - 표시9/관전6그룹, PWA14/Android 오프라인11,8뷰포트/전체 활성 이름/44px/전체 관전 직접 엔진 일치·정산·리플레이 통과. 실제 Chrome390×844 기본 핵심 관전은 추가시간 포함98분2:3/슈팅12:8을149.481초에 완료했습니다. 하프타임/골 알림 자동 넘김, 휴대폰 실측 아님. 명목 비교는193→140초이며 실제 이전 버전 벽시계 비교는 아닙니다.
-- 기능3589c710de76758fe5980507713b891aabe569fe/트리dbc1f33c9715dbc4faa4c915f8d8e9e82b3c7696. 로컬 전체와 [원격38329865898](https://github.com/jaeseok614/win-again-football/actions/runs/38329865898)은167 suites/1304 checks 통과·1 suite 실패. 실패는 test-match-sequence.cjs의 옛 ‘핵심 관전’ 기대값 한 곳이며 실제 새 ‘위치 요약’으로 바꾼 해당3그룹 재검사는 통과했습니다. 게임 소스·APK는 바뀌지 않았습니다. 최종 검사/문서 커밋은 원격 전체 검사를 다시 시작하며 아직 그 결과를 확인하지 않았습니다.
+- 기능3589c710de76758fe5980507713b891aabe569fe/트리dbc1f33c9715dbc4faa4c915f8d8e9e82b3c7696. 로컬 전체와 [원격38329865898](https://github.com/jaeseok614/win-again-football/actions/runs/38329865898)은167 suites/1304 checks 통과·1 suite 실패. 실패는 test-match-sequence.cjs의 옛 ‘핵심 관전’ 기대값 한 곳이며 실제 새 ‘위치 요약’으로 바꾼 해당3그룹 재검사는 통과했습니다. 게임 소스·APK는 바뀌지 않았습니다. 후속8e95114의 원격38330968174/job115080358834도 성공한 것을 확인했습니다.
 - [Android38329865864](https://github.com/jaeseok614/win-again-football/actions/runs/38329865864) API34 job115077009728/API35 job115077009882 각각10/10, skipped0/failed0·APK/AAB/lint 성공. PR merge c506c2403d08006b578786a4a6378f9a98f957fa. Android 오프라인 SHA256d4f45257276d289f4cb4748cc2fa95fec7f2ac25de0c936b655c3ee7689069e8/4,572,788바이트. PWA4,573,395바이트/shell65648cd23e66.
 - 성공 API34 아티팩트11781583780 ZIP SHA25632cf0b793b0c5022f34497b96aa0c85b31dfc7aeeaec936406ded6ef1bb0210b 확인. APK5,546,905바이트/SHA256d4eb2dd1a6d5b508739cae6d15eed286020b080f02d318390e0fa577414cf71e. APK 안 assets/game/index.html은 최종 로컬과 바이트 일치·패키지/저장 키 유지.
 - APK만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 교체하고 win-again-20261013-calm-pace.apk/MIME/5,546,905바이트 재조회했습니다. 다른 파일·공유/폴더 설정은 변경하지 않았습니다.
