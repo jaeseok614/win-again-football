@@ -1,3 +1,17 @@
+# 최종 보정 진행 — Android 글꼴의 안내 명단/영입 비교
+
+실제 API34 캡처에서 안내 하단 영역 때문에 명단 끝과 비교 수치가 내부 스크롤로 내려가는 것을 발견하여 안내18명/선수6능력/영입4비교의 행 높이를 보정했습니다. 브라우저7크기에서 실제 영역을 다시 검증했고 Android 검사에도 내부 명단 및 비교 마지막 행 영역 확인을 추가했습니다. 아래 c53 APK는 검증된 직전 버전이며, 이번 보정 APK로 다시 교체할 예정입니다.
+
+# 최신 완료 — 가로 관전·서사와 FM 방식 선수단/영입
+
+- [가로 읽기/관전](docs/LANDSCAPE_SCREENS_2026-10-13.md), [FM 공식 참고와 선수단/영입](docs/FM_WORKSPACE_2026-10-13.md):844×390 경기장140→243px, 그림/긴 대사/고정 하단 버튼, 수첩2장,18명 명단+선택 선수 미리보기, 후보8명+현재 방출 선수 비교, 능력 숫자와 막대4단계 색상. 좁은568~640px 명단/긴 관리 상세는 내부 스크롤 유지.
+- 로컬 전체170 suites/1314checks 통과. 이후 최종 색상/본문 관련 재검증도 성공: 선수단3/초상·용량10/PWA14/Android 자산11, 브라우저7크기 실제 명단·선택·상세·영입 모드·필터·저장 불변성과 숫자-색상 일치. 가로 읽기7크기 및 전술7크기×12포메이션의 카드 내부/겹침/상세/접근성 성공.
+- 최종 기능c53ba0b0f4751901825c4d860f60ef441b86fdfc / tree3f65a58f4375b2d5d2f5dfbfb90520d63d86473b. [Android38364667472](https://github.com/jaeseok614/win-again-football/actions/runs/38364667472):API34 job115187105364, API35 job115187105799 각각10tests, skipped0/failed0, APK/AAB/lint 성공. PR merge b178e098978d0a948224cc3bd8bef3c6dbc2a57c. 자동 조작은 새 본문·하단 닫기를 대상으로 하며 선택 미리보기→상세→뒤로가기까지 확인. [원격 Source38364667501](https://github.com/jaeseok614/win-again-football/actions/runs/38364667501) job115186813790는 아직 진행 중이며 로컬 전체 통과와 구분합니다.
+- PWA4,675,693바이트/shell f83d77f6cf84. Android4,675,086바이트/SHA256093f586b297e6f1a138e3bbdb58fe12bbcb2675fea888a25e4197e7c397bbf52. API34 artifact11796705376 ZIP SHA25695b1cc55350740976e22ade2c194122eb8ed2faee9a867397ab5f4eaf98714b1을 검증했고 내부 게임 자산은 로컬과 바이트 동일.
+- APK5,575,889바이트/SHA2567830f3b9793f6364038b579423ccb8d7d773a0d4eb5fc5a16db47db58193a304만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261013-fm-workspace.apk로 교체하고 이름/MIME/크기/부모 폴더를 재조회했습니다. 기존 공유/폴더/파일ID 유지, ZIP/AAB/개인 저장 업로드 없음.
+- 서명8132bb81a0da677ab6cd61e482c6433b606ac781d8d5c16a6b8e887915e3828b→71a89b0dadf3b5d29050d5d858a1873652b6755866eb990584efd1cebbf77639 변경. 구단 내보내기 백업→기존 앱 제거→새APK설치→불러오기 필요. 앱을 자동 삭제하지 않습니다. APK 로컬 work/win-again-20261013-fm-workspace.apk, 검증 work/fm-workspace-apk-verification.json.
+- draft PR25 유지, main 병합 없음. 아래 진행 중/실패 기록은 개발 중간 상태입니다.
+
 # 최신 개발 — FM 방식의 전체 선수단과 영입 비교
 
 - [설계/공식 참고](docs/FM_WORKSPACE_2026-10-13.md):18명 명단과 인물 미리보기, 후보8명과 실제 방출 선수 비교, 색상 수치, 고정 상세/영입 버튼, 목록·카드 전환. 저장/물리/RNG 변경 없음.

@@ -472,7 +472,7 @@ public final class GameSmokeTest {
             evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());season=S.create(4088);state=season.match;appSessionStarted=true;view='club';render();openManagerGuide(2);return true;})()");
             tapWebElement(scenario, "#manager-guide-open");
             awaitTrue(scenario, "document.getElementById('squad-overview-dialog').open&&document.querySelectorAll('[data-squad-detail]').length===18");
-            assertEquals("true", evaluate(scenario, "(()=>{const d=document.getElementById('squad-overview-dialog').getBoundingClientRect(),list=document.querySelector('.squad-overview-list');return d.top>=0&&d.bottom<=innerHeight&&d.width<=innerWidth&&list.clientHeight>80;})()"));
+            assertEquals("true", evaluate(scenario, "(()=>{const d=document.getElementById('squad-overview-dialog').getBoundingClientRect(),list=document.querySelector('.squad-overview-list');return d.top>=0&&d.bottom<=innerHeight&&d.width<=innerWidth&&list.clientHeight>80&&list.scrollHeight<=list.clientHeight+1;})()"));
             screenshot(scenario, "android-whole-squad.png");
             tapWebElement(scenario, "[data-squad-detail='sp_f1']");
             awaitTrue(scenario, "squadOverviewSelectedIdentity==='sp_f1'&&document.getElementById('squad-overview-preview').textContent.includes('손헝민')&&!document.getElementById('player-detail-dialog').open");
@@ -504,6 +504,8 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "document.querySelectorAll('.market-card').length===0");
             evaluate(scenario, "(()=>{const q=document.getElementById('transfer-query');q.value='';q.dispatchEvent(new Event('input'));return true;})()");
             awaitTrue(scenario, "document.querySelectorAll('.market-card').length===8");
+            assertEquals("All four recruitment comparisons stay above the fixed review button", "true", evaluate(scenario,
+                "(()=>{const body=document.querySelector('.market-card:not([hidden]) .market-card-content'),last=body.querySelector('.market-quick-comparison>div:last-child');return last.getBoundingClientRect().bottom<=body.getBoundingClientRect().bottom+1;})()"));
             screenshot(scenario, "android-keyword-free-market.png");
             scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
         }

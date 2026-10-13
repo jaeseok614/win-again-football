@@ -688,3 +688,28 @@
 #squad-overview-dialog [data-ability-band=elite]{--ability-color:#cfed98}#squad-overview-dialog [data-ability-band=strong]{--ability-color:#efdb86}#squad-overview-dialog [data-ability-band=steady]{--ability-color:#a2d5e9}#squad-overview-dialog [data-ability-band=developing]{--ability-color:#efa68f}
 #squad-overview-dialog b[data-ability-band],#squad-overview-preview dd{color:var(--ability-color)}
 #squad-overview-preview meter::-webkit-meter-optimum-value{background:var(--ability-color)}#squad-overview-preview meter::-moz-meter-bar{background:var(--ability-color)}
+
+/* Android font metrics: all core comparison values stay above the fixed action. */
+@media(orientation:landscape){
+ #management-content #market-overview[data-market-mode=list] .candidate-top,#management-content #market-overview[data-market-mode=list] .market-origin{display:none}
+ #management-content #market-overview[data-market-mode=list] .market-quick-comparison>div{line-height:14px}
+ #management-content #market-overview[data-market-mode=list] .market-quick-comparison h3{line-height:12px}
+ #management-content #market-overview[data-market-mode=list] .market-compare-labels{line-height:10px}
+ #management-content .market-list-row{height:22px;min-height:22px!important;grid-template-columns:18px minmax(0,1fr) 26px 26px 23px}
+ #management-content .market-list-row .player-portrait{width:18px;height:18px}
+ .market-list-row strong{font-size:9px;line-height:9px}.market-list-row small{font-size:8px;line-height:8px}
+ #squad-overview-preview dl dt,#squad-overview-preview dl dd{line-height:11px}
+ #squad-overview-preview dl meter{height:3px}
+ #squad-overview-dialog.manager-guided .squad-overview-list{grid-template-rows:repeat(9,minmax(18px,1fr))}
+ #squad-overview-dialog.manager-guided .squad-overview-row{min-height:18px!important;padding:0 2px}
+ #squad-overview-dialog.manager-guided .squad-overview-row .player-portrait{height:14px;width:14px}
+ #squad-overview-dialog.manager-guided .squad-overview-name strong{font-size:9px;line-height:9px}
+ #squad-overview-dialog.manager-guided .squad-overview-name small{font-size:7px;line-height:7px}
+ #squad-overview-dialog.manager-guided .squad-overview-row>b{font-size:12px;line-height:14px}
+ #squad-overview-dialog.manager-guided .squad-overview-energy{font-size:9px;line-height:10px}
+ #squad-overview-dialog.manager-guided #squad-overview-preview .player-portrait{width:24px;height:24px;flex-basis:24px}
+ #squad-overview-dialog.manager-guided #squad-overview-preview .squad-preview-body>small{display:none}
+ #squad-overview-dialog.manager-guided #squad-overview-preview p{font-size:9px;line-height:12px;margin:2px 0}
+}
+
+@media(orientation:landscape){#squad-overview-dialog.manager-guided[open]{padding-block:6px}#squad-overview-dialog.manager-guided .squad-overview-list{row-gap:1px}}
