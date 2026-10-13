@@ -485,6 +485,13 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "document.getElementById('squad-overview-dialog').open&&!!document.querySelector('[data-guide-forward]')");
             tapWebElement(scenario, "[data-guide-forward]");
             awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===3");
+            tapWebElement(scenario, "#manager-guide-open");
+            awaitTrue(scenario, "document.getElementById('match-popup').open&&matchPopupActive==='tactics'");
+            assertEquals("Guided tactics reserve space for the pitch and navigation", "true", evaluate(scenario,
+                "(()=>{const pitch=document.querySelector('.tactical-pitch').getBoundingClientRect(),buttons=[...document.querySelectorAll('#match-popup .manager-guide-rail button')];return pitch.height>100&&buttons.length===3&&buttons.every(b=>{const r=b.getBoundingClientRect();return r.height>=44&&r.top>=pitch.bottom&&r.bottom<=innerHeight;});})()"));
+            tapWebElement(scenario, "#match-popup [data-guide-forward]");
+            awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===4");
+
             evaluate(scenario, "(()=>{managerGuideActive=false;managerGuideWaiting=null;document.getElementById('manager-guide').close();setView('market');return true;})()");
             tapWebElement(scenario, "[data-management-open='transfer-search-panel']");
             assertEquals("true", evaluate(scenario, "document.getElementById('management-dialog').open&&document.getElementById('management-content').contains(document.getElementById('market-overview'))"));
@@ -633,7 +640,8 @@ public final class GameSmokeTest {
             awaitLoadingLayout(scenario);
             scenario.onActivity(activity -> assertTrue("Initial landscape title or gauge was clipped", activity.loadingBrandFitsForTest()));
             screenshot(scenario, "android-loading-landscape-default.png");
-            scenario.onActivity(activity -> activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE));
+            // A 180-degree rotation can retain the Activity, so dismiss the test-only loader first.
+            scenario.onActivity(activity -> { activity.hideLoadingPreviewForTest(); activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE); });
             awaitOrientation(scenario, Configuration.ORIENTATION_LANDSCAPE); awaitReady(scenario);
             scenario.onActivity(activity -> activity.showLoadingPreviewForTest());
             awaitLoadingLayout(scenario);
