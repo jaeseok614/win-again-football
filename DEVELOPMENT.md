@@ -1,3 +1,5 @@
+2026-10-13 설치판: 풋몹식 실제12기록+점유율/가로 화면 겹침 수정, 로컬·원격171 suites/1325checks 및 Android14/15 각각10검사 성공. 기존 Drive에 match-statistics.apk만 교체했습니다. [설계](docs/PHONE_WORKSPACES_2026-10-13.md), HANDOFF의 정확한 검사/서명/원격Source 상태 참조.
+
 2026-10-13 진행: 풋몹 방식 실제 경기 통계, 경기장 비율, 선수단/영입 직접 진입과 교체 선택 누수/명단 겹침 수정. [설계](docs/PHONE_WORKSPACES_2026-10-13.md), HANDOFF 검증/배포 상태 참조.
 
 2026-10-13 최종 선수 보고서: 신상/주발/선호 위치/전체 능력과 상대 비교를 첫 화면에 통합. 로컬·원격171 suites/1320checks, Android14/15 각각10검사 통과. 기존 Drive에 player-profile.apk만 교체했습니다. [설계/출처](docs/PLAYER_REPORT_WORKSPACE_2026-10-13.md), HANDOFF 최종 파일/서명 참조.

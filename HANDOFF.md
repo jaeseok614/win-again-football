@@ -1,3 +1,13 @@
+# 최신 완료 — 풋몹식 경기 통계와 가로 관리 화면
+
+- [설계/참조](docs/PHONE_WORKSPACES_2026-10-13.md): 표시 경기장 약1.6비율, 골 본문/버튼 겹침 제거, 점유율+실제12기록 비교, 양 팀22명 이름/능력 셀 정렬, 선수단18명/영입8명 직접 진입과 기본 교체 선택 초기화. 물리/저장/경제 규칙 변경 없음.
+- 기능6bc01f28b8a546aeca8bf1b97943bdeff0e4d83a / tree4e5f5253d3ebaf60212ab6b68ac2d80dc68fb889, PR25 merge bcd42287fd05d224f3dd4a4f2c18ac27b59d11c8. 로컬 전체169 suites/1309checks 성공 후 테스트 환경 의존성2곳을 보완, 해당2 suites/16checks 재통과로 전체171 suites/1325checks를 확인했습니다. 새 하단 메뉴/금액/불변성/실제12기록8크기, FM목록7크기, 선수보고서8크기, 가로읽기7크기, 전술7크기×12포메이션 통과. PWA14/Android자산11 성공.
+- [Android38382341234](https://github.com/jaeseok614/win-again-football/actions/runs/38382341234):API34 job115245590741, API35 job115245590313 각각10tests/skipped0/failed0, APK/AAB/lint 성공. API35검증artifact11803509162(SHA256dd06e03fbbe5168c08eb91d47f6c6ecd01d1c3a95f42f70e563e737845777ef8), API34검증artifact11804008281(SHA2565ac0d6a34ce202156ea4005b536865aa98d77ffa7d0fe426d34f2384d3232e2d)의 XML10/0/0/0와 실제 명단/교체/영입/통계 캡처 확인. work/phone-api34-*, work/phone-api35-*.
+- [원격 Source38382341184](https://github.com/jaeseok614/win-again-football/actions/runs/38382341184) job115245590168도 전체171 suites/1325checks, PWA14 및 공개 자산 재생성 일치까지 completed/success 확인했습니다.
+- PWA4,726,614바이트/shell94d3792307a7, Android4,726,007바이트/SHA256064570ba3be4f83be4eabfae964e78d7ebbcb38e8dd314e01fcdc2837967e730. API34 APK artifact11803384877 ZIP SHA2568db47e6edabeeebd30df3c3520e1f45242c03991dacb07a1d34ac3e1ff95487a 검증, APK 내부 게임이 로컬과 바이트 동일.
+- APK5,587,549바이트/SHA2560cfdc7de264b0314d8c793bf5af2ee5bb08797001233a4a75abfe6b4d8670b3d만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261013-match-statistics.apk로 교체(10:28UTC), 파일ID/이름/MIME/크기/부모폴더 재조회 성공. 로컬 work/win-again-20261013-match-statistics.apk 및 work/phone-stats-apk-verification.json.
+- 서명bfdcf6c3f81bbc7e48178ef72787f06715724718a7f4af9930b0843e379173f3→3dd497fc20d352f3e70304cafb87e140dd37176d80d9b9fc7ace32f21f96ed87 변경: 구단 내보내기→기존 앱 제거→새APK설치→불러오기. 자동 삭제 없음. draft PR25 유지, main 병합 없음.
+
 # 최신 개발 — 실제 경기 통계와 가로 관리 화면
 
 [설계와 참조](docs/PHONE_WORKSPACES_2026-10-13.md). 점유율+실제12기록, 표시 경기장 비율, 양 팀 선발 이름 정렬, 선수단/영입 직접 진입, 기본 교체 선택 초기화를 수정했습니다. 전체 소스/브라우저/Android 검증과 새 APK는 진행 중입니다. 아래 player-profile.apk는 이전 검증판입니다.
