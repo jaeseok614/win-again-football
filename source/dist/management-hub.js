@@ -20,13 +20,14 @@ function showManagementSection(id){
  $('management-title').textContent=entry[1];$('management-section').value=id;$('management-content').scrollTop=0;$('management-title').focus({preventScroll:true});return true;
 }
 function openManagementPanel(id,opener=document.activeElement){
+ if(id==='squad-overview'){if(managementDialog.open)managementDialog.close();setView('squad');openSquadOverview(opener);return;}
  const group=Object.keys(managementGroups).find(key=>managementGroups[key].some(row=>row[0]===id));if(!group)return;
  if(managementDialog.open)managementDialog.close();if(view!==group)setView(group);pauseForPlanning();managementActive=group;managementReturn=opener;
  $('management-section').innerHTML=managementGroups[group].filter(row=>$(row[0])).map(([key,label])=>'<option value="'+key+'">'+label+'</option>').join('');
  if(showManagementSection(id)){managementDialog.showModal();$('management-title').focus({preventScroll:true});}
 }
 managementDialog.addEventListener('close',()=>{if(managementDialog.open)return;restoreManagementPanel();managementActive=null;const target=managementReturn;managementReturn=null;if(target?.isConnected&&!target.closest('[hidden]'))target.focus({preventScroll:true});});
-$('management-close').onclick=()=>managementDialog.close();$('management-section').onchange=e=>showManagementSection(e.target.value);
+$('management-close').onclick=()=>managementDialog.close();$('management-section').onchange=e=>e.target.value==='squad-overview'?openManagementPanel('squad-overview',e.target):showManagementSection(e.target.value);
 for(const [group,entries] of Object.entries(managementGroups)){
  if(group==='club')entries.push(['coach-guide','연습 · 도움말']);
  for(const [id] of entries){const node=$(id);if(node)node.dataset.managedPanel='true';}
@@ -52,3 +53,5 @@ const managementShellRender=renderAppShell;renderAppShell=function(){managementS
  const next=storyInboxPriority(ClubStory.read(season).pending).find(e=>e.round===season.round&&e.key!=='arrival');if(!next)return;
  managementMeetingQueued=true;requestAnimationFrame(()=>{managementMeetingQueued=false;if(view!=='club'||!appSessionStarted||document.querySelector('dialog[open]'))return;managementMeetingKey=key;openClubStory(next.id,$('mobile-match-action'));});
 };
+
+for(const button of document.querySelectorAll('.view-nav [data-view]')){if(button.dataset.view==='squad')button.onclick=()=>{setView('squad');openSquadOverview(button);};if(button.dataset.view==='market')button.onclick=()=>{setView('market');openManagementPanel('transfer-search-panel',button);};}

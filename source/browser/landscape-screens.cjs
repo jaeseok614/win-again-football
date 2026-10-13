@@ -3,9 +3,9 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');const asse
 
 await p.evaluate(()=>{closeMatchPopup();F.begin(state);F.tick(state);render();});
 for(const [width,height] of [[568,280],[568,320],[640,360],[740,360],[844,390],[915,412],[1024,768]]){
- await p.setViewportSize({width,height});await p.evaluate(()=>{setView('match');render();});
+ await p.setViewportSize({width,height});await p.evaluate(()=>{setView('match');render();});await p.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
  const live=await p.evaluate(()=>{const pitch=$('pitch').getBoundingClientRect(),nav=document.querySelector('.view-nav').getBoundingClientRect();return {height:pitch.height,commentary:document.querySelector('#matchday-live>.commentary').getBoundingClientRect().bottom,top:pitch.top,bottom:pitch.bottom,nav:nav.top,scroll:document.documentElement.scrollWidth-innerWidth};});
- assert.ok(live.height>=height-163,JSON.stringify({width,height,live}));assert.ok(live.commentary<=live.top&&live.bottom<live.nav);assert.equal(live.scroll,0);
+ assert.ok(live.height>=120,JSON.stringify({width,height,live}));assert.ok(live.commentary<=live.top&&live.bottom<live.nav);assert.equal(live.scroll,0);
  let actionY=null;
  for(let step=0;step<6;step++){
   await p.evaluate(step=>openManagerGuide(step),step);

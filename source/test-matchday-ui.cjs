@@ -25,7 +25,7 @@ function harness(season,{width=1280,selected=null,view='match'}={}){
   Object.defineProperty(node,'innerHTML',{get(){return node.html;},set(html){
    for(const child of node.children){child.isConnected=false;if(child.id&&nodes.get(child.id)===child)nodes.delete(child.id);if(document.activeElement===child)document.activeElement=null;}
    node.html=html;node.children=[];node.details=null;node.summary=null;node.setCount++;
-   for(const [,tag,attrs] of html.matchAll(/<(button|h3|span)\b([^>]*)>/g)){const id=/\bid="([^"]*)"/.exec(attrs)?.[1]||'',child=element(id,attrs);if(tag==='button'||id){node.children.push(child);if(id)nodes.set(id,child);}}
+   for(const [,tag,attrs] of html.matchAll(/<(button|h3|span|b)\b([^>]*)>/g)){const id=/\bid="([^"]*)"/.exec(attrs)?.[1]||'',child=element(id,attrs);if(tag==='button'||id){node.children.push(child);if(id)nodes.set(id,child);}}
    const details=/<details\b([^>]*)>/.exec(html);if(details){node.details=element();node.details.open=/\bopen\b/.test(details[1]);node.summary=element();node.details.querySelector=selector=>selector==='summary'?node.summary:null;}
   }});
   if(id)nodes.set(id,node);return node;
@@ -74,11 +74,11 @@ test('quick starter selection pauses without substitution and keeps identity, co
  const saved=JSON.stringify(s),selected=h.context.selected;for(const invalid of ['not-a-slot','__proto__','f3',null]){h.context.selectMatchdayPlayer(invalid);assert.equal(h.context.selected,selected);unchanged(h,saved);}const bench=h.element('', 'data-bench="f3"');h.dispatch('match-pane','click',bench);unchanged(h,saved);
 });
 
-test('keyboard activation of a desktop quick starter moves focus from the removed button to the new player heading',()=>{
+test('keyboard activation of a desktop quick starter keeps focus on its selected starter while preserving the full roster',()=>{
  for(const width of [730,1280]){
   const s=at(23),h=harness(s,{width}),before=copy(s);h.render();const quick=h.get('matchday-selection').querySelector('[data-matchday-player]'),id=quick.dataset.matchdayPlayer;
   quick.focus();assert.equal(h.document.activeElement,quick);h.dispatch('match-pane','click',quick);
-  assert.equal(quick.isConnected,false);assert.equal(h.context.selected,id);assert.equal(h.document.activeElement,h.get('matchday-selected-name'));assert.equal(h.document.activeElement.isConnected,true);assert.deepEqual(copy(h.document.activeElement.focusOptions),{preventScroll:true});assert.equal(h.get('matchday-selection').scrollOptions,undefined);
+  assert.equal(quick.isConnected,false);assert.equal(h.context.selected,id);assert.equal(h.document.activeElement.dataset.matchdayPlayer,id);assert.equal(h.document.activeElement.isConnected,true);assert.deepEqual(copy(h.document.activeElement.focusOptions),{preventScroll:true});assert.equal(h.get('matchday-selection').scrollOptions,undefined);
   assert.equal(h.calls.save,1);assertTab(h,'live');onlyPaused(h,before);
  }
 });
@@ -113,7 +113,7 @@ test('resume and full time automatically restore live panels and disable stale f
 test('removed and injured reserve identities never become actionable selections or mutate the match from candidate display',()=>{
  const s=at(12),h=harness(s,{selected:'f1'});F.swap(s.match,'f1','f3');s.match.players.f4.injuryRemaining=1;h.render();const before=JSON.stringify(s);assert.equal(Matchday.read(s,'f1').selected,null);assert.doesNotMatch(h.get('matchday-selection').innerHTML,/id="matchday-selected-name"/);
  for(const id of ['f1','f4','missing']){h.context.selectMatchdayPlayer(id);unchanged(h,before);}h.context.selected='f3';h.render();assert.deepEqual(Matchday.read(s,'f3').candidates,[]);assert.match(h.get('matchday-selection').innerHTML,/출전 가능한 후보가 없습니다/);unchanged(h,before);
- const clear=h.get('matchday-selection').querySelector('[data-matchday="clear"]');h.dispatch('match-pane','click',clear);assert.equal(h.context.selected,null);assert.match(h.get('matchday-selection').innerHTML,/현재 선발 중 체력이 낮은 3명/);unchanged(h,before);
+ const clear=h.get('matchday-selection').querySelector('[data-matchday="clear"]');h.dispatch('match-pane','click',clear);assert.equal(h.context.selected,null);assert.match(h.get('matchday-selection').innerHTML,/선발을 선택한 뒤 후보를 누르면/);unchanged(h,before);
 });
 
 test('kickoff and exhausted substitution limits show accurate explanations without calling engine mutation APIs',()=>{
@@ -144,8 +144,8 @@ test('a real analyst alert opens decision tools but never applies a suggested ta
  onlyPaused(h,before);assertTab(h,'analysis');assert.equal(s.match.tactic,before.match.tactic);assert.equal(h.calls.setTactic,0);assert.equal(h.calls.save,1);
 });
 test('suggested substitution opens the existing review flow and never swaps players on first tap',()=>{
- const s=at(23);for(const id of s.match.lineup)s.match.players[id].energy=80;s.match.players.f1.energy=25;s.match.players.f3.energy=95;const q=Matchday.read(s).substitution.suggestion,h=harness(s,{width:390}),before=copy(s);h.render();const suggestion=h.get('matchday-selection').querySelector('[data-matchday-player="'+q.out.id+'"]');assert.ok(suggestion);assert.match(h.get('matchday-selection').innerHTML,/코치 추천 교체/);assert.match(h.get('matchday-selection').innerHTML,new RegExp(escapeText(q.incoming.name)));h.dispatch('match-pane','click',suggestion);
- onlyPaused(h,before);assert.equal(h.context.selected,q.out.id);assert.equal(s.match.subs,0);assert.ok(s.match.lineup.includes(q.out.id));assert.ok(!s.match.lineup.includes(q.incoming.id));assert.match(h.get('matchday-selection').innerHTML,/교체 후보를 고르세요/);
+ const s=at(23);for(const id of s.match.lineup)s.match.players[id].energy=80;s.match.players.f1.energy=25;s.match.players.f3.energy=95;const q=Matchday.read(s).substitution.suggestion,h=harness(s,{width:390}),before=copy(s);h.render();const suggestion=h.get('matchday-selection').querySelector('[data-matchday-player="'+q.out.id+'"]');assert.ok(suggestion);assert.match(h.get('matchday-selection').innerHTML,/코치 추천:/);assert.match(h.get('matchday-selection').innerHTML,new RegExp(escapeText(q.incoming.name)));h.dispatch('match-pane','click',suggestion);
+ onlyPaused(h,before);assert.equal(h.context.selected,q.out.id);assert.equal(s.match.subs,0);assert.ok(s.match.lineup.includes(q.out.id));assert.ok(!s.match.lineup.includes(q.incoming.id));assert.match(h.get('matchday-selection').innerHTML,/선택한 선발/);
 });
 test('yellow cards and dismissals identify players in substitution choices and the opponent report',()=>{
  const s=at(23),opponents=Opposition.read(s).lineup;s.match.discipline={version:1,events:[
@@ -163,12 +163,12 @@ test('yellow cards and dismissals identify players in substitution choices and t
  h.context.renderOpponentReport();const report=host.innerHTML;
  assert.match(report,/🟨 경고 1/);assert.match(report,/🟥 퇴장/);assert.match(report,/opposition-dismissed/);
 });
-test('the preparation HUD reads actual lineups and availability then switches to live statistics, without model writes',()=>{
- const s=S.create(822),h=harness(s),host=h.element('match-live-stats');s.match.players.f1.energy=49;const before=JSON.stringify(s),data=Matchday.read(s);h.context.renderLiveMatchStats(data);const ours=SquadOverview.read(s),xi=Opposition.read(s).lineup,opponent=Math.round(xi.reduce((n,p)=>n+p.overall,0)/xi.length);assert.match(host.innerHTML,new RegExp('<strong>'+ours.startingOverall+'</strong>'));assert.match(host.innerHTML,new RegExp('<strong>'+opponent+'</strong>'));assert.match(host.innerHTML,/가용 선수/);assert.match(host.innerHTML,/18 \/ 18/);assert.doesNotMatch(host.innerHTML,/점유율|슈팅|남은 교체/);const count=host.setCount;h.context.renderLiveMatchStats(data);assert.equal(host.setCount,count);unchanged(h,before);F.begin(s.match);h.context.renderLiveMatchStats(Matchday.read(s));assert.match(host.innerHTML,/점유율 · 추정/);assert.match(host.innerHTML,/슈팅/);assert.match(host.innerHTML,/남은 교체/);assert.doesNotMatch(host.innerHTML,/상대 종합/);h.context.view='club';const liveCount=host.setCount;h.context.renderLiveMatchStats(Matchday.read(s));assert.equal(host.setCount,liveCount);noModelActions(h);
+test('the comparison HUD waits before kickoff, exposes twelve actual fact rows and skips hidden rendering without model writes',()=>{
+ const s=S.create(822),h=harness(s),host=h.element('match-live-stats');s.match.players.f1.energy=49;const before=JSON.stringify(s),data=Matchday.read(s);h.context.renderLiveMatchStats(data);assert.match(host.innerHTML,/킥오프 전 · 기록 대기/);assert.match(host.innerHTML,/data-empty="true"/);assert.equal((host.innerHTML.match(/data-stat=/g)||[]).length,12);assert.match(host.innerHTML,/선발 체력/);assert.doesNotMatch(host.innerHTML,/stat-own-lead|stat-opponent-lead/);const count=host.setCount;h.context.renderLiveMatchStats(data);assert.equal(host.setCount,count);unchanged(h,before);F.begin(s.match);h.context.renderLiveMatchStats(Matchday.read(s));assert.match(host.innerHTML,/점유율 · 추정/);assert.match(host.innerHTML,/전체 슈팅/);assert.match(host.innerHTML,/남은 교체/);assert.match(host.innerHTML,/data-stat="onTarget"><b class="">—/);h.context.view='club';const liveCount=host.setCount;h.context.renderLiveMatchStats(Matchday.read(s));assert.equal(host.setCount,liveCount);noModelActions(h);
 });
 test('starter comparison uses the current football player, keeps condition separate from stamina, and skips hidden roster work',()=>{
  const s=at(45),h=harness(s,{selected:'f1',width:390});s.match.players.f1.attack+=2;s.match.players.f1.energy=31;const before=JSON.stringify(s),metrics=h.context.matchdayPlayerMetrics(Matchday.read(s,'f1').selected);assert.equal(metrics.overall,SquadOverview.overall(s.match.players.f1));assert.deepEqual(copy(metrics.condition),PlayerTraits.condition(s,s.match.players.f1));
- h.context.matchPopupActive='roster';h.render();let html=h.get('matchday-selection').innerHTML;assert.match(html,new RegExp('종합·계산 <b>'+metrics.overall));assert.match(html,/체력 <b class="loss">31/);assert.match(html,new RegExp('컨디션 '+metrics.condition.label+' '+metrics.condition.score+' · 계산'));
+ h.context.matchPopupActive='roster';h.render();let html=h.get('matchday-selection').innerHTML;assert.match(html,new RegExp('종합 '+metrics.overall+' · 체력 31'));assert.match(html,new RegExp('체력 31 · '+metrics.condition.label));
  const writes=h.get('matchday-selection').setCount;h.context.matchPopupActive=null;h.context.matchdayPlayerMetrics=()=>{throw Error('Hidden comparison must not run');};h.render();assert.equal(h.get('matchday-selection').setCount,writes);unchanged(h,before);
 });
 

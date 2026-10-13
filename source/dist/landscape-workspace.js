@@ -27,3 +27,19 @@ function syncLandscapeOrientation(){
 }
 window.addEventListener('resize',syncLandscapeOrientation);
 syncLandscapeOrientation();
+
+// Bound the display field to a football-like ratio. Does not touch world coordinates.
+var matchWorkspaceFrame=0;
+function fitMatchWorkspace(){
+ if(matchWorkspaceFrame)return;
+ matchWorkspaceFrame=requestAnimationFrame(()=>{
+  matchWorkspaceFrame=0;if(view!=='match'||innerWidth<innerHeight)return;
+  const pane=$('match-pane');if(!pane)return;
+  const style=getComputedStyle(pane),rows=style.gridTemplateRows.split(' ').map(Number.parseFloat),availableHeight=rows[1]+rows[2]+Number.parseFloat(style.rowGap);
+  if(!Number.isFinite(availableHeight))return;
+  const width=Math.max(180,Math.min(availableHeight*1.6,pane.clientWidth-Math.max(280,Math.min(400,pane.clientWidth*.34))-4));
+  pane.style.setProperty('--match-field-width',Math.round(width)+'px');
+  pane.style.setProperty('--match-field-height',Math.floor(width/1.6)+'px');
+ });
+}
+new ResizeObserver(fitMatchWorkspace).observe($('match-pane'));window.addEventListener('resize',fitMatchWorkspace);

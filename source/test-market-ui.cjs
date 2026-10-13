@@ -4,12 +4,14 @@ const F=require('./dist/engine.js'),S=require('./dist/season.js'),E=require('./d
 let groups=0;const copy=value=>JSON.parse(JSON.stringify(value));
 function test(name,fn){fn();groups++;console.log('PASS '+name);}
 function finish(match){while(match.phase!=='full'){if(!F.running(match))F.begin(match);F.finishSegment(match);}}
-function harness(season){
+function harness(season,mode='cards'){
  let html='',buttons=[],selects=[],pending=null;const calls={action:0,save:0},errors=[];
  const panel={dataset:{},querySelectorAll(selector){return selector==='[data-outgoing]'?selects:selector==='[data-recruit]'?buttons:[];}};
  Object.defineProperty(panel,'innerHTML',{get(){return html;},set(markup){html=markup;buttons=[...markup.matchAll(/<button\b([^>]*\bdata-recruit="([^"]+)"[^>]*)>/g)].map(([,attributes,identity])=>({disabled:/\bdisabled\b/.test(attributes),dataset:{recruit:identity}}));selects=[...markup.matchAll(/<select\b([^>]*\bdata-outgoing="([^"]+)"[^>]*)>([\s\S]*?)<\/select>/g)].map(([,attributes,identity,options])=>({disabled:/\bdisabled\b/.test(attributes),dataset:{outgoing:identity},value:options.match(/<option value="([^"]+)" selected/)[1]}));}});
- const context=vm.createContext({F,S,E,Staff,season,state:season.match,Portraits,openRecruitmentReview(identity,slot){pending={identity,slot};},$:id=>id==='market-overview'?panel:null,action(fn){calls.action++;try{fn();calls.save++;context.renderMarket();}catch(error){errors.push(error.message);}}});
+ const context=vm.createContext({F,S,E,Staff,PlayerTraits:require('./dist/player-traits.js'),playerUiText:v=>String(v),transferShortlistMarkup:()=>'<button>관심</button>',season,state:season.match,Portraits,openRecruitmentReview(identity,slot){pending={identity,slot};},$:id=>id==='market-overview'?panel:null,action(fn){calls.action++;try{fn();calls.save++;context.renderMarket();}catch(error){errors.push(error.message);}}});
  vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/market-ui.js'),'utf8'),context);
+ // These contract restriction assertions exercise the retained detailed card mode.
+ vm.runInContext('marketDisplayMode='+JSON.stringify(mode),context);
  return {context,calls,errors,panel,confirm(){assert.ok(pending);context.action(()=>{const P=require('./dist/transfer-plans.js'),m=P.preview(context.season,pending.identity,pending.slot);context.season=P.confirm(context.season,m.identity,m.slot,m.fingerprint);context.state=context.season.match;});pending=null;},render(){context.renderMarket();},select(identity,slot){const select=selects.find(value=>value.dataset.outgoing===identity);assert.ok(select);assert.equal(select.disabled,false);select.value=slot;select.onchange();},click(identity){const button=buttons.find(value=>value.dataset.recruit===identity);assert.ok(button);button.onclick();},button(identity){const button=buttons.find(value=>value.dataset.recruit===identity);assert.ok(button);return button;},get html(){return html;}};
 }
 
@@ -36,6 +38,12 @@ test('suspension rules block all post-talk transfers, including the bench, witho
 });
 test('hidden market skips candidate markup and regenerates when opened',()=>{const h=harness(S.create(121));h.context.view='club';h.render();assert.equal(h.html,'');h.context.view='market';h.render();assert.ok(h.html.includes('data-finance-compare'));});
 test('finance rewards render from a five-tier rank preview on the first Tottenham manager screen',()=>{
- const season=S.create(121,{startingClub:true}),nodes=new Map([['finance-summary',{innerHTML:'',onclick:null}],['finance-detail',{innerHTML:''}],['open-market',{onclick:null}]]),context=vm.createContext({F,S,E,Staff,season,view:'market',$:id=>nodes.get(id),ledgerTitle:e=>e.type,ledgerDetail:()=>'',leagueTargetLabel:()=> '승격 목표'});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/market-ui.js'),'utf8'),context);assert.doesNotThrow(()=>context.renderFinance());assert.ok(nodes.get('finance-detail').innerHTML.includes('1위 £80,000 / 2위 £50,000'));assert.equal(season.finance.balance,160000);
+ const season=S.create(121,{startingClub:true}),nodes=new Map([['finance-summary',{innerHTML:'',onclick:null}],['finance-detail',{innerHTML:''}],['open-market',{onclick:null}]]),context=vm.createContext({F,S,E,Staff,season,view:'market',$:id=>nodes.get(id),ledgerTitle:e=>e.type,ledgerDetail:()=>'',leagueTargetLabel:()=> '승격 목표'});vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/market-ui.js'),'utf8'),context);
+ // These contract restriction assertions exercise the retained detailed card mode.
+ vm.runInContext("marketDisplayMode='cards'",context);assert.doesNotThrow(()=>context.renderFinance());assert.ok(nodes.get('finance-detail').innerHTML.includes('1위 £80,000 / 2위 £50,000'));assert.equal(season.finance.balance,160000);
 });
+
+test('default compact comparison preserves actual quotes, cancellation and confirmed financial identities',()=>{const s=S.create(121),h=harness(s,'list'),before=JSON.stringify(s);h.render();h.select('t_f2','f3');const q=E.quote(s,'t_f2','f3');assert.match(h.html,/market-compact/);assert.match(h.html,/수수료 포함 지출/);assert.match(h.html,/선호 위치/);assert.equal(h.button('t_f2').disabled,false);h.click('t_f2');assert.equal(JSON.stringify(s),before);h.confirm();assert.equal(h.context.season.squad.f3.identity,'t_f2');assert.equal(h.context.season.finance.balance,q.balanceAfter);assert.deepEqual(S.restore(copy(h.context.season)),h.context.season);});
+test('compact recruitment keeps spoken-player and insufficient-budget guards',()=>{const s=S.create(121),h=harness(s,'list');Life.talk(s,'encourage');h.render();h.select('t_f2','f1');assert.equal(h.button('t_f2').disabled,true);const before=JSON.stringify(s);h.click('t_f2');assert.equal(JSON.stringify(s),before);assert.equal(h.calls.action,0);s.finance.balance=0;h.select('t_f2','f3');assert.equal(h.button('t_f2').disabled,true);});
+
 console.log('Validated '+groups+' market UI groups for actual team-talk restrictions, bench transfers, identity-safe restores and the next match.');

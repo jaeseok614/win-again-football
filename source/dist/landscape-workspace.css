@@ -773,3 +773,264 @@
 @media(orientation:landscape){
  #player-detail-dialog .report-page .detail-records{margin:0;padding:6px;border:1px solid #416066;border-radius:7px}.player-report-workspace .detail-records h3{font-size:11px;line-height:15px;margin:0 0 4px}.player-report-workspace .detail-records h3 small{font-size:9px}.player-report-workspace .detail-record-grid{gap:4px;grid-template-columns:repeat(3,minmax(0,1fr))}.player-report-workspace .detail-record-grid>div{padding:3px;line-height:12px}.player-report-workspace .detail-record-grid span,.player-report-workspace .detail-record-grid small{font-size:10px;line-height:12px}.player-report-workspace .detail-record-grid strong{font-size:18px;line-height:21px}.player-report-workspace #player-detail-career{margin-top:6px;font-size:11px;min-height:44px}
 }
+
+/* Real phone entry paths: roster, filters, selected comparison and match ratio. */
+@media(orientation:landscape){
+ #match-popup .match-popup-nav [data-match-popup=roster]{display:none}
+ #match-popup:has(#match-popup-roster:not([hidden])){grid-template-columns:minmax(0,1fr)}
+ #match-popup:has(#match-popup-roster:not([hidden])) .match-popup-nav{display:none!important}
+ #match-popup:has(#match-popup-roster:not([hidden])) .match-popup-header,#match-popup:has(#match-popup-roster:not([hidden])) .match-popup-body{grid-column:1}
+ #match-popup #match-popup-roster:not([hidden]){height:100%;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);grid-template-rows:22px minmax(0,1fr);gap:4px 10px}
+ #match-popup-roster #coach-lineup-entry,#match-popup-roster #pitch-swap-options,#match-popup-roster #selection-hint{display:none!important}
+ #match-popup-roster #matchday-selection{grid-column:1;grid-row:1/-1;display:flex;flex-direction:column;gap:4px;min-height:0;margin:0;padding:0}
+ .roster-choice{display:flex;align-items:center;justify-content:space-between;gap:4px;flex:0 0 44px;background:#223d37;padding:0 6px;border-radius:6px}
+ .roster-choice>span{min-width:0}.roster-choice b{display:block;font-size:12px;line-height:15px}.roster-choice small{display:block;font-size:9px;line-height:12px}.roster-choice button{min-height:44px;font-size:10px;padding:3px}
+ #match-popup-roster .matchday-tired-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));gap:3px;min-height:0;flex:1;margin:0}
+ #match-popup-roster .matchday-tired-list button{height:100%;min-height:0!important;min-width:0;padding:2px 4px;display:flex;gap:5px;align-items:center;text-align:left;box-sizing:border-box}
+ #match-popup-roster .matchday-tired-list button[aria-pressed=true]{border-color:#d4ed99;background:#3a5136}
+ #match-popup-roster .matchday-tired-list .player-portrait{width:23px;height:23px;flex:0 0 23px}
+ #match-popup-roster .matchday-tired-list strong{font-size:11px;line-height:13px;word-break:keep-all}#match-popup-roster .matchday-tired-list small{display:inline;font-size:9px;line-height:11px;margin-right:4px}
+ #match-popup-roster .matchday-candidate-note{display:none}
+ #match-popup-roster .bench-heading{grid-column:2;grid-row:1;margin:0;font-size:11px;line-height:20px;padding:0}
+ #match-popup-roster #bench{grid-column:2;grid-row:2;display:grid;grid-template-columns:1fr;grid-auto-rows:minmax(28px,1fr);gap:3px;min-height:0;overflow:auto;align-content:stretch;margin:0}
+ #match-popup-roster .bench-player{min-height:0!important;height:100%;padding:2px 4px;display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,.8fr);gap:5px;align-items:center;box-sizing:border-box}
+ #match-popup-roster .bench-player .name-row{font-size:11px;line-height:13px;gap:4px;min-width:0;word-break:keep-all}
+ #match-popup-roster .bench-player .player-portrait{width:23px;height:23px;flex:0 0 23px}#match-popup-roster .bench-player .position{font-size:9px}
+ #match-popup-roster .bench-player .mini-stats{display:block;font-size:9px;line-height:11px;margin:0}#match-popup-roster .bench-player .mini-stats>span{display:block;font-size:9px;line-height:11px}
+ #match-popup-roster #error{grid-column:1/-1}
+ #squad-overview-dialog .squad-overview-list{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(9,minmax(0,1fr));grid-auto-flow:column;grid-auto-rows:auto;overflow:auto}
+ #squad-overview-dialog .squad-overview-row{min-height:0!important;grid-template-columns:16px minmax(0,1fr) 23px 24px 25px;gap:2px;padding:1px 2px}
+ #squad-overview-dialog .squad-overview-name strong{font-size:10px;line-height:11px;word-break:keep-all;overflow-wrap:normal}
+ #squad-overview-dialog .squad-overview-name small{font-size:8px;line-height:9px}
+ #management-content:has(>#transfer-search-panel){grid-template-columns:minmax(0,1fr);grid-template-rows:104px minmax(0,1fr);gap:5px;position:relative}
+ #management-content>#transfer-search-panel{grid-column:1;grid-row:1;overflow:visible;scrollbar-gutter:auto;position:static}
+ #management-content .transfer-search{padding:0;border:0;display:grid;grid-template-columns:135px minmax(0,1fr) 130px 210px;grid-template-rows:56px 44px;gap:4px;height:100%;box-sizing:border-box}
+ #management-content .transfer-search>.panel-heading,#management-content .transfer-search>p{display:none}
+ #management-content .transfer-search>.transfer-filter-grid{grid-column:1/-1;grid-row:1;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+ #management-content .transfer-filter-grid label{font-size:9px;line-height:10px;display:flex;flex-direction:column;gap:2px}
+ #management-content .transfer-filter-grid select{height:44px;min-height:44px;margin:0;font-size:10px}
+ #management-content .transfer-advanced{grid-column:1;grid-row:2;margin:0;padding:0;border:0}
+ #management-content .transfer-advanced>summary{display:flex;align-items:center;justify-content:center;min-height:44px;height:44px;box-sizing:border-box;font-size:10px;padding:4px;border:1px solid #45616d;border-radius:5px;background:#203443}
+ #management-content .transfer-advanced[open]{position:absolute;inset:0;z-index:10;background:#132733;padding:6px;overflow:auto;border:1px solid #617b85;border-radius:6px}
+ #management-content .transfer-advanced[open]>summary{justify-content:space-between;margin-bottom:6px}
+ #management-content .transfer-advanced[open]>summary:after{content:'조건 접기 ×';color:#d4ed99}
+ #management-content .transfer-advanced .transfer-filter-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+ #management-content #transfer-query-form{grid-column:1/-1}
+ #management-content .transfer-filter-toggles{grid-column:2;grid-row:2;display:flex;gap:3px;margin:0}
+ #management-content .transfer-filter-toggles button{flex:1;min-width:0;line-height:12px}
+ #management-content .transfer-search>.market-view-toolbar{grid-column:3;grid-row:2;display:flex;margin:0;gap:3px}
+ #management-content .transfer-search>.market-view-toolbar button{font-size:9px;min-width:0;flex:1;padding:2px}
+ #management-content .transfer-pagination{grid-column:4;grid-row:2;display:grid;grid-template-columns:58px minmax(0,1fr) 58px;gap:3px;margin:0;align-items:center}
+ #management-content .transfer-pagination span{font-size:9px;line-height:11px;text-align:center}
+ #management-content #market-overview[data-market-mode=list]{grid-column:1;grid-row:2;grid-template-columns:minmax(0,.38fr) minmax(0,.62fr);grid-template-rows:minmax(0,1fr);gap:6px;scrollbar-gutter:auto}
+ #management-content #market-overview[data-market-mode=list]>.market-title,#management-content #market-overview[data-market-mode=list]>.market-status{display:none}
+ #management-content #market-overview[data-market-mode=list]>.market-candidate-list{grid-column:1;grid-row:1;display:grid;grid-template-rows:14px repeat(8,minmax(0,1fr));overflow:auto}
+ #management-content .market-list-columns{font-size:8px;padding:0 3px;line-height:14px}
+ #management-content .market-list-row{height:100%;min-height:0!important;padding:0 3px;gap:3px;box-sizing:border-box}
+ #management-content #market-overview[data-market-mode=list]>.market-grid{grid-column:2;grid-row:1}
+ #management-content #market-overview[data-market-mode=list] .market-compact:not([hidden]){display:grid;grid-template-columns:1fr 1fr 1.2fr;grid-template-rows:minmax(0,1fr) 44px;gap:3px;padding:3px}
+ #management-content #market-overview[data-market-mode=list] .market-compact .market-card-content{display:grid;grid-column:1/-1;grid-row:1;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:44px minmax(0,1fr);gap:3px 8px;overflow:auto;scrollbar-gutter:auto}
+ #management-content .market-compact .candidate-identity{grid-column:1;grid-row:1;margin:0;gap:5px;min-width:0}
+ #management-content .market-compact .candidate-identity h2{font-size:12px;line-height:14px;margin:0;word-break:keep-all}
+ #management-content .market-compact .candidate-identity small{font-size:9px;line-height:11px;display:block}.market-compact .position{padding:0;background:none}
+ #management-content .market-compact .market-outgoing{grid-column:2;grid-row:1;font-size:0;min-width:0;display:block}
+ #management-content .market-compact .market-outgoing select{width:100%;min-width:0;font-size:10px;height:44px;margin:0;padding:2px}
+ #management-content #market-overview[data-market-mode=list] .market-compact .market-quick-comparison{grid-column:1;grid-row:2;padding:1px 3px;min-width:0}
+ #management-content .market-compact .market-quick-comparison h3{font-size:9px;line-height:11px;margin:0}
+ #management-content .market-compact .market-quick-comparison>div{font-size:9px;line-height:11px!important;padding:0}
+ #management-content .market-compact .market-quick-comparison b{font-size:10px;line-height:11px}
+ #management-content .market-compact .market-compare-labels{font-size:8px;line-height:10px!important}
+ .market-compact .market-terms{grid-column:2;grid-row:2;display:flex;flex-direction:column;gap:1px;min-width:0;font-size:9px;line-height:11px}
+ .market-terms>span{display:flex;justify-content:space-between;gap:3px;word-break:keep-all}.market-terms b{font-size:10px}.market-terms small{font-size:8px;line-height:10px;color:#b9ccc1}
+ #management-content #market-overview[data-market-mode=list] .market-compact>button{grid-row:2;height:44px;min-height:44px;margin:0!important;padding:3px!important;font-size:10px;line-height:12px;white-space:normal;word-break:keep-all}
+}
+@media(orientation:landscape) and (max-width:739px){
+ #squad-overview-dialog[open]{grid-template-columns:130px minmax(0,1fr);padding:5px;gap:3px}
+ #squad-overview-dialog .squad-overview-row{grid-template-columns:minmax(0,1fr) 21px 22px;gap:2px}
+ #squad-overview-dialog .squad-overview-row>.player-portrait,#squad-overview-dialog .squad-overview-row>span:last-child{display:none}
+ #squad-overview-dialog .squad-overview-name strong{font-size:9px;line-height:10px}#squad-overview-dialog .squad-overview-name small{font-size:7px;line-height:8px}
+ #management-content .transfer-search{grid-template-columns:100px minmax(0,1fr) 90px 158px;gap:3px}
+ #management-content .transfer-pagination{grid-template-columns:44px minmax(0,1fr) 44px}.transfer-filter-toggles button{font-size:9px!important}
+ #management-content .market-list-row{grid-template-columns:minmax(0,1fr) 22px 22px 20px}
+ #management-content .market-list-row>.player-portrait{display:none}
+ #management-content #market-overview[data-market-mode=list]{grid-template-columns:minmax(0,.32fr) minmax(0,.68fr)}
+ #management-content .market-compact .candidate-identity .player-portrait{display:none}
+ #management-content .market-compact .candidate-identity h2{font-size:10px;line-height:12px}
+ #management-content .market-compact .market-card-content{gap:2px 4px!important}
+ #management-content .market-compact .market-terms{font-size:8px}.market-terms b{font-size:9px}
+ #match-popup-roster .bench-player{grid-template-columns:minmax(0,1fr);gap:0}#match-popup-roster .bench-player .mini-stats>span{display:inline;margin-right:3px}
+}
+
+@media(orientation:landscape){
+ body.match-popup-ready.match-view #match-pane{grid-template-columns:minmax(0,var(--match-field-width,55%)) minmax(180px,1fr)}
+ body.match-popup-ready.match-view #match-live-stats{grid-template-rows:repeat(3,minmax(0,1fr));align-content:stretch;gap:4px;padding:5px}
+ body.match-popup-ready.match-view #match-live-stats>div{border:1px solid #34494f;border-radius:5px;background:#142831;padding:4px;align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:2px}
+ body.match-popup-ready.match-view #match-live-stats span{font-size:10px;line-height:12px;word-break:keep-all}
+ body.match-popup-ready.match-view #match-live-stats strong{font-size:17px;line-height:20px}
+ #goal-scene{display:grid;grid-template-rows:minmax(0,1fr) 44px;gap:3px;padding:6px;box-sizing:border-box}
+ #goal-scene .goal-scene-copy{align-self:end;min-height:0;max-height:100%;padding:0;overflow:auto}
+ #goal-scene .goal-scene-copy>small{font-size:9px;line-height:12px}
+ #goal-scene .goal-scene-copy h3{font-size:20px;line-height:23px;margin:2px 0}
+ #goal-scene .goal-scene-scorer{gap:5px}#goal-scene .goal-scene-scorer strong{font-size:11px;line-height:14px}#goal-scene .goal-scene-scorer span:not(.player-portrait){font-size:9px;line-height:12px}
+ #goal-scene .goal-scene-copy p{font-size:10px;line-height:13px;margin:3px 0;word-break:keep-all}
+ #goal-scene .goal-scene-actions{padding:0;gap:4px;min-height:0}#goal-scene .goal-scene-actions button{font-size:10px;line-height:12px;min-height:44px;padding:3px}
+}
+
+@media(orientation:landscape){
+ #goal-scene{grid-template-columns:minmax(0,1fr);justify-content:stretch}
+ #goal-scene .goal-scene-copy{grid-column:1;grid-row:1;width:100%;box-sizing:border-box}
+ #goal-scene .goal-scene-actions{grid-column:1;grid-row:2;width:100%;box-sizing:border-box}
+ #squad-overview-preview .squad-preview-body>small{display:none}
+ #management-dialog:has(#transfer-search-panel)[open]{width:calc(100vw - 12px);height:calc(100dvh - 12px);padding:6px;gap:4px 8px}
+ #management-content .transfer-pagination{padding:0;border:0;box-sizing:border-box;height:44px}
+ #management-content .transfer-pagination button{padding:2px;height:44px;line-height:12px;font-size:9px}
+ #management-content #market-overview[data-market-mode=list] .market-compact>button.profile-inline-button{grid-column:1;order:0}
+ #management-content #market-overview[data-market-mode=list] .market-compact>button.transfer-shortlist{grid-column:2;order:0}
+ #management-content #market-overview[data-market-mode=list] .market-compact>button[data-recruit]{grid-column:3;order:0}
+ #management-content .market-terms small{display:none}
+ #management-content .market-compact .market-quick-comparison h3{white-space:nowrap;font-size:8px;line-height:10px!important}
+ #management-content .market-compact .market-quick-comparison>div{line-height:10px!important}
+ #management-content .market-compact .market-quick-comparison b{line-height:10px;font-size:9px}
+ body.match-popup-ready.match-view #match-pane .score-center b{font-size:20px;line-height:22px}body.match-popup-ready.match-view #match-pane .scoreboard .team-name{align-items:center}
+}
+
+@media(orientation:landscape) and (max-width:739px){
+ #match-ceremony .preview-lineup .preview-player{grid-template-columns:19px minmax(0,1fr) 25px;gap:1px;padding:0 2px;min-height:0}
+ #match-ceremony .preview-lineup .preview-player span{font-size:8px;line-height:10px;word-break:keep-all}
+ #match-ceremony .preview-lineup .preview-player small,#match-ceremony .preview-lineup .preview-player b{font-size:8px;line-height:10px}
+ #squad-overview-dialog .squad-overview-summary>div{display:flex;align-items:center;gap:3px;font-size:8px;padding:0 2px;min-height:0}
+ #squad-overview-dialog .squad-overview-summary small{font-size:8px;line-height:10px}
+ #squad-overview-dialog .squad-overview-list{gap:1px 3px}
+ #squad-overview-dialog .squad-overview-row{padding:0 2px}
+ #squad-overview-dialog .squad-overview-name strong{font-size:8px;line-height:9px}#squad-overview-dialog .squad-overview-name small{font-size:7px;line-height:7px}
+ #squad-overview-preview .squad-preview-body header{min-height:20px;gap:3px}#squad-overview-preview .squad-preview-body header .player-portrait{width:20px;height:20px;flex:0 0 20px}
+ #squad-overview-preview .squad-preview-body header strong{font-size:9px;line-height:10px}#squad-overview-preview .squad-preview-body header small{font-size:8px;line-height:9px}
+ #squad-overview-preview .squad-preview-overall{font-size:9px;line-height:14px;margin:1px 0}#squad-overview-preview .squad-preview-overall b{font-size:14px;line-height:14px}
+ #squad-overview-preview dl{gap:1px 3px;margin:1px 0}#squad-overview-preview dl dt,#squad-overview-preview dl dd{font-size:9px;line-height:10px}#squad-overview-preview dl meter{height:2px}#squad-overview-preview p{font-size:8px;line-height:10px;margin:1px 0}
+ #match-popup-roster .matchday-tired-list .player-portrait,#match-popup-roster .bench-player .player-portrait{display:none}
+ #match-popup-roster .matchday-tired-list button{padding:1px 3px}
+ #match-popup-roster .matchday-tired-list strong{font-size:10px;line-height:11px}#match-popup-roster .matchday-tired-list small{font-size:8px;line-height:9px}
+ #match-popup-roster .bench-player{grid-template-columns:minmax(0,1fr) 99px;gap:3px;padding:1px 3px}
+ #match-popup-roster .bench-player .name-row{font-size:9px;line-height:11px}
+ #match-popup-roster .bench-player .mini-stats>span{display:block;font-size:8px;line-height:9px}
+ #management-content .transfer-filter-toggles button{white-space:normal;word-break:keep-all;padding:2px!important}
+}
+@media(orientation:landscape) and (max-height:350px){
+ #management-content:has(>#transfer-search-panel){grid-template-columns:154px minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:5px}
+ #management-content .transfer-search{grid-template-columns:1fr 1fr;grid-template-rows:44px 44px 44px 44px 44px;gap:4px}
+ #management-content .transfer-search>.transfer-filter-grid{display:contents}
+ #management-content .transfer-search>.transfer-filter-grid label{font-size:0;gap:0}
+ #management-content .transfer-search>.transfer-filter-grid label:nth-child(1){grid-column:1;grid-row:1}#management-content .transfer-search>.transfer-filter-grid label:nth-child(2){grid-column:2;grid-row:1}
+ #management-content .transfer-search>.transfer-filter-grid label:nth-child(3){grid-column:1;grid-row:2}#management-content .transfer-search>.transfer-filter-grid label:nth-child(4){grid-column:2;grid-row:2}#management-content .transfer-search>.transfer-filter-grid label:nth-child(5){grid-column:1;grid-row:3}
+ #management-content .transfer-advanced{grid-column:2;grid-row:3}
+ #management-content .transfer-filter-toggles{grid-column:1/-1;grid-row:4}
+ #management-content .transfer-pagination{grid-column:1/-1;grid-row:5;grid-template-columns:44px minmax(0,1fr) 44px}
+ #management-content .transfer-search>.market-view-toolbar{display:none}
+ #management-content #market-overview[data-market-mode=list]{grid-column:2;grid-row:1;grid-template-columns:minmax(0,.37fr) minmax(0,.63fr)}
+ #management-content .market-compact .market-card-content{grid-template-columns:1fr!important;grid-template-rows:30px 44px minmax(0,1fr) auto!important;gap:2px!important}
+ #management-content .market-compact .candidate-identity{grid-column:1;grid-row:1}
+ #management-content .market-compact .market-outgoing{grid-column:1;grid-row:2}
+ #management-content #market-overview[data-market-mode=list] .market-compact .market-quick-comparison{grid-column:1;grid-row:3}
+ #management-content .market-compact .market-terms{grid-column:1;grid-row:4;display:grid;grid-template-columns:1fr 1fr;gap:1px 4px;font-size:8px;line-height:10px}
+ #management-content .market-terms>span:first-child{grid-column:1/-1}
+ #management-content .market-terms>span{display:block}#management-content .market-terms b{font-size:9px;margin-left:3px}
+}
+
+/* FotMob-style comparison: actual displayed-match values, no fabricated live facts. */
+@media(orientation:landscape){
+ body.match-popup-ready.match-view #match-live-stats{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:16px 28px minmax(0,1fr) 14px;gap:3px;padding:5px;text-align:center;background:#10232c}
+ #match-live-stats .live-stats-heading{display:flex;justify-content:space-between;align-items:center;min-width:0;line-height:14px}
+ #match-live-stats .live-stats-heading b{font-size:11px}body.match-popup-ready.match-view #match-live-stats .live-stats-heading span{font-size:9px}
+ #match-live-stats .live-possession{display:block;min-height:0}#match-live-stats .live-possession>div{display:flex;align-items:center;justify-content:space-between;font-size:11px;line-height:15px}
+ #match-live-stats .possession-bar{display:block;height:7px;background:#d69b7f;border-radius:4px;overflow:hidden;margin-top:3px}
+ #match-live-stats .possession-bar em{display:block;height:100%;background:#cce696;border-right:2px solid #142c30;box-sizing:border-box}
+ #match-live-stats .possession-bar[data-empty=true]{background:#34505a}#match-live-stats .possession-bar[data-empty=true] em{background:#34505a}
+ body.match-popup-ready.match-view #match-live-stats>.live-stats-comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));gap:1px 10px;padding:0;border:0;background:none;align-items:stretch}
+ #match-live-stats .live-stat-row{display:grid;grid-template-columns:minmax(24px,.7fr) minmax(0,2.4fr) minmax(24px,.7fr);gap:2px;align-items:center;border-bottom:1px solid #2b444d;min-width:0;padding:0 2px}
+ #match-live-stats .live-stat-row b{font-size:11px;line-height:13px;font-variant-numeric:tabular-nums;border-radius:8px;padding:1px 2px}
+ body.match-popup-ready.match-view #match-live-stats .live-stat-row span{font-size:10px;line-height:12px;word-break:keep-all}
+ #match-live-stats .stat-own-lead{color:#e5f6b5;background:#385039}#match-live-stats .stat-opponent-lead{color:#ffd5ba;background:#573d31}
+ #match-live-stats .live-stats-footer{display:flex;justify-content:space-between;gap:4px;font-size:8px;line-height:12px;min-width:0}body.match-popup-ready.match-view #match-live-stats .live-stats-footer span{font-size:8px;line-height:12px}
+}
+@media(orientation:landscape) and (max-height:350px){
+ body.match-popup-ready.match-view #match-live-stats{grid-template-rows:12px 22px minmax(0,1fr) 12px;padding:3px;gap:2px}
+ #match-live-stats .live-stats-heading b{font-size:9px}#match-live-stats .live-possession>div{font-size:10px;line-height:12px}#match-live-stats .possession-bar{height:5px;margin-top:2px}
+ #match-live-stats .live-stat-row b{font-size:9px;line-height:10px;padding:0 1px}body.match-popup-ready.match-view #match-live-stats .live-stat-row span{font-size:8px;line-height:10px}
+ body.match-popup-ready.match-view #match-live-stats>.live-stats-comparison{gap:0 4px}.live-stats-footer>span{display:none}
+}
+
+@media(orientation:landscape){
+ #match-popup-roster .matchday-tired-list{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(4,minmax(44px,1fr))}
+ #match-popup-roster #bench{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(4,minmax(44px,1fr));grid-auto-rows:auto}
+ #match-popup-roster .bench-player{display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:2px;padding:2px 4px}
+ #match-popup-roster .bench-player .mini-stats>span{font-size:8px;line-height:10px;display:block}
+ #match-popup-roster .bench-player .name-row{font-size:10px;line-height:12px}
+ #match-popup-roster .matchday-tired-list .player-portrait{display:none}
+ #match-popup-roster .matchday-tired-list button>span{min-width:0}
+ #match-popup-roster .matchday-tired-list small{display:block;line-height:11px}
+ #match-popup-roster .bench-player .player-portrait{display:none}
+ #management-content .market-list-row strong,#management-content .market-list-row small{white-space:normal;overflow:visible;text-overflow:clip;word-break:keep-all;overflow-wrap:anywhere}
+}
+@media(orientation:landscape) and (max-width:739px){
+ #match-popup-roster .matchday-tired-list strong{font-size:9px;line-height:11px}
+ #match-popup-roster .matchday-tired-list small{font-size:8px;line-height:10px}
+ #match-popup-roster .bench-player .name-row{font-size:9px;line-height:11px}
+ #squad-overview-dialog .squad-overview-energy{font-size:9px;line-height:9px}#squad-overview-dialog .squad-overview-energy i{height:2px;margin:1px 0 0}#squad-overview-dialog .squad-overview-energy em{height:2px}
+ #management-content .market-list-row strong{font-size:8px;line-height:9px}#management-content .market-list-row small{font-size:7px;line-height:8px}
+}
+@media(orientation:landscape) and (max-height:350px){
+ #management-content .transfer-search>.transfer-filter-grid label{line-height:0}
+ #management-content .market-compact .candidate-identity{min-height:0}
+ #management-content .market-compact .market-terms{line-height:9px}#management-content .market-terms b{font-size:8px}
+ #management-content .market-compact .market-quick-comparison h3{line-height:9px!important}
+ #management-content .market-compact .market-quick-comparison>div{line-height:9px!important}#management-content .market-compact .market-quick-comparison b{line-height:9px}
+}
+
+@media(orientation:landscape){
+ #match-live-stats .live-stats-footer{margin:0;padding:0;border:0;min-height:0;height:100%;align-items:center;box-sizing:border-box}
+ body.match-popup-ready.match-view #match-pane .score-center{display:flex;flex-direction:column;justify-content:center;min-height:0;line-height:1;margin:0}
+ body.match-popup-ready.match-view #match-pane .score-center small{font-size:8px;line-height:9px;margin:0}
+ body.match-popup-ready.match-view #match-pane .score-center b{display:block;font-size:20px;line-height:22px;margin:0}
+}
+
+@media(orientation:landscape) and (max-height:420px){
+ #squad-overview-dialog .squad-overview-row{padding:0 2px}
+ #squad-overview-dialog .squad-overview-name strong{font-size:9px;line-height:10px}#squad-overview-dialog .squad-overview-name small{font-size:7px;line-height:8px}
+ #squad-overview-dialog .squad-overview-energy{font-size:9px;line-height:10px}#squad-overview-dialog .squad-overview-energy i{height:2px;margin-top:1px}
+}
+
+@media(orientation:landscape){
+ #squad-overview-dialog .squad-overview-row>b{font-size:11px;line-height:12px}
+ #squad-overview-dialog .squad-overview-name strong,#squad-overview-dialog .squad-overview-name small{white-space:normal;overflow:visible;text-overflow:clip;word-break:keep-all}
+}
+
+@media(orientation:landscape) and (max-height:350px){
+ #squad-overview-dialog .squad-overview-name strong{font-size:8px;line-height:9px}#squad-overview-dialog .squad-overview-name small{font-size:7px;line-height:7px}
+}
+
+@media(orientation:landscape){
+ body.match-popup-ready.match-view #match-pane .score-center>div{margin:0}
+ body.match-popup-ready.match-view #matchday-live>.pitch{height:var(--match-field-height,100%);max-height:100%;align-self:center}
+}
+
+@media(orientation:landscape){
+ body.match-popup-ready.match-view #match-pane>.scoreboard{grid-template-rows:minmax(0,1fr);align-items:center}
+ body.match-popup-ready.match-view #match-pane .scoreboard .team-name{min-height:0}
+ body.match-popup-ready.match-view #match-pane .scoreboard .team-name small{display:none}
+ body.match-popup-ready.match-view #match-pane .scoreboard #own-name,body.match-popup-ready.match-view #match-pane .scoreboard #opp-name{font-size:10px;line-height:12px}
+}
+
+@media(orientation:landscape){
+ body.match-popup-ready.match-view #match-live-stats{container-type:inline-size}
+}
+@container(max-width:350px){#match-live-stats .live-stats-footer>span{display:none}}
+@media(orientation:landscape) and (min-height:500px){
+ body.match-popup-ready.match-view #match-live-stats>.live-stats-comparison{grid-template-columns:1fr;grid-template-rows:repeat(12,minmax(0,1fr))}
+}
+
+@media(orientation:landscape){
+ body.match-popup-ready.match-view .app{width:100%;max-width:1600px}
+ body.match-popup-ready.match-view .view-nav{width:100%;max-width:none;align-self:stretch}
+}
+
+@media(orientation:landscape){body.match-popup-ready.match-view .app>main{width:100%;align-self:stretch}}

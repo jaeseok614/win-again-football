@@ -389,8 +389,8 @@ public final class GameSmokeTest {
 
             assertEquals("true", evaluate(scenario, "document.querySelectorAll('#players button:disabled').length===11"));
             assertEquals("true", evaluate(scenario, "!document.getElementById('match-popup').open&&document.getElementById('matchday-live').hidden===false"));
-            assertEquals("Preparation HUD must compare actual starter abilities", "true", evaluate(scenario,
-                "(()=>{const h=document.getElementById('match-live-stats').textContent;return h.includes('우리 종합')&&h.includes('상대 종합')&&h.includes('선발 체력')&&!h.includes('점유율');})()"));
+            assertEquals("Preparation HUD waits for real recorded match statistics", "true", evaluate(scenario,
+                "(()=>{const h=document.getElementById('match-live-stats').textContent;return h.includes('기록 대기')&&h.includes('기대 득점')&&h.includes('선발 체력')&&h.includes('공 점유율')&&document.querySelectorAll('#match-live-stats .live-stat-row').length===12;})()"));
             assertEquals("Preparation offers lineup and opponent directly", "true", evaluate(scenario,
                 "document.getElementById('matchday-roster').textContent==='선발 · 후보'&&document.getElementById('match-open-details').dataset.matchPopup==='opponent'"));
             tapWebElement(scenario, "#match-open-details");
@@ -412,12 +412,16 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "document.querySelectorAll('#match-popup-roster [data-matchday-player]').length===11");
             assertEquals("Starter and bench comparison must show ability, fitness and condition", "true", evaluate(scenario,
                 "(()=>{const first=document.querySelector('#match-popup-roster [data-matchday-player]'),bench=document.getElementById('bench'),chooser=document.getElementById('match-popup-select');return first.textContent.includes('종합')&&first.textContent.includes('체력')&&bench.textContent.includes('컨디션')&&chooser.value==='roster'&&first.getBoundingClientRect().height>=44;})()"));
+            assertEquals("Generic substitution starts without a selected player and keeps all eighteen choices visible", "true", evaluate(scenario,
+                "(()=>{const root=document.getElementById('match-popup-roster'),rows=[...root.querySelectorAll('[data-matchday-player],[data-bench]')],r=root.getBoundingClientRect();return selected===null&&rows.length===18&&rows.every(e=>{const b=e.getBoundingClientRect();return b.height>=44&&b.top>=r.top&&b.bottom<=r.bottom+1;});})()"));
             screenshot(scenario, "android-starter-comparison.png");
             tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
             awaitTrue(scenario, "!document.getElementById('match-popup').open");
             assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
             assertEquals("Score, pitch and main action must share the phone viewport", "true", evaluate(scenario,
                 "(()=>{const p=document.getElementById('pitch').getBoundingClientRect(),b=document.getElementById('primary').getBoundingClientRect(),s=document.querySelector('.scoreboard').getBoundingClientRect();return s.top>=0&&p.top>=0&&(p.right<=b.left+1||p.bottom<=b.top+1)&&b.bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1;})()"));
+            assertEquals("All twelve match facts remain inside the side panel", "true", evaluate(scenario,
+                "(()=>{const h=document.getElementById('match-live-stats'),r=h.getBoundingClientRect();return h.scrollHeight<=h.clientHeight+1&&h.scrollWidth<=h.clientWidth+1&&[...h.querySelectorAll('.live-stat-row')].every(e=>{const b=e.getBoundingClientRect();return b.top>=r.top&&b.bottom<=r.bottom;});})()"));
             screenshot(scenario, "android-compact-match.png");
             evaluate(scenario, "openMatchPopup('setpieces');true");
             awaitTrue(scenario, "matchPopupActive==='setpieces'&&document.querySelectorAll('[data-deadball-role]').length===3");

@@ -204,3 +204,20 @@ body.match-popup-ready.match-view:not(.launch-mode){height:100dvh;overflow:hidde
 
 /* Keep the live call directly above the pitch; ambient text stays out of its two lines. */
 .match-popup-ready.match-view #commentary #crowd-caption{display:none}
+
+@media(orientation:landscape){
+ #match-ceremony[data-kind=preview] .ceremony-content{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:44px minmax(0,1fr) 44px;gap:4px}
+ #match-ceremony[data-kind=preview] #ceremony-squads:not(.coach-preparation-open){display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);height:100%;position:relative;padding:0;gap:0}
+ #match-ceremony .preview-heading h2{font-size:15px}
+ #match-ceremony #ceremony-roster{position:absolute;right:60px;top:-48px;width:136px;height:44px;font-size:10px}
+ #match-ceremony .preview-heading{padding-right:200px;position:relative}
+ #match-ceremony #ceremony-close{position:absolute;right:0;top:0;height:44px}
+ #match-ceremony .preview-teams{height:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ #match-ceremony .preview-team header>span{min-height:14px}
+ #match-ceremony .preview-lineup{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));gap:3px}
+ #match-ceremony .preview-lineup .preview-player{box-sizing:border-box;grid-template-columns:22px minmax(0,1fr) 30px;min-height:22px;padding:2px 3px;gap:3px}
+ #match-ceremony .preview-lineup .preview-player>*{grid-column:auto;grid-row:auto;min-width:0;line-height:12px}
+ #match-ceremony .preview-lineup .preview-player span{font-size:10px;word-break:keep-all;overflow-wrap:normal}
+ #match-ceremony .preview-keys{display:none}
+ #match-ceremony .preview-roster small{grid-column:auto}
+}

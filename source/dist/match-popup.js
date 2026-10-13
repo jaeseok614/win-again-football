@@ -2,11 +2,13 @@
 var matchPopupActive=null,matchPopupOpener=null;
 const matchPopupNames={roster:'선수 교체',lineup:'코치 선발 제안',tactics:'전술 지시',setpieces:'세트피스 작전실',opponent:'상대 보고서',analysis:'전술 분석',brief:'흐름 요약',stats:'경기 기록',bench:'벤치 알림',talk:'선수 대화',settings:'경기 설정'};
 function syncMatchScreenMode(){document.body.classList.toggle('match-view',appSessionStarted&&view==='match'&&!!state);if(view!=='match')closeMatchPopup();}
-function openMatchPopup(kind,opener=document.activeElement){
+function openMatchPopup(kind,opener=document.activeElement,options={}){
  if(!Object.hasOwn(matchPopupNames,kind)||view!=='match'||!state)return;
  if(kind==='brief'&&state.phase==='half'&&typeof showMatchCeremony==='function'){closeMatchPopup();showMatchCeremony('half');return;}
  const dialog=$('match-popup');if(!dialog)return;
  if(!dialog.open)matchPopupOpener=opener;
+ // A tactical preview is never an implicit substitution request.
+ if(kind==='roster'){selected=options.playerId&&state.lineup.includes(options.playerId)?options.playerId:null;}
  pauseForPlanning();matchPopupActive=kind;save();render();
  if(!dialog.open)dialog.showModal();
  const body=dialog.querySelector('.match-popup-body');if(body)body.scrollTop=0;

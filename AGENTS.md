@@ -30,6 +30,16 @@ positions and current abilities together. Use compact numeric/color tables and
 preserve actual actions, identity routing and 44px essential controls. Unknown
 facts remain explicit, never fabricated. Read docs/PLAYER_REPORT_WORKSPACE_2026-10-13.md.
 
+## Match facts and entry routes (2026-10-13)
+
+The landscape match side rail compares actual displayed-match facts, inspired by
+FotMob: possession and twelve numeric statistics. Use visibleMatchForReports and
+Matchday.facts; show waiting/unknown values explicitly, never fabricated live facts.
+Generic substitutions start with no selected player. Only explicit player actions
+carry an identity; never inherit a tactical preview as a substitution selection.
+Test real bottom-menu and management-dropdown routes, not only direct helper calls.
+Read docs/PHONE_WORKSPACES_2026-10-13.md and test internal text/row/goal-action bounds.
+
 ## Current owner requirements (2026-10-07; supersede historical notes)
 
 The owner explicitly retired old saves, old superstar rosters and 14-round leagues.
