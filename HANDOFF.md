@@ -1,8 +1,11 @@
 # 최신 개발 — 홈 가림 수정 · 전술과 대회 센터
 
-- [관리 센터 변경](docs/MANAGEMENT_CENTRES_2026-10-13.md): 하단 7메뉴를 실제 레이아웃 행으로 배치해 홈 구단 소식 가림 방지. 전술 메뉴에서 기존 포메이션/경기 지시/선발 비교/세트피스 담당/상대 분석 사용. 대회에 현재 성적, 모든 공식 수치의 순위표 페이지, 실제 국내컵 전체 대진과 유럽/일정/결산 진입을 추가했습니다.
-- 신규 모델/저장 회귀3, Chrome8크기 홈·전술·대회 경계/44px/편집기 왕복/키커 실제 변경/닫기 후 정지 유지, 기존 경기8크기와 독립 연습 통과. PWA14/Android 자산11그룹 통과. 전체 회귀 검사 및 원격 네이티브 검증 진행 중이며 완료 결과를 후속 기록합니다.
-- 저장 키/시즌10/물리1~9/일정/확정 결과 보존. 페널티 전담 역할 추가는 이번 범위에 포함되지 않습니다. PR25 draft/main 미병합 유지.
+- [관리 센터 변경과 검증](docs/MANAGEMENT_CENTRES_2026-10-13.md): 하단7메뉴의 실제 높이를 레이아웃에 반영해 구단 소식 가림 방지. 전술 메뉴에서 기존 포메이션/경기 지시/선발 비교/세트피스 담당/상대 분석 사용. 대회 첫 화면에 현재 성적, 공식 수치 전체의 순위표 페이지, 실제 국내컵8강~결승 전체 대진과 유럽/일정/결산을 연결했습니다. 미정 대진은 승자로 강조하지 않습니다.
+- 최종 기능c2fda611847fda0bd6ea0d4c9fb6cb0cdd2b33bb/트리050f4882c2b6a73a8431f79c78ec629fd63f9dbe. [원격 Source38336460081](https://github.com/jaeseok614/win-again-football/actions/runs/38336460081) job115097532753: 전체169 suites/1310 checks, PWA14, Android 자산 생성, 공개 생성물 일치 모두 성공. 로컬 최초 전체의 옛6메뉴 기대값2 suite 실패는7메뉴로 수정해 해당20 checks와 신규3 checks 재검증 완료.
+- Chrome8크기 홈·전술·대회 경계/44px/편집기 왕복/실제 키커 변경/닫기 후 정지 유지·기존 경기8크기와 독립 연습 통과. 긴 기사+24px 안전 영역, 실제12라운드 및 컵 결과 이후 대진 확인. 저장 키/시즌10/물리1~9/확정 기록 보존. 페널티 전담 역할을 새로 추가한 것은 아닙니다.
+- [Android38336460151](https://github.com/jaeseok614/win-again-football/actions/runs/38336460151): API34 job115097624153/API35 job115097623940 각각10/10, skipped0/failed0, APK/AAB/lint 성공. PR merge6ea5c53ef247623eca2af5ade3e1aa7f01bff6b1. PWA4,590,622바이트/shell d0be793b834f. Android4,590,015바이트/SHA256ca18db24ab05536ad89e703d1d86455dba171074859df92238ecb7a60f0751d4.
+- API34 아티팩트11784532793 ZIP SHA2564ffdd5d5fb54be40321dd607b84b3d9f2cacace97a15ea79b22bb0867cd56001 확인. APK5,552,697바이트/SHA25680128de790383614dbf7287dfcc2a080c76484cebf6afc4c688a765c0d51c508. 내부 자산이 로컬과 바이트 일치. APK만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 교체하고 win-again-20261013-management-centres.apk/MIME/크기 재조회했습니다. 폴더·공유 설정 유지.
+- 시험판 서명은 직전9fc71cf2ea1cfd1c6f4667c37292d284aa6dd4f0eaea24a92fb38a47ad3a74fb→929afc14eb5a29538611da45360c233104c5a56b254329544573549a85b37c76. 구단 내보내기→앱 삭제→새 APK 설치→구단 가져오기 필요. 최종 후속은 검증 문서만 [skip ci], PR25 draft/main 미병합 유지.
 
 # 최신 개발 — 경기장 위 중계 · 조금 더 빠른 시계
 
