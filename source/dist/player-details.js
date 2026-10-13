@@ -3,6 +3,9 @@
  const F=root.Football||(typeof require==='function'?require('./engine.js'):null),ST=root.Statistics||(typeof require==='function'?require('./statistics.js'):null),D=root.PlayerDevelopment||(typeof require==='function'?require('./development.js'):null),Traits=root.PlayerTraits||(typeof require==='function'?require('./player-traits.js'):null);
  const Scout=root.PlayerScouting||(typeof require==='function'?require('./player-scouting.js'):null);
  const statLabels={attack:'결정력',defense:'수비',passing:'패스',speed:'속도',endurance:'지구력',keeping:'선방'},recordKeys=['apps','starts','goals','assists','minutes','cleanSheets'];
+ // Reference-player heights are display metadata; unknown prospects stay unknown.
+ // Source provenance: docs/PLAYER_REPORT_WORKSPACE_2026-10-13.md.
+ const heights={sp_g1:194,sp_g2:201,sp_d1:185,sp_d2:193,sp_d3:173,sp_d4:186,sp_d5:191,sp_d6:181,sp_m1:182,sp_m2:175,sp_m3:186,sp_m4:187,sp_m5:185,sp_m6:187,sp_f1:183,sp_f2:187,sp_f3:179,sp_f4:184};
  const invalid=(identity,reason)=>({valid:false,identity:typeof identity==='string'?identity:null,reason});
  function read(s,identity){
   if(!s||!Number.isInteger(s.year)||s.year<1)return invalid(identity,'현재 시즌을 확인할 수 없어요.');
@@ -19,7 +22,8 @@
   const summary=ST.summary(s,'all',s.year),row=summary.players.find(player=>player.identity===identity);
   const records={year:s.year,...Object.fromEntries(recordKeys.map(stat=>[stat,row?.[stat]??0])),partial:summary.partial,matches:summary.matches,trackedSinceRound:summary.trackedSinceRound};
   const positions=Traits.allPositions(p),feet=Traits.feet(p),matchCondition=owned?Traits.condition(s,p):{score:null,tier:'unknown',label:'영입 전 미확인'},scouting=Scout.read(p);
-  return {valid:true,attributes:scouting.attributes,scouting,mental:F.mentalProfile(p),identity,name:p.name,position:p.pos,pos:p.pos,age:p.age+s.year-(p.academy?p.academyYear:1),nickname:personality.nickname,tagline:personality.tagline,owned:!!owned,slot,status:owned?'our':'prospect',source:owned?'squad':market?'market':'academy',kind:p.kind,no:owned?.no??null,wage:p.wage,fee:p.fee,primaryKey:key,primaryLabel:statLabels[key],current:{primary:p[key],potential:p.potential,growthHeadroom:Math.max(0,p.potential-p[key]),xp:owned?p.xp:0,energy},stats:Object.entries(statLabels).map(([stat,label])=>({key:stat,label,value:stat==='keeping'&&p.pos!=='GK'?null:p[stat],primary:stat===key})),injury,condition,feet,positions,matchCondition,records,development:owned?D.analyze(s,slot):null};
+  const preferred=Traits.preferredPositions(p),weights=Traits.positions[preferred[0]][2],overall=Math.round(Object.entries(weights).reduce((n,[stat,w])=>n+(p[stat]||0)*w,0));
+  return {valid:true,heightCm:heights[identity]??null,preferredPositions:preferred,overall,attributes:scouting.attributes,scouting,mental:F.mentalProfile(p),identity,name:p.name,position:p.pos,pos:p.pos,age:p.age+s.year-(p.academy?p.academyYear:1),nickname:personality.nickname,tagline:personality.tagline,owned:!!owned,slot,status:owned?'our':'prospect',source:owned?'squad':market?'market':'academy',kind:p.kind,no:owned?.no??null,wage:p.wage,fee:p.fee,primaryKey:key,primaryLabel:statLabels[key],current:{primary:p[key],potential:p.potential,growthHeadroom:Math.max(0,p.potential-p[key]),xp:owned?p.xp:0,energy},stats:Object.entries(statLabels).map(([stat,label])=>({key:stat,label,value:stat==='keeping'&&p.pos!=='GK'?null:p[stat],primary:stat===key})),injury,condition,feet,positions,matchCondition,records,development:owned?D.analyze(s,slot):null};
  }
  const api={read};root.PlayerDetails=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

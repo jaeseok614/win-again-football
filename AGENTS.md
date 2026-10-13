@@ -21,6 +21,15 @@ Check internal text bounds, card overlap and full profile visibility, not only o
 Position ratings are labelled coach estimates, separate from base attributes,
 condition and stamina; they must not silently change published engine rules.
 
+## Dense reports (permanent owner feedback, 2026-10-13)
+
+When a popup has little information, show its useful facts directly in the current
+landscape screen instead of fragmenting them behind extra buttons or small pages.
+Player reports keep age, height/unknown status, wage, preferred foot, preferred
+positions and current abilities together. Use compact numeric/color tables and
+preserve actual actions, identity routing and 44px essential controls. Unknown
+facts remain explicit, never fabricated. Read docs/PLAYER_REPORT_WORKSPACE_2026-10-13.md.
+
 ## Current owner requirements (2026-10-07; supersede historical notes)
 
 The owner explicitly retired old saves, old superstar rosters and 14-round leagues.
