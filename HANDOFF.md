@@ -1,7 +1,10 @@
 # 최신 개발 — 전술 카드 정렬과 한 화면 가독성
 
 - [변경과 참고 자료](docs/TACTICS_TYPOGRAPHY_2026-10-13.md): 능력치/포지션/이름을 카드 내부 정렬, 능력치 숫자·막대 색상과 범례, 한국어 단어 줄바꿈, 메뉴 두 줄 고정, 제목 대신 실제 메뉴에 접근성 포커스. 낮은 화면에서도 선수 상세를 압축 표시하고 골키퍼/수비 카드 겹침을 제거했습니다.
-- source/browser/landscape-typography.cjs에 실제 Chrome 내부 경계·겹침·전체 상세·키보드/메뉴 동작 검사를 추가했습니다. 최종 전체 검사와 APK 정보는 완료 후 기록합니다.
+- 로컬 전체170 suites/1314 checks 통과. 전술9/팝업8/코치4/가로 배치4/PWA14/Android 자산11 통과. Chrome7크기(568×320~1280×720)×12포메이션의 카드 내부·카드 간 겹침·전체 상세·단어 줄바꿈 검사, 실제 메뉴 이동/긴 이름/키보드 이동/포커스/색상 갱신 통과. 전술3탭/분석6페이지/안내 Next/홈 확인. 가장 작은568×320 세트피스의 긴 설명은 상세 영역 스크롤을 유지합니다.
+- 기능633429bacc9cd2e9b9c277d709eb4c2710f5af50 / tree b06280842189cb13c6b3e217a2f3107680b9a0fb. [Android38355030685](https://github.com/jaeseok614/win-again-football/actions/runs/38355030685) API34 job115155802734/API35 job115155802719 각각10/10·skipped0·failed0, APK/AAB/lint 성공. PR merge f4b1b0bcc6022f8d24d2f976d40c489c967a3929. [원격 Source38355030681](https://github.com/jaeseok614/win-again-football/actions/runs/38355030681) job115155802401은 문서 작성 시점06:17 UTC에 진행 중이며 로컬 전체 성공과 구분합니다.
+- PWA4,630,677바이트/shell ceeb8437e639. Android4,630,070바이트/SHA256786c0deea58a37a1a6a0b72da9eaa9dabaa8f3ebe126854633526dd9ab3545d3. API34 artifact11792302262 ZIP SHA25652d1ca5692512a53de63ac1ac7004bc8d778ec1084b786e1d06a5171e140b91b 검증. 내부 게임 자산은 로컬과 바이트 동일.
+- 검증 APK5,564,393바이트/SHA256e12f858cc36aa946908d97546cbbb00313296dcf159730f1b5469b2d1f74a7fe만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261013-tactics-polish.apk로 교체하고 이름/MIME/크기/부모 폴더 재조회. 서명d62e2be68219e354a2fc51b1238411e056d2a7ca3a43b5dba039c0c7e63a7403→8132bb81a0da677ab6cd61e482c6433b606ac781d8d5c16a6b8e887915e3828b 변경: 구단 내보내기→앱 삭제→설치→가져오기 필요. 최종 문서만 [skip ci], PR25 draft/main 미병합 유지.
 - 직전 기능 ef4b0ba의 원격 Source38352563326 성공 완료 확인. 저장/경기 규칙 변경 없음.
 
 # 최신 개발 — 가로 전용 전술 작업 공간
