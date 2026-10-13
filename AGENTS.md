@@ -269,3 +269,5 @@ Read docs/MATCH_VIEWING_PACE_2026-10-13.md. The owner likes formation movement b
 
 ## Latest commentary placement and slight slow motion
 The owner wants commentary directly ABOVE the pitch in portrait and landscape, with readable two-line text and no overlap with players. Keep clock text separate and all core controls in one viewport. Routine key play is180× selected; attacks stay3× capped6; shots/saves2.25× capped4.5, only25% slower than key attacks. Full-view shots use2.25× capped4.5 too. These supersede previous viewing rates; physics and saved records remain identical.
+
+Permanent owner feedback (2026-10-13): reserve real layout space for bottom navigation on management screens so club news stays above it. The tactics tab is the central entry for formation, instructions, lineup comparison and existing set-piece takers. Reuse actual editors; closing returns to the tactics centre without resuming. Competition starts with confirmed current standings (played/W/D/L/GF/GA/GD/points) and actual cup brackets; paginate vertically dense tables without horizontal swipes or future-result disclosure.
