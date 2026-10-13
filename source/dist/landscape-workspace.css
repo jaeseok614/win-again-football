@@ -196,3 +196,102 @@
  #management-content .staff-note{grid-column:1/-1}
  #management-content .staff-grid{grid-column:2;grid-row:1/4;display:grid;grid-template-columns:1fr;gap:6px}
 }
+
+/* Compact release typography: words wrap together, player data stays inside cards. */
+@media(orientation:landscape){
+ #match-popup{word-break:keep-all;overflow-wrap:break-word;font-variant-numeric:tabular-nums}
+ #match-popup .match-popup-nav button{word-break:keep-all;overflow-wrap:normal;white-space:normal;line-height:1.45;font-weight:600}
+ #match-popup .match-popup-header>div{overflow:hidden}
+ #match-popup #match-popup-title{box-sizing:border-box!important;flex:0 1 auto;min-width:0;padding:4px 2px!important;line-height:1.4!important;font-size:13px!important;white-space:normal!important;word-break:keep-all;overflow-wrap:normal;outline:none}
+ #match-popup #match-popup-title:focus-visible{outline:2px solid #a9daf3;outline-offset:-2px;border-radius:4px}
+ #match-popup button:focus-visible{outline:2px solid #a9daf3;outline-offset:-3px}
+ #match-popup .landscape-tactics .tactical-pitch{container-type:size}
+ #match-popup .landscape-tactics .tactical-pitch button{display:grid!important;grid-template-columns:minmax(0,1fr) 19px;grid-template-rows:14px 12px;align-content:center;align-items:center;gap:0 1px;width:clamp(34px,16cqw,66px);height:32px;min-height:32px!important;padding:2px!important;overflow:hidden;box-sizing:border-box;border-radius:4px;box-shadow:0 1px 3px #0005;background:#172f40}
+ #match-popup .landscape-tactics .tactical-pitch button[aria-pressed=true]{background:#294b45;border:1px solid #c5ed9f;box-shadow:0 0 0 1px #c5ed9f}
+ #match-popup .landscape-tactics .tactical-pitch button>.placement-badge{position:static;grid-column:2;grid-row:1;display:flex;align-items:center;justify-content:center;inset:auto;margin:0!important;padding:0!important;width:19px;height:14px;background:#0d222b;border-radius:2px;font-size:11px!important;line-height:14px!important;letter-spacing:0;transform:none;box-sizing:border-box}
+ #match-popup .landscape-tactics .placement-badge strong{font-size:11px;line-height:14px;color:var(--ability-color);font-weight:800}
+ #match-popup .landscape-tactics .tactical-pitch button>b{grid-column:1;grid-row:1;display:flex;align-items:center;justify-content:center;gap:2px;position:static;margin:0!important;padding:0!important;min-width:0;height:14px;line-height:14px!important;font-size:9px;color:#e3edf1;border:0!important;width:auto!important;transform:none!important}
+ #match-popup .landscape-tactics .tactical-pitch button>b em{display:inline;position:static;font-style:normal;font-size:9px;line-height:14px;color:inherit;margin:0;padding:0;background:none}
+ #match-popup .landscape-tactics .tactical-shirt{font-size:8px;color:#aac0ca}
+ #match-popup .landscape-tactics .tactical-pitch button>.tactical-short-name{grid-column:1/-1;grid-row:2;min-width:0;max-width:100%;margin:0!important;padding:0!important;height:12px;font-size:9px!important;line-height:12px!important;color:#edf4f6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:0!important;letter-spacing:0}
+ #match-popup [data-ability-band=elite]{--ability-color:#8de5af}
+ #match-popup [data-ability-band=strong]{--ability-color:#ede592}
+ #match-popup [data-ability-band=steady]{--ability-color:#b9d4eb}
+ #match-popup [data-ability-band=developing]{--ability-color:#efb0a4}
+ #match-popup .placement-summary b[data-ability-band],#match-popup .placement-attributes b{color:var(--ability-color)}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes{gap:3px 10px;padding:4px 0}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes>div{min-width:0;grid-template-columns:36px minmax(8px,1fr) 24px;padding:2px 0;border-bottom:1px solid #354955}
+ #match-popup .placement-attributes b{font-size:12px;text-align:right}
+ #match-popup .placement-attributes meter{height:6px;appearance:none;background:#0f2531;border:0;border-radius:2px}
+ #match-popup .placement-attributes meter::-webkit-meter-bar{height:6px;border:0;background:#0f2531;border-radius:2px}
+ #match-popup .placement-attributes meter::-webkit-meter-optimum-value{background:var(--ability-color);border-radius:2px}
+ #match-popup .placement-attributes meter::-moz-meter-bar{background:var(--ability-color)}
+ #match-popup .tactical-selected-profile .ability-legend{font-size:9px;line-height:1.5;margin:2px 0;word-break:keep-all}
+ #match-popup .landscape-tactics .tactical-selected-profile .ability-legend span{display:inline;background:none;padding:0;border:0;border-radius:0;white-space:nowrap;font-size:9px;color:var(--ability-color)}
+ #match-popup .tactical-selected-profile header strong{font-size:12px;line-height:1.35;word-break:keep-all}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-best{flex-wrap:wrap;gap:3px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-best span{white-space:nowrap}
+ #match-popup .tactical-selected-profile>small{word-break:keep-all;line-height:1.45}
+}
+@media(orientation:landscape) and (max-width:700px){
+ #match-popup .landscape-tactics .tactical-shirt{display:none}
+ #match-popup .landscape-tactics .tactical-pitch button{grid-template-columns:minmax(0,1fr) 16px;column-gap:0}
+ #match-popup .landscape-tactics .tactical-pitch button>.placement-badge{width:16px}
+ #match-popup .landscape-tactics .placement-badge strong{font-size:10px}
+ #match-popup .landscape-tactics .tactical-pitch button>b em{font-size:8px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes>div{grid-template-columns:32px minmax(6px,1fr) 20px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes{gap:2px 5px;padding:1px 0}
+ #match-popup .tactical-selected-profile .placement-summary{padding:2px!important}
+ #match-popup .tactical-selected-profile .placement-summary b{font-size:18px}
+ #match-popup .tactical-selected-profile>small{font-size:9px;line-height:1.3}
+}
+
+@media(orientation:landscape){
+ #match-popup .landscape-tactics .tactical-selected-profile{line-height:1.25}
+ #match-popup .landscape-tactics .tactical-selected-profile header{min-height:32px}
+ #match-popup .landscape-tactics .tactical-selected-profile header .player-portrait{height:32px;width:32px;flex-basis:32px}
+ #match-popup .landscape-tactics .tactical-selected-profile p{margin:3px 0!important;line-height:1.25}
+ #match-popup .landscape-tactics .tactical-selected-profile header p{margin:2px 0 0!important;font-size:10px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-summary{margin:4px 0;padding:3px 4px;min-height:24px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-summary b{line-height:1;font-size:22px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes>div{line-height:14px;padding:1px 0}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-best span{line-height:12px;padding:2px 3px}
+ #match-popup .landscape-tactics .tactical-selected-profile>small{margin:3px 0 0;line-height:1.25}
+}
+@media(orientation:landscape) and (max-width:700px),(orientation:landscape) and (max-height:360px){
+ #match-popup .landscape-tactics .tactical-selected-profile header{min-height:26px}
+ #match-popup .landscape-tactics .tactical-selected-profile header .player-portrait{height:26px;width:26px;flex-basis:26px}
+ #match-popup .landscape-tactics .tactical-selected-profile header strong{font-size:10px;line-height:12px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-summary{margin:2px 0;padding:2px;min-height:20px;font-size:10px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-summary b{font-size:18px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes{gap:1px 4px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes>div{line-height:12px;padding:0}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes b{font-size:11px}
+ #match-popup .landscape-tactics .tactical-selected-profile p{font-size:10px;margin:2px 0!important}
+ #match-popup .landscape-tactics .tactical-selected-profile .ability-legend{font-size:8px}
+ #match-popup .landscape-tactics .tactical-selected-profile .ability-legend span{font-size:8px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-best{margin:2px 0}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-best span{font-size:9px;padding:1px 2px}
+ #match-popup .landscape-tactics .tactical-selected-profile>small{font-size:8px;line-height:10px;margin:2px 0 0}
+}
+
+/* Scale with the pitch, including short phones; never let CB and GK cover each other. */
+@media(orientation:landscape){
+ #match-popup .landscape-tactics .tactical-pitch button{width:clamp(32px,15cqw,66px);height:clamp(22px,12cqh,32px);min-height:0!important;grid-template-rows:minmax(0,1fr) 10px;padding:0 2px!important}
+ #match-popup .landscape-tactics .tactical-pitch button[data-tactical-keeper=true]{transform:translate(-50%,-20%)}
+ #match-popup .landscape-tactics .tactical-pitch button>b,#match-popup .landscape-tactics .tactical-pitch button>b em{height:11px;line-height:11px!important}
+ #match-popup .landscape-tactics .tactical-pitch button>.placement-badge{height:11px;line-height:11px!important}
+ #match-popup .landscape-tactics .placement-badge strong{line-height:11px}
+ #match-popup .landscape-tactics .tactical-pitch button>.tactical-short-name{height:10px;line-height:10px!important}
+}
+
+@media(orientation:landscape) and (max-width:900px){
+ #match-popup .landscape-tactics .tactical-shirt{display:none}
+ #match-popup .landscape-tactics .tactical-pitch button>b em{font-size:8px}
+}
+@media(orientation:landscape) and (max-width:700px){
+ #match-popup .landscape-tactics .tactical-pitch button{grid-template-columns:minmax(0,1fr) 14px;padding:0 1px!important}
+ #match-popup .landscape-tactics .tactical-pitch button>.placement-badge{width:14px}
+ #match-popup .landscape-tactics .tactical-pitch button>b em{font-size:7px}
+ #match-popup .landscape-tactics .field-toolbar select{font-size:9px!important;padding:2px!important}
+}

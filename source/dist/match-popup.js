@@ -10,7 +10,7 @@ function openMatchPopup(kind,opener=document.activeElement){
  pauseForPlanning();matchPopupActive=kind;save();render();
  if(!dialog.open)dialog.showModal();
  const body=dialog.querySelector('.match-popup-body');if(body)body.scrollTop=0;
- const chooser=$('match-popup-select');if(chooser?.getClientRects?.().length)chooser.focus({preventScroll:true});else $('match-popup-title').focus({preventScroll:true});
+ const chooser=$('match-popup-select');if(chooser?.getClientRects?.().length)chooser.focus({preventScroll:true});else (dialog.querySelector('[data-match-popup="'+kind+'"]')||$('match-popup-title')).focus({preventScroll:true});
 }
 function closeMatchPopup(){const dialog=$('match-popup');if(dialog?.open)dialog.close();}
 function finishMatchPopupClose(){if($('match-popup')?.open)return;matchPopupActive=null;matchdayTab='live';render();const opener=matchPopupOpener;matchPopupOpener=null;if(opener?.isConnected&&!opener.closest('dialog'))opener.focus({preventScroll:true});else $('matchday-roster')?.focus({preventScroll:true});}
@@ -44,7 +44,7 @@ function renderMatchPopup(){
 }
 function initMatchPopup(){
  const pane=$('match-pane'),dialog=document.createElement('dialog');dialog.id='match-popup';dialog.setAttribute('aria-labelledby','match-popup-title');
- dialog.innerHTML='<header class="match-popup-header"><div><h2 id="match-popup-title" tabindex="-1">경기 메뉴</h2><p id="match-popup-status"></p></div><button type="button" data-match-popup-close aria-label="경기 메뉴 닫기">닫기</button></header><nav class="match-popup-nav" aria-label="경기 상세 메뉴">'+Object.entries(matchPopupNames).map(([kind,label])=>'<button type="button" data-match-popup="'+kind+'" aria-pressed="false">'+label+'</button>').join('')+'</nav><p id="match-popup-error" role="alert" tabindex="-1" hidden></p><div class="match-popup-body">'+Object.keys(matchPopupNames).map(kind=>'<section id="match-popup-'+kind+'" hidden></section>').join('')+'</div><footer class="match-popup-footer"><button type="button" data-match-popup-close>경기로 돌아가기</button></footer>';
+ dialog.innerHTML='<header class="match-popup-header"><div><h2 id="match-popup-title" tabindex="-1">경기 메뉴</h2><p id="match-popup-status"></p></div><button type="button" data-match-popup-close aria-label="경기 메뉴 닫기">닫기</button></header><nav class="match-popup-nav" aria-label="경기 상세 메뉴">'+Object.entries(matchPopupNames).map(([kind,label])=>'<button type="button" data-match-popup="'+kind+'" aria-pressed="false">'+(kind==='lineup'?'코치 선발<br>제안':kind==='setpieces'?'세트피스<br>작전실':label)+'</button>').join('')+'</nav><p id="match-popup-error" role="alert" tabindex="-1" hidden></p><div class="match-popup-body">'+Object.keys(matchPopupNames).map(kind=>'<section id="match-popup-'+kind+'" hidden></section>').join('')+'</div><footer class="match-popup-footer"><button type="button" data-match-popup-close>경기로 돌아가기</button></footer>';
  const chooser=document.createElement('select');chooser.id='match-popup-select';chooser.setAttribute('aria-label','경기 상세 메뉴 선택');chooser.innerHTML=Object.entries(matchPopupNames).map(([kind,label])=>'<option value="'+kind+'">'+label+'</option>').join('');dialog.querySelector('.match-popup-header>div').append(chooser);chooser.addEventListener('change',()=>openMatchPopup(chooser.value,chooser));
  pane.append(dialog);
  const move=(node,kind)=>{if(node)$('match-popup-'+kind).append(node);};

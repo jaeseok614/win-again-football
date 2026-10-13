@@ -15,6 +15,9 @@ attributes together, persistent match navigation instead of a native menu select
 club crests in competitions, and placement-dependent overall estimates.
 Quality takes priority over minimum download size, while offline assets, bounded
 work and responsive controls remain required. Do not inflate assets without value.
+Keep Korean words together when wrapping; use intentional two-line navigation labels.
+Keep ratings/position/name inside player cards, with numeric values alongside color.
+Check internal text bounds, card overlap and full profile visibility, not only outer panels.
 Position ratings are labelled coach estimates, separate from base attributes,
 condition and stamina; they must not silently change published engine rules.
 
