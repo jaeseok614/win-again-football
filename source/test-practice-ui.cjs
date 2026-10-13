@@ -44,7 +44,7 @@ test('elapsed-minute decisions follow independent engine ticks and show only act
 });
 
 test('playback waits for elapsed time, pauses on visibility loss and never takes a hidden extra minute',()=>{
- const h=harness();h.open('comeback');const timer=[...h.intervals.values()][0];h.action('play');assert.equal(h.session.match.paused,false);h.time(0);timer();h.time(1799);timer();assert.equal(h.session.match.minute,75);h.time(1800);timer();assert.equal(h.session.match.minute,76);h.visibility(true);const before=JSON.stringify(h.session);assert.equal(h.session.match.paused,true);h.time(12000);timer();assert.equal(JSON.stringify(h.session),before);h.visibility(false);h.time(14000);timer();assert.equal(JSON.stringify(h.session),before);assert.ok(h.calls.feedbackCancel>0);h.action('play');h.time(15000);timer();h.time(16800);timer();assert.equal(h.session.match.minute,77);
+ const h=harness();h.open('comeback');const timer=[...h.intervals.values()][0];h.action('play');assert.equal(h.session.match.paused,false);h.time(0);timer();h.time(899);timer();assert.equal(h.session.match.minute,75);h.time(900);timer();assert.equal(h.session.match.minute,76);h.visibility(true);const before=JSON.stringify(h.session);assert.equal(h.session.match.paused,true);h.time(12000);timer();assert.equal(JSON.stringify(h.session),before);h.visibility(false);h.time(14000);timer();assert.equal(JSON.stringify(h.session),before);assert.ok(h.calls.feedbackCancel>0);h.action('play');h.time(15000);timer();h.time(15900);timer();assert.equal(h.session.match.minute,77);
 });
 
 test('retry and scenario changes keep deterministic starts and retain comparison history without extra timers',()=>{

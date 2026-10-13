@@ -1,7 +1,7 @@
 // Physical time is separate from display speed. Hidden/paused matches never tick.
 var continuousVisualBefore=null,continuousVisualCurrent=null,continuousVisualContact=false;
-var continuousOverview=null;
-function continuousSummary(match){return !match.paused&&F.running(match)&&MatchFlow.watchMode(playbackPrefs)==='key'&&MatchFlow.viewingPhase(match)==='routine';}
+var continuousOverview=null,continuousDirector=MatchFlow.createDirector();
+function continuousSummary(match){return !match.paused&&F.running(match)&&continuousDirector.summary(match,playbackPrefs);}
 function continuousVisualFrame(match){
  if(continuousSummary(match)){
   if(continuousOverview?.match!==match)continuousOverview={match,frame:F.continuousFrame(match)};
@@ -12,7 +12,7 @@ function continuousVisualFrame(match){
  return ContinuousFootball.interpolate(continuousVisualBefore,continuousVisualCurrent,continuousBudget/100)||F.continuousFrame(match);
 }
 var continuousStamp=0,continuousBudget=0,continuousMatch=null,continuousSavedAt=0,continuousRenderAt=0,continuousRAF=null;
-function continuousDisplayRate(match){return MatchFlow.displayRate(match,playbackPrefs);}
+function continuousDisplayRate(match){return continuousDirector.rate(match,playbackPrefs);}
 function continuousDisplayTick(now){
  continuousRAF=requestAnimationFrame(continuousDisplayTick);
  const match=practiceSession?.match?.continuousSetup?practiceSession.match:state,practice=match===practiceSession?.match;

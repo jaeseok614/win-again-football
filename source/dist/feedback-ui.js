@@ -1,7 +1,7 @@
 var mediaPrefs={effects:true,haptics:false},matchFeedback=null,momentTimer=0,impactTimer=0,lastMoment=null,pendingMatchMoment=null,lastEventFast=false;
 function motionEnabled(){return mediaPrefs.effects&&!matchMedia('(prefers-reduced-motion: reduce)').matches;}
 function matchMomentFor(events,match,fast=false){
- const event=[...events].reverse().find(e=>e.type==='goal')||[...events].reverse().find(e=>e.type==='shot'&&e.team===1&&(!match.continuousSetup||['save','parry'].includes(e.outcome)))||[...events].reverse().find(e=>e.type==='sub');if(!event)return null;
+ const event=[...events].reverse().find(e=>e.type==='goal')||[...events].reverse().find(e=>e.type==='shot'&&e.team===1&&(typeof MatchFlow==='undefined'||MatchFlow.shouldShowMoment(e,typeof playbackPrefs==='undefined'?{}:playbackPrefs))&&(!match.continuousSetup||['save','parry'].includes(e.outcome)))||[...events].reverse().find(e=>e.type==='sub');if(!event)return null;
  const kind=event.type==='goal'?(event.team===0?'goal':'concede'):event.type==='shot'?'save':'sub';
  const keeper=match.lineup.map(id=>match.players[id]).find(p=>p.pos==='GK'),scorer=match.players[event.scorerId]||(event.scorerIdentity?F.identityProfile(event.scorerIdentity):null);
  const opponentRoster=typeof currentVisualOpponentRoster==='function'?currentVisualOpponentRoster():Opposition.roster(S.opponentFor(season)),performer=match.continuousSetup?match.continuous.players.find(p=>p.id===event.actorId)?.name:Movement.frame({match,opponentFormation:Opposition.plan(S.opponentFor(season)).formation,opponentRoster,event,eventAgeMs:0,dismissedOpponent:typeof Discipline!=='undefined'?Discipline.dismissed(match,1):[]}).performerName;

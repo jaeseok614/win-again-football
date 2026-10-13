@@ -1,0 +1,246 @@
+/* Shared landscape workspaces: facts together, controls at the same lower edge. */
+@media(orientation:landscape){
+ #match-live-stats .stat-label-short{display:none}
+ #match-live-stats .stat-label-full,#match-live-stats .stat-label-short{font:inherit;color:inherit}
+ #league-centre-dialog[open]{width:calc(100vw - 12px);max-width:1600px;height:calc(100dvh - 12px);max-height:none;padding:6px;display:grid;grid-template-rows:44px minmax(0,1fr);gap:4px;overflow:hidden;box-sizing:border-box}
+ #league-centre-dialog .league-centre-head{margin:0;padding:0;min-height:0;border:0}
+ #league-centre-dialog .league-centre-head h2{font-size:15px;line-height:17px;margin:0}#league-centre-dialog .eyebrow{font-size:8px;line-height:10px}
+ #close-league-centre{min-height:44px;min-width:44px;font-size:10px;padding:3px}
+ .league-workspace{display:grid;grid-template-rows:44px minmax(0,1fr) 44px;gap:4px;min-width:0;min-height:0;height:100%;overflow:hidden;box-sizing:border-box}
+ .league-workspace-filters{display:grid;grid-template-columns:minmax(100px,.7fr) minmax(100px,.7fr) minmax(0,1fr);gap:5px;min-width:0}
+ .league-workspace-filters label{font-size:0;line-height:0;min-width:0}.league-workspace-filters select{height:44px;min-height:44px;width:100%;margin:0;padding:3px;font-size:10px}
+ .league-workspace-race{display:flex;flex-direction:column;justify-content:center;min-width:0;gap:2px;background:#1e3429;padding:3px 6px;border-radius:5px}
+ .league-workspace-race b{font-size:10px;line-height:12px}.league-workspace-race small{font-size:8px;line-height:10px;color:#b9d4b3;word-break:keep-all}
+ .league-workspace-content{display:grid;grid-template-columns:minmax(0,.68fr) minmax(0,.32fr);gap:6px;min-height:0;min-width:0;overflow:hidden}
+ .league-workspace-standings,.league-workspace-fixtures{display:flex;flex-direction:column;min-height:0;min-width:0;padding:3px;border:1px solid #38534d;border-radius:5px;background:#14262b}
+ .league-workspace h3{display:flex;justify-content:space-between;margin:0 0 2px;font-size:10px;line-height:12px;min-width:0}.league-workspace h3 small{font-size:7px;line-height:10px;color:#a4bcb7;font-weight:400}
+ .league-workspace-tables{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;min-height:0;min-width:0;flex:1}
+ .league-workspace-table{table-layout:fixed;width:100%;height:100%;border-collapse:collapse;font-size:8px;line-height:10px;background:none}
+ .league-workspace-table col.rank{width:14px}.league-workspace-table col.club{width:31%}
+ .league-workspace-table th,.league-workspace-table td{text-align:center;padding:0 1px;border-bottom:1px solid #2b4347;min-width:0;font-variant-numeric:tabular-nums}
+ .league-workspace-table th[scope=row]{text-align:left;min-width:0}
+ .league-workspace-table th button{display:flex;align-items:center;gap:2px;background:none;border:0;color:#dbead9;min-height:0!important;min-width:0;width:100%;height:100%;padding:0;font-size:8px;line-height:10px;text-align:left;word-break:keep-all}
+ .league-workspace-table .club-crest{width:10px;height:11px;min-width:10px;flex:0 0 10px}
+ .league-workspace-table .league-own{background:#34462f}.league-workspace-table .promotion td:first-child{color:#d4ef95}.league-workspace-table .relegation td:first-child{color:#f5b0a0}.league-workspace-table .league-selected{outline:1px solid #c0df9a;outline-offset:-1px}
+ .league-workspace .league-centre-games{display:grid;grid-template-columns:1fr;grid-template-rows:repeat(12,minmax(0,1fr));gap:2px;min-height:0;min-width:0;flex:1;margin:0;padding:0;list-style:none}
+ .league-workspace .league-centre-games li{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:minmax(0,1fr);align-items:center;min-height:0;min-width:0;padding:0 2px;background:#182f31;border:0;border-bottom:1px solid #304b43;border-radius:2px;position:relative}
+ .league-workspace .league-centre-games .our-game{background:#354d30}
+ .league-workspace .league-fixture-score{display:grid;grid-column:1;grid-row:1;grid-template-columns:minmax(0,1fr) 25px minmax(0,1fr);gap:2px;align-items:center;min-height:0;min-width:0;font-size:8px;line-height:10px;margin:0}
+ .league-fixture-score>span:last-child{text-align:right}.league-workspace .league-fixture-score b{font-size:9px;text-align:center;line-height:10px}
+ .league-workspace .league-fixture-status{display:none}.league-workspace .league-fixture-action{grid-column:2;grid-row:1;font-size:8px;line-height:10px;min-height:0!important;height:100%;padding:0 2px;border:1px solid #759655;border-radius:3px;background:#284535;color:#e5f4da}
+ .league-workspace .league-club-form{display:flex;flex-wrap:wrap;align-items:center;gap:2px;margin:2px 0 0;padding:0;font-size:7px;line-height:9px}.league-club-form .league-form>span{width:12px;height:12px;font-size:7px}.league-workspace .league-club-form>b{font-size:8px;margin:0}.league-workspace .league-club-form>span:last-child{width:100%}
+ .league-workspace-footer{display:grid;grid-template-columns:1fr minmax(70px,.7fr) 1fr;gap:4px;align-items:center;margin:0;padding:0;min-width:0;height:44px;box-sizing:border-box}
+ .league-workspace-footer button{height:44px;min-height:44px;font-size:10px;line-height:12px;padding:3px}.league-workspace-footer strong{text-align:center;font-size:9px;line-height:12px}
+ body.management-view #competition-centre{display:grid;grid-template-columns:86px minmax(0,1fr);grid-template-rows:22px minmax(0,1fr) 44px;gap:4px;position:relative;overflow:hidden;height:100%;padding:0}
+ #competition-centre>.centre-heading{grid-column:1/-1;grid-row:1;display:flex;align-items:center;justify-content:space-between;margin:0;gap:6px;min-width:0}#competition-centre>.centre-heading h2{font-size:13px;margin:0}#competition-centre>.centre-heading p{font-size:9px;line-height:11px;margin:0}
+ #competition-centre .competition-tabs{grid-column:1;grid-row:2;display:flex;flex-direction:column;justify-content:flex-start;gap:4px;margin:0;padding:0}
+ #competition-centre .competition-tabs button{width:100%;min-height:44px;font-size:10px;line-height:12px;padding:3px;word-break:keep-all}
+ #competition-centre .competition-surface{grid-column:2;grid-row:2;min-height:0;min-width:0;margin:0;padding:0;overflow:hidden;display:flex;flex-direction:column}
+ #competition-centre .league-workspace{grid-template-rows:44px minmax(0,1fr);flex:1}
+ #competition-centre .competition-links{grid-column:1/-1;grid-row:3;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:6px;align-items:stretch;height:44px;min-height:0;border:0;margin:0;padding:0}
+ #competition-centre .competition-extra-actions{display:flex;gap:4px;height:44px;grid-column:2}
+ #competition-centre .competition-extra-actions button{flex:1;min-width:0;min-height:44px;height:44px;font-size:10px;line-height:12px;padding:3px}
+ #competition-centre .competition-bracket{min-height:0;flex:1;gap:5px}
+ #competition-centre .competition-europe,#competition-europe-workspace{height:100%;min-height:0;overflow:hidden}
+ #competition-europe-workspace>#europe-panel{display:block!important;min-height:0;height:100%;overflow:auto}
+ #competition-europe-workspace .europe-centre{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px;height:100%;padding:4px;overflow:hidden}
+ #competition-europe-workspace .europe-heading{grid-column:1;margin:0;padding:0}#competition-europe-workspace .europe-heading h1{font-size:13px;margin:0;line-height:16px}#competition-europe-workspace .europe-heading p{font-size:9px;line-height:11px;margin:2px 0}.europe-heading .europe-star{display:none}
+ #competition-europe-workspace .europe-rules{grid-column:2;grid-row:1;font-size:8px;line-height:10px;padding:3px;margin:0;display:flex;flex-direction:column}
+ #competition-europe-workspace .europe-empty{grid-column:1/-1;padding:5px;margin:0}#competition-europe-workspace .europe-empty h2{font-size:14px;margin:0}#competition-europe-workspace .europe-empty p{font-size:10px;line-height:14px}
+ #competition-europe-workspace .europe-qualification{font-size:8px;line-height:10px;margin:0;grid-column:1/-1}.europe-titles{font-size:9px}
+ #competition-europe-workspace .europe-groups{grid-column:1;grid-row:3;display:grid;grid-template-columns:1fr 1fr;gap:4px;min-height:0}
+ #competition-europe-workspace .europe-groups h2{font-size:9px;margin:0}#competition-europe-workspace .europe-table{font-size:8px;line-height:10px;table-layout:fixed;width:100%}#competition-europe-workspace .europe-table th,#competition-europe-workspace .europe-table td{font-size:8px;line-height:10px;padding:1px}#competition-europe-workspace .europe-table th small{display:none}
+ #competition-europe-workspace .europe-fixtures{grid-column:2;grid-row:3/6;display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:0;padding:2px;overflow:auto;min-height:0}#competition-europe-workspace .europe-fixtures>summary{grid-column:1/-1;font-size:9px;line-height:11px;pointer-events:none}#competition-europe-workspace .europe-stage{margin:0;padding:0}#competition-europe-workspace .europe-stage h3{font-size:8px;line-height:10px;margin:0}#competition-europe-workspace .europe-stage h3 small{display:none}#competition-europe-workspace .europe-pair{font-size:7px;line-height:9px;padding:0;display:grid;grid-template-columns:minmax(0,1fr) 17px minmax(0,1fr);gap:1px}.europe-pending{font-size:8px;line-height:10px}
+ #competition-europe-workspace .europe-titles{grid-column:1;font-size:8px;margin:0;padding:2px}#competition-europe-workspace .finance-note{font-size:8px;line-height:10px;margin:0}
+ #tactics-pane{position:relative;display:grid!important;grid-template-columns:1fr;grid-template-rows:24px minmax(0,1fr) 44px;gap:5px;padding:0}
+ #tactics-pane[hidden]{display:none!important}#tactics-pane>.centre-heading{grid-row:1;display:flex;justify-content:space-between;align-items:center;margin:0}#tactics-pane .centre-heading h2{font-size:14px;margin:0}#tactics-pane .centre-heading p{font-size:10px;line-height:12px;margin:0}
+ #tactics-pane .tactics-takers{grid-row:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;min-height:0;margin:0;padding:5px;border:1px solid #35504a;background:#15282c;align-content:center}
+ #tactics-pane .tactics-takers h3{grid-column:1/-1;font-size:11px;margin:0}#tactics-pane .tactics-takers>div{padding:3px;font-size:10px;line-height:13px}.tactics-takers strong{font-size:11px}.tactics-takers small{font-size:9px}
+ #tactics-pane .tactics-centre-grid{grid-row:3;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:0;min-height:0;height:44px}
+ #tactics-pane .tactics-centre-grid button{height:44px;min-height:44px;padding:3px;font-size:10px;line-height:12px;display:flex;align-items:center;justify-content:center;word-break:keep-all}#tactics-pane .tactics-centre-grid button span{display:none}#tactics-pane .tactics-centre-grid strong{font-size:10px;line-height:12px}#tactics-pane>.centre-note{display:none}
+ body.management-view #academy-pane{display:grid;grid-template-columns:minmax(125px,.23fr) minmax(0,.77fr);grid-template-rows:minmax(0,1fr) 30px;gap:5px;padding:0}
+ body.management-view #academy-pane>[data-managed-panel]{display:block!important;margin:0;min-height:0;min-width:0;overflow:hidden}
+ #management-hub-academy{display:none!important}#academy-overview{grid-column:1;grid-row:1;display:flex!important;flex-direction:column;gap:3px}
+ #academy-overview .academy-art{height:50px;min-height:30px;flex:1;overflow:hidden}#academy-overview .academy-art img{height:100%;width:100%;object-fit:cover}
+ #academy-overview .academy-hero{display:block;margin:0;padding:0}#academy-overview .academy-hero h1{font-size:12px;line-height:14px;margin:0}#academy-overview .academy-hero p,#academy-overview .academy-badge{display:none}#academy-overview .eyebrow{font-size:8px;line-height:10px}
+ #academy-overview .scout-panel{display:flex;flex-direction:column;padding:3px;gap:4px;margin:0;min-height:0}#academy-overview .scout-copy h2{font-size:10px;line-height:12px;margin:0}#academy-overview .scout-copy p{font-size:8px;line-height:10px;margin:2px 0}#academy-overview .scout-actions{display:grid;grid-template-columns:1fr;gap:3px;margin-top:auto}#academy-overview .scout-actions select,#academy-overview .scout-actions button{min-height:44px;height:44px;font-size:9px;line-height:11px;padding:3px;width:100%}
+ #academy-reports{grid-column:2;grid-row:1;display:flex!important;flex-direction:column;gap:3px}
+ #academy-reports .report-tabs{height:44px;display:flex;gap:3px;flex-shrink:0;margin:0}#academy-reports .report-tabs button{height:44px;min-height:44px;font-size:10px;padding:3px}#academy-reports>.panel-heading{display:none}
+ #academy-reports .academy-empty{height:100%;padding:10px;display:flex;flex-direction:column;justify-content:center}#academy-reports .academy-empty h2{font-size:14px}#academy-reports .academy-empty p{font-size:10px;line-height:14px}
+ #academy-reports .academy-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;min-height:0;flex:1}
+ #academy-reports .market-compact{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr) 44px;padding:3px;gap:3px;min-height:0;height:100%;margin:0}
+ #academy-reports .market-card-content{grid-column:1/-1;display:grid;grid-template-columns:1fr;grid-template-rows:28px 44px minmax(40px,1fr) auto;gap:2px;min-width:0;min-height:0;overflow:auto}
+ #academy-reports .candidate-identity{grid-row:1;margin:0;gap:3px;min-height:0}#academy-reports .candidate-identity .player-portrait{width:24px;height:24px;flex-basis:24px}#academy-reports .candidate-identity h2{font-size:10px;line-height:11px;margin:0}#academy-reports .candidate-identity small{font-size:8px;line-height:9px}
+ #academy-reports .market-outgoing{grid-row:2;font-size:0;line-height:0;min-height:0}#academy-reports .market-outgoing select{height:44px;min-height:44px;width:100%;font-size:9px;line-height:11px;padding:2px;margin:0}
+ #academy-reports .market-quick-comparison{grid-row:3;margin:0;padding:1px 2px;min-height:0}#academy-reports .market-quick-comparison h3{font-size:8px;line-height:9px;white-space:nowrap;margin:0}#academy-reports .market-quick-comparison>div{font-size:8px;line-height:9px;margin:0;padding:0}#academy-reports .market-quick-comparison b{font-size:9px;line-height:9px}
+ #academy-reports .market-terms{grid-row:4;display:grid;grid-template-columns:1fr 1fr;font-size:7px;line-height:9px;gap:1px 3px}#academy-reports .market-terms>span{display:block}#academy-reports .market-terms b{font-size:8px}#academy-reports .market-terms>span:first-child{grid-column:1/-1}#academy-reports .market-terms small{display:none}
+ #academy-reports .market-compact>button{grid-row:2;height:44px;min-height:44px;font-size:9px;line-height:11px;margin:0;padding:3px}#academy-reports .market-compact>button[data-promote]{grid-column:2}
+ #academy-tasks{grid-column:1/-1;grid-row:2}#academy-tasks>.panel-heading{display:none}#academy-tasks .mission-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:0;height:100%}#academy-tasks .mission-card{padding:2px;margin:0}#academy-tasks .mission-card h3{font-size:9px;line-height:10px;margin:0}#academy-tasks .mission-card p,.mission-card .mission-top{display:none}#academy-tasks .mission-card small{font-size:7px;line-height:9px}#academy-tasks .mission-progress{height:2px;margin:0}
+ .management-hub .management-entries{gap:4px}.management-hub .management-entries button{min-height:44px;padding:4px;justify-content:space-between}.management-entries>button:last-child:nth-child(odd){grid-column:auto}
+ #match-popup .match-popup-header [data-match-popup-close],#management-close,#squad-overview-close,#close-league-centre{min-width:44px;height:44px;margin:0}
+}
+@container(max-width:280px){
+ #match-live-stats .stat-label-full{display:none}#match-live-stats .stat-label-short{display:inline}
+ #match-live-stats .live-stat-row{grid-template-columns:24px minmax(0,1fr) 24px;gap:1px;padding:0}
+ #match-live-stats .live-stat-row b{font-size:9px;line-height:10px;padding:0}body.match-popup-ready.match-view #match-live-stats .live-stat-row span{font-size:8px;line-height:10px}
+ #match-live-stats .live-stats-heading span{font-size:7px;line-height:9px}#match-live-stats .live-stats-heading b{font-size:9px}
+}
+@media(orientation:landscape) and (max-width:739px){
+ .league-workspace-table .club-crest{display:none}.league-workspace-table col.club{width:37%}.league-workspace-table col.rank{width:10px}
+ .league-workspace-table .goals-column{display:none}.league-workspace-table th button{font-size:7px;line-height:9px}.league-workspace-table th,.league-workspace-table td{font-size:7px;line-height:9px;padding:0}
+ .league-workspace h3{font-size:8px;line-height:10px}.league-workspace h3 small{display:none}.league-workspace-content{grid-template-columns:minmax(0,.66fr) minmax(0,.34fr);gap:3px}.league-workspace-tables{gap:3px}
+ .league-workspace .league-fixture-score{font-size:7px;line-height:9px;grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr);gap:1px}.league-workspace .league-fixture-score b{font-size:8px;line-height:9px}.league-workspace .league-fixture-action{font-size:7px;line-height:8px;padding:0 1px}
+ body.management-view #competition-centre{grid-template-columns:65px minmax(0,1fr)}#competition-centre .competition-tabs button{font-size:9px;line-height:11px}
+ .league-workspace-race b{font-size:9px;line-height:10px}.league-workspace-race small{font-size:7px;line-height:9px}.league-workspace-filters{grid-template-columns:minmax(75px,.7fr) minmax(75px,.7fr) minmax(0,1fr);gap:3px}.league-workspace-filters select{font-size:9px;line-height:11px}
+ .league-workspace-footer button,#competition-centre .competition-extra-actions button{font-size:9px;line-height:10px}.league-workspace-footer strong{font-size:8px;line-height:10px}
+ #academy-reports .candidate-identity .player-portrait{display:none}.league-workspace-race{padding:2px}
+}
+
+@media(orientation:landscape){
+ .league-workspace-tables{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+ .league-workspace-table{font-size:7px;line-height:8px}.league-workspace-table col.rank{width:10px}.league-workspace-table col.club{width:34%}
+ .league-workspace-table th,.league-workspace-table td{border:0;box-shadow:inset 0 -1px #2b4347;font-size:7px;line-height:8px;padding:0}
+ .league-workspace-table th button{height:auto;font-size:7px;line-height:8px}.league-workspace-table .club-crest{width:8px;height:9px;min-width:8px;flex-basis:8px}
+ .league-workspace .league-centre-games{gap:0}
+ .league-workspace .league-centre-games li{padding:0 1px;border:0;box-shadow:inset 0 -1px #304b43}
+ .league-workspace .league-fixture-score{font-size:7px;line-height:8px}.league-workspace .league-fixture-score b{font-size:8px;line-height:8px}.league-workspace .league-fixture-action{border:0;box-shadow:inset 0 0 0 1px #759655;font-size:7px;line-height:8px}
+ #academy-overview .scout-panel{min-width:0;width:100%;max-width:100%;box-sizing:border-box;flex:0 0 auto}
+ #academy-overview .academy-art{margin:0;min-width:0;min-height:0}#academy-overview .academy-art>*{height:100%;width:100%;min-height:0;max-height:100%;margin:0}
+ #academy-overview .scout-actions{min-width:0;width:100%}#academy-overview .scout-actions button{white-space:normal;word-break:keep-all}
+ #academy-reports .academy-empty{min-height:0;margin:0;box-sizing:border-box}#academy-reports .academy-empty .empty-line{display:none}#academy-reports .academy-empty h2,#academy-reports .academy-empty p{margin:3px 0}
+ #academy-reports .market-card-content>*{grid-column:1!important;min-width:0}
+ #academy-reports>.finance-note{display:none}
+ #academy-tasks{padding:0;margin:0;min-height:0;height:100%;box-sizing:border-box}#academy-tasks .mission-card{height:100%;min-height:0;box-sizing:border-box}#academy-tasks .mission-card .mission-top{display:none}#academy-tasks .mission-card small{display:block;line-height:8px}.mission-progress{min-height:0}
+ #competition-europe-workspace .europe-centre{min-height:0;grid-template-rows:auto auto minmax(0,1fr) auto;box-sizing:border-box}
+ #competition-europe-workspace .europe-empty{min-height:0;padding:3px;overflow:auto}#competition-europe-workspace .europe-empty p{margin:3px 0}
+ #competition-europe-workspace .europe-titles{padding:1px;border:0;margin:0;grid-column:1/-1}#competition-europe-workspace .europe-titles strong{font-size:9px;line-height:11px}#competition-europe-workspace .europe-titles p{font-size:8px;line-height:10px;margin:1px 0}
+}
+@media(orientation:landscape) and (max-width:739px){
+ .league-workspace-table col.club{width:38%}.league-workspace-table th button{font-size:6.5px;line-height:8px}.league-workspace-table th,.league-workspace-table td{font-size:6.5px;line-height:8px}
+ .league-workspace .league-fixture-score{font-size:6.5px;line-height:8px}.league-workspace .league-fixture-action{font-size:6.5px;line-height:8px}
+}
+
+@media(orientation:landscape){
+ #academy-reports .market-card-content{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:44px minmax(0,1fr);gap:3px;min-height:0}
+ #academy-reports .candidate-identity{grid-column:1!important;grid-row:1;gap:3px;align-items:center}#academy-reports .candidate-identity>div{min-width:0}
+ #academy-reports .market-outgoing{grid-column:2!important;grid-row:1;display:block;min-height:44px}
+ #academy-reports .market-quick-comparison{display:block!important;grid-column:1!important;grid-row:2;overflow:hidden}
+ #academy-reports .market-quick-comparison>div{display:grid;grid-template-columns:minmax(0,1fr) 20px 20px;gap:1px}
+ #academy-reports .market-terms{grid-column:2!important;grid-row:2;display:flex;flex-direction:column;gap:1px;font-size:8px;line-height:10px}
+ #academy-reports .market-terms>span{display:flex;justify-content:space-between;gap:2px;word-break:keep-all}#academy-reports .market-terms b{font-size:8px;line-height:10px}
+ #academy-reports .market-compact>button.profile-inline-button{grid-column:1;grid-row:2;order:0;width:100%;margin:0}#academy-reports .market-compact>button[data-promote]{grid-column:2;grid-row:2;order:0}
+ #academy-reports .academy-grid{height:auto}#academy-reports .candidate-identity h2{font-size:9px;line-height:10px}
+ #academy-overview .academy-art{height:28px;max-height:28px;flex:0 0 28px}#academy-overview .scout-panel{padding:2px;gap:2px}
+ #academy-tasks>.finance-note{display:none}#academy-tasks>.panel-heading{display:none!important}#academy-tasks .mission-card h3{margin:0;padding:0}
+ #competition-europe-workspace .europe-centre:not(:has(.europe-groups)){grid-template-rows:48px minmax(0,1fr) 22px}
+ #competition-europe-workspace .europe-centre:not(:has(.europe-groups)) .europe-heading,#competition-europe-workspace .europe-centre:not(:has(.europe-groups)) .europe-rules{grid-row:1}
+ #competition-europe-workspace .europe-centre:not(:has(.europe-groups)) .europe-empty{grid-row:2}
+ #competition-europe-workspace .europe-centre:not(:has(.europe-groups)) .europe-titles{grid-row:3}
+ #competition-europe-workspace .europe-fixtures{grid-template-columns:1fr;grid-template-rows:44px minmax(0,1fr);overflow:hidden;padding:0}
+ #competition-europe-workspace .europe-fixtures>summary{display:none}.europe-stage-filter{display:block;font-size:0;line-height:0;grid-column:1;grid-row:1;margin:0;padding:0}
+ .europe-stage-filter select{min-height:44px;height:44px;font-size:10px;width:100%;margin:0;padding:3px}
+ #competition-europe-workspace .europe-fixtures>.europe-stage{grid-column:1;grid-row:2}#competition-europe-workspace .europe-pair{font-size:9px;line-height:12px;padding:1px 2px}
+}
+@media(orientation:landscape) and (max-width:739px){
+ #academy-reports .market-card-content{grid-template-columns:1fr;grid-template-rows:22px 44px minmax(0,1fr) 40px;gap:2px}
+ #academy-reports .candidate-identity{grid-column:1!important;grid-row:1}#academy-reports .market-outgoing{grid-column:1!important;grid-row:2}
+ #academy-reports .market-quick-comparison{grid-column:1!important;grid-row:3;padding:0}
+ #academy-reports .market-quick-comparison>div{line-height:8px;font-size:7px}#academy-reports .market-quick-comparison b{font-size:8px;line-height:8px}#academy-reports .market-quick-comparison h3{font-size:7px;line-height:8px}
+ #academy-reports .market-terms{grid-column:1!important;grid-row:4;display:grid;grid-template-columns:1fr 1fr;font-size:6.5px;line-height:8px;gap:0 2px}#academy-reports .market-terms>span{display:block}#academy-reports .market-terms b{font-size:7px;line-height:8px}
+}
+
+@media(orientation:landscape){
+ #academy-reports .market-card-content{grid-column:1/-1;grid-row:1;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:44px minmax(0,1fr);gap:3px;height:100%}
+ #academy-reports .candidate-identity{grid-column:1!important;grid-row:1;min-height:0}
+ #academy-reports .market-outgoing{grid-column:2!important;grid-row:1;min-height:44px}
+ #academy-reports .market-quick-comparison{grid-column:1!important;grid-row:2;display:block!important;min-height:0;overflow:visible}
+ #academy-reports .market-terms{grid-column:2!important;grid-row:2;display:flex;flex-direction:column;gap:1px;font-size:7px;line-height:9px}
+ #academy-reports .market-terms>span{display:flex;justify-content:space-between;gap:2px}#academy-reports .market-terms b{font-size:8px;line-height:9px}
+ #academy-reports .market-compact{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) 44px;min-height:0;box-sizing:border-box}
+ #academy-reports .market-compact>button.profile-inline-button{grid-column:1;grid-row:2;width:100%;order:0}
+ #academy-reports .market-compact>button[data-promote]{grid-column:2;grid-row:2;order:0}
+ #academy-overview .scout-panel{min-width:0;flex:0 0 auto}#academy-overview .academy-art{flex:0 0 20px;min-height:0;height:20px;max-height:20px}
+ #academy-overview .scout-panel .scout-copy .eyebrow{display:none}#academy-overview .scout-panel .scout-copy p{font-size:7px;line-height:9px;margin:1px 0}
+ #academy-tasks>p{display:none}#academy-tasks .mission-grid{height:100%}#academy-tasks .mission-card{padding:1px 3px}
+ #academy-reports .market-quick-comparison>div{font-size:7px;line-height:9px}#academy-reports .market-compare-labels{font-size:6.5px;line-height:8px}
+}
+@media(orientation:landscape) and (max-width:739px){
+ #academy-reports .candidate-identity small{font-size:7px;line-height:8px}#academy-reports .candidate-identity h2{font-size:8px;line-height:9px}
+ #academy-reports .market-outgoing select{font-size:7px;padding:1px}
+ #academy-reports .market-quick-comparison>div{grid-template-columns:minmax(0,1fr) 14px 14px;font-size:6.5px;line-height:8px}#academy-reports .market-quick-comparison b{font-size:7px;line-height:8px}
+ #academy-reports .market-terms{font-size:6.5px;line-height:8px}#academy-reports .market-terms b{font-size:7px;line-height:8px}
+}
+
+@media(orientation:landscape){
+ body.management-view #academy-pane>#academy-reports,body.management-view #academy-pane>#academy-overview{display:flex!important;min-height:0;height:100%;box-sizing:border-box}
+ #academy-reports .academy-grid{flex:1;min-height:0;height:auto;grid-template-rows:minmax(0,1fr)}
+ #competition-europe-workspace>#europe-panel{margin:0;padding:0;border:0;min-width:0;box-sizing:border-box}
+ #competition-europe-workspace .europe-centre{margin:0;min-width:0}
+ #competition-europe-workspace .europe-rules{min-width:0;max-width:100%;width:100%;gap:2px;padding:2px;box-sizing:border-box}
+ #competition-europe-workspace .europe-rules span{min-width:0;max-width:100%;font-size:8px;line-height:10px;white-space:normal;word-break:keep-all;padding:0;border:0}
+}
+
+@media(orientation:landscape) and (max-width:739px){
+ .league-workspace-content{min-height:0}.league-workspace-standings,.league-workspace-fixtures{padding:1px}
+ .league-workspace h3{font-size:7px;line-height:8px;margin-bottom:0}
+ .league-workspace-table[data-compact=true] col.club{width:52%}.league-workspace-table th button{font-size:7px;line-height:8px}.league-workspace-table th,.league-workspace-table td{font-size:7px;line-height:8px}
+ #academy-reports .market-quick-comparison h3{white-space:normal;font-size:6.5px;line-height:8px;margin:0}
+ #academy-reports .market-quick-comparison .market-compare-labels{font-size:6px;line-height:7px;word-break:keep-all}
+}
+@media(orientation:landscape) and (max-height:350px){
+ #competition-centre .competition-tabs{gap:0}
+ .league-workspace .league-centre-games{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));gap:1px 2px}
+ .league-workspace .league-fixture-score{grid-template-columns:minmax(0,1fr) 20px;grid-template-rows:6px 6px;gap:0 1px;font-size:6.5px;line-height:6px}
+ .league-workspace .league-fixture-score>span{grid-column:1;text-align:left;white-space:nowrap}.league-workspace .league-fixture-score>span:last-child{grid-row:2;text-align:left}.league-workspace .league-fixture-score b{grid-column:2;grid-row:1/3;font-size:7px;line-height:8px}
+ .league-workspace .league-centre-games li{padding:0 1px;grid-template-columns:1fr}
+}
+
+@media(orientation:landscape){
+ #academy-reports .report-tabs:has(>strong){height:14px;min-height:14px;align-items:center;font-size:10px;line-height:12px}
+ #academy-overview .scout-panel,#academy-overview .scout-actions,#academy-overview .scout-copy{margin:0}
+ #academy-overview .scout-actions button{margin:0}#academy-overview .scout-copy p{padding:0}
+}
+@media(orientation:landscape) and (max-height:350px){
+ body.management-view #competition-centre{grid-template-rows:minmax(0,1fr) 44px}
+ #competition-centre>.centre-heading{display:none}#competition-centre .competition-tabs,#competition-centre .competition-surface{grid-row:1}#competition-centre .competition-links{grid-row:2}
+ body.management-view #academy-pane{grid-template-rows:minmax(0,1fr) 22px;gap:3px}
+ #academy-overview .academy-art{display:none}#academy-overview .academy-hero .eyebrow{font-size:7px;line-height:8px}
+ #academy-overview .academy-hero h1{font-size:10px;line-height:11px}#academy-overview .scout-copy h2{font-size:9px;line-height:10px}
+ #academy-reports .market-quick-comparison h3{font-size:6px;line-height:7px}
+ #competition-europe-workspace .europe-empty h2{font-size:11px;line-height:12px}#competition-europe-workspace .europe-empty p{font-size:8px;line-height:10px}
+}
+
+@media(orientation:landscape){.league-workspace-table[data-compact=true] col.club{width:52%}}
+
+@media(orientation:landscape) and (max-width:1023px){#academy-reports .candidate-identity .player-portrait{display:none}#academy-reports .candidate-identity h2{font-size:8px;line-height:10px}#academy-reports .candidate-identity small{font-size:7px;line-height:9px}}
+
+@media(orientation:landscape){#academy-reports .candidate-identity .player-portrait{width:16px;height:16px;min-width:16px;min-height:16px;flex:0 0 16px}#academy-reports .candidate-identity h2{font-size:8px;line-height:9px}#academy-reports .candidate-identity small{font-size:6.5px;line-height:8px}#academy-reports .candidate-identity>div{max-height:44px;line-height:8px}}
+
+@media(orientation:landscape){
+ body.management-view #academy-pane{position:relative}
+ #academy-reports .academy-report-heading{flex:0 0 14px;height:14px;font-size:10px;line-height:12px}
+ #academy-reports .report-tabs:has(>strong){display:none}
+ #academy-pane:has(.report-tabs button) #academy-overview .scout-actions{visibility:hidden}
+ #academy-reports .report-tabs:has(button){position:absolute;left:0;bottom:35px;width:calc(23% - 4px);min-width:125px;height:44px;gap:3px;z-index:2}
+ #academy-reports .report-tabs button{flex:1;min-width:0;font-size:8px;line-height:10px;padding:2px;word-break:keep-all}
+}
+@media(orientation:landscape) and (max-height:350px){#academy-reports .report-tabs:has(button){bottom:25px}}
+
+@media(orientation:landscape){
+ #competition-europe-workspace .europe-centre:has(.europe-groups){grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:24px minmax(0,1fr) 24px;padding:0;gap:3px}
+ #competition-europe-workspace .europe-centre:has(.europe-groups) .europe-heading{grid-row:1;grid-column:1;min-height:0}
+ #competition-europe-workspace .europe-centre:has(.europe-groups) .europe-heading h1{display:none}#competition-europe-workspace .europe-centre:has(.europe-groups) .europe-heading p{font-size:8px;line-height:10px;margin:0}
+ #competition-europe-workspace .europe-centre:has(.europe-groups) .europe-rules{grid-row:1;grid-column:2;gap:0;padding:0;min-height:0}
+ #competition-europe-workspace .europe-centre:has(.europe-groups) .europe-rules span{font-size:6.5px;line-height:7px}
+ #competition-europe-workspace .europe-groups{grid-row:2;grid-column:1;margin:0;min-height:0;align-items:start}
+ #competition-europe-workspace .europe-groups .table-wrap{margin:0;padding:0;min-height:0;overflow:visible}
+ #competition-europe-workspace .europe-table th,#competition-europe-workspace .europe-table td{font-size:7px;line-height:8px;padding:0;border:0}
+ #competition-europe-workspace .europe-fixtures{grid-row:2;grid-column:2;min-height:0;border:0;gap:2px;grid-template-rows:44px minmax(0,1fr)}
+ #competition-europe-workspace .europe-stage{min-height:0;overflow:visible}#competition-europe-workspace .europe-pair{font-size:7px;line-height:9px;padding:0}
+ #competition-europe-workspace .europe-qualification{grid-column:1;grid-row:3;align-self:start;font-size:6.5px;line-height:7px;margin:0}
+ #competition-europe-workspace .europe-centre:has(.europe-groups) .europe-titles{grid-row:3;grid-column:1;align-self:end;padding:0;height:8px;min-height:0}
+ #competition-europe-workspace .europe-centre:has(.europe-groups) .europe-titles strong{font-size:7px;line-height:8px}#competition-europe-workspace .europe-centre:has(.europe-groups) .europe-titles p{display:none}
+ #competition-europe-workspace .europe-centre>.finance-note{grid-row:3;grid-column:2;margin:0;font-size:6.5px;line-height:8px;min-height:0}
+}
+
+@media(orientation:landscape){#competition-europe-workspace .europe-centre:has(.europe-groups) .europe-titles{font-size:7px;line-height:8px}#competition-europe-workspace .europe-centre:has(.europe-groups) .europe-titles strong{display:block;line-height:8px;height:8px}#competition-europe-workspace #europe-match{position:absolute;left:0;bottom:0;width:calc(60% - 3px);height:44px;min-height:44px;margin:0;padding:3px;font-size:10px;line-height:12px;z-index:2}}

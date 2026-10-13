@@ -1,3 +1,5 @@
+2026-10-14 최신: 큰 경기장(62%)/짧은 핵심 관전/득점 자동 진행, 전체 리그·유소년 보고서의 가로 통합. [설계](docs/SINGLE_SCREEN_WORKSPACES_2026-10-14.md). 새 소스·브라우저·네이티브 검증과 APK 배포 상태는 HANDOFF 최신 항목을 확인하세요.
+
 2026-10-13 설치판: 풋몹식 실제12기록+점유율/가로 화면 겹침 수정, 로컬·원격171 suites/1325checks 및 Android14/15 각각10검사 성공. 기존 Drive에 match-statistics.apk만 교체했습니다. [설계](docs/PHONE_WORKSPACES_2026-10-13.md), HANDOFF의 정확한 검사/서명/원격Source 상태 참조.
 
 2026-10-13 진행: 풋몹 방식 실제 경기 통계, 경기장 비율, 선수단/영입 직접 진입과 교체 선택 누수/명단 겹침 수정. [설계](docs/PHONE_WORKSPACES_2026-10-13.md), HANDOFF 검증/배포 상태 참조.

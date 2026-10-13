@@ -30,6 +30,17 @@ positions and current abilities together. Use compact numeric/color tables and
 preserve actual actions, identity routing and 44px essential controls. Unknown
 facts remain explicit, never fabricated. Read docs/PLAYER_REPORT_WORKSPACE_2026-10-13.md.
 
+## Single-screen match and management (2026-10-14)
+
+The owner requires the pitch to be larger than the statistical rail (about 62%/38%).
+This supersedes the previous 1.6 display-pitch ratio. Keep actual 22-player football
+and facts, but bound repetitive viewer highlights. Goal artwork dismisses after
+2.6 seconds without resuming a manual pause or crossing a match phase boundary.
+Put small management reports inline with consistent 44px lower actions; league
+clubs and selected-round fixtures must appear together without table pagination.
+Use compact columns plus selected-club totals on phones. Read
+docs/SINGLE_SCREEN_WORKSPACES_2026-10-14.md and test real later-campaign states.
+
 ## Match facts and entry routes (2026-10-13)
 
 The landscape match side rail compares actual displayed-match facts, inspired by

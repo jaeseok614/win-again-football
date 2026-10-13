@@ -1,4 +1,4 @@
-self.WIN_AGAIN_CACHE_REVISION = "232bebe321f4";
+self.WIN_AGAIN_CACHE_REVISION = "b2e2092fb48c";
 self.WIN_AGAIN_ASSETS = [
   "./style.css?v=22",
   "./coach-guide.css?v=22",
@@ -207,6 +207,7 @@ self.WIN_AGAIN_ASSETS = [
   "./management-centres.js?v=1",
   "./landscape-workspace.css?v=1",
   "./landscape-workspace.js?v=1",
+  "./single-screen-workspaces.css?v=1",
   "./assets/player-faces-v19.webp?v=19",
   "./assets/player-faces-v17.webp?v=17",
   "./assets/player-faces-v18.webp?v=18",

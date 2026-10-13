@@ -37,9 +37,9 @@ function fitMatchWorkspace(){
   const pane=$('match-pane');if(!pane)return;
   const style=getComputedStyle(pane),rows=style.gridTemplateRows.split(' ').map(Number.parseFloat),availableHeight=rows[1]+rows[2]+Number.parseFloat(style.rowGap);
   if(!Number.isFinite(availableHeight))return;
-  const width=Math.max(180,Math.min(availableHeight*1.6,pane.clientWidth-Math.max(280,Math.min(400,pane.clientWidth*.34))-4));
+  const width=Math.floor((pane.clientWidth-4)*.62);
   pane.style.setProperty('--match-field-width',Math.round(width)+'px');
-  pane.style.setProperty('--match-field-height',Math.floor(width/1.6)+'px');
+  pane.style.setProperty('--match-field-height',Math.floor(availableHeight)+'px');
  });
 }
 new ResizeObserver(fitMatchWorkspace).observe($('match-pane'));window.addEventListener('resize',fitMatchWorkspace);

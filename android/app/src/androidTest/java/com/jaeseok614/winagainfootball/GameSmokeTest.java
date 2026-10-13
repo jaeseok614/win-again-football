@@ -558,6 +558,31 @@ public final class GameSmokeTest {
         }
     }
 
+    @Test public void wholeLeagueAcademyAndAutomaticGoalsFitLandscape() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeGoalScene();managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;competitionTab='league';leagueCentreRound=null;leagueCentreClub='all';setView('cup');return true;})()");
+            String before = evaluate(scenario, "JSON.stringify(season)");
+            assertEquals("Every league club and current fixture fit together", "true", evaluate(scenario,
+                "(()=>{const h=document.getElementById('competition-centre'),r=h.getBoundingClientRect(),rows=[...h.querySelectorAll('[data-league-row]')],games=[...h.querySelectorAll('.league-fixture-score')];return rows.length===24&&games.length===12&&[...rows,...games,...h.querySelectorAll('.competition-links button')].every(e=>{const b=e.getBoundingClientRect();return b.top>=r.top&&b.bottom<=r.bottom+1;});})()"));
+            screenshot(scenario, "android-whole-league.png");
+            evaluate(scenario, "(()=>{const e=document.getElementById('competition-league-round');e.value='46';e.dispatchEvent(new Event('change'));return true;})()");
+            assertEquals("Later rounds do not expose invented scores", "true", evaluate(scenario, "[...document.querySelectorAll('#competition-centre .league-fixture-score b')].every(e=>e.textContent==='—')"));
+            assertEquals(before, evaluate(scenario, "JSON.stringify(season)"));
+            evaluate(scenario, "(()=>{season=S.scout(season,'FW');state=season.match;setView('academy');return true;})()");
+            assertEquals("All three actual prospect comparisons and costs remain above the actions", "true", evaluate(scenario,
+                "(()=>{const cards=[...document.querySelectorAll('.academy-candidate')];return cards.length===3&&cards.every(c=>{const body=c.querySelector('.market-card-content'),r=body.getBoundingClientRect(),q=E.quote(season,c.dataset.marketCandidate,outgoingChoices[c.dataset.marketCandidate]);return c.querySelectorAll('.market-quick-comparison>div').length===5&&[...body.querySelectorAll('.market-quick-comparison>div,.market-terms>span')].every(e=>e.getBoundingClientRect().bottom<=r.bottom+1)&&c.querySelector('.market-terms').textContent.includes(signedMoney(q.cost))&&c.querySelectorAll('button').length===2;});})()"));
+            screenshot(scenario, "android-whole-academy.png");
+            evaluate(scenario, "(()=>{setView('match');const pre=Opposition.preview(season);F.enableContinuous(state,{opponentFormation:pre.teams[1].formation,opponentPlayers:pre.teams[1].players,positions:positions()});F.begin(state);while(!state.logs.some(e=>e.type==='goal')&&F.running(state)&&state.minute<44)F.advanceContinuous(state,300);state.paused=true;mediaPrefs.effects=true;render();const e=state.logs.findLast(e=>e.type==='goal');if(!e)return false;showGoalScene({kind:e.team===0?'goal':'concede',minute:e.minute,player:'득점 선수',label:e.minute+'분'});return goalSceneHold;})()");
+            awaitTrue(scenario, "goalSceneHold");
+            screenshot(scenario, "android-auto-goal.png");
+            awaitTrue(scenario, "!goalSceneHold");
+            assertEquals("Dismissing a goal never resumes a manual pause", "true", evaluate(scenario, "state.paused"));
+            assertEquals("Pitch has more width than the statistics", "true", evaluate(scenario, "document.getElementById('pitch').getBoundingClientRect().width>document.getElementById('match-live-stats').getBoundingClientRect().width*1.4"));
+            scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
     @Test public void continuousKickoffAndPhysicalReplaySurviveNativeRelaunch() throws Exception {
         String physical;
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
