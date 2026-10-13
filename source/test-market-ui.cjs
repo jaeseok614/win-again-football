@@ -6,7 +6,7 @@ function test(name,fn){fn();groups++;console.log('PASS '+name);}
 function finish(match){while(match.phase!=='full'){if(!F.running(match))F.begin(match);F.finishSegment(match);}}
 function harness(season){
  let html='',buttons=[],selects=[],pending=null;const calls={action:0,save:0},errors=[];
- const panel={querySelectorAll(selector){return selector==='[data-outgoing]'?selects:selector==='[data-recruit]'?buttons:[];}};
+ const panel={dataset:{},querySelectorAll(selector){return selector==='[data-outgoing]'?selects:selector==='[data-recruit]'?buttons:[];}};
  Object.defineProperty(panel,'innerHTML',{get(){return html;},set(markup){html=markup;buttons=[...markup.matchAll(/<button\b([^>]*\bdata-recruit="([^"]+)"[^>]*)>/g)].map(([,attributes,identity])=>({disabled:/\bdisabled\b/.test(attributes),dataset:{recruit:identity}}));selects=[...markup.matchAll(/<select\b([^>]*\bdata-outgoing="([^"]+)"[^>]*)>([\s\S]*?)<\/select>/g)].map(([,attributes,identity,options])=>({disabled:/\bdisabled\b/.test(attributes),dataset:{outgoing:identity},value:options.match(/<option value="([^"]+)" selected/)[1]}));}});
  const context=vm.createContext({F,S,E,Staff,season,state:season.match,Portraits,openRecruitmentReview(identity,slot){pending={identity,slot};},$:id=>id==='market-overview'?panel:null,action(fn){calls.action++;try{fn();calls.save++;context.renderMarket();}catch(error){errors.push(error.message);}}});
  vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/market-ui.js'),'utf8'),context);

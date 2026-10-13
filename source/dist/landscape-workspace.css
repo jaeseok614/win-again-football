@@ -523,3 +523,164 @@
 @media(orientation:landscape) and (max-height:300px){#manager-notebook .notebook-card p{-webkit-line-clamp:1}#manager-notebook .notebook-card>div{gap:2px}}
 
 @media(orientation:landscape){#management-content{position:relative}#management-content #academy-overview>.academy-art{float:left;width:30%;height:150px;margin:0 10px 6px 0}#management-content .academy-art>.club-art{height:100%;width:100%}#management-content .academy-hero{margin:0 0 8px;gap:8px}#management-content .academy-hero p{font-size:11px;line-height:1.5}#management-content .academy-badge{display:none}#management-content .scout-panel{clear:both;padding:8px;margin:0;gap:8px}#management-content .scout-copy h2{font-size:14px}#management-content .scout-copy p{font-size:10px}#management-content .scout-actions{min-width:170px}#management-content .scout-actions button,#management-content .scout-actions select{font-size:11px}#management-content #academy-overview{font-size:12px}#management-content #academy-overview h1{font-size:19px}}
+
+/* FM-style recruitment: a dense read-only list beside the selected real deal card. */
+.market-view-toolbar{display:flex;gap:5px;margin:0 0 6px}.market-view-toolbar button{min-height:44px;font-size:11px;padding:5px}
+.market-view-toolbar [aria-pressed=true]{background:#d2ec9f;color:#1a2c20;border-color:#d2ec9f}
+.market-candidate-list{display:none}.market-card-content{min-width:0}
+.market-rating[data-ability-band=elite]{color:#cfed98}.market-rating[data-ability-band=strong]{color:#efdb86}.market-rating[data-ability-band=steady]{color:#a2d5e9}.market-rating[data-ability-band=developing]{color:#efa68f}
+@media(orientation:landscape){
+ #management-content #market-overview[data-market-mode=list]{display:grid!important;grid-template-columns:minmax(100px,.48fr) minmax(0,.52fr);grid-template-rows:44px minmax(0,1fr) 26px;gap:5px;overflow:hidden}
+ #management-content #market-overview[data-market-mode=list]>.market-view-toolbar{grid-column:1;grid-row:1;margin:0;min-width:0}
+ #management-content #market-overview[data-market-mode=list]>.market-view-toolbar button{flex:1;min-width:0;padding:3px;font-size:10px}
+ #management-content #market-overview[data-market-mode=list]>.market-title{grid-column:2;grid-row:1;padding:0;margin:0;min-width:0}
+ #management-content #market-overview[data-market-mode=list] .market-balance{font-size:9px}
+ #management-content #market-overview[data-market-mode=list] .market-balance strong{font-size:15px;line-height:1.1}
+ #management-content #market-overview[data-market-mode=list] .market-balance small{font-size:8px;line-height:1.2}
+ #management-content #market-overview[data-market-mode=list]>.market-status{grid-column:1/-1;grid-row:3;min-width:0;margin:0;padding:3px;font-size:9px;line-height:1.25;overflow:auto;word-break:keep-all}
+ #management-content #market-overview[data-market-mode=list]>.market-grid{grid-column:2;grid-row:2;display:block;min-width:0;min-height:0;overflow:hidden}
+ #management-content #market-overview[data-market-mode=list]>.finance-note{display:none}
+ #management-content #market-overview[data-market-mode=list]>.market-candidate-list{display:block;grid-column:1;grid-row:2;min-height:0;overflow:auto;border:1px solid #38515f;border-radius:7px;background:#132631}
+ .market-list-columns{display:grid;grid-template-columns:minmax(0,1fr) 26px 26px 23px;align-items:center;padding:3px;font-size:8px;color:#b9cbd4}
+ #management-content .market-list-row{display:grid;grid-template-columns:20px minmax(0,1fr) 26px 26px 23px;gap:2px;width:100%;height:26px;min-height:26px!important;box-sizing:border-box;align-items:center;padding:1px 3px;font-size:10px;border:0;border-bottom:1px solid #304954;border-radius:0;background:#152831;text-align:left;color:#eaf3f5}
+ #management-content .market-list-row[aria-pressed=true]{background:#324835;box-shadow:inset 3px 0 #c9e998}
+ #management-content .market-list-row .player-portrait{height:20px;width:20px;flex-basis:20px;border-radius:4px}
+ .market-list-row>span{min-width:0}.market-list-row strong{display:block;font-size:10px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.market-list-row small{display:block;font-size:8px;line-height:9px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+ .market-list-row b{font-size:11px;text-align:center}.market-list-row>span:last-child{text-align:center;font-size:9px}
+ #management-content #market-overview[data-market-mode=list] .market-card:not([hidden]){height:100%;box-sizing:border-box;min-height:0;display:flex;flex-direction:column;padding:6px;gap:4px}
+ #management-content #market-overview[data-market-mode=list] .market-card-content{flex:1;min-height:0;overflow:auto;scrollbar-gutter:stable}
+ #management-content #market-overview[data-market-mode=list] .market-card>button[data-recruit]{flex-shrink:0;margin:0;width:100%;min-height:44px}
+ #management-content #market-overview[data-market-mode=list] .candidate-scout-summary{padding:3px;font-size:9px;margin:3px 0}
+ #management-content #market-overview[data-market-mode=list] .candidate-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #management-content #market-overview[data-market-mode=list] .candidate-stats b{font-size:15px}
+ #management-content #market-overview[data-market-mode=list] .candidate-identity h2{font-size:12px}
+ #management-content #market-overview[data-market-mode=list] .candidate-identity .player-portrait{width:30px;height:30px;flex-basis:30px}
+ #management-content #market-overview[data-market-mode=list] .candidate-set-pieces{font-size:9px;padding:3px;gap:3px}
+ #management-content #market-overview[data-market-mode=list] .candidate-set-pieces b{font-size:13px}
+ #management-content #market-overview[data-market-mode=list] .candidate-comparison{padding:5px;margin:4px 0;font-size:10px}
+ #management-content #market-overview[data-market-mode=list] .comparison-people{grid-template-columns:1fr}
+ #management-content #market-overview[data-market-mode=list] .comparison-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .market-list-row:focus-visible{outline:2px solid #a8d9ef;outline-offset:-2px}
+}
+
+.market-quick-comparison{display:none}
+@media(orientation:landscape){
+ #management-content #market-overview[data-market-mode=list] .market-card-content{display:flex;flex-direction:column;gap:4px}
+ #management-content #market-overview[data-market-mode=list] .market-card-content>*{flex-shrink:0;margin:0}
+ #management-content #market-overview[data-market-mode=list] .candidate-top{order:0}
+ #management-content #market-overview[data-market-mode=list] .market-origin{order:1;font-size:9px}
+ #management-content #market-overview[data-market-mode=list] .candidate-identity{order:2}
+ #management-content #market-overview[data-market-mode=list] .candidate-scout-summary{order:3}
+ #management-content #market-overview[data-market-mode=list] .candidate-stats{order:4;margin:2px 0}
+ #management-content #market-overview[data-market-mode=list] .market-quick-comparison{display:block;order:5;border:1px solid #38545b;border-radius:6px;padding:4px}
+ .market-quick-comparison h3{font-size:10px;margin:0 0 3px;line-height:1.4;color:#cde5a0;word-break:keep-all}
+ .market-quick-comparison>div{display:grid;grid-template-columns:minmax(0,1fr) 38px 38px;align-items:center;gap:2px;font-size:9px;line-height:16px}
+ .market-quick-comparison b{text-align:center;font-size:11px}.market-compare-labels{color:#b1c7d0;font-size:8px!important}
+ #management-content #market-overview[data-market-mode=list] .candidate-age{order:6}
+ #management-content #market-overview[data-market-mode=list] .candidate-fee{order:7}
+ #management-content #market-overview[data-market-mode=list] .candidate-set-pieces{order:8}
+ #management-content #market-overview[data-market-mode=list] .profile-inline-button{order:9}
+ #management-content #market-overview[data-market-mode=list] .transfer-shortlist{order:10}
+ #management-content #market-overview[data-market-mode=list] .candidate-deal-details{order:11}
+ #management-content #market-overview[data-market-mode=list] .market-card-content>button{height:44px;min-height:44px;margin:0!important;padding:4px!important}
+}
+
+@media(orientation:landscape){
+ #management-content:has(>#transfer-search-panel){grid-template-columns:minmax(170px,.26fr) minmax(0,.74fr)}
+ #management-content #market-overview[data-market-mode=list] .market-quick-comparison{order:3}
+ #management-content #market-overview[data-market-mode=list] .candidate-stats{display:none}
+ #management-content #market-overview[data-market-mode=list] .candidate-scout-summary{order:8}
+}
+
+#squad-overview-preview{min-width:0;border:1px solid #436050;border-radius:8px;background:#1b3228;padding:8px;overflow:auto}
+#squad-overview-preview header{gap:6px;justify-content:start}
+#squad-overview-preview .player-portrait{width:36px;height:36px;flex-basis:36px}
+#squad-overview-preview strong{font-size:12px;line-height:1.3;word-break:keep-all}
+#squad-overview-preview header small{display:block;font-size:9px;color:#bfd3c8}
+.squad-preview-overall{display:flex;align-items:center;gap:5px;font-size:11px;margin:5px 0}.squad-preview-overall b{font-size:20px;color:#d1ef9a}.squad-preview-overall span{margin-left:auto;font-size:9px}
+#squad-overview-preview dl{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:5px 0}
+#squad-overview-preview dl>div{display:grid;grid-template-columns:1fr auto;gap:1px 4px;font-size:10px}
+#squad-overview-preview dd{margin:0;color:#d1ef9a;font-size:12px}
+#squad-overview-preview meter{grid-column:1/-1;width:100%;height:6px;appearance:none}
+#squad-overview-preview meter::-webkit-meter-bar{background:#3c5042;border:0}#squad-overview-preview meter::-webkit-meter-optimum-value{background:#bdd88b}
+#squad-overview-preview p{font-size:10px;margin:5px 0;line-height:1.4}#squad-overview-preview>small{font-size:9px;line-height:1.4;color:#bfd3c8;display:block}
+@media(orientation:landscape){
+ #squad-overview-dialog[open]{width:min(1180px,calc(100vw - 16px));height:calc(100dvh - 16px);display:grid;grid-template-columns:minmax(155px,.25fr) minmax(0,.75fr);grid-template-rows:44px 24px minmax(0,1fr) 44px;gap:5px;padding:8px}
+ #squad-overview-dialog header{grid-column:1/-1;grid-row:1;min-width:0}
+ #squad-overview-dialog>.squad-overview-summary{grid-column:2;grid-row:2;grid-template-columns:repeat(3,minmax(0,1fr));align-self:stretch;gap:5px}
+ #squad-overview-dialog>.squad-overview-summary>div{display:flex;align-items:center;gap:4px;padding:2px 4px}
+ #squad-overview-dialog>.squad-overview-summary small{font-size:9px;line-height:1.2}
+ #squad-overview-dialog>.squad-overview-summary strong{font-size:15px;line-height:1.2}
+ #squad-overview-dialog>.squad-overview-composition{grid-column:1;grid-row:2;font-size:9px;text-align:left;line-height:12px;align-self:center;word-break:keep-all}
+ #squad-overview-dialog>.squad-overview-columns{display:none}
+ #squad-overview-dialog>.squad-overview-list{grid-column:2;grid-row:3;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(9,minmax(24px,1fr));grid-auto-flow:column;gap:2px 5px;scrollbar-gutter:auto;height:auto;min-height:0}
+ #squad-overview-dialog .squad-overview-list>section{display:contents}
+ #squad-overview-dialog .squad-overview-list h3{display:none}
+ #squad-overview-dialog .squad-overview-row{grid-template-columns:18px minmax(0,1fr) 26px 25px 30px;gap:3px;min-height:24px!important;height:100%;padding:1px 3px;box-sizing:border-box;border:1px solid #354a3e;border-radius:4px}
+ #squad-overview-dialog .squad-overview-row .player-portrait{width:18px;height:18px}
+ #squad-overview-dialog .squad-overview-name strong{font-size:10px;line-height:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #squad-overview-dialog .squad-overview-name small{font-size:8px;line-height:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #squad-overview-dialog .squad-overview-row>b{font-size:13px}
+ #squad-overview-dialog .squad-overview-row>span:last-child{font-size:8px;line-height:10px}
+ #squad-overview-dialog .squad-overview-energy{font-size:10px}
+ #squad-overview-dialog .squad-overview-energy i{height:3px;margin-top:1px}
+ #squad-overview-dialog .squad-overview-row[aria-pressed=true]{background:#354b2d;border-color:#c9e993}
+ #squad-overview-dialog>#squad-overview-preview{grid-column:1;grid-row:3;min-height:0}
+ #squad-overview-dialog footer{grid-column:1/-1;grid-row:4;display:grid;grid-template-columns:minmax(155px,.25fr) minmax(0,.75fr);gap:5px}
+ #squad-overview-dialog footer p{display:none}
+ #squad-overview-dialog footer button{min-width:0;min-height:44px;font-size:11px;padding:4px}
+ #squad-overview-dialog.manager-guided[open]{grid-template-rows:44px 24px minmax(0,1fr) 68px}
+ #squad-overview-dialog.manager-guided footer{display:block}
+}
+@media(orientation:landscape) and (max-width:700px){
+ #squad-overview-dialog .squad-overview-list{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row;grid-auto-rows:28px}
+ #squad-overview-dialog .squad-overview-summary>div{display:block;padding:1px}
+ #squad-overview-dialog .squad-overview-summary strong{font-size:12px}
+}
+
+@media(orientation:landscape) and (max-height:360px) and (min-width:701px){
+ #squad-overview-dialog .squad-overview-list{grid-template-rows:repeat(9,minmax(20px,1fr))}
+ #squad-overview-dialog .squad-overview-row{min-height:20px!important}
+ #squad-overview-dialog>#squad-overview-preview{padding:5px}
+ #squad-overview-preview .player-portrait{width:28px;height:28px;flex-basis:28px}
+ #squad-overview-preview dl{gap:2px}
+ #squad-overview-preview>small{font-size:8px;line-height:1.2}
+ #squad-overview-preview .squad-preview-overall{margin:3px 0}
+ #squad-overview-preview .squad-preview-overall b{font-size:17px}
+}
+
+.squad-overview-key{font-size:9px;line-height:1.3;color:#bfd3c8}
+@media(orientation:landscape) and (max-height:360px) and (min-width:701px){
+ #squad-overview-dialog .squad-overview-list{grid-template-rows:repeat(9,minmax(19px,1fr))}
+ #squad-overview-dialog .squad-overview-row{min-height:19px!important}
+ #squad-overview-dialog .squad-overview-row .player-portrait{width:16px;height:16px}
+ #squad-overview-dialog .squad-overview-name strong{font-size:9px;line-height:9px}
+ #squad-overview-dialog .squad-overview-name small{font-size:7px;line-height:7px}
+ #squad-overview-dialog .squad-overview-row>b{font-size:12px;line-height:14px}
+ #squad-overview-dialog .squad-overview-energy{font-size:9px;line-height:10px}
+ #squad-overview-dialog>#squad-overview-preview{padding:4px}
+ #squad-overview-preview p{margin:3px 0}
+}
+
+@media(orientation:landscape) and (min-width:701px) and (min-height:361px){
+ #squad-overview-dialog .squad-overview-list{grid-template-rows:repeat(9,minmax(22px,1fr))}
+ #squad-overview-dialog .squad-overview-row{min-height:22px!important}
+ #squad-overview-dialog .squad-overview-name strong{line-height:10px}
+ #squad-overview-dialog .squad-overview-name small{line-height:8px}
+ #squad-overview-dialog .squad-overview-energy{line-height:12px}
+}
+@media(orientation:landscape){#squad-overview-dialog>header .eyebrow{display:none}#squad-overview-dialog>header h2{font-size:16px;margin:0}}
+
+#squad-overview-preview{display:flex;flex-direction:column;gap:4px}
+.squad-preview-body{min-height:0;flex:1;overflow:auto}
+#squad-overview-preview>#squad-overview-detail{flex-shrink:0;width:100%;height:44px;min-height:44px;font-size:10px;padding:4px}
+@media(orientation:landscape){
+ #squad-overview-dialog footer{display:block}
+ #squad-overview-dialog .squad-preview-body>header{display:flex}
+ #squad-overview-preview .squad-preview-body>small{font-size:8px;line-height:1.3;color:#bfd3c8;display:block}
+ #squad-overview-preview .player-portrait{width:28px;height:28px;flex-basis:28px}
+ #squad-overview-preview .squad-preview-overall{margin:3px 0}
+ #squad-overview-preview .squad-preview-overall b{font-size:17px}
+ #squad-overview-preview dl{gap:2px;margin:3px 0}
+ #squad-overview-preview p{margin:3px 0}
+}

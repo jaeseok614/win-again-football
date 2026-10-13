@@ -475,6 +475,8 @@ public final class GameSmokeTest {
             assertEquals("true", evaluate(scenario, "(()=>{const d=document.getElementById('squad-overview-dialog').getBoundingClientRect(),list=document.querySelector('.squad-overview-list');return d.top>=0&&d.bottom<=innerHeight&&d.width<=innerWidth&&list.clientHeight>80;})()"));
             screenshot(scenario, "android-whole-squad.png");
             tapWebElement(scenario, "[data-squad-detail='sp_f1']");
+            awaitTrue(scenario, "squadOverviewSelectedIdentity==='sp_f1'&&document.getElementById('squad-overview-preview').textContent.includes('손헝민')&&!document.getElementById('player-detail-dialog').open");
+            tapWebElement(scenario, "#squad-overview-detail");
             awaitTrue(scenario, "document.getElementById('player-detail-dialog').open&&document.getElementById('player-detail-name').textContent==='손헝민'");
             assertEquals("New starter portrait must show Son's dedicated cell and bundled offline atlas", "true", evaluate(scenario, "document.querySelector('.detail-hero .player-portrait').dataset.portraitIndex==='14'&&Portraits.index('sp_f1')===14&&getComputedStyle(document.querySelector('.detail-hero .player-portrait')).backgroundImage.includes('data:image/webp')"));
             evaluate(scenario, "WinAgainAndroid.handleBack()");

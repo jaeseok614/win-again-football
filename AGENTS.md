@@ -290,3 +290,6 @@ Permanent owner feedback (2026-10-13): reserve real layout space for bottom navi
 
 ## Landscape reading and match space (2026-10-13)
 Keep commentary above the enlarged pitch and the compact score beside it. Guides/story/notebook use illustration left, prose right and stable bottom actions with44px primary targets. Expand Korean narrative without moving reply controls offscreen. Test568×280 through tablet; reading must not answer or mutate the campaign. Long management lists may scroll inside a bounded report; title/close stay visible. See docs/LANDSCAPE_SCREENS_2026-10-13.md.
+
+## FM-style roster/recruitment (2026-10-13)
+Use dense list plus selected-person report, numeric/color ability comparison, actual remaining energy and stable44px primary actions. Squad selection previews; a separate visible detail button opens the full report in normal and guided views. Recruitment list uses trained owned-player values and current outgoing identity. List/mode selection never spends, saves, advances physics or changes lineup. See docs/FM_WORKSPACE_2026-10-13.md. Owner permits larger assets when they improve quality; keep shared atlases and measured performance rather than inflating bytes.
