@@ -21,7 +21,7 @@
  }
  function displayRate(match,prefs){
   const speed=speeds[prefs?.speed]?.multiplier||1,w=match.continuous;
-  if(watchMode(prefs)==='key'){const phase=viewingPhase(match);return phase==='decisive'?Math.min(4,2*speed):phase==='attack'?Math.min(12,4*speed):48*speed;}
+  if(watchMode(prefs)==='key'){const phase=viewingPhase(match);return phase==='decisive'?Math.min(3,1.5*speed):phase==='attack'?Math.min(6,3*speed):144*speed;}
   if(w.ball.flight?.kind==='shot'||w.tick-w.cue.tick<12&&['save','parry','header','block','woodwork'].includes(w.cue.kind))return Math.min(4,1.5*speed);
   if(w.ball.flight?.kind==='cross'||w.ball.flight&&Math.min(w.ball.y,105-w.ball.y)<30)return Math.min(8,3*speed);
   if(w.ball.flight)return Math.min(8,4*speed);

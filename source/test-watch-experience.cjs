@@ -9,15 +9,15 @@ test('old playback settings retain their original shape while explicit viewing c
 });
 test('routine play accelerates without treating every pass and first touch as a highlight',()=>{
  const m=world(),w=m.continuous;w.restart=null;w.ball.owner=null;w.ball.flight={kind:'pass',receiver:null};w.ball.y=52;w.cue={kind:'control',tick:w.tick};
- assert.equal(Flow.viewingPhase(m),'routine');assert.equal(Flow.displayRate(m,{speed:'normal'}),48);assert.equal(Flow.displayRate(m,{speed:'rapid'}),192);
+ assert.equal(Flow.viewingPhase(m),'routine');assert.equal(Flow.displayRate(m,{speed:'normal'}),144);assert.equal(Flow.displayRate(m,{speed:'rapid'}),576);
  assert.equal(Flow.displayRate(m,{speed:'rapid',watch:'full'}),8);
 });
 test('actual shooting, save and rebound action always stay readable at every selected speed',()=>{
  const m=world(),w=m.continuous;for(const kind of ['shot','save','parry','header','block','woodwork','goal']){
   w.ball.flight=kind==='shot'?{kind:'shot'}:null;w.cue={kind,tick:w.tick};
-  assert.equal(Flow.displayRate(m,{speed:'normal',watch:'key'}),2);assert.equal(Flow.displayRate(m,{speed:'rapid',watch:'key'}),4);assert.equal(Flow.displayRate(m,{speed:'slow',watch:'key'}),1);
+  assert.equal(Flow.displayRate(m,{speed:'normal',watch:'key'}),1.5);assert.equal(Flow.displayRate(m,{speed:'rapid',watch:'key'}),3);assert.equal(Flow.displayRate(m,{speed:'slow',watch:'key'}),.75);
  }
- w.ball.flight={kind:'cross'};w.cue={kind:'pass',tick:w.tick};assert.equal(Flow.displayRate(m,{speed:'rapid'}),12);
+ w.ball.flight={kind:'cross'};w.cue={kind:'pass',tick:w.tick};assert.equal(Flow.displayRate(m,{speed:'rapid'}),6);
 });
 test('dangerous possession, passes and set pieces use the real team direction in both halves',()=>{
  const m=world(),w=m.continuous;w.cue={kind:'pass',tick:-100};
