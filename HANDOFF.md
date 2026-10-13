@@ -1,6 +1,12 @@
-# 최신 개발 — 큰 경기장과 한 화면 관리
+# 최신 완료 — 큰 경기장과 짧은 핵심 관전·한 화면 관리
 
-[설계/참조](docs/SINGLE_SCREEN_WORKSPACES_2026-10-14.md). 핵심 관전 추정49~52% 단축, 전체 리그·유소년·전술 정렬, 실제 골 그림2.6초 후 자동 해제. 저장/물리/경제 불변. 로컬 전체 검사에서 169 suites/1301checks 통과 후, 새 속도·카드 의존성에 맞춘3 suites/28checks 재검증으로172 suites/1329checks 확인. 기본8크기/후반기·1부·유럽4크기/실제골 자동진행, 기존선수·영입8크기/가로읽기7크기/12포메이션×7크기 통과. 원격 Source·Android 검증 및 새APK 교체는 진행 중이며 아래 Drive는 이전 검증판입니다.
+- [설계/참조](docs/SINGLE_SCREEN_WORKSPACES_2026-10-14.md): 경기장62%/기록판38%, 반복 공격 표시 제한, 실제 골 그림2.6초 자동 닫기, 전체24/20구단과12/10경기 동시 표시, 유소년3후보/비용과 전술 하단 버튼 정렬. 물리/저장/경제 불변. 같은3개 실제물리 표본의 관전 배율 추정시간49~52%감소(독서/기기처리 시간 제외).
+- 기능067799ef00ca1e8dc73d0e248536b6055c3d7911/tree8632511d7eb2be7960094dc9db72461872dedf12, draft PR25 유지/main 병합 없음. 로컬 전체169 suites/1301checks 후 속도 기대값과 카드 의존성3 suites/28checks 재통과=172 suites/1329checks. 기본8가로 해상도/실제 후반기·1부·유럽4크기/실제 골의 자동 진행·수동 정지 유지 성공. 기존 선수·영입8크기, 가로읽기7크기, 12포메이션×7크기, PWA14/자산11/성능10 통과. 실제 유럽 경기 이동 버튼은 공통 하단으로 이동하며 기존 핸들러 유지.
+- [Android38482406855](https://github.com/jaeseok614/win-again-football/actions/runs/38482406855): API35 job115587864994/API34 job115587865390 각각11tests/실패0/오류0/건너뛰기0. APK/AAB/lint 성공. API35검증artifact11858582070(SHA2565099865f58337e1906ba935858d7f456ff01693a76abe311dff94fb4f82f887d), API34검증artifact11858557238(SHA25637de7f97727131dcfa4f5f4167d17a5b6954f1107c5e95ef3bc09e520f07d142) XML11/0/0/0 및 실제 큰 경기장/전체리그/유소년/골자동 캡처 확인. work/single-screen-api34-* 및 api35-*.
+- [원격 Source38482406794](https://github.com/jaeseok614/win-again-football/actions/runs/38482406794)/job115587864683도 completed/success. 전체172 suites/1329checks, PWA14, Android자산 재생성 및 커밋된 공개 파일의 일치까지 성공 로그 확인.
+- PWA4,763,167바이트/shell6c7e76e4bf82. Android4,762,560바이트/SHA256268cd660e02c0f1d42be0bcd73eb8baac785ae4f91ba7b72c279a699593f3658. APK artifact11857836290 ZIP SHA2564ec68fa667352c6a3139a56fe504ce96f98200b7bc895ea45e04a409f710b0b6 검증. APK 내부 HTML은 로컬 Android 파일과 바이트 동일.
+- APK5,595,685바이트/SHA256e2b3916b56fcfd584fa3d6022b11530f400894ccaf09c0f406990a097d2a9c39만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261014-single-screen.apk로 교체(2026-10-13 23:17:53UTC). 파일ID/이름/MIME/크기/부모폴더 재조회 성공. 로컬 work/win-again-20261014-single-screen.apk 및 work/single-screen-apk-verification.json.
+- 테스트 서명3dd497fc20d352f3e70304cafb87e140dd37176d80d9b9fc7ace32f21f96ed87→6c6f9ee65ea55a3344d39c3d3d199c858aea38ef8f7cf95c652e5f6498724ceb 변경. 저장 내보내기→기존 앱 제거→새 APK 설치→저장 불러오기 필요. 자동 삭제 없음. APK 파일만 Drive에 교체했고 저장/ZIP/AAB/키를 올리지 않았다.
 
 # 최신 완료 — 풋몹식 경기 통계와 가로 관리 화면
 
