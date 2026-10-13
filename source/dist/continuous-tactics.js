@@ -47,6 +47,7 @@
   return base==='press'&&energy<58?'balanced':base;
  }
  function prepare(w){
+  if(w.version>=9)return prepareShape(w);
   const carrier=w.players.find(p=>p.active&&p.id===w.ball.owner),last=w.players.find(p=>p.id===w.ball.lastTouch),team=carrier?.team??w.ball.flight?.team??(w.version>=4?w.controlledTeam:null)??last?.team??0;
   const signature=[w.half,...w.tactics,...w.focuses,w.ball.flight?.receiver||'',...w.players.filter(p=>p.active).map(p=>p.id),...(w.version>=5?[w.ball.owner||'',w.ball.flight?.released??'',w.ball.flight?.kind||'',w.ball.lastTouch||'']:[])].join(':');
   if(!w.ai)w.ai={builtAt:-5,ownerTeam:team,transitionTick:w.tick,signature:'',targets:[]};
@@ -123,6 +124,54 @@
    }
   }
   w.ai.builtAt=w.tick;w.ai.signature=signature;w.ai.targets=rows;return rows;
+ }
+
+ // Rule9: formation anchors move as a block; only local challengers leave them.
+ // Published planners remain unchanged for saved receipts.
+ function prepareShape(w){
+  const active=w.players.filter(p=>p.active),carrier=active.find(p=>p.id===w.ball.owner),team=carrier?.team??w.ball.flight?.team??w.controlledTeam??0;
+  const signature=[w.half,...w.tactics,...w.focuses,w.ball.owner,w.ball.flight?.receiver,w.ball.flight?.released,...active.map(p=>p.id)].join(':');
+  const old=w.ai?.builtAt>=0?w.ai:null;if(old&&w.tick-old.builtAt<5&&old.signature===signature)return old.targets;
+  const previous=new Map((old?.targets||[]).map(r=>[r.id,r])),elapsed=Math.max(.1,Math.min(.5,(w.tick-(old?.builtAt??w.tick-5))*.1)),rows=[];
+  for(const t of [0,1]){
+   const own=team===t,tactic=w.tactics[t],at=progress(w,t,w.ball.y),field=active.filter(p=>p.team===t&&p.pos!=='GK'),opponents=active.filter(p=>p.team!==t),role=p=>p.role||p.pos;
+   if(!field.length)continue;
+   const hx=p=>w.half===1?p.homeX:W-p.homeX,hd=p=>progress(w,t,w.half===1?p.homeY:H-p.homeY),depths=field.map(hd),low=Math.min(...depths),span=Math.max(25,Math.max(...depths)-low);
+   const base=own?clamp(at*.52-4,18,tactic==='lowBlock'?40:49):clamp(at-12-(tactic==='lowBlock'?2:0),8,tactic==='press'?46:40),length=own?43:22,width=own?.98:tactic==='lowBlock'?.62:.72;
+   const anchors=new Map(field.map(p=>[p.id,{x:clamp(34+(hx(p)-34)*width+clamp((w.ball.x-34)*.12,-4,4),4,64),y:from(w,t,clamp(base+(hd(p)-low)/span*length,3,98))}]));
+   const marked=new Set(),ranked=field.map(p=>({p,...intercept(w,p)}));
+   const cost=r=>r.eta+Math.max(0,Math.abs(anchors.get(r.p.id).x-w.ball.x)-10)*.07+(role(r.p)==='DEF'&&at>progress(w,t,anchors.get(r.p.id).y)+16?2:0)-(previous.get(r.p.id)?.role==='press'?.6:0);
+   ranked.sort((a,b)=>Math.round((cost(a)-cost(b))*1e8)||a.p.id.localeCompare(b.p.id));
+   let chasers=[];
+   if(!carrier){const receiver=ranked.find(r=>r.p.id===w.ball.flight?.receiver);chasers=[own&&receiver&&receiver.eta<=ranked[0].eta+.4?receiver:ranked[0]];}
+   else if(!own){const radius=tactic==='press'?24:tactic==='lowBlock'?14:18,first=ranked.find(r=>distance(r.p,carrier)<radius&&Math.abs(anchors.get(r.p.id).x-carrier.x)<22);if(first)chasers=[first];
+    const second=ranked.find(r=>r!==first&&distance(r.p,carrier)<10&&Math.abs(anchors.get(r.p.id).x-carrier.x)<16&&r.p.energy>45&&r.p.burst>25);
+    if(first&&second&&tactic==='press'&&distance(first.p,carrier)<10&&(w.tick-(carrier.receptionAt??-10000)<6||Math.abs(carrier.x-34)>22))chasers.push(second);
+   }
+   const shield=!own&&carrier&&at<55?ranked.find(r=>role(r.p)==='MID'&&!chasers.includes(r)&&Math.abs(anchors.get(r.p.id).x-carrier.x)<14):null;
+   const supports=own&&carrier?field.filter(p=>p.id!==carrier.id&&role(p)==='MID'&&distance(anchors.get(p.id),carrier)<26).sort((a,b)=>{const score=p=>distance(anchors.get(p.id),carrier)-(previous.get(p.id)?.role==='support'?3:0);return Math.round((score(a)-score(b))*1e8)||a.id.localeCompare(b.id);}).slice(0,2):[];
+   const legal=Math.max(52.5,at,opponents.map(p=>progress(w,t,p.y)).sort((a,b)=>b-a)[1]??105)-1.3,transition=w.tick-(w.transitionTick??-10000)<40;
+   const overlap=own&&carrier&&at>65&&Math.abs(carrier.x-34)>20&&!['counter','lowBlock'].includes(tactic)?field.filter(p=>role(p)==='DEF'&&Math.abs(hx(p)-34)>19&&Math.sign(hx(p)-34)===Math.sign(carrier.x-34)).sort((a,b)=>distance(a,carrier)-distance(b,carrier)||a.id.localeCompare(b.id))[0]:null;
+   for(const p of field){
+    const anchor=anchors.get(p.id),pos=role(p),wide=Math.abs(hx(p)-34)>19,chase=chasers.find(r=>r?.p.id===p.id);let x=anchor.x,d=progress(w,t,anchor.y),sprint=false,job=own?'hold-shape':'cover';
+    if(chase){x=chase.point.x;d=progress(w,t,chase.point.y)-.4;sprint=true;job=carrier?'press':'intercept';if(chasers[1]===chase&&carrier){const q=A.screen(w,p,carrier,opponents);x=q.x;d=progress(w,t,q.y);job='press-screen';}}
+    else if(p.id===carrier?.id){const q=A.carrying(w,p,opponents);x=q.x;d=progress(w,t,q.y);sprint=q.sprint;job='carry';if(w.tick-(p.receptionAt??-10000)<6){x=p.x;d=progress(w,t,p.y);sprint=false;job='first-touch';}}
+    else if(own){
+     if(pos==='FW'){d=Math.max(d,Math.min(at+12,96));if(wide){x=anchor.x;d=Math.min(d,at+9);}else if(at>74&&Math.abs(w.ball.x-34)>20){x=clamp(anchor.x,23,45);}job='run';sprint=transition&&tactic==='counter'&&distance(p,w.ball)<30;}
+     const si=supports.indexOf(p);if(si>=0){const forward=si===0&&hd(p)>low+span*.35;d=clamp(at+(forward?8:-9),d-8,d+10);x=clamp(carrier.x+(anchor.x<carrier.x?-10:10),anchor.x-5,anchor.x+5);job='support';}
+     if(p===overlap){d=Math.min(80,at+4);x=hx(p)<34?5:63;job='overlap';}
+     if(pos!=='DEF')d=Math.min(d,legal);
+    }else{
+     // Defenders cover their channel instead of following a distant opponent.
+     if(pos==='DEF'){const threat=opponents.filter(q=>q.pos!=='GK'&&!marked.has(q.id)&&Math.abs(q.x-anchor.x)<12&&progress(w,t,q.y)<d+8).sort((a,b)=>progress(w,t,a.y)-progress(w,t,b.y)||a.id.localeCompare(b.id))[0];if(threat){marked.add(threat.id);x=clamp(threat.x,anchor.x-7,anchor.x+7);d=clamp(progress(w,t,threat.y)-1.5,d-5,d+3);job='mark';}}
+     if(shield?.p.id===p.id){x=clamp(carrier.x,anchor.x-6,anchor.x+6);d=Math.min(d,at-4);job='goal-cover';}
+     sprint=progress(w,t,p.y)-d>6&&at<40;
+    }
+    if(!chase&&p.id!==carrier?.id){const prior=previous.get(p.id);if(prior&&old.half===w.half){const y=from(w,t,d),dx=x-prior.x,dy=y-prior.y,n=Math.hypot(dx,dy),limit=(own?3:at<30?6:4)*elapsed;if(n>limit){x=prior.x+dx*limit/n;d=progress(w,t,prior.y+dy*limit/n);}}}
+    rows.push({id:p.id,x:clamp(x,1,67),y:from(w,t,clamp(d,1,104)),sprint,role:job});
+   }
+  }
+  w.ai={builtAt:w.tick,ownerTeam:team,transitionTick:old?.ownerTeam===team?old.transitionTick:w.tick,signature,targets:rows,half:w.half};return rows;
  }
  function laneRisk(w,p,q,excludeKeeper=false){let risk=0;const dx=q.x-p.x,dy=q.y-p.y,n=dx*dx+dy*dy||1,travel=Math.sqrt(n)/(12+p.passing*.06);for(const d of w.players){if(!d.active||d.team===p.team||excludeKeeper&&d.pos==='GK')continue;const f=clamp(((d.x-p.x)*dx+(d.y-p.y)*dy)/n,0,1);if(f<.06||f>.97)continue;const point={x:p.x+dx*f,y:p.y+dy*f},arrival=distance(d,point)/Math.max(1,speed(d))+.18;if(arrival<travel*f+.18)risk+=1;else if(distance(d,point)<2)risk+=.5;}return risk;}
  function choose(w,p){

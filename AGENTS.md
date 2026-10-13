@@ -48,7 +48,7 @@ history is not payment entitlement proof. Read docs/REBIRTH_LOOP_2026-10-11.md.
 ## Full continuous engine direction (2026-10-12, supersedes hybrid notes below)
 
 The owner requested whole-match continuous football. New confirmed kickoffs use
-continuousSetup.version=8, a shared 100ms physical world for the actual two elevens.
+continuousSetup.version=9, a shared 100ms physical world for the actual two elevens.
 The minute opportunity sampler is not used for those matches. Live and replay read
 the same physical coordinates, contacts and recorded statistics. Preserve valid v10
 running/confirmed matches and the released spatial version1 solver. Never change a
@@ -260,3 +260,6 @@ RAF callback; next callback reads fresh state. Project active players into team
 frames in one pass. Display optimization must not change journal, RNG or receipts.
 Do not infer a reusable football engine from a browser-port headline; inspect
 primary source and license before any source or asset reuse.
+
+## Latest formation movement (2026-10-13)
+New kickoffs/practice use continuous9. Read docs/FORMATION_MOVEMENT_2026-10-13.md. Preserve published1–8 worlds/receipts; future physical changes require10. Use actual formation anchors, local pressing, distinct marks, far-wing width and time-bounded off-ball target changes. Drop stale targets at restarts/end changes. Never apply arrival slowdown to physical receivers. Benchmarks are diagnostics, not proof of finished tactical balance.

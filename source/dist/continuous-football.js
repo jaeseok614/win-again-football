@@ -1,6 +1,6 @@
 (function(root){
  'use strict';
- // Versioned rules 1–8: original continuous 100 ms simulation in metres (68 x 105).
+ // Versioned rules 1–9: original continuous 100 ms simulation in metres (68 x 105).
  // Outcomes are contacts and boundary crossings, never minute-based chances.
  const T=root.ContinuousTactics||(typeof require==='function'?require('./continuous-tactics.js'):null),P=root.ContinuousContact||(typeof require==='function'?require('./continuous-contact.js'):null);
  const DT=.1,W=68,H=105,GOAL=7.32,POST=(W-GOAL)/2,COVER=new Set(['cover','mark','goal-cover','screen','press-screen']),ARRIVE=new Set(['hold-shape','support','advance-support','run','return-run','overlap','cover','mark','goal-cover','screen','outlet']);
@@ -18,7 +18,7 @@
  function cue(w,kind,p,extra={}){w.cue={kind,tick:w.tick,team:p?.team??extra.team,id:p?.id??null,...extra};}
  function create(config){
   const players=config.players.map(p=>({...copy(p),x:p.homeX,y:p.homeY,vx:0,vy:0,energy:p.initialEnergy,active:true,playedTicks:0,distance:0,cooldown:0,decisionAt:0,focus:1}));
-  const w={version:[1,2,3,4,5,6,7].includes(config.version)?config.version:8,tick:0,rng:(config.seed^0x434f4e54)>>>0,half:1,firstKickTeam:0,players,ball:{x:W/2,y:H/2,z:0,vx:0,vy:0,vz:0,owner:null,lastTouch:null,flight:null},restart:null,pendingShot:null,lastPass:null,score:[0,0],stats:{possession:[0,0],passes:[0,0],completed:[0,0],shots:[0,0],onTarget:[0,0],xg:[0,0],corners:[0,0],freeKicks:[0,0],offsides:[0,0],tackles:[0,0],fouls:[0,0],saves:[0,0]},cue:{kind:'kickoff',tick:0,team:0,id:null},bookings:[],dismissed:[],celebrateUntil:0};
+  const w={version:[1,2,3,4,5,6,7,8].includes(config.version)?config.version:9,tick:0,rng:(config.seed^0x434f4e54)>>>0,half:1,firstKickTeam:0,players,ball:{x:W/2,y:H/2,z:0,vx:0,vy:0,vz:0,owner:null,lastTouch:null,flight:null},restart:null,pendingShot:null,lastPass:null,score:[0,0],stats:{possession:[0,0],passes:[0,0],completed:[0,0],shots:[0,0],onTarget:[0,0],xg:[0,0],corners:[0,0],freeKicks:[0,0],offsides:[0,0],tackles:[0,0],fouls:[0,0],saves:[0,0]},cue:{kind:'kickoff',tick:0,team:0,id:null},bookings:[],dismissed:[],celebrateUntil:0};
   if(w.version>=3)for(const p of w.players){p.burst=100;p.tackleAt=0;}
   if(w.version>=4)for(const p of w.players){p.prevX=p.x;p.prevY=p.y;}
   if(w.version>=5)for(const p of w.players)p.receptionAt=-10000;
@@ -263,5 +263,5 @@
   return {own,opponent,ball:b,ballHeight:w.ball.z/2,trail:[],carrierId:w.ball.owner,receiverId,ownerTeam:owner?.team??w.ball.flight?.team??c.team,phase,label:w.version>=4&&w.handHold&&w.tick-w.handHold.tick>=30?'골키퍼 공 확보 · '+Math.max(0,Math.ceil((80-w.tick+w.handHold.tick)/10))+'초 내 배급':labels[w.restart?.kind==='afterGoal'?'goal':w.restart?'restart':w.ball.flight?.kind==='shot'?'shot':w.ball.flight?.kind==='cross'?'cross':w.ball.flight?'pass':owner?(owner.pos==='GK'?(w.version>=4&&!w.handHold?'keeper-feet':'keeper-hold'):Math.abs(owner.x-W/2)>22?'wing-run':'carry'):c.kind]||'공을 향해 경합합니다',focusName:owner?.name||w.players.find(p=>p.id===c.id)?.name||'',performerId:c.id,performerName:w.players.find(p=>p.id===c.id)?.name||'',keeperId:['save','parry'].includes(c.kind)?c.id:null,keeperDive:w.tick-c.tick<6&&['save','parry'].includes(c.kind)?Math.sin((w.tick-c.tick)/6*Math.PI):0,runnerId:owner?.id||receiverId,tacklerId:c.kind==='tackle'&&w.tick-c.tick<8?c.id:null,tackleProgress:c.kind==='tackle'?clamp((w.tick-c.tick)/8,0,1):0,headerId:c.kind==='header'?c.id:null,headerLift:c.kind==='header'?clamp(1-(w.tick-c.tick)/8,0,1):0,continuous:true,attributed:true,tick:w.tick,tactic:w.tactics?.[0]||'balanced'};
  }
  function interpolate(a,b,alpha){if(!a||!b||b.tick!==a.tick+1)return b;const n=clamp(alpha,0,1),blend=(p,q)=>({...q,x:p.x+(q.x-p.x)*n,y:p.y+(q.y-p.y)*n}),people=(before,after)=>after.map(p=>{const old=before.find(q=>q.id===p.id);return old?blend(old,p):{...p};});return {...b,own:people(a.own,b.own),opponent:people(a.opponent,b.opponent),ball:blend(a.ball,b.ball),ballHeight:a.ballHeight+(b.ballHeight-a.ballHeight)*n};}
- const api={version:8,DT,W,H,POST,create,step,kickoff,frame,interpolate,direction,progress,offside,sweep,copy,clearanceTarget};root.ContinuousFootball=api;if(typeof module!=='undefined')module.exports=api;
+ const api={version:9,DT,W,H,POST,create,step,kickoff,frame,interpolate,direction,progress,offside,sweep,copy,clearanceTarget};root.ContinuousFootball=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
