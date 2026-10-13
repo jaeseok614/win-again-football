@@ -266,3 +266,6 @@ New kickoffs/practice use continuous9. Read docs/FORMATION_MOVEMENT_2026-10-13.m
 
 ## Latest viewing pace (2026-10-13)
 Read docs/MATCH_VIEWING_PACE_2026-10-13.md. The owner likes formation movement but wants calmer players and faster match time. Default key mode holds a clearly labelled all-player position overview during routine play (144× selected), then displays real attack3× capped6 and decisive1.5× capped3. This supersedes earlier key rates. Keep whole physical ticks, exact clock/results,6ms RAF work budget/50ms display delta and readonly presentation. Clear overview on phase/contact/pause/inactive callbacks/match/watch changes; pause shows current real coordinates. Full viewing remains available.
+
+## Latest commentary placement and slight slow motion
+The owner wants commentary directly ABOVE the pitch in portrait and landscape, with readable two-line text and no overlap with players. Keep clock text separate and all core controls in one viewport. Routine key play is180× selected; attacks stay3× capped6; shots/saves2.25× capped4.5, only25% slower than key attacks. Full-view shots use2.25× capped4.5 too. These supersede previous viewing rates; physics and saved records remain identical.

@@ -69,9 +69,9 @@ body.match-popup-ready.match-view:not(.launch-mode){height:100dvh;overflow:hidde
 #match-live-stats span{display:block;font-size:10px;line-height:14px;color:#c1d2db;white-space:nowrap}
 #match-live-stats strong{display:block;font:700 13px/18px system-ui;color:#f1f6f7}
 #match-live-stats .fatigue-low{color:#ffd1a0}
-.match-popup-ready.match-view #matchday-live>.commentary{flex:0 0 78px;min-height:78px;max-height:78px;gap:8px;padding:7px 6px;align-items:flex-start;background:#0b1820;border-color:#46565e;border-radius:5px;overflow:hidden}
-.match-popup-ready.match-view #matchday-live>.commentary p{font-size:15px;line-height:21px;font-weight:500;color:#f5f8fa;-webkit-line-clamp:3;overflow-wrap:anywhere}
-.match-popup-ready.match-view #matchday-live>.commentary .minute-label{flex:0 0 32px;min-width:0;margin-top:1px;color:#dcffa5;font:700 14px/21px system-ui;text-align:center}
+.match-popup-ready.match-view #matchday-live>.commentary{flex:0 0 60px;min-height:60px;max-height:60px;gap:8px;padding:7px 6px;align-items:flex-start;background:#0b1820;border-color:#46565e;border-radius:5px;overflow:hidden}
+.match-popup-ready.match-view #matchday-live>.commentary p{font-size:15px;line-height:21px;font-weight:500;color:#f5f8fa;-webkit-line-clamp:2;overflow-wrap:anywhere}
+.match-popup-ready.match-view #matchday-live>.commentary .minute-label{flex:0 0 44px;min-width:0;margin-top:1px;color:#dcffa5;font:700 14px/21px system-ui;text-align:center}
 .match-popup-ready.match-view #match-live-actions :is(button.primary,button.secondary){font-size:13px;line-height:1.35}
 .match-popup-ready.match-view .match-quick-menu button{font-size:12px}
 .match-popup-ready.match-view #match-live-actions .main-action{display:grid;grid-template-columns:minmax(0,1fr) 74px 84px;gap:5px}
@@ -93,17 +93,17 @@ body.match-popup-ready.match-view:not(.launch-mode){height:100dvh;overflow:hidde
 #broadcast-strip .match-moment[data-kind=save]{color:#b5e9ff}
 #broadcast-strip .match-moment[data-kind=concede]{color:#ffceb8}
 #broadcast-strip:has(.match-moment:not([hidden])) :is(.broadcast-on,#live-play-label){display:none}
-@media(max-height:650px){.match-popup-ready.match-view #match-pane>.scoreboard{min-height:52px}.match-popup-ready.match-view #matchday-live{padding:4px;gap:3px}.match-popup-ready.match-view #matchday-live>.commentary{flex-basis:74px;min-height:74px;max-height:74px;padding-block:5px}.match-popup-ready.match-view #match-live-stats{flex-basis:39px}}
+@media(max-height:650px){.match-popup-ready.match-view #match-pane>.scoreboard{min-height:52px}.match-popup-ready.match-view #matchday-live{padding:4px;gap:3px}.match-popup-ready.match-view #matchday-live>.commentary{flex-basis:54px;min-height:54px;max-height:54px;padding-block:5px}.match-popup-ready.match-view #match-live-stats{flex-basis:39px}}
 @media(max-height:450px) and (min-width:500px){.match-popup-ready.match-view #matchday-live>.commentary{flex-basis:55px;min-height:55px;max-height:55px}.match-popup-ready.match-view #matchday-live>.commentary p{-webkit-line-clamp:2}.match-popup-ready.match-view #match-live-stats{flex-basis:36px}.match-popup-ready.match-view #match-pane>.scoreboard{min-height:44px}}
 @media(max-height:450px) and (min-width:500px){
- .match-popup-ready.match-view #matchday-live{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,.55fr);grid-template-rows:30px minmax(44px,.65fr) minmax(65px,1fr);gap:4px}
- .match-popup-ready.match-view #matchday-live>.broadcast-strip{grid-column:1/-1;grid-row:1}
- .match-popup-ready.match-view #matchday-live>.pitch{grid-column:1;grid-row:2/4;height:100%;min-height:0}
+ .match-popup-ready.match-view #matchday-live{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,.55fr);grid-template-rows:48px minmax(0,1fr);gap:4px}
+ .match-popup-ready.match-view #matchday-live>.broadcast-strip{grid-column:2;grid-row:1;height:100%;min-height:0;flex-wrap:wrap}
+ .match-popup-ready.match-view #matchday-live>.pitch{grid-column:1;grid-row:2;height:100%;min-height:0}
  .match-popup-ready.match-view #match-live-stats{grid-column:2;grid-row:2;grid-template-columns:repeat(2,minmax(0,1fr));height:100%}
  .match-popup-ready.match-view #match-live-stats>div:nth-child(2){border:0}
- .match-popup-ready.match-view #matchday-live>.commentary{grid-column:2;grid-row:3;height:100%;min-height:0;max-height:none;padding:5px}
- .match-popup-ready.match-view #matchday-live>.commentary p{font-size:14px;line-height:20px;-webkit-line-clamp:5}
- .match-popup-ready.match-view #matchday-live>.commentary .minute-label{flex-basis:28px}
+ .match-popup-ready.match-view #matchday-live>.commentary{grid-column:1;grid-row:1;height:100%;min-height:0;max-height:none;padding:3px 5px}
+ .match-popup-ready.match-view #matchday-live>.commentary p{font-size:14px;line-height:20px;-webkit-line-clamp:2}
+ .match-popup-ready.match-view #matchday-live>.commentary .minute-label{flex-basis:44px}
 }
 
 .match-popup-ready.match-view #match-live-actions .main-action:has(#pause[hidden]):has(#matchday-roster[hidden]){grid-template-columns:1fr}
@@ -201,3 +201,6 @@ body.match-popup-ready.match-view:not(.launch-mode){height:100dvh;overflow:hidde
 @media(max-height:450px){#match-ceremony[data-kind="preview"] #ceremony-squads:not(.coach-preparation-open){display:flex;flex-direction:column;gap:3px}#match-ceremony .preview-lineup{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr))}#match-ceremony .preview-team header>span{min-height:14px}#ceremony-roster{flex-basis:44px}}
 
 @media(max-height:450px){#match-ceremony[data-kind="preview"] #ceremony-squads:not(.coach-preparation-open){height:auto;min-height:0}#match-ceremony .preview-teams{height:auto;min-height:0}#match-ceremony .preview-lineup{min-height:0}}
+
+/* Keep the live call directly above the pitch; ambient text stays out of its two lines. */
+.match-popup-ready.match-view #commentary #crowd-caption{display:none}
