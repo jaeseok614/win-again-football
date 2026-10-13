@@ -21,6 +21,7 @@ function playerReportPages(){
  const tools=document.createElement('div');tools.className='player-report-tools';tools.append(q('.report-page-select'));if(role)tools.append(role);host.insertBefore(tools,identity);
  for(const node of all(':scope>.detail-condition,:scope>.scouting-profile,:scope>.player-traits-report,:scope>.fm-attributes,:scope>.detail-columns'))node.remove();
 }
+const workspacePlayerOpen=openPlayerDetails;openPlayerDetails=function(identity,opener){if(!$('player-detail-dialog').open)reportPagesState.player='전체 능력';workspacePlayerOpen(identity,opener);};
 const pagedPlayerRender=renderPlayerDetails;renderPlayerDetails=function(d){pagedPlayerRender(d);playerReportPages();};
 const pagedPlayerRoute=routePlayerDetails;routePlayerDetails=function(){const d=PlayerDetails.read(season,playerDetailIdentity);pagedPlayerRoute();if(d.valid&&typeof openManagementPanel==='function')openManagementPanel(d.owned?'individual-training':d.source==='academy'?'academy-overview':'transfer-search-panel');};
 function opponentReportPages(){
@@ -29,6 +30,7 @@ function opponentReportPages(){
  const basis=q('.opponent-detail-compare>p'),overview=document.createElement('div');overview.className='opponent-report-overview';overview.append(q('.opponent-detail-summary'),q('.opponent-role-report'),q('.opponent-detail-compare'));
  reportDeck(host,[['능력 비교',[overview]],['보고서 기준',[q('.opponent-detail-source'),basis]]],'opponent',q('footer'));q('.opponent-detail-source').open=true;
 }
+const workspaceOpponentOpen=openOpponentDetails;openOpponentDetails=function(identity,opener){if(!$('opponent-detail-dialog').open)reportPagesState.opponent='능력 비교';workspaceOpponentOpen(identity,opener);};
 const pagedOpponentRender=renderOpponentDetails;renderOpponentDetails=function(d){pagedOpponentRender(d);opponentReportPages();};
 function applyTacticsPage(){
  const section=$('match-popup-tactics'),host=$('tactical-editor');if(!host)return;const page=reportPagesState.tactics;section.dataset.reportPage=page;if(typeof applyLandscapeTactics==='function'){applyLandscapeTactics();return;}
