@@ -24,7 +24,7 @@ function competitionBracketMarkup(){
  return '<div class="competition-bracket">'+P.stageNames.map((name,stage)=>{
  const fixtures=P.fixturesFor(season,stage);return '<section><h3>'+name+'</h3><div class="bracket-round">'+Array.from({length:[4,2,1][stage]},(_,index)=>{
  const fixture=fixtures[index],r=cup.results.find(r=>r.stage===stage&&r.index===index);
- return '<article class="bracket-pair" aria-label="'+name+' '+(index+1)+'경기">'+['home','away'].map((side,i)=>{const id=fixture?.[side];return '<div class="'+(id===S.own?'our-club ':'')+(r?.winner===id?'winner':'')+'"><span>'+esc(id?S.club(id).short:P.stageNames[stage-1]+' '+(index*2+i+1)+' 승자')+'</span><b>'+(r?r.goals[i]:'—')+'</b></div>';}).join('')+(r?.penalties?'<small>승부차기 '+r.penalties.join(':')+'</small>':'')+'</article>';
+ return '<article class="bracket-pair" aria-label="'+name+' '+(index+1)+'경기">'+['home','away'].map((side,i)=>{const id=fixture?.[side];return '<div class="'+(id===S.own?'our-club ':'')+(r&&r.winner===id?'winner':'')+'"><span>'+esc(id?S.club(id).short:P.stageNames[stage-1]+' '+(index*2+i+1)+' 승자')+'</span><b>'+(r?r.goals[i]:'—')+'</b></div>';}).join('')+(r?.penalties?'<small>승부차기 '+r.penalties.join(':')+'</small>':'')+'</article>';
  }).join('')+'</div></section>';
  }).join('')+'</div><p class="centre-note">굵은 글씨는 승자 · 점수는 확정 결과만 표시</p>';
 }
