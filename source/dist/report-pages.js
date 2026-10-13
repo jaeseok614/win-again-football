@@ -26,7 +26,7 @@ function opponentReportPages(){
 }
 const pagedOpponentRender=renderOpponentDetails;renderOpponentDetails=function(d){pagedOpponentRender(d);opponentReportPages();};
 function applyTacticsPage(){
- const section=$('match-popup-tactics'),host=$('tactical-editor');if(!host)return;const page=reportPagesState.tactics;section.dataset.reportPage=page;
+ const section=$('match-popup-tactics'),host=$('tactical-editor');if(!host)return;const page=reportPagesState.tactics;section.dataset.reportPage=page;if(typeof applyLandscapeTactics==='function'){applyLandscapeTactics();return;}
  for(const node of host.children){const visible=page==='배치'?node.matches('.tactical-pitch,#tactical-position-status'):page==='선수 특징'?node.matches('.tactical-selected-profile'):page==='연결 요약'?node.matches('.support-map-toggle,.tactical-team-strip,.support-summary'):page==='세트피스'?node.matches('.set-piece-plan'):page.startsWith('코치 ')?node.matches('.touchline-briefing'):page==='도움말'?node.matches('h3,h3+p,.tactical-note'):false;node.classList.toggle('report-page-off',!visible);}
  for(const node of section.children){if(node===host||node.classList.contains('tactics-page-controls'))continue;const visible=node.matches('.field-toolbar')?page==='배치':node.id==='mobile-tactics-dock'?page==='팀 지시':node.id==='pitch-player-tools'?page==='선수 역할':false;node.classList.toggle('report-page-off',!visible);}
  const briefing=host.querySelector('.touchline-briefing');if(briefing){briefing.open=true;const advice=briefing.querySelector('.touchline-advice');for(const child of briefing.children)child.classList.toggle('report-page-off',child.tagName!=='SUMMARY'&&(page==='코치 브리핑'?child===advice:child!==advice));for(const [i,article] of [...advice.children].entries())article.hidden=page!=='코치 조언 '+(i+1);}

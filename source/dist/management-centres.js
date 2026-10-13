@@ -17,14 +17,14 @@ function renderTacticsCentre(){
 }
 function competitionTableMarkup(model,page,size){
  const rows=model.table.slice(page*size,(page+1)*size),esc=escapeText;
- return '<table class="competition-table"><caption>'+esc(model.league)+' · '+model.throughRound+'라운드 확정 기록</caption><colgroup><col class="rank"><col class="club">'+Array(8).fill('<col>').join('')+'</colgroup><thead><tr>'+['위','구단','경기','승','무','패','득','실','차','점'].map(x=>'<th scope="col">'+x+'</th>').join('')+'</tr></thead><tbody>'+rows.map(c=>'<tr class="'+(c.own?'our-club ':'')+(c.zone||'')+'"><td>'+(model.throughRound?c.rank:'—')+'</td><th scope="row">'+esc(c.short)+'</th>'+[c.played,c.won,c.drawn,c.lost,c.gf,c.ga,c.gd,c.points].map(n=>'<td>'+n+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+ return '<table class="competition-table"><caption>'+esc(model.league)+' · '+model.throughRound+'라운드 확정 기록</caption><colgroup><col class="rank"><col class="club">'+Array(8).fill('<col>').join('')+'</colgroup><thead><tr>'+['위','구단','경기','승','무','패','득','실','차','점'].map(x=>'<th scope="col">'+x+'</th>').join('')+'</tr></thead><tbody>'+rows.map(c=>'<tr class="'+(c.own?'our-club ':'')+(c.zone||'')+'"><td>'+(model.throughRound?c.rank:'—')+'</td><th scope="row">'+clubMark(S.club(c.id))+esc(c.short)+'</th>'+[c.played,c.won,c.drawn,c.lost,c.gf,c.ga,c.gd,c.points].map(n=>'<td>'+n+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
 }
 function competitionBracketMarkup(){
  const esc=escapeText,cup=season.cup;if(!cup.enabled)return '<p>이번 시즌 국내컵에 참가하지 않습니다.</p>';
  return '<div class="competition-bracket">'+P.stageNames.map((name,stage)=>{
  const fixtures=P.fixturesFor(season,stage);return '<section><h3>'+name+'</h3><div class="bracket-round">'+Array.from({length:[4,2,1][stage]},(_,index)=>{
  const fixture=fixtures[index],r=cup.results.find(r=>r.stage===stage&&r.index===index);
- return '<article class="bracket-pair" aria-label="'+name+' '+(index+1)+'경기">'+['home','away'].map((side,i)=>{const id=fixture?.[side];return '<div class="'+(id===S.own?'our-club ':'')+(r&&r.winner===id?'winner':'')+'"><span>'+esc(id?S.club(id).short:P.stageNames[stage-1]+' '+(index*2+i+1)+' 승자')+'</span><b>'+(r?r.goals[i]:'—')+'</b></div>';}).join('')+(r?.penalties?'<small>승부차기 '+r.penalties.join(':')+'</small>':'')+'</article>';
+ return '<article class="bracket-pair" aria-label="'+name+' '+(index+1)+'경기">'+['home','away'].map((side,i)=>{const id=fixture?.[side];return '<div class="'+(id===S.own?'our-club ':'')+(r&&r.winner===id?'winner':'')+'"><span>'+(id?clubMark(S.club(id)):'<span class="crest-pending" aria-hidden="true">?</span>')+esc(id?S.club(id).short:P.stageNames[stage-1]+' '+(index*2+i+1)+' 승자')+'</span><b>'+(r?r.goals[i]:'—')+'</b></div>';}).join('')+(r?.penalties?'<small>승부차기 '+r.penalties.join(':')+'</small>':'')+'</article>';
  }).join('')+'</div></section>';
  }).join('')+'</div><p class="centre-note">굵은 글씨는 승자 · 점수는 확정 결과만 표시</p>';
 }

@@ -5,6 +5,19 @@ Develop in source/dist; root index.html is generated. The source/ tree is the
 current implementation. football-source-v22.zip is only a historic snapshot;
 never replace current modules or restore retired legacy modules from that archive.
 
+## Landscape-only release direction (2026-10-13; supersedes portrait layouts below)
+
+The owner explicitly requires landscape-only play, including future development.
+Android uses sensorLandscape; the installed PWA requests landscape; browsers that
+cannot lock orientation show a rotate prompt and pause without auto-resuming.
+Prioritize a polished landscape management workspace: pitch and selected-player
+attributes together, persistent match navigation instead of a native menu select,
+club crests in competitions, and placement-dependent overall estimates.
+Quality takes priority over minimum download size, while offline assets, bounded
+work and responsive controls remain required. Do not inflate assets without value.
+Position ratings are labelled coach estimates, separate from base attributes,
+condition and stamina; they must not silently change published engine rules.
+
 ## Current owner requirements (2026-10-07; supersede historical notes)
 
 The owner explicitly retired old saves, old superstar rosters and 14-round leagues.

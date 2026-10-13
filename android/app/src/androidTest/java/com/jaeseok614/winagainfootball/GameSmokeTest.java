@@ -410,7 +410,7 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "!document.getElementById('match-popup').open");
             assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
             assertEquals("Score, pitch and main action must share the phone viewport", "true", evaluate(scenario,
-                "(()=>{const p=document.getElementById('pitch').getBoundingClientRect(),b=document.getElementById('primary').getBoundingClientRect(),s=document.querySelector('.scoreboard').getBoundingClientRect();return s.top>=0&&p.top>=0&&p.bottom<=b.top&&b.bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1;})()"));
+                "(()=>{const p=document.getElementById('pitch').getBoundingClientRect(),b=document.getElementById('primary').getBoundingClientRect(),s=document.querySelector('.scoreboard').getBoundingClientRect();return s.top>=0&&p.top>=0&&(p.right<=b.left+1||p.bottom<=b.top+1)&&b.bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1;})()"));
             screenshot(scenario, "android-compact-match.png");
             evaluate(scenario, "openMatchPopup('setpieces');true");
             awaitTrue(scenario, "matchPopupActive==='setpieces'&&document.querySelectorAll('[data-deadball-role]').length===3");
@@ -511,7 +511,7 @@ public final class GameSmokeTest {
             screenshot(scenario, "android-paged-player.png");
             evaluate(scenario, "closePlayerDetails();openMatchPopup('tactics');true");
             assertEquals("Tactical pages must keep all eleven players and controls in the viewport", "[]", evaluate(scenario,
-                "(()=>{const failures=[],s=document.getElementById('tactics-page-select'),b=document.querySelector('.match-popup-body');selected='f1';render();for(const o of s.options){s.value=o.value;s.dispatchEvent(new Event('change'));if(b.scrollHeight>b.clientHeight+1||b.scrollWidth>b.clientWidth+1)failures.push(o.value);}s.value='배치';s.dispatchEvent(new Event('change'));if(document.querySelectorAll('[data-tactical-player]').length!==11)failures.push('missing starters');return failures;})()"));
+                "(()=>{const failures=[],b=document.querySelector('.match-popup-body');selected='f1';render();for(const tab of ['overview','roles','support']){landscapeTacticsTab=tab;applyLandscapeTactics();if(b.scrollHeight>b.clientHeight+1||b.scrollWidth>b.clientWidth+1)failures.push(tab);}landscapeTacticsTab='overview';applyLandscapeTactics();const pitch=document.querySelector('.tactical-pitch').getBoundingClientRect(),profile=document.querySelector('.tactical-selected-profile').getBoundingClientRect();if(pitch.right>profile.left||!profile.height)failures.push('simultaneous pitch and profile');if(document.querySelectorAll('[data-tactical-player]').length!==11)failures.push('missing starters');if(document.getElementById('match-popup-select').getClientRects().length)failures.push('native menu shown');return failures;})()"));
             screenshot(scenario, "android-paged-tactics.png");
             evaluate(scenario, "openMatchPopup('analysis');true");
             assertEquals("Analysis pages must not hide overflow below the dialog", "[]", evaluate(scenario,
@@ -625,21 +625,22 @@ public final class GameSmokeTest {
         }
         fail("Activity did not change orientation");
     }
-    @Test public void brandedLoadingFitsPortraitAndLandscape() throws Exception {
+    @Test public void brandedLoadingFitsBothLandscapeDirections() throws Exception {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
+            awaitOrientation(scenario, Configuration.ORIENTATION_LANDSCAPE);
             scenario.onActivity(activity -> activity.showLoadingPreviewForTest());
             awaitLoadingLayout(scenario);
-            scenario.onActivity(activity -> assertTrue("Portrait title or gauge was clipped", activity.loadingBrandFitsForTest()));
-            screenshot(scenario, "android-loading-portrait.png");
-            scenario.onActivity(activity -> activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));
+            scenario.onActivity(activity -> assertTrue("Initial landscape title or gauge was clipped", activity.loadingBrandFitsForTest()));
+            screenshot(scenario, "android-loading-landscape-default.png");
+            scenario.onActivity(activity -> activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE));
             awaitOrientation(scenario, Configuration.ORIENTATION_LANDSCAPE); awaitReady(scenario);
             scenario.onActivity(activity -> activity.showLoadingPreviewForTest());
             awaitLoadingLayout(scenario);
             scenario.onActivity(activity -> assertTrue("Landscape title or gauge was clipped", activity.loadingBrandFitsForTest()));
             screenshot(scenario, "android-loading-landscape.png");
-            scenario.onActivity(activity -> { activity.hideLoadingPreviewForTest(); activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); });
-            awaitOrientation(scenario, Configuration.ORIENTATION_PORTRAIT);
+            scenario.onActivity(activity -> { activity.hideLoadingPreviewForTest(); activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); });
+            awaitOrientation(scenario, Configuration.ORIENTATION_LANDSCAPE);
         }
     }
 

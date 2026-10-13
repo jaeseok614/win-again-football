@@ -8,7 +8,7 @@ const trainingNames={technique:'기술 훈련',pace:'스피드 훈련',fitness:'
 initMatchFeedback();
 function setView(next){if(typeof appSessionStarted!=='undefined')appSessionStarted=true;if(next==='match'&&!state)return;if(next!==view){if(next!=='match')pauseForPlanning();clearMatchFeedback();}movementStamp=performance.now();view=next;save();render();window.scrollTo({top:0,behavior:'instant'});}
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
-function clubMark(c){return `<span class="club-mark" style="--club-color:${c.color}" aria-hidden="true">${c.code}</span>`;}
+function clubMark(c){return ClubCrests.html(c);}
 let mobileDashboardExpanded=false;
 function setMobileDashboardExpanded(expanded){mobileDashboardExpanded=!!expanded;$('club-pane')?.classList.toggle('mobile-details-open',mobileDashboardExpanded);const toggle=$('mobile-dashboard-toggle');if(toggle){toggle.setAttribute('aria-expanded',String(mobileDashboardExpanded));toggle.textContent=mobileDashboardExpanded?'상세 현황 접기':'상세 현황 펼치기';}}
 function renderMobileCommandCenter(table,me,own,tier,finished){

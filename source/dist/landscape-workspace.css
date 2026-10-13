@@ -1,0 +1,177 @@
+/* Landscape is the supported play surface. Dense information, roomy primary actions. */
+.club-mark.club-crest{display:inline-flex;align-items:center;justify-content:center;background:none!important;border:0!important;border-radius:0!important;padding:0!important;width:30px;height:34px;min-width:24px;vertical-align:middle;box-shadow:none}
+.club-crest svg{width:100%;height:100%;overflow:visible}
+.competition-table .club-crest{width:22px;height:25px;min-width:22px;margin-right:5px}
+.bracket-pair>div>span{display:flex;align-items:center;gap:5px}
+.bracket-pair .club-crest{width:22px;height:25px;flex:0 0 22px;min-width:22px}
+.crest-pending{flex:0 0 22px!important;text-align:center;color:#8aa1b3;border:1px dashed #567087;border-radius:5px}
+#landscape-rotation{width:min(420px,90vw);padding:24px;text-align:center;background:#10232c;color:#edf4ed;border:1px solid #70989a;border-radius:18px}
+#landscape-rotation::backdrop{background:#081218fa}
+#landscape-rotation h2{font-size:20px}#landscape-rotation p{font-size:14px;line-height:1.7}
+#landscape-rotation button{min-height:48px;width:100%}.rotation-device{font-size:70px;color:#cce893}
+@media(orientation:landscape){
+ #match-popup[open],#match-popup.focused-tactics[open]{width:calc(100vw - 12px);max-width:1500px;height:calc(100dvh - 12px);max-height:none;padding:0;display:grid!important;grid-template-columns:170px minmax(0,1fr);grid-template-rows:46px minmax(0,1fr);gap:0;overflow:hidden;background:linear-gradient(130deg,#172734,#0d1924);border:1px solid #496272;border-radius:10px}
+ #match-popup .match-popup-header{grid-column:2;grid-row:1;padding:0 8px;min-width:0;display:flex;gap:8px;background:#1c303e;border-bottom:1px solid #496272}
+ #match-popup .match-popup-header>div{display:flex!important;align-items:center;gap:12px;min-width:0;flex:1}
+ #match-popup #match-popup-title{display:block!important;font-size:14px;margin:0;white-space:nowrap}
+ #match-popup #match-popup-status{display:block!important;font-size:10px;margin:0;line-height:1.3;color:#b9cbd1}
+ #match-popup .match-popup-header button{min-height:44px;min-width:48px;margin:0}
+ #match-popup #match-popup-select,#match-popup .match-popup-footer{display:none!important}
+ #match-popup .match-popup-nav{grid-column:1;grid-row:1/-1;display:grid!important;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(44px,1fr);align-content:start;gap:3px;padding:6px;background:#101e2b;overflow:auto;margin:0;max-height:100%;border-right:1px solid #405867}
+ #match-popup .match-popup-nav button{min-height:44px;min-width:0;padding:4px 2px;font-size:11px;line-height:1.35;background:#1b2e3d;border:1px solid #344c5c}
+ #match-popup .match-popup-nav button[aria-pressed=true]{background:#354e38;border-color:#c5e58d;color:#e5f7ca}
+ #match-popup .match-popup-body{grid-column:2;grid-row:2;padding:6px;overflow:auto;min-width:0;min-height:0}
+ #match-popup-error:not([hidden]){position:absolute;top:48px;right:12px;left:184px;z-index:10}
+ #match-popup-tactics.landscape-tactics{height:100%;display:grid!important;grid-template-columns:minmax(0,1.2fr) minmax(185px,1fr);grid-template-rows:44px minmax(0,1fr);gap:6px;position:relative}
+ #match-popup-tactics[hidden]{display:none!important}
+ #match-popup .landscape-tactics .field-toolbar{grid-column:1;grid-row:1;order:0;padding:0!important;display:flex!important;gap:4px;min-width:0;height:44px}
+ #match-popup .landscape-tactics .field-toolbar>label{flex:1;min-width:0;gap:2px;font-size:0}
+ #match-popup .landscape-tactics .field-toolbar>label select{width:100%;min-width:0;font-size:11px;min-height:44px}
+ #match-popup .landscape-tactics .formation-actions{display:flex;flex:1.7;min-width:0;margin:0;gap:3px}
+ #match-popup .landscape-tactics .formation-actions>[data-formation-recommend],#match-popup .landscape-tactics [data-formation-reset]{display:none}
+ #match-popup .landscape-tactics .formation-quick-orders{display:flex;gap:3px;min-width:0;width:100%}
+ #match-popup .landscape-tactics .formation-quick-orders select{width:50%;min-width:0;min-height:44px;padding:2px;font-size:11px}
+ #match-popup .landscape-tactics-tabs{grid-column:2;grid-row:1;display:flex;gap:3px}
+ #match-popup .landscape-tactics-tabs button{flex:1;min-width:0;min-height:44px;font-size:11px;padding:2px}
+ #match-popup .landscape-tactics-tabs button[aria-pressed=true]{color:#e5f7ca;border-color:#c5e58d;background:#354e38}
+ #match-popup .landscape-tactics #tactical-editor{grid-column:1/-1;grid-row:2;display:grid!important;grid-template-columns:minmax(0,1.2fr) minmax(185px,1fr);grid-template-rows:20px minmax(0,1fr);height:100%;gap:4px 6px;min-width:0;min-height:0}
+ #match-popup .landscape-tactics .tactical-team-strip{grid-column:1/-1;grid-row:1;font-size:11px;margin:0;padding:1px 4px;line-height:18px;background:#203c37;white-space:nowrap}
+ #match-popup .landscape-tactics .tactical-pitch{grid-column:1;grid-row:2;position:relative;width:100%;height:100%;min-height:0;max-height:none;aspect-ratio:auto;margin:0;box-sizing:border-box;border-radius:6px;background:repeating-linear-gradient(0deg,#214d3c 0 14%,#244f3f 14% 28%);overflow:visible}
+ #match-popup .landscape-tactics .tactical-pitch button{width:56px;min-width:0;min-height:28px!important;height:32px;padding:1px 2px!important;transform:translate(-50%,-50%);background:#183446ef;border:1px solid #749186;box-shadow:0 2px 4px #0006;font-size:10px;line-height:1.05;overflow:visible;border-radius:4px}
+ #match-popup .landscape-tactics .tactical-pitch button[aria-pressed=true]{background:#3c5033;border-color:#e4eb98;z-index:5}
+ #match-popup .landscape-tactics .tactical-pitch button .player-portrait{display:none!important}
+ #match-popup .landscape-tactics .tactical-full-name{display:block!important;white-space:normal;font-size:9px;line-height:1.1}
+ #match-popup .landscape-tactics .tactical-short-name{display:none!important}
+ #match-popup .landscape-tactics .tactical-pitch button>b{font-size:10px;display:block;color:#c5d9e0}
+ #match-popup .landscape-tactics .placement-badge{position:absolute;right:-6px;top:-7px;display:flex;gap:2px;background:#d9e99b;color:#142c22;font-size:11px;font-weight:bold;padding:1px 3px;border-radius:3px;z-index:1}
+ .placement-badge small{font-size:8px;font-weight:normal}
+ #match-popup .tactical-selected-profile{grid-column:2;grid-row:2;overflow:auto;margin:0;padding:7px;background:#1b303e;border:1px solid #45616d;border-radius:6px;font-size:11px;min-height:0}
+ .tactical-selected-profile header{display:flex;align-items:center;gap:7px}.tactical-selected-profile header .player-portrait{width:40px;height:40px;flex:0 0 40px}
+ #match-popup .tactical-selected-profile p{margin:4px 0;font-size:11px;line-height:1.3}
+ .placement-summary{display:flex;align-items:center;justify-content:space-between;background:#203d37;padding:5px;margin:4px 0}
+ .placement-summary b{font-size:22px;color:#e1eea1}.placement-summary em{font-style:normal}.rating-loss{color:#ffad9e}.rating-gain{color:#b3e99c}
+ .placement-attributes{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+ .placement-attributes>div{display:grid;grid-template-columns:36px minmax(10px,1fr) 22px;align-items:center;gap:3px;font-size:11px}
+ .placement-attributes meter{width:100%;height:8px;accent-color:#bbdc8d}
+ .placement-best{display:flex;gap:4px;margin:5px 0}.placement-best span{background:#314c55;padding:3px;font-size:10px}
+ #match-popup .tactical-selected-profile>small{display:block;color:#b6c8d1;font-size:10px;line-height:1.4}
+ #match-popup .landscape-tactics #pitch-player-tools{grid-column:2;grid-row:2;z-index:2;align-self:stretch;margin-top:24px;overflow:auto;background:#1b303e;padding:8px;min-height:0}
+ #match-popup .landscape-tactics #pitch-player-tools>div{display:block}
+ #match-popup .landscape-tactics #pitch-player-tools select,#match-popup .landscape-tactics #pitch-player-tools button{min-height:44px;width:100%;margin:3px 0}
+ #match-popup .landscape-tactics .support-summary{grid-column:2;grid-row:2;overflow:auto;margin:0}
+ #match-popup .landscape-tactics .support-map-toggle{grid-column:2;grid-row:2;z-index:2;align-self:start;background:#203742;padding:5px}
+ #match-popup .landscape-tactics[data-side=support] .support-summary{padding-top:44px}
+ .coach-current h3{margin:0;font-size:16px}.coach-current header p{font-size:11px;line-height:1.4;margin:4px 0}
+ .coach-current-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+ #match-popup .coach-current-grid button{display:flex;align-items:center;gap:5px;text-align:left;min-height:44px;padding:3px;background:#203743;border:1px solid #405e6a}
+ .coach-current-grid .player-portrait{width:30px;height:30px;flex:0 0 30px}.coach-current-grid strong{font-size:11px}
+ .coach-current-grid small{display:block;font-size:10px;color:#c7d6db}.coach-current-grid meter{display:block;width:100%;height:5px}
+ #match-popup .coach-lineup{display:grid;grid-template-columns:minmax(150px,.7fr) minmax(0,1.5fr);gap:4px 10px}
+ #match-popup .coach-lineup>h3,#match-popup .coach-lineup>.eyebrow{display:none}
+ #match-popup .coach-lineup-eleven{grid-column:2;grid-row:1/8;margin:0;gap:2px 6px}
+ #match-popup .coach-lineup-eleven li{grid-template-columns:22px 20px minmax(0,1fr) 26px 5px;gap:3px;min-height:44px}
+ #match-popup .coach-lineup-eleven .player-portrait{width:22px;height:22px;min-width:22px}
+ #match-popup .coach-lineup-player{font-size:11px}#match-popup .coach-lineup-fit{font-size:12px}
+ #match-popup .coach-lineup-fit small{font-size:8px}#match-popup .coach-lineup-filters{grid-template-columns:1fr;gap:4px}
+ #match-popup .coach-lineup-filters label{font-size:10px;gap:2px}#match-popup .coach-lineup-comparison{padding:5px;gap:4px}
+ #match-popup .coach-lineup-comparison small{font-size:10px}#match-popup .coach-lineup-comparison b{font-size:14px}
+ #match-popup .coach-lineup-note{font-size:10px;margin:3px 0}#match-popup .coach-lineup-actions{padding:3px 0;position:static}
+ #match-popup .coach-lineup-actions button{font-size:11px}
+}
+@media(orientation:landscape) and (max-width:700px){
+ #match-popup[open],#match-popup.focused-tactics[open]{grid-template-columns:126px minmax(0,1fr)}
+ #match-popup .match-popup-nav{padding:3px;gap:2px}#match-popup .match-popup-nav button{font-size:10px}
+ #match-popup #match-popup-status{display:none!important}
+ #match-popup-tactics.landscape-tactics,#match-popup .landscape-tactics #tactical-editor{grid-template-columns:minmax(0,1fr) minmax(168px,.9fr)}
+ #match-popup .landscape-tactics .tactical-pitch button{width:44px;height:30px}
+ .placement-attributes{gap:2px 4px}.placement-attributes>div{grid-template-columns:32px 1fr 20px;font-size:10px}
+ #match-popup .tactical-selected-profile{padding:4px}.tactical-selected-profile header .player-portrait{width:30px;height:30px;flex-basis:30px}
+ .coach-current-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #match-popup .coach-lineup-eleven{grid-template-columns:1fr}
+}
+
+@media(orientation:landscape){
+ #match-popup.focused-tactics #match-popup-tactics.landscape-tactics{grid-template-columns:minmax(0,1.2fr) minmax(185px,1fr);grid-template-rows:44px minmax(0,1fr);align-content:stretch;gap:6px}
+ #match-popup .landscape-tactics .field-toolbar{flex-direction:row!important}
+ #match-popup .landscape-tactics .field-toolbar>label{min-height:44px}
+ #match-popup .landscape-tactics .tactical-selected-profile div{display:block;border:0;margin:0;border-radius:0}
+ #match-popup .landscape-tactics .tactical-selected-profile header>div{min-width:0}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-summary{display:flex;margin:4px 0;padding:4px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-summary span{display:inline;background:none;border:0;padding:0}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes>div{display:grid;grid-template-columns:36px minmax(10px,1fr) 22px;align-items:center;gap:3px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes span{display:inline;background:none;padding:0;border:0;font-size:11px;white-space:nowrap}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-best{display:flex;margin:4px 0;gap:4px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-best span{padding:3px;font-size:10px;border:0}
+ #match-popup .landscape-tactics:not([data-side=support]) .support-map{display:none}
+ #match-popup #match-popup-title{position:static!important;width:auto!important;height:auto!important;clip:auto!important;clip-path:none!important;overflow:visible!important}
+}
+@media(orientation:landscape) and (max-width:700px){
+ #match-popup.focused-tactics #match-popup-tactics.landscape-tactics{grid-template-columns:minmax(0,1fr) minmax(168px,.9fr)}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes{gap:3px}
+ #match-popup .landscape-tactics .tactical-selected-profile .placement-attributes>div{grid-template-columns:32px 1fr 20px}
+}
+
+@media(orientation:landscape){#match-popup .landscape-tactics:not([data-side=support]) .support-link-label{display:none!important}.placement-badge small{margin-left:2px}#match-popup .landscape-tactics .tactical-pitch button{display:block!important}#match-popup .landscape-tactics .tactical-pitch button>b{background:none!important}}
+
+@media(orientation:landscape){
+ #match-popup .landscape-tactics .tactical-pitch button>.tactical-full-name{display:none!important}
+ #match-popup .landscape-tactics .tactical-pitch button>.tactical-short-name{display:block!important;white-space:nowrap!important;font-size:9px!important;line-height:12px!important;background:none!important}
+ #match-popup .landscape-tactics .tactical-pitch button>.placement-badge{font-size:11px!important;line-height:12px!important;white-space:nowrap!important;word-break:normal}
+}
+
+@media(orientation:landscape){
+ #match-popup-lineup{height:100%}
+ #match-popup .coach-lineup{height:100%;grid-template-columns:minmax(165px,.8fr) minmax(0,1.6fr);grid-template-rows:minmax(0,1fr);min-height:0}
+ #match-popup .coach-lineup-controls{grid-column:1;grid-row:1;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:4px}
+ #match-popup .coach-lineup-controls>h3,#match-popup .coach-lineup-controls>.eyebrow{display:none}
+ #match-popup .coach-lineup-eleven{grid-column:2;grid-row:1;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(0,1fr);align-content:stretch;min-height:0;height:100%}
+ #match-popup .coach-lineup-eleven li{min-height:0;height:auto}
+ #match-popup .coach-lineup-player{min-height:38px;line-height:1.2;padding:1px 0}
+ #match-popup .coach-lineup-controls .coach-lineup-filters{grid-template-columns:1fr}
+ #match-popup .coach-lineup-controls>.coach-lineup-note:nth-last-child(3){display:none}
+ body.management-view .app>.masthead{display:flex!important;flex-direction:row!important;align-items:center;justify-content:space-between;min-height:44px!important;height:44px!important;max-height:44px!important;flex:0 0 44px!important;padding:0!important;overflow:hidden}
+ body.management-view .masthead>.brand{flex:1;min-width:0;margin:0}
+ body.management-view .masthead .header-actions{display:flex!important;width:auto!important;flex:0 0 auto!important;margin:0!important;gap:5px}
+ body.management-view .masthead .header-actions button{width:auto!important;min-width:72px;min-height:44px;margin:0!important;padding:4px 7px}
+ .competition-bracket .bracket-pair{padding:2px}
+ .competition-bracket .bracket-pair>div{min-height:19px;font-size:11px}
+ .competition-bracket .club-crest{width:18px;height:20px;min-width:18px;flex-basis:18px}
+ .competition-bracket .bracket-round{gap:3px}
+}
+
+.coach-short-name{display:none}
+@media(orientation:landscape) and (max-width:700px){
+ #match-popup .coach-lineup{grid-template-columns:140px minmax(0,1fr);gap:6px}
+ #match-popup .coach-lineup .coach-full-name{display:none}.coach-short-name{display:inline}
+ #match-popup .coach-lineup-eleven li{grid-template-columns:20px 18px minmax(0,1fr) 22px 4px;gap:2px}
+ #match-popup .coach-lineup-player{font-size:10px;white-space:nowrap}
+ #match-popup .coach-lineup-fit small{display:none}
+ #match-popup .coach-lineup-controls>.coach-lineup-note{display:none}
+ #match-popup .coach-lineup-controls>.coach-lineup-note[role=status]:not(:empty){display:block}
+ #match-popup .coach-lineup-comparison{font-size:10px}
+ #match-popup .coach-lineup-comparison b{font-size:13px}
+}
+
+@media(orientation:landscape) and (max-height:360px){
+ .competition-bracket .bracket-pair{padding:1px}
+ .competition-bracket .bracket-pair>div{min-height:15px;font-size:9px;line-height:15px}
+ .competition-bracket .bracket-pair>div>span{white-space:nowrap;gap:2px}
+ .competition-bracket .club-crest{width:14px;height:15px;min-width:14px;flex-basis:14px}
+ .competition-bracket h3{font-size:11px;margin:0 0 3px}
+ .competition-bracket .crest-pending{flex-basis:14px!important}
+ .competition-surface .centre-status{font-size:10px;margin:0}
+ .competition-bracket .bracket-pair b{font-size:10px}
+}
+
+@media(orientation:landscape) and (max-height:450px){
+ body.management-view #club-pane .mobile-command-card{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);grid-template-rows:16px minmax(32px,1fr) minmax(24px,1fr) auto}
+ body.management-view #club-pane .mobile-command-top{grid-column:1/-1!important;grid-row:1!important}
+ body.management-view #club-pane .mobile-command-card>.club-growth{display:flex!important;grid-column:1!important;grid-row:2/4!important;min-height:0;max-height:none;height:100%}
+ body.management-view #club-pane .mobile-command-card>.club-growth .club-growth-picture{min-height:0;flex:1}
+ body.management-view #club-pane .mobile-command-card>.club-growth figcaption{font-size:9px;padding:3px}
+ body.management-view #club-pane .mobile-command-card>.club-growth figcaption span{display:none}
+ body.management-view #club-pane .mobile-kpis{grid-column:2!important;grid-row:2!important;align-self:center}
+ body.management-view #club-pane .mobile-next{grid-column:2!important;grid-row:3!important;align-self:center}
+ body.management-view #club-pane .mobile-command-actions{grid-column:1/-1!important;grid-row:4!important}
+}
