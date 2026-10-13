@@ -43,7 +43,7 @@ public final class GameSmokeTest {
     private void reachStoryQuestion(ActivityScenario<MainActivity> scenario) throws Exception {
         for (int page = 0; page < 16 && !"true".equals(evaluate(scenario,"!document.querySelector('#club-story-dialog .story-choices').hidden")); page++) {
             assertEquals("Every story card and navigation must fit without scrolling", "true", evaluate(scenario,
-                "(()=>{const d=document.getElementById('club-story-dialog'),b=d.querySelector('.story-conversation'),r=d.getBoundingClientRect();return d.open&&r.top>=0&&r.bottom<=innerHeight&&d.scrollHeight<=d.clientHeight+1&&b.scrollHeight<=b.clientHeight+1;})()"));
+                "(()=>{const d=document.getElementById('club-story-dialog'),b=d.querySelector('.story-reading'),r=d.getBoundingClientRect();return d.open&&r.top>=0&&r.bottom<=innerHeight&&d.scrollHeight<=d.clientHeight+1&&b.scrollHeight<=b.clientHeight+1;})()"));
             tapWebElement(scenario,"#club-story-dialog [data-story-page='next']");
         }
         awaitTrue(scenario,"clubStoryPage===clubStoryPages(ClubStory.scene(season,clubStoryEvent)).length-1&&!document.querySelector('#club-story-dialog .story-choices').hidden");
@@ -335,7 +335,7 @@ public final class GameSmokeTest {
                 awaitTrue(scenario, "ClubStory.scene(season,clubStoryEvent).step===1");
                 tapWebElement(scenario, "#club-story-dialog [data-story-choice]");
                 awaitTrue(scenario, "ClubStory.scene(season,clubStoryEvent).step===2&&!!document.querySelector('#club-story-dialog .story-complete')");
-                tapWebElement(scenario, "#club-story-dialog [data-story-close]");
+                tapWebElement(scenario, "#club-story-dialog footer [data-story-close]");
                 awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===2");
                 tapWebElement(scenario, "#manager-guide-skip");
             }
@@ -372,7 +372,7 @@ public final class GameSmokeTest {
             }
             assertEquals("Reading every story page must preserve the campaign", storyBefore, evaluate(scenario, "JSON.stringify(season)"));
             screenshot(scenario, "android-story-chapter.png");
-            tapWebElement(scenario, "#club-story-dialog [data-story-close]");
+            tapWebElement(scenario, "#club-story-dialog footer [data-story-close]");
             awaitTrue(scenario, "!document.getElementById('club-story-dialog').open&&!document.getElementById('manager-notebook').open");
 
             tapWebElement(scenario, "#mobile-match-action");
@@ -590,7 +590,7 @@ public final class GameSmokeTest {
             for (int step = 0; step < 2; step++) {
                 for (int page = 0; page < 12 && !"true".equals(evaluate(scenario,"!document.querySelector('#club-story-dialog .story-choices').hidden")); page++) {
                     assertEquals("The entire current prose and navigation fit without scrolling", "true", evaluate(scenario,
-                        "(()=>{const d=document.getElementById('club-story-dialog'),b=d.querySelector('.story-conversation');return d.scrollHeight<=d.clientHeight+1&&b.scrollHeight<=b.clientHeight+1;})()"));
+                        "(()=>{const d=document.getElementById('club-story-dialog'),b=d.querySelector('.story-reading');return d.scrollHeight<=d.clientHeight+1&&b.scrollHeight<=b.clientHeight+1;})()"));
                     tapWebElement(scenario,"#club-story-dialog [data-story-page='next']");
                 }
                 tapWebElement(scenario, step == 0 ? "#club-story-dialog [data-story-choice='practical']" : "#club-story-dialog [data-story-choice='honest']");
