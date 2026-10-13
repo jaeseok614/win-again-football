@@ -769,3 +769,7 @@
 @media(orientation:landscape){.opponent-report-overview .opponent-role-report article{line-height:12px}.opponent-report-overview .opponent-role-report h3{line-height:12px}.opponent-report-overview .opponent-detail-compare select{margin:0}.opponent-report-overview .opponent-detail-summary>div{line-height:14px}}
 
 @media(orientation:landscape) and (max-height:380px){.opponent-report-overview .opponent-detail-energy .opponent-energy-gauge{height:20px}.opponent-report-overview .opponent-detail-summary strong{line-height:16px}}
+
+@media(orientation:landscape){
+ #player-detail-dialog .report-page .detail-records{margin:0;padding:6px;border:1px solid #416066;border-radius:7px}.player-report-workspace .detail-records h3{font-size:11px;line-height:15px;margin:0 0 4px}.player-report-workspace .detail-records h3 small{font-size:9px}.player-report-workspace .detail-record-grid{gap:4px;grid-template-columns:repeat(3,minmax(0,1fr))}.player-report-workspace .detail-record-grid>div{padding:3px;line-height:12px}.player-report-workspace .detail-record-grid span,.player-report-workspace .detail-record-grid small{font-size:10px;line-height:12px}.player-report-workspace .detail-record-grid strong{font-size:18px;line-height:21px}.player-report-workspace #player-detail-career{margin-top:6px;font-size:11px;min-height:44px}
+}

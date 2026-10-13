@@ -186,8 +186,15 @@ public final class GameSmokeTest {
         awaitTrue(scenario,"(()=>{const element=document.querySelector("+quotedSelector+");if(!element)return false;const r=element.getBoundingClientRect();return r.width>0&&r.height>0;})()");
         evaluate(scenario, "document.querySelector(" + quotedSelector + ").scrollIntoView({block:'center',behavior:'instant'});true");
         awaitWebViewFrame(scenario); awaitAppWindowFocus(scenario);
-        String pointJson = evaluate(scenario,
-            "(()=>{const r=document.querySelector(" + quotedSelector + ").getBoundingClientRect();return JSON.stringify([r.x+r.width/2,r.y+r.height/2,devicePixelRatio])})()");
+        String pointJson = "null";
+        // A DOM node can be replaced while the software-rendered frame commits.
+        // Reacquire the actual visible element; do not retry or simulate a click.
+        for (int attempt = 0; attempt < 3 && "null".equals(pointJson); attempt++) {
+            awaitTrue(scenario,"(()=>{const e=document.querySelector("+quotedSelector+");if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0;})()");
+            pointJson = evaluate(scenario,
+                "(()=>{const e=document.querySelector(" + quotedSelector + ");if(!e)return null;const r=e.getBoundingClientRect();return JSON.stringify([r.x+r.width/2,r.y+r.height/2,devicePixelRatio])})()");
+            if ("null".equals(pointJson)) awaitWebViewFrame(scenario);
+        }
         assertNotEquals("Tap target disappeared before dispatch: " + selector, "null", pointJson);
         JSONArray point = new JSONArray(new JSONTokener(pointJson).nextValue().toString());
         int[] origin = new int[2]; int[] size = new int[2];
@@ -516,7 +523,7 @@ public final class GameSmokeTest {
             awaitReady(scenario);
             evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());season=S.create(4095);state=season.match;appSessionStarted=true;view='match';render();return true;})()");
             String before = evaluate(scenario, "JSON.stringify(season)");
-            assertEquals("All abilities may scroll vertically; report navigation and every skill stay available", "[]", evaluate(scenario,
+            assertEquals("Complete biography, all abilities and every report fit the actual landscape phone", "[]", evaluate(scenario,
                 "(()=>{const failures=[];for(const id of ['sp_f1',Object.values(season.squad).find(p=>p.pos==='GK').identity]){openPlayerDetails(id);const d=document.getElementById('player-detail-dialog'),s=d.querySelector('.report-page-select'),b=d.querySelector('.report-page-body');for(const o of s.options){s.value=o.value;s.dispatchEvent(new Event('change'));if(b.scrollHeight>b.clientHeight+1||b.scrollWidth>b.clientWidth+1||b.getBoundingClientRect().bottom>d.getBoundingClientRect().bottom)failures.push(id+':'+o.value);}const actual=[...d.querySelectorAll('[data-scout-attribute]')].map(e=>e.dataset.scoutAttribute).sort(),expected=PlayerDetails.read(season,id).attributes.flatMap(g=>g.items.map(i=>i.key)).sort();if(JSON.stringify(actual)!==JSON.stringify(expected))failures.push(id+':missing attributes');const bio=d.querySelector('.player-identity-panel');if(bio.scrollHeight>bio.clientHeight+1||!['주발','선호 포지션','키','나이','주급'].every(t=>bio.textContent.includes(t)))failures.push(id+':incomplete biography');closePlayerDetails();}return failures;})()"));
             evaluate(scenario, "openPlayerDetails('sp_f1');document.querySelector('#player-detail-dialog .report-page-select').value='전체 능력';document.querySelector('#player-detail-dialog .report-page-select').dispatchEvent(new Event('change'));true");
             screenshot(scenario, "android-paged-player.png");

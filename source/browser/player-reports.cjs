@@ -2,7 +2,7 @@
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');const assert=require('assert/strict'),path=require('path'),{pathToFileURL}=require('url');(async()=>{const b=await chromium.launch({headless:true,...(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{})});try{const p=await b.newPage({viewport:{width:844,height:390}}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto(pathToFileURL(path.resolve(__dirname,'../../index.html')).href);await p.evaluate(()=>{managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;launchBusy=false;document.body.classList.remove('launch-mode');$('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;setView('match');openMatchPopup('tactics');});
 
 await p.evaluate(()=>closeMatchPopup());
-for(const [width,height] of [[568,320],[640,360],[740,360],[844,390],[915,412],[1024,768],[1280,720]]){
+for(const [width,height] of [[568,320],[640,360],[740,360],[844,364],[844,390],[915,412],[1024,768],[1280,720]]){
  await p.setViewportSize({width,height});await p.evaluate(()=>closeMatchPopup());
  const result=await p.evaluate(()=>{const before=JSON.stringify(season),faults=[];for(const person of Object.values(season.squad)){reportPagesState.player='시즌 기록';openPlayerDetails(person.identity);const d=$('player-detail-dialog'),body=d.querySelector('.report-page-body'),identity=d.querySelector('.player-identity-panel'),model=PlayerDetails.read(season,person.identity),rows=[...d.querySelectorAll('[data-scout-attribute]')];
  if(d.querySelector('.report-page-select').value!=='전체 능력')faults.push([person.identity,'wrong entry']);
