@@ -1,0 +1,163 @@
+
+/* Dense page workspaces. Primary confirmation and navigation controls remain 44px. */
+body.dense-workspace-view .app{display:grid!important;grid-template-rows:44px minmax(0,1fr) 44px;gap:4px;height:100dvh;box-sizing:border-box;padding:6px 6px 0!important}
+body.dense-workspace-view .app>.masthead{grid-row:1;min-height:44px;padding:0}
+body.dense-workspace-view .app>main{grid-row:2;min-height:0}
+body.dense-workspace-view .app>.view-nav{grid-row:3;position:static!important;inset:auto!important;margin:0 -6px!important;width:auto!important;min-height:44px;padding:0 4px!important}
+body.dense-workspace-view #squad-pane,body.dense-workspace-view #market-pane{display:block;height:100%;min-height:0}
+body.dense-workspace-view #management-hub-squad,body.dense-workspace-view #management-hub-market{display:none!important}
+dialog[data-inline-workspace]{position:static!important;inset:auto!important;margin:0!important;width:100%!important;max-width:none!important;height:100%!important;max-height:none!important;box-sizing:border-box}
+#management-dialog[data-inline-workspace]{display:grid!important;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);padding:3px;gap:0;background:#102027}
+#management-dialog[data-inline-workspace]>header,#management-dialog[data-inline-workspace]>.management-switch{display:none!important}
+#management-dialog[data-inline-workspace] #management-content{grid-column:1;grid-row:1;height:100%;padding:0;min-height:0}
+#management-dialog[data-inline-workspace=market] #management-content{display:grid;grid-template-columns:154px minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:5px;overflow:hidden}
+#management-dialog[data-inline-workspace=market] #transfer-search-panel{grid-column:1;grid-row:1}
+#management-dialog[data-inline-workspace=market] .transfer-search{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(5,44px);gap:3px;height:100%;align-content:start}
+#management-dialog[data-inline-workspace=market] .transfer-search>.panel-heading,#management-dialog[data-inline-workspace=market] .transfer-search>p,#management-dialog[data-inline-workspace=market] .market-view-toolbar{display:none}
+#management-dialog[data-inline-workspace=market] .transfer-search>.transfer-filter-grid{display:contents}
+#management-dialog[data-inline-workspace=market] .transfer-search>.transfer-filter-grid label{font-size:0;gap:0;min-width:0}
+#management-dialog[data-inline-workspace=market] .transfer-search>.transfer-filter-grid label:nth-child(1){grid-column:1;grid-row:1}
+#management-dialog[data-inline-workspace=market] .transfer-search>.transfer-filter-grid label:nth-child(2){grid-column:2;grid-row:1}
+#management-dialog[data-inline-workspace=market] .transfer-search>.transfer-filter-grid label:nth-child(3){grid-column:1;grid-row:2}
+#management-dialog[data-inline-workspace=market] .transfer-search>.transfer-filter-grid label:nth-child(4){grid-column:2;grid-row:2}
+#management-dialog[data-inline-workspace=market] .transfer-search>.transfer-filter-grid label:nth-child(5){grid-column:1;grid-row:3}
+#management-dialog[data-inline-workspace=market] .transfer-advanced{grid-column:2;grid-row:3}
+#management-dialog[data-inline-workspace=market] .transfer-filter-toggles{grid-column:1/-1;grid-row:4}
+#management-dialog[data-inline-workspace=market] .transfer-pagination{grid-column:1/-1;grid-row:5}
+#management-dialog[data-inline-workspace=market] #market-overview[data-market-mode=list]{grid-column:2;grid-row:1;grid-template-columns:minmax(0,.38fr) minmax(0,.62fr)}
+.workspace-position-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:22px 22px;gap:0;height:44px}
+.workspace-position-filters button{font-size:9px!important;line-height:11px;min-height:0!important;padding:0 1px!important;border-radius:3px!important}
+label:has(>.workspace-position-filters)>select{display:none!important}
+.workspace-position-filters button[aria-pressed=true],.workspace-formations button[aria-pressed=true],.workspace-orders button[aria-pressed=true],.workspace-position-picker button[aria-pressed=true]{background:#45602d!important;border-color:#d1ef9a!important;color:#f3ffdf!important}
+#squad-overview-dialog[data-inline-workspace]{padding:4px;gap:3px;grid-template-rows:24px 20px minmax(0,1fr) 44px}
+#squad-overview-dialog[data-inline-workspace]>header{min-height:0;height:24px}
+#squad-overview-dialog[data-inline-workspace]>header h2{font-size:12px;line-height:14px}
+#squad-overview-dialog[data-inline-workspace] #squad-overview-close{min-height:24px;height:24px;padding:1px 5px;font-size:9px}
+#squad-overview-dialog[data-inline-workspace] .squad-overview-row{min-height:0!important;padding:0 2px}
+#squad-overview-dialog[data-inline-workspace] .squad-overview-list{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(9,minmax(0,1fr));grid-auto-flow:column;gap:2px;overflow:auto}
+#squad-overview-dialog[data-inline-workspace] .squad-overview-name strong{font-size:8px;line-height:9px;white-space:normal;overflow:visible;text-overflow:clip}
+#squad-overview-dialog[data-inline-workspace] .squad-overview-name small{font-size:7px;line-height:8px}
+#squad-overview-dialog[data-inline-workspace] .squad-overview-row .player-portrait{width:15px;height:15px}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-body>small{display:none}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-body dl{gap:2px;margin:3px 0}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-body header strong{font-size:10px;line-height:12px}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-body p{font-size:8px;line-height:10px;margin:2px 0}
+body.inline-tactics-view .app{grid-template-rows:minmax(0,1fr) 44px!important}
+body.inline-tactics-view .app>.masthead{display:none!important}
+body.inline-tactics-view .app>main{grid-row:1!important}
+body.inline-tactics-view .app>.view-nav{grid-row:2!important}
+body.inline-tactics-view #tactics-pane{display:grid!important;grid-template-columns:116px minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:4px;padding:0;min-height:0;height:100%}
+.workspace-formation-rail{min-width:0;min-height:0;padding:3px;border:1px solid #36544a;background:#172e28;border-radius:5px;overflow:auto}
+.workspace-formation-rail h2,.workspace-orders h3{font-size:9px;line-height:11px;margin:1px 0 3px}
+.workspace-formations{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
+.workspace-formations button{min-width:0;min-height:28px;height:28px;padding:1px;font-size:8px;line-height:10px}
+.workspace-orders{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:3px}
+.workspace-orders h3{grid-column:1/-1;margin:2px 0}
+.workspace-orders button{min-height:26px;height:26px;font-size:8px;line-height:10px;padding:1px;word-break:keep-all}
+.workspace-tactical-field{min-width:0;min-height:0}
+#match-popup-tactics[data-inline-workspace]{display:block!important;height:100%;min-height:0}
+#match-popup-tactics[data-inline-workspace]>:not(#tactical-editor){display:none!important}
+#match-popup-tactics[data-inline-workspace] #tactical-editor{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(166px,.65fr);grid-template-rows:18px minmax(0,1fr) 44px;gap:4px;height:100%;min-height:0}
+#match-popup-tactics[data-inline-workspace] #tactical-editor>:is(h3,p,.support-map-toggle,.touchline-briefing){display:none!important}
+#match-popup-tactics[data-inline-workspace] .tactical-team-strip{grid-column:1/-1;grid-row:1;font-size:9px;line-height:12px;padding:2px;margin:0}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch{grid-column:1;grid-row:2;min-height:0;height:100%;width:100%;aspect-ratio:auto;margin:0}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button{min-height:28px!important;height:28px;width:54px;padding:0;grid-template-rows:10px 8px 10px}
+#match-popup-tactics[data-inline-workspace] .placement-badge{font-size:8px;line-height:10px}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button b{font-size:7px;line-height:8px}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .tactical-full-name{display:none}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .tactical-short-name{display:block;font-size:7px;line-height:8px;white-space:normal}
+#match-popup-tactics[data-inline-workspace] .tactical-selected-profile{grid-column:2;grid-row:2;display:flex;flex-direction:column;gap:2px;min-height:0;overflow:auto;padding:4px}
+#match-popup-tactics[data-inline-workspace] .tactical-selected-profile header{min-height:22px;gap:3px;margin:0}
+#match-popup-tactics[data-inline-workspace] .tactical-selected-profile header .player-portrait{width:22px;height:22px;flex-basis:22px}
+#match-popup-tactics[data-inline-workspace] .tactical-selected-profile header strong{font-size:10px;line-height:12px}
+#match-popup-tactics[data-inline-workspace] .tactical-selected-profile header p{font-size:8px;line-height:9px;margin:0}
+#match-popup-tactics[data-inline-workspace] .placement-summary{font-size:9px;line-height:12px;margin:0;padding:2px}
+#match-popup-tactics[data-inline-workspace] .placement-summary b{font-size:14px}
+#match-popup-tactics[data-inline-workspace] .placement-attributes{display:grid;grid-template-columns:1fr 1fr;gap:2px 5px;margin:0}
+#match-popup-tactics[data-inline-workspace] .placement-attributes>div{grid-template-columns:1fr 25px 16px;font-size:8px;line-height:11px}
+#match-popup-tactics[data-inline-workspace] .placement-attributes meter{height:4px;width:25px}
+#match-popup-tactics[data-inline-workspace] .placement-condition{font-size:8px;line-height:10px;margin:0}
+#match-popup-tactics[data-inline-workspace] .tactical-selected-profile>:is(.ability-legend,.placement-best,small){display:none}
+.workspace-position-picker{margin-top:auto;min-width:0}
+.workspace-position-picker h3{font-size:9px;line-height:11px;margin:1px 0 2px}
+.workspace-position-picker>div{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px}
+.workspace-position-picker button{min-height:22px;height:22px;min-width:0;padding:1px;font-size:8px;line-height:10px}
+.workspace-position-picker small{display:block;font-size:7px;line-height:9px;margin-top:2px;word-break:keep-all}
+#match-popup-tactics[data-inline-workspace] .workspace-takers{grid-column:1/-1;grid-row:3;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:0;padding:0;border:0;overflow:hidden}
+.workspace-takers>:not(label){display:none!important}
+.workspace-takers label{font-size:8px;line-height:10px;margin:0;display:grid!important;grid-template-rows:10px 32px;gap:2px;min-width:0}
+.workspace-takers label span small{display:none}
+.workspace-takers select{min-height:32px!important;height:32px;font-size:9px;padding:2px;margin:0;width:100%}
+#management-hub-club .management-entries button:has(.workspace-home-fact){flex-direction:column!important;gap:2px!important}
+.workspace-home-fact{font-size:8px;line-height:10px;color:#c1d2ab}
+@media(max-height:350px){
+ #squad-overview-dialog[data-inline-workspace] .squad-overview-list{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr))}
+ #squad-overview-dialog[data-inline-workspace] .squad-overview-row{grid-template-columns:minmax(0,1fr) 18px 19px;gap:1px}
+ #squad-overview-dialog[data-inline-workspace] .squad-overview-row>.player-portrait,#squad-overview-dialog[data-inline-workspace] .squad-overview-row>span:last-child{display:none}
+ #squad-overview-dialog[data-inline-workspace] .squad-overview-name strong{font-size:7px;line-height:8px}
+ #squad-overview-dialog[data-inline-workspace] .squad-overview-name small{font-size:6.5px;line-height:7px}
+ #match-popup-tactics[data-inline-workspace] .tactical-selected-profile{padding:2px;gap:1px}
+ .workspace-position-picker button{min-height:18px;height:18px}
+}
+
+#match-popup-tactics[data-inline-workspace] #tactical-editor>:not(.tactical-team-strip):not(.tactical-pitch):not(.tactical-selected-profile):not(.workspace-takers){display:none!important}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch{position:relative;overflow:hidden;background:#173f30;border:1px solid #6c9b80;border-radius:5px}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button{position:absolute!important;transform:translate(-50%,-50%)!important;display:grid!important;align-content:center;justify-items:center;box-sizing:border-box;background:#19343d;color:#eff4e9;border:1px solid #537460;border-radius:4px;gap:0;min-width:0}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button>.player-portrait{display:none!important}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button b{display:flex;align-items:center;gap:2px;margin:0}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .placement-badge{position:static!important;transform:none!important;min-width:0;width:auto;background:transparent;border:0;height:10px;padding:0}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .placement-badge strong{font-size:9px;line-height:10px;color:#d1e89b}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .placement-badge small{display:none}
+#squad-overview-dialog[data-inline-workspace] #squad-overview-preview{display:grid;grid-template-rows:minmax(0,1fr) 44px;gap:3px;padding:3px}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-body{min-height:0;overflow:auto}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-body dl{display:grid!important;grid-template-columns:1fr 1fr!important;gap:2px 5px;margin:2px 0}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-body dl>div{grid-column:auto!important;grid-template-columns:1fr auto!important;gap:0 3px;font-size:8px;line-height:10px}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-body dd{font-size:10px;line-height:11px}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-body meter{height:3px;margin:0}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-body header{display:flex;min-height:24px;gap:3px}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-body .player-portrait{height:24px;width:24px;flex-basis:24px}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-body .squad-preview-overall{font-size:9px;margin:2px 0;line-height:14px}
+#squad-overview-dialog[data-inline-workspace] .squad-preview-overall b{font-size:16px}
+body.dense-workspace-view{padding:0!important}
+body.dense-workspace-view .app>.view-nav{box-sizing:border-box;height:44px;min-height:44px;border:0!important;padding:0!important}
+
+body.dense-workspace-view .app>.view-nav{grid-template-rows:44px!important}body.dense-workspace-view .app>.view-nav button{height:44px!important;min-height:44px!important;box-sizing:border-box}
+#match-popup-tactics[data-inline-workspace] .tactical-selected-profile{margin:0!important;padding:3px;gap:1px}
+#match-popup-tactics[data-inline-workspace] .placement-attributes>div{height:11px;min-height:0;padding:0;margin:0}#match-popup-tactics[data-inline-workspace] .placement-attributes b{font-size:9px;line-height:11px}
+.workspace-position-picker button{min-height:18px;height:18px}.workspace-position-picker h3{margin:0 0 2px;font-size:8px;line-height:10px}
+.workspace-takers label{grid-template-columns:1fr!important}.workspace-takers label>span{grid-row:1!important;grid-column:1!important}.workspace-takers label>select{grid-row:2!important;grid-column:1!important}
+
+#match-popup-tactics[data-inline-workspace] .support-map,#match-popup-tactics[data-inline-workspace] .support-link-label{display:none!important}
+#club-press-desk .newsroom-thumb>:is(.story-art,.memory-art),.voice-press-centre .newsroom-thumb>:is(.story-art,.memory-art){display:block!important;position:static!important;min-height:0!important;height:100%!important;inset:auto!important}
+
+#squad-overview-dialog[data-inline-workspace]>footer{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}#squad-overview-dialog[data-inline-workspace]>footer>p{display:none}#squad-overview-dialog[data-inline-workspace]>footer button{min-width:0;width:100%;min-height:44px;height:44px;font-size:9px;line-height:11px;padding:2px}
+.workspace-market-finance{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:2px}.workspace-market-finance>span{grid-column:1/-1;font-size:7px;line-height:9px}.workspace-market-finance button{height:22px!important;min-height:22px!important;font-size:8px;line-height:10px;padding:1px}
+#management-dialog[data-inline-workspace=market] #transfer-search-panel{display:flex!important;flex-direction:column}#management-dialog[data-inline-workspace=market] .transfer-search{height:auto;flex:1;grid-template-rows:repeat(5,minmax(32px,1fr))}
+
+body.dense-workspace-view .app{grid-template-rows:minmax(0,1fr) 44px!important}body.dense-workspace-view .app>.masthead{display:none!important}body.dense-workspace-view .app>main{grid-row:1!important}body.dense-workspace-view .app>.view-nav{grid-row:2!important}
+#squad-overview-dialog[data-inline-workspace] .squad-overview-row{grid-template-columns:16px minmax(0,1fr) 21px 22px 24px;gap:2px}#squad-overview-dialog[data-inline-workspace] .squad-overview-row>span:last-child{display:block!important;font-size:7px;line-height:9px}
+@media(max-height:350px){#squad-overview-dialog[data-inline-workspace] .squad-overview-row{grid-template-columns:minmax(0,1fr) 18px 19px 22px;gap:1px}}
+
+@media(max-height:350px){#squad-overview-dialog[data-inline-workspace] .squad-preview-body header{min-height:20px}#squad-overview-dialog[data-inline-workspace] .squad-preview-body .player-portrait{height:20px;width:20px;flex-basis:20px}#squad-overview-dialog[data-inline-workspace] .squad-preview-body header strong{font-size:9px;line-height:11px}#squad-overview-dialog[data-inline-workspace] .squad-preview-body header small{font-size:7px;line-height:8px}#squad-overview-dialog[data-inline-workspace] .squad-preview-body p{font-size:7px;line-height:9px;margin:1px 0}}
+
+.workspace-market-finance{display:none}#management-dialog[data-inline-workspace=market] #market-overview[data-market-mode=list]{grid-template-rows:minmax(0,1fr) 24px}#management-dialog[data-inline-workspace=market] .workspace-market-finance{display:grid;grid-column:1/-1;grid-row:2;grid-template-columns:minmax(0,1fr) 66px 44px;align-items:center;gap:3px;margin:0;height:24px}#management-dialog[data-inline-workspace=market] .workspace-market-finance>span{grid-column:1;font-size:8px;line-height:10px}#management-dialog[data-inline-workspace=market] .workspace-market-finance button{height:24px!important;min-height:24px!important}
+
+#match-popup-tactics[data-inline-workspace] .tactical-selected-profile span{display:inline;background:none;border:0;padding:0;font-size:8px;line-height:11px;white-space:nowrap}
+#match-popup-tactics[data-inline-workspace] .tactical-selected-profile p{margin:0!important}
+#match-popup-tactics[data-inline-workspace] .tactical-selected-profile header strong{display:block;font-size:9px;line-height:11px;word-break:keep-all}
+#match-popup-tactics[data-inline-workspace] .placement-summary{display:grid;grid-template-columns:1fr auto;align-items:center;height:20px;min-height:20px;padding:1px;gap:2px}
+#match-popup-tactics[data-inline-workspace] .placement-summary span{font-size:8px;line-height:14px}
+#match-popup-tactics[data-inline-workspace] .placement-summary em{font-size:8px}
+#match-popup-tactics[data-inline-workspace] .placement-attributes>div{grid-template-rows:11px}
+#match-popup-tactics[data-inline-workspace] .placement-attributes span{font-size:8px;line-height:11px}
+#match-popup-tactics[data-inline-workspace] .placement-attributes b{color:var(--ability-color)}
+@media(max-height:350px){.workspace-formations button{min-height:24px;height:24px}.workspace-orders button{min-height:22px;height:22px}}
+
+@media(max-height:350px){#match-popup-tactics[data-inline-workspace] .placement-summary{height:18px;min-height:18px}.workspace-position-picker h3{font-size:7px;line-height:8px}.workspace-position-picker small{font-size:6px;line-height:7px;white-space:nowrap}}
+
+#squad-overview-dialog[data-inline-workspace] .squad-overview-row>.player-portrait{display:block!important}#squad-overview-dialog[data-inline-workspace] .squad-overview-name{grid-column:2}
+@media(max-height:350px){#squad-overview-dialog[data-inline-workspace] .squad-overview-row>.player-portrait{display:none!important}#squad-overview-dialog[data-inline-workspace] .squad-overview-name{grid-column:1}}
+
+@media(max-width:740px){#match-popup-tactics[data-inline-workspace] .tactical-pitch>button{width:42px;min-height:24px!important;height:24px;grid-template-rows:8px 6px 8px}#match-popup-tactics[data-inline-workspace] .placement-badge{font-size:7px;line-height:8px}#match-popup-tactics[data-inline-workspace] .tactical-pitch>button b{font-size:6px;line-height:6px}#match-popup-tactics[data-inline-workspace] .tactical-short-name{font-size:6px!important;line-height:8px!important;white-space:nowrap!important}}
+
+body.dense-workspace-view .app{grid-template-columns:minmax(0,1fr)!important;align-items:stretch!important}body.dense-workspace-view .app>main{grid-column:1!important;align-self:stretch!important;justify-self:stretch!important;height:100%!important;max-height:none!important;width:100%!important;max-width:none!important}body.dense-workspace-view .app>.view-nav{grid-column:1!important}

@@ -15,7 +15,8 @@
    return true;
   },
   handleBack() {
-   const dialog = document.activeElement?.closest?.('dialog[open]') || [...document.querySelectorAll('dialog[open]')].at(-1);
+   const focused = document.activeElement?.closest?.('dialog[open]');
+   const dialog = focused && !focused.dataset?.inlineWorkspace ? focused : [...document.querySelectorAll('dialog[open]')].filter(node => !node.dataset?.inlineWorkspace).at(-1);
    if (dialog) {
     const event = new Event('cancel', { cancelable: true });
     if (dialog.dispatchEvent(event)) dialog.close();

@@ -1,4 +1,4 @@
-self.WIN_AGAIN_CACHE_REVISION = "1ea734b197b3";
+self.WIN_AGAIN_CACHE_REVISION = "b8502fd2f7e7";
 self.WIN_AGAIN_ASSETS = [
   "./style.css?v=22",
   "./coach-guide.css?v=22",
@@ -211,6 +211,11 @@ self.WIN_AGAIN_ASSETS = [
   "./single-screen-workspaces.css?v=1",
   "./manager-voice.css?v=1",
   "./manager-voice-ui.js?v=1",
+  "./screen-workspaces.css?v=1",
+  "./screen-workspaces-ui.js?v=1",
+  "./newsroom.js?v=1",
+  "./newsroom.css?v=1",
+  "./newsroom-ui.js?v=1",
   "./assets/player-faces-v19.webp?v=19",
   "./assets/player-faces-v17.webp?v=17",
   "./assets/player-faces-v18.webp?v=18",

@@ -452,7 +452,8 @@ public final class GameSmokeTest {
                 dragTacticalForward(scenario);
                 screenshot(scenario, "android-drag-position.png");
                 assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
-                tapWebElement(scenario, "#match-popup [aria-label='경기 메뉴 닫기']");
+                assertEquals("tactics", new JSONTokener(evaluate(scenario, "view")).nextValue().toString());
+                tapWebElement(scenario, ".view-nav [data-view=match]");
             }
 
             evaluate(scenario, "(()=>{while(state.phase!=='full'){if(!F.running(state))F.begin(state);state.paused=false;F.finishSegment(state);}render();openMatchPopup('stats');return true;})()");
@@ -554,6 +555,51 @@ public final class GameSmokeTest {
                 "(()=>{const failures=[],choose=tab=>{const select=document.getElementById('life-review-tab');select.value=tab;select.dispatchEvent(new Event('change'));};for(const tab of ['성적표','약속','경기']){choose(tab);let pages=0;do{const body=document.querySelector('#rebirth-dialog .rebirth-body');if(body.scrollHeight>body.clientHeight+1||body.scrollWidth>body.clientWidth+1)failures.push(tab+':'+rebirthReviewPage);const next=document.querySelector('[data-life-review-page=\"1\"]');if(!next||next.disabled)break;if(++pages>100){failures.push('unbounded review');break;}next.click();}while(true);}choose('약속');const promise=RebirthReview.read(season).promises.at(-1),body=document.querySelector('#rebirth-dialog .rebirth-body'),goals=promise&&promise.games.reduce((n,g)=>n+g.score[0],0);if(!promise||promise.metric!=='goals'||promise.success||promise.value!==goals||!body.textContent.includes(promise.target)||!body.textContent.includes('실제 '+goals+' 득점')||!body.textContent.includes('미달성')||!promise.games.every(g=>body.textContent.includes(g.year+'시즌 '+g.round+'R · '+g.score.join(' : '))))failures.push('actual missed promise');return failures;})()"));
             screenshot(scenario, "android-life-review.png");
             assertEquals(before, evaluate(scenario, "JSON.stringify(season)"));
+            scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
+
+    @Test public void directSquadMarketFormationsAndFullArticlesFitLandscape() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;setView('club');window.denseBefore=JSON.stringify(season);return true;})()");
+            assertEquals("Three article images are visible with their summaries", "true", evaluate(scenario, "(()=>{const rows=[...document.querySelectorAll('#club-press-desk .newsroom-thumb>div')];return rows.length===3&&rows.every(e=>e.getBoundingClientRect().height>10&&getComputedStyle(e).backgroundImage.startsWith('url('));})()"));
+            tapWebElement(scenario, "#club-press-desk [data-news-article]");
+            awaitTrue(scenario, "!!document.querySelector('#news-article-dialog:modal')&&document.querySelector('.news-article-copy').textContent.includes(articleSnapshot.paragraphs[0])&&JSON.stringify(season)===denseBefore");
+            screenshot(scenario, "android-full-article.png");
+            scenario.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
+            awaitTrue(scenario, "!document.getElementById('news-article-dialog').open");
+            tapWebElement(scenario, ".view-nav [data-view=squad]");
+            awaitTrue(scenario, "view==='squad'&&!document.querySelector(':modal')&&document.querySelectorAll('#squad-overview-dialog [data-squad-detail]').length===18");
+            assertEquals("The full squad, all six preview attributes and lower actions fit", "true", evaluate(scenario, "(()=>{const list=document.querySelector('.squad-overview-list'),facts=document.querySelector('.squad-preview-body'),nav=document.querySelector('.view-nav').getBoundingClientRect();return list.scrollHeight<=list.clientHeight+1&&facts.scrollHeight<=facts.clientHeight+1&&facts.querySelectorAll('dl>div').length===6&&[...document.querySelectorAll('#squad-overview-dialog footer button')].every(b=>b.getBoundingClientRect().bottom<=nav.top)&&JSON.stringify(season)===denseBefore;})()"));
+            screenshot(scenario, "android-inline-squad.png");
+            tapWebElement(scenario, "#squad-overview-detail");
+            awaitTrue(scenario, "!!document.querySelector('#player-detail-dialog:modal')");
+            scenario.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
+            awaitTrue(scenario, "view==='squad'&&!document.querySelector(':modal')&&document.getElementById('squad-overview-dialog').open");
+            scenario.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
+            awaitTrue(scenario, "view==='club'&&!document.querySelector(':modal')");
+            tapWebElement(scenario, ".view-nav [data-view=tactics]");
+            awaitTrue(scenario, "view==='tactics'&&!document.querySelector(':modal')&&document.querySelectorAll('[data-workspace-formation]').length===12&&document.querySelectorAll('[data-workspace-position]').length===23&&document.querySelectorAll('.workspace-takers select').length===3");
+            assertEquals("Formation choices, player cards, numeric attributes and position chips fit internally", "true", evaluate(scenario, "(()=>{const nav=document.querySelector('.view-nav').getBoundingClientRect();return [...document.querySelectorAll('.workspace-formation-rail,.workspace-formations button,.workspace-orders button,.tactical-pitch,.tactical-pitch>button,.tactical-selected-profile,.placement-attributes,.workspace-position-picker,.workspace-position-picker button,.workspace-takers label')].every(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=nav.top&&r.left>=0&&r.right<=innerWidth&&e.scrollHeight<=e.clientHeight+2&&e.scrollWidth<=e.clientWidth+2;});})()"));
+            tapWebElement(scenario, "[data-workspace-formation='433']");
+            awaitTrue(scenario, "state.formation==='433'&&!document.querySelector(':modal')");
+            tapWebElement(scenario, "[data-workspace-formation='442']");
+            evaluate(scenario, "(()=>{const a=positions().filter(r=>r.p.pos==='FW');window.denseSlots=a.map(r=>({id:r.id,identity:r.p.identity,x:r.x,y:r.y,code:tacticalPosition(r.x,r.y,r.p.pos).code}));window.denseRegistrations=JSON.stringify(Object.values(state.players).map(p=>[p.identity,p.pos]));return true;})()");
+            String selectedId = new JSONTokener(evaluate(scenario, "denseSlots[0].id")).nextValue().toString();
+            String targetCode = new JSONTokener(evaluate(scenario, "denseSlots[1].code")).nextValue().toString();
+            tapWebElement(scenario, "[data-tactical-player='"+selectedId+"']");
+            tapWebElement(scenario, "[data-workspace-position='"+targetCode+"']");
+            assertEquals("Occupied positions swap actual coordinates and preserve registered identities", "true", evaluate(scenario, "(()=>{const a=denseSlots,p=positions(),one=p.find(r=>r.p.identity===a[0].identity),two=p.find(r=>r.p.identity===a[1].identity);return one.x===a[1].x&&one.y===a[1].y&&two.x===a[0].x&&two.y===a[0].y&&JSON.stringify(Object.values(state.players).map(p=>[p.identity,p.pos]))===denseRegistrations&&JSON.stringify(S.restore(JSON.parse(JSON.stringify(season))))===JSON.stringify(season);})()"));
+            screenshot(scenario, "android-inline-tactics.png");
+            tapWebElement(scenario, ".view-nav [data-view=market]");
+            awaitTrue(scenario, "view==='market'&&!document.querySelector(':modal')&&document.querySelectorAll('[data-market-select]').length===8&&document.querySelectorAll('[data-workspace-filter]').length===5");
+            String beforeFilters = evaluate(scenario, "JSON.stringify(season)");
+            tapWebElement(scenario, "[data-workspace-filter=FW]");
+            awaitTrue(scenario, "transferFilters.position==='FW'&&document.getElementById('transfer-query').value===''&&document.querySelectorAll('[data-market-select]').length>0&&document.querySelectorAll('[data-workspace-filter]').length===5");
+            assertEquals(beforeFilters, evaluate(scenario, "JSON.stringify(season)"));
+            screenshot(scenario, "android-inline-market.png");
             scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
         }
     }

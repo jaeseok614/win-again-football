@@ -19,14 +19,14 @@ function showManagementSection(id){
  render();managementMount=[];for(const key of id==='transfer-search-panel'?[id,'market-overview']:[id]){const node=$(key),anchor=document.createComment('management-panel');node.before(anchor);managementMount.push({node,anchor});$('management-content').append(node);node.hidden=false;}if(id==='owner-board-panel')$(id).querySelector('details').open=true;
  $('management-title').textContent=entry[1];$('management-section').value=id;$('management-content').scrollTop=0;$('management-title').focus({preventScroll:true});return true;
 }
-function openManagementPanel(id,opener=document.activeElement){
+function openManagementPanel(id,opener=document.activeElement,options={}){
  if(id==='squad-overview'){if(managementDialog.open)managementDialog.close();setView('squad');openSquadOverview(opener);return;}
  const group=Object.keys(managementGroups).find(key=>managementGroups[key].some(row=>row[0]===id));if(!group)return;
- if(managementDialog.open)managementDialog.close();if(view!==group)setView(group);pauseForPlanning();managementActive=group;managementReturn=opener;
+ if(managementDialog.open)managementDialog.close();managementActive=group;managementReturn=opener;if(view!==group)setView(group);pauseForPlanning();
  $('management-section').innerHTML=managementGroups[group].filter(row=>$(row[0])).map(([key,label])=>'<option value="'+key+'">'+label+'</option>').join('');
- if(showManagementSection(id)){managementDialog.showModal();$('management-title').focus({preventScroll:true});}
+ if(showManagementSection(id)){if(options.inline){managementDialog.dataset.inlineWorkspace=group;managementDialog.setAttribute('role','region');managementDialog.setAttribute('aria-modal','false');$(group+'-pane').append(managementDialog);managementReturn=null;managementDialog.show();}else{delete managementDialog.dataset.inlineWorkspace;managementDialog.setAttribute('role','dialog');managementDialog.removeAttribute('aria-modal');document.body.append(managementDialog);managementDialog.showModal();$('management-title').focus({preventScroll:true});}}
 }
-managementDialog.addEventListener('close',()=>{if(managementDialog.open)return;restoreManagementPanel();managementActive=null;const target=managementReturn;managementReturn=null;if(target?.isConnected&&!target.closest('[hidden]'))target.focus({preventScroll:true});});
+managementDialog.addEventListener('close',()=>{if(managementDialog.open)return;restoreManagementPanel();managementActive=null;delete managementDialog.dataset.inlineWorkspace;managementDialog.setAttribute('role','dialog');managementDialog.removeAttribute('aria-modal');document.body.append(managementDialog);const target=managementReturn;managementReturn=null;if(target?.isConnected&&!target.closest('[hidden]'))target.focus({preventScroll:true});});
 $('management-close').onclick=()=>managementDialog.close();$('management-section').onchange=e=>e.target.value==='squad-overview'?openManagementPanel('squad-overview',e.target):showManagementSection(e.target.value);
 for(const [group,entries] of Object.entries(managementGroups)){
  if(group==='club')entries.push(['coach-guide','연습 · 도움말']);

@@ -334,3 +334,14 @@ Keep commentary above the enlarged pitch and the compact score beside it. Guides
 
 ## FM-style roster/recruitment (2026-10-13)
 Use dense list plus selected-person report, numeric/color ability comparison, actual remaining energy and stable44px primary actions. Squad selection previews; a separate visible detail button opens the full report in normal and guided views. Recruitment list uses trained owned-player values and current outgoing identity. List/mode selection never spends, saves, advances physics or changes lineup. See docs/FM_WORKSPACE_2026-10-13.md. Owner permits larger assets when they improve quality; keep shared atlases and measured performance rather than inflating bytes.
+
+## Direct formation and page workspaces (2026-10-14)
+Formation choices (all 12), actual player placement, selected numeric/color abilities,
+23 placement choices, attack/defence orders and the three set-piece assignments
+belong on the main landscape tactics page. Do not require a formation popup.
+Primary squad/recruitment navigation opens the actual inline workspace, not a modal.
+Show short home facts and illustrated article summaries directly; only the full
+article and richer reports need a modal. Preserve native back routing through
+focused child reports before returning to home, actual slot swaps and registered
+player identities. Read docs/DENSE_PAGE_WORKSPACES_2026-10-14.md and verify card
+overlap, every internal text/control bound and actual bottom-menu routes.
