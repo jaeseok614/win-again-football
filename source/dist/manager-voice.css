@@ -96,3 +96,5 @@
 }
 
 @media(orientation:landscape) and (max-height:300px){#club-press-desk{grid-template-rows:10px minmax(0,1fr) 72px}#club-press-desk .voice-article small{display:none}#club-press-desk .voice-article{padding:2px}#club-press-desk .voice-interview{padding:2px}#club-press-desk .voice-interview h3{font-size:7px;line-height:8px}}
+
+@media(orientation:landscape){body.management-view #mobile-command-center{align-self:stretch;height:100%;box-sizing:border-box}}
