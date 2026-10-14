@@ -22,7 +22,7 @@
     if (dialog.dispatchEvent(event)) dialog.close();
     return true;
    }
-   if (typeof tacticsBoardOpen !== 'undefined' && tacticsBoardOpen) {
+   if (typeof tacticsBoardOpen !== 'undefined' && tacticsBoardOpen && (typeof view === 'undefined' || view === 'match')) {
     if (typeof collapseTacticsBoard === 'function') collapseTacticsBoard();
     if (typeof render === 'function') render();
     return true;

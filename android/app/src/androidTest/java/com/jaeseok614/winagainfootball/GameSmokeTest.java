@@ -262,7 +262,7 @@ public final class GameSmokeTest {
                 "if(urls.some(url=>!url||!url.startsWith('data:image/')))return 'Missing rendered portrait background';let loaded=0;" +
                 "urls.forEach(url=>{const image=new Image();image.onload=()=>{if(image.naturalWidth>0&&++loaded===2)androidPortraitsReady=true};image.src=url});return true;})()"));
             awaitTrue(scenario, "window.androidPortraitsReady===true");
-            tapWebElement(scenario, "[data-management-open='staff-panel']");
+            tapWebElement(scenario, "[data-workspace-report='staff-panel']");
             assertEquals("Coach screen must select the squad and display its faces", "true", evaluate(scenario,
                 "(()=>{document.querySelector('[data-staff-role]').open=true;const panel=document.getElementById('staff-panel');" +
                 "panel.scrollIntoView({block:'start',behavior:'instant'});const face=panel.querySelector('.staff-portrait').getBoundingClientRect();" +
@@ -507,7 +507,7 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "document.getElementById('manager-guide').open&&managerGuideStep===4");
 
             evaluate(scenario, "(()=>{managerGuideActive=false;managerGuideWaiting=null;document.getElementById('manager-guide').close();setView('market');return true;})()");
-            tapWebElement(scenario, "[data-management-open='transfer-search-panel']");
+            awaitTrue(scenario, "view==='market'&&!document.querySelector(':modal')&&document.getElementById('management-dialog').dataset.inlineWorkspace==='market'");
             assertEquals("true", evaluate(scenario, "document.getElementById('management-dialog').open&&document.getElementById('management-content').contains(document.getElementById('market-overview'))"));
             assertEquals("8", evaluate(scenario, "document.querySelectorAll('.market-card').length"));
             evaluate(scenario, "(()=>{const p=document.getElementById('transfer-position');p.value='FW';p.dispatchEvent(new Event('change'));return true;})()");
