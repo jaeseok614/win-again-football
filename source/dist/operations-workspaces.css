@@ -533,3 +533,5 @@ body.operations-page #squad-health .medical-report .panel-heading{flex-direction
 body.operations-page #squad-health .medical-report-lines p>span{display:inline-block!important;padding:0 2px;margin:0 2px 0 0;border-radius:2px}
 body.operations-page #individual-training .training-session-panel{grid-template-rows:32px 28px minmax(0,1fr) 38px 44px 18px!important}
 @media(max-height:350px){body.operations-page #individual-training .training-session-panel{grid-template-rows:32px 28px minmax(0,1fr) 24px 44px 14px!important}}
+
+body.operations-page #individual-training .training-form-report>p{line-height:10px!important}

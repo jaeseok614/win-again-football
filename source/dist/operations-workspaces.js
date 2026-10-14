@@ -55,7 +55,7 @@ window.addEventListener('resize',()=>{if(operationsSection)render();});
 const operationsTrainingOriginal=renderIndividualTraining;
 renderIndividualTraining=function(){
  operationsTrainingOriginal();
- if(operationsSection==='individual-training'){const panel=$('individual-training'),row=TrainingCentre.read(season).players.find(p=>p.slot===individualTrainingSlot);if(row){const h=panel.querySelector('.training-selected-heading small');if(h)h.textContent=(row.capped?'성장 한계 도달':'다음 성장 '+row.minutesToGrowth+'분')+' · '+row.recommendation.label;}const note=panel.querySelector('.individual-training-note');panel.classList.toggle('operations-training-completed',Boolean(note));operationsTrainingBands();}
+ if(operationsSection==='individual-training'){const panel=$('individual-training'),row=TrainingCentre.read(season).players.find(p=>p.slot===individualTrainingSlot);if(row){const h=panel.querySelector('.training-selected-heading small');if(h)h.textContent=(row.capped?'성장 한계 도달':'다음 성장 '+row.minutesToGrowth+'분')+' · '+row.recommendation.label;}if(row&&innerHeight<=450){const form=panel.querySelector('.training-form-report>p');if(form&&row.form.appearances)form.textContent='최근 '+row.form.appearances+'회 · '+row.form.minutes+'분 · '+row.form.goals+'골 '+row.form.assists+'도움';}const note=panel.querySelector('.individual-training-note');panel.classList.toggle('operations-training-completed',Boolean(note));operationsTrainingBands();}
 };
 const operationsStaffOriginal=renderStaff;
 renderStaff=function(){
