@@ -314,6 +314,8 @@ public final class GameSmokeTest {
             assertOperationsFits(scenario, "completed season preparation facts");
             assertEquals("true", evaluate(scenario, "PreparationDesk.read(season).finished&&PreparationDesk.read(season).fixture===null"));
             screenshot(scenario, "android-preparation-completed.png");
+            tapWebElement(scenario, "[data-preparation-view=cup]");
+            awaitTrue(scenario, "view==='cup'&&operationsSection===null&&season.year===1&&season.round===46");
             assertEquals("true", evaluate(scenario, "(()=>{closeOperationsPage();season=S.create(41,{startingClub:true,suspensions:true});state=season.match;managementMeetingKey=season.seed+':'+season.year+':'+season.round;setView('club');openManagementPanel('training-card');window.preparationBefore=JSON.stringify(season);window.preparationQuote=S.trainingPreview(season,'pace');return document.querySelectorAll('[data-team-focus]').length===4;})()"));
             tapWebElement(scenario, "[data-team-focus=pace]");
             assertEquals("Selecting team training is readonly", "true", evaluate(scenario, "JSON.stringify(season)===preparationBefore&&document.getElementById('training-focus').value==='pace'"));
