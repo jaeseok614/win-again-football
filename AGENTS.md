@@ -357,3 +357,6 @@ weekly training sharing, role contract limits, confirmed-only finance, readonly
 previews and the Android back path from an inline home operation to main home.
 Test internal glyph/photo bounds and post-action states, not only outer rectangles.
 See docs/OPERATIONS_WORKSPACES_2026-10-14.md.
+
+## Preparation report and real training comparisons (2026-10-14)
+Keep opponent formation/danger player/actual comparisons, recent confirmed league results, current body status, staff expiration and owner promises together in the club workspace. Four team-training choices show actual expected effects and energy cost before explicit execution. Only successful execution shows exact before/after values, scoped to the matching campaign/week/identities/results; the session-only receipt is not saved history and must never be fabricated on restore. Read docs/PREPARATION_DESK_2026-10-14.md.

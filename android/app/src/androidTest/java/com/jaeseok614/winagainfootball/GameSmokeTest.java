@@ -310,6 +310,22 @@ public final class GameSmokeTest {
             assertEquals("true", evaluate(scenario, "(()=>{let closed=S.create(41,{startingClub:true,suspensions:true});while(!S.ready(closed)){while(closed.match.phase!=='full'){if(!F.running(closed.match))F.begin(closed.match);F.finishSegment(closed.match);}closed=S.settle(closed);}season=S.restore(closed);state=season.match;managementMeetingKey=season.seed+':'+season.year+':'+season.round;setView('club');openManagementPanel('training-card');return season.round===46&&document.querySelectorAll('.operations-team-current li').length===18&&document.getElementById('train').disabled;})()"));
             assertOperationsFits(scenario, "completed season training preserves current eighteen");
             screenshot(scenario, "android-operations-completed.png");
+            tapWebElement(scenario, "[data-operations-section=club-overview]");
+            assertOperationsFits(scenario, "completed season preparation facts");
+            assertEquals("true", evaluate(scenario, "PreparationDesk.read(season).finished&&PreparationDesk.read(season).fixture===null"));
+            screenshot(scenario, "android-preparation-completed.png");
+            assertEquals("true", evaluate(scenario, "(()=>{closeOperationsPage();season=S.create(41,{startingClub:true,suspensions:true});state=season.match;managementMeetingKey=season.seed+':'+season.year+':'+season.round;setView('club');openManagementPanel('training-card');window.preparationBefore=JSON.stringify(season);window.preparationQuote=S.trainingPreview(season,'pace');return document.querySelectorAll('[data-team-focus]').length===4;})()"));
+            tapWebElement(scenario, "[data-team-focus=pace]");
+            assertEquals("Selecting team training is readonly", "true", evaluate(scenario, "JSON.stringify(season)===preparationBefore&&document.getElementById('training-focus').value==='pace'"));
+            tapWebElement(scenario, "#train");
+            assertEquals("true", evaluate(scenario, "season.trained==='pace'&&document.querySelectorAll('.preparation-training-receipt li').length===18&&preparationQuote.rows.every(p=>season.squad[p.id].speed===p.after&&season.squad[p.id].energy===p.energyAfter)"));
+            assertOperationsFits(scenario, "real team training receipt");
+            screenshot(scenario, "android-preparation-team-receipt.png");
+            tapWebElement(scenario, "[data-operations-section=club-overview]");
+            assertOperationsFits(scenario, "preparation reflects training completion");
+            tapWebElement(scenario, "[data-preparation-target=training-card]");
+            assertEquals("18", evaluate(scenario, "document.querySelectorAll('.preparation-training-receipt li').length"));
+            assertOperationsFits(scenario, "receipt returns after real preparation navigation");
             scenario.onActivity(activity -> assertTrue("Operations emitted JavaScript errors: " + activity.consoleErrorsForTest(), activity.consoleErrorsForTest().isEmpty()));
         }
     }
