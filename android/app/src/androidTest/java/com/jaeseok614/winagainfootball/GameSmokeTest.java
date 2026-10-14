@@ -248,7 +248,7 @@ public final class GameSmokeTest {
             "if(r.left<-.5||r.top<-.5||r.right>innerWidth+.5||r.bottom>innerHeight+.5)issues.push(name+':viewport');" +
             "if(e.scrollWidth>e.clientWidth+2||e.scrollHeight>e.clientHeight+2)issues.push(name+':scroll');" +
             "for(let a=e.parentElement;a&&a!==document.body;a=a.parentElement){if(!a.clientHeight||getComputedStyle(a).display==='contents')continue;const q=a.getBoundingClientRect(),style=getComputedStyle(a);if(['hidden','auto','scroll','clip'].includes(style.overflowY)&&(r.top<q.top-1||r.bottom>q.bottom+1)||['hidden','auto','scroll','clip'].includes(style.overflowX)&&(r.left<q.left-1||r.right>q.right+1)){issues.push(name+':clipped');break;}}" +
-            "if(['BUTTON','STRONG','SMALL','H2','H3','DD','DT','P','B','SPAN'].includes(e.tagName)&&!e.children.length&&e.textContent.trim()){const range=document.createRange();range.selectNodeContents(e);for(const t of range.getClientRects())if(t.left<r.left-1||t.right>r.right+1||t.top<r.top-1||t.bottom>r.bottom+1){issues.push(name+':text:'+e.textContent.slice(0,30));break;}}}" +
+            "if(['BUTTON','STRONG','SMALL','H2','H3','DD','DT','P','B','SPAN'].includes(e.tagName)&&!e.children.length&&e.textContent.trim()){const range=document.createRange();range.selectNodeContents(e);for(const t of range.getClientRects())if(t.left<r.left-1||t.right>r.right+1||t.top<r.top-1||t.bottom>r.bottom+1){issues.push(name+':text:'+e.textContent.slice(0,30)+':'+JSON.stringify({font:s.fontSize,line:s.lineHeight,box:[r.width,r.height],offset:[t.x-r.x,t.y-r.y],glyph:[t.width,t.height]}));break;}}}" +
             "if(document.querySelector(':modal'))issues.push('unexpected modal');if(document.documentElement.scrollHeight>innerHeight+1)issues.push('outer scroll');return issues;})()"));
     }
     @Test public void landscapeTrainingAndClubOperationsUseActualSinglePages() throws Exception {
@@ -306,6 +306,9 @@ public final class GameSmokeTest {
             tapWebElement(scenario, "[data-operations-section=training-card]");
             scenario.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
             awaitTrue(scenario, "view==='club'&&operationsSection===null&&!document.getElementById('management-dialog').open");
+            assertEquals("true", evaluate(scenario, "(()=>{let closed=S.create(41,{startingClub:true,suspensions:true});while(!S.ready(closed)){while(closed.match.phase!=='full'){if(!F.running(closed.match))F.begin(closed.match);F.finishSegment(closed.match);}closed=S.settle(closed);}season=S.restore(closed);state=season.match;managementMeetingKey=season.seed+':'+season.year+':'+season.round;setView('club');openManagementPanel('training-card');return season.round===46&&document.querySelectorAll('.operations-team-current li').length===18&&document.getElementById('train').disabled;})()"));
+            assertOperationsFits(scenario, "completed season training preserves current eighteen");
+            screenshot(scenario, "android-operations-completed.png");
             scenario.onActivity(activity -> assertTrue("Operations emitted JavaScript errors: " + activity.consoleErrorsForTest(), activity.consoleErrorsForTest().isEmpty()));
         }
     }
