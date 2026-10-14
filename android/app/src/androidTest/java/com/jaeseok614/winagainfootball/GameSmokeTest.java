@@ -601,7 +601,8 @@ public final class GameSmokeTest {
             tapWebElement(scenario, "[data-workspace-filter=FW]");
             awaitTrue(scenario, "transferFilters.position==='FW'&&document.getElementById('transfer-query').value===''&&document.querySelectorAll('[data-market-select]').length>0&&document.querySelectorAll('[data-workspace-filter]').length===5");
             assertEquals(beforeFilters, evaluate(scenario, "JSON.stringify(season)"));
-            assertEquals("Every inline filter action keeps text inside its own button", "true", evaluate(scenario, "(()=>{const g=document.querySelector('.transfer-filter-toggles').getBoundingClientRect();return [...document.querySelectorAll('.transfer-filter-toggles button')].every(e=>{const r=e.getBoundingClientRect();return r.left>=g.left&&r.right<=g.right&&e.scrollWidth<=e.clientWidth+1&&e.scrollHeight<=e.clientHeight+1;});})()"));
+            String filterMetrics=evaluate(scenario, "JSON.stringify([...document.querySelectorAll('.transfer-filter-toggles button')].map(e=>({text:e.textContent,rect:[e.getBoundingClientRect().left,e.getBoundingClientRect().right],parent:[e.parentElement.getBoundingClientRect().left,e.parentElement.getBoundingClientRect().right],scroll:[e.scrollWidth,e.scrollHeight],client:[e.clientWidth,e.clientHeight],font:getComputedStyle(e).fontSize})))");
+            assertEquals("Every inline filter action keeps text inside its own button: "+filterMetrics, "true", evaluate(scenario, "(()=>{const g=document.querySelector('.transfer-filter-toggles').getBoundingClientRect();return [...document.querySelectorAll('.transfer-filter-toggles button')].every(e=>{const r=e.getBoundingClientRect();return r.left>=g.left&&r.right<=g.right&&e.scrollWidth<=e.clientWidth+1&&e.scrollHeight<=e.clientHeight+1;});})()"));
             screenshot(scenario, "android-inline-market.png");
             scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
         }
