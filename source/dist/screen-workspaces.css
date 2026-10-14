@@ -142,7 +142,7 @@ body.dense-workspace-view .app{grid-template-rows:minmax(0,1fr) 44px!important}b
 
 .workspace-market-finance{display:none}#management-dialog[data-inline-workspace=market] #market-overview[data-market-mode=list]{grid-template-rows:minmax(0,1fr) 24px}#management-dialog[data-inline-workspace=market] .workspace-market-finance{display:grid;grid-column:1/-1;grid-row:2;grid-template-columns:minmax(0,1fr) 66px 44px;align-items:center;gap:3px;margin:0;height:24px}#management-dialog[data-inline-workspace=market] .workspace-market-finance>span{grid-column:1;font-size:8px;line-height:10px}#management-dialog[data-inline-workspace=market] .workspace-market-finance button{height:24px!important;min-height:24px!important}
 
-#match-popup-tactics[data-inline-workspace] .tactical-selected-profile span{display:inline;background:none;border:0;padding:0;font-size:8px;line-height:11px;white-space:nowrap}
+#match-popup-tactics[data-inline-workspace] .tactical-selected-profile span:not(.player-portrait){display:inline;background:none;border:0;padding:0;font-size:8px;line-height:11px;white-space:nowrap}
 #match-popup-tactics[data-inline-workspace] .tactical-selected-profile p{margin:0!important}
 #match-popup-tactics[data-inline-workspace] .tactical-selected-profile header strong{display:block;font-size:9px;line-height:11px;word-break:keep-all}
 #match-popup-tactics[data-inline-workspace] .placement-summary{display:grid;grid-template-columns:1fr auto;align-items:center;height:20px;min-height:20px;padding:1px;gap:2px}
