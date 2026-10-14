@@ -27,6 +27,7 @@
     if (typeof render === 'function') render();
     return true;
    }
+   if (typeof operationsSection !== 'undefined' && operationsSection && typeof closeOperationsPage === 'function') { closeOperationsPage(); if (typeof setView === 'function') setView('club'); return true; }
    if (typeof view !== 'undefined' && view !== 'club' && typeof setView === 'function') {
     setView('club'); return true;
    }

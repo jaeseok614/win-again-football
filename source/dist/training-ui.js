@@ -30,7 +30,7 @@ function renderTrainingRoster(){
 function chooseTrainingPlayer(slot,identity){
  const p=season.squad[slot];if(!p||(identity!==undefined&&p.identity!==identity))return;
  individualTrainingSlot=slot;individualTrainingNote='';save();renderIndividualTraining();
- const heading=$('training-selected-name');if(innerWidth<730)heading?.scrollIntoView({block:'start',behavior:'instant'});heading?.focus({preventScroll:true});
+ const heading=$('training-selected-name');if(innerWidth<730&&!(typeof operationsSection!=='undefined'&&operationsSection==='individual-training'))heading?.scrollIntoView({block:'start',behavior:'instant'});heading?.focus({preventScroll:true});
 }
 function chooseTrainingFocus(focus){
  if(!Object.hasOwn(Training.choices,focus))return;

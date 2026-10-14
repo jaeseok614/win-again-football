@@ -345,3 +345,15 @@ article and richer reports need a modal. Preserve native back routing through
 focused child reports before returning to home, actual slot swaps and registered
 player identities. Read docs/DENSE_PAGE_WORKSPACES_2026-10-14.md and verify card
 overlap, every internal text/control bound and actual bottom-menu routes.
+
+## Single-screen training and club operations (2026-10-14)
+Primary training, coaches, owner promises, body status, saved-XI plans, current
+finance, club facts and discipline use actual landscape page workspaces. Keep all
+18 training players, all 10 staff candidates, current 5 roles and 11-player plan
+visible together with real effects/quotes and explicit actions. Short core facts
+are inline; long forecast rows/full player reports remain explicit detail reads.
+Never let hidden inactive panes occupy layout space. Preserve real node handlers,
+weekly training sharing, role contract limits, confirmed-only finance, readonly
+previews and the Android back path from an inline home operation to main home.
+Test internal glyph/photo bounds and post-action states, not only outer rectangles.
+See docs/OPERATIONS_WORKSPACES_2026-10-14.md.

@@ -241,6 +241,75 @@ public final class GameSmokeTest {
         }
     }
 
+    private void assertOperationsFits(ActivityScenario<MainActivity> scenario, String label) throws Exception {
+        assertEquals(label + " complete text/image/control bounds", "[]", evaluate(scenario,
+            "(()=>{const issues=[],d=document.getElementById('management-dialog');for(const e of [d,...d.querySelectorAll('*')]){" +
+            "if(!e.checkVisibility()||e.closest('.sr-only')||!e.getBoundingClientRect().height||['OPTION','PROGRESS'].includes(e.tagName))continue;const r=e.getBoundingClientRect(),s=getComputedStyle(e),name=e.id||e.className||e.tagName;" +
+            "if(r.left<-.5||r.top<-.5||r.right>innerWidth+.5||r.bottom>innerHeight+.5)issues.push(name+':viewport');" +
+            "if(e.scrollWidth>e.clientWidth+2||e.scrollHeight>e.clientHeight+2)issues.push(name+':scroll');" +
+            "for(let a=e.parentElement;a&&a!==document.body;a=a.parentElement){if(!a.clientHeight||getComputedStyle(a).display==='contents')continue;const q=a.getBoundingClientRect(),style=getComputedStyle(a);if(['hidden','auto','scroll','clip'].includes(style.overflowY)&&(r.top<q.top-1||r.bottom>q.bottom+1)||['hidden','auto','scroll','clip'].includes(style.overflowX)&&(r.left<q.left-1||r.right>q.right+1)){issues.push(name+':clipped');break;}}" +
+            "if(['BUTTON','STRONG','SMALL','H2','H3','DD','DT','P','B','SPAN'].includes(e.tagName)&&!e.children.length&&e.textContent.trim()){const range=document.createRange();range.selectNodeContents(e);for(const t of range.getClientRects())if(t.left<r.left-1||t.right>r.right+1||t.top<r.top-1||t.bottom>r.bottom+1){issues.push(name+':text:'+e.textContent.slice(0,30));break;}}}" +
+            "if(document.querySelector(':modal'))issues.push('unexpected modal');if(document.documentElement.scrollHeight>innerHeight+1)issues.push('outer scroll');return issues;})()"));
+    }
+    @Test public void landscapeTrainingAndClubOperationsUseActualSinglePages() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            assertEquals("true", evaluate(scenario,
+                "(()=>{closeOperationsPage();document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;launchBusy=false;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;season.squad.f4.energy=52;state.players.f4.energy=52;state.players.f4.initialEnergy=52;trainingCentreFilters={position:'all',query:'',sort:'recommended'};individualTrainingNote='';operationsStaffChoice='';staffNote='';rotationPreview=null;squadPlanPreview=null;setView('club');return true;})()"));
+            String original = evaluate(scenario, "JSON.stringify(season)");
+            tapWebElement(scenario, "#management-hub-club [data-management-open=training-card]");
+            String[] screens = {"training-card", "individual-training", "staff-panel", "owner-board-panel", "squad-health", "squad-plans-panel", "finance-detail", "finance-plan-panel", "club-overview", "suspensions-panel"};
+            for (String screen : screens) {
+                if (!screen.equals("training-card")) tapWebElement(scenario, "[data-operations-section='" + screen + "']");
+                awaitTrue(scenario, "operationsSection==='" + screen + "'&&document.getElementById('management-dialog').open");
+                assertOperationsFits(scenario, screen);
+                assertEquals("Reading management pages must not alter the campaign", original, evaluate(scenario, "JSON.stringify(season)"));
+                screenshot(scenario, "android-operations-" + screen + ".png");
+            }
+            tapWebElement(scenario, "[data-operations-section=individual-training]");
+            assertEquals("18", evaluate(scenario, "document.querySelectorAll('[data-training-slot]').length"));
+            tapWebElement(scenario, "[data-training-slot=f4]");
+            tapWebElement(scenario, "#individual-training [data-player-detail]");
+            awaitTrue(scenario, "document.getElementById('player-detail-dialog').open");
+            scenario.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
+            awaitTrue(scenario, "!document.getElementById('player-detail-dialog').open&&operationsSection==='individual-training'");
+            assertOperationsFits(scenario, "player report returns to training page");
+            tapWebElement(scenario, "[data-training-focus=recovery]");
+            assertEquals(original, evaluate(scenario, "JSON.stringify(season)"));
+            tapWebElement(scenario, "#train-individual");
+            assertOperationsFits(scenario, "completed individual training");
+            assertEquals("true", evaluate(scenario, "document.getElementById('train-individual').disabled&&!!season.trained"));
+            tapWebElement(scenario, "[data-operations-section=training-card]");
+            assertEquals("true", evaluate(scenario, "document.getElementById('train').disabled&&document.querySelectorAll('.operations-team-current li').length===18"));
+            assertOperationsFits(scenario, "weekly training already used");
+            screenshot(scenario, "android-operations-trained.png");
+            tapWebElement(scenario, "[data-operations-section=staff-panel]");
+            assertEquals("true", evaluate(scenario, "(()=>{window.operationsContractBefore={balance:season.finance.balance,q:Staff.quote(season,'hire',operationsStaffChoice)};return operationsContractBefore.q.available;})()"));
+            tapWebElement(scenario, "[data-staff-action=hire]");
+            assertEquals("true", evaluate(scenario, "season.finance.balance===operationsContractBefore.balance-operationsContractBefore.q.cost&&Staff.active(season,operationsContractBefore.q.role)!==null"));
+            tapWebElement(scenario, "[data-ops-staff-choice='active:GK']");
+            assertOperationsFits(scenario, "actual contracted coach");
+            screenshot(scenario, "android-operations-contract.png");
+            tapWebElement(scenario, "[data-operations-section=owner-board-panel]");
+            tapWebElement(scenario, "[data-owner-choice=results]");
+            assertOperationsFits(scenario, "active owner promise");
+            screenshot(scenario, "android-operations-promise.png");
+            tapWebElement(scenario, "[data-operations-section=squad-plans-panel]");
+            tapWebElement(scenario, "#save-squad-plan");
+            String saved = evaluate(scenario, "JSON.stringify(season)");
+            tapWebElement(scenario, "#preview-squad-plan");
+            assertEquals("11", evaluate(scenario, "document.querySelectorAll('.squad-plan-eleven li').length"));
+            assertOperationsFits(scenario, "all eleven plan preview");
+            assertEquals(saved, evaluate(scenario, "JSON.stringify(season)"));
+            screenshot(scenario, "android-operations-plan.png");
+            tapWebElement(scenario, "#cancel-squad-plan");
+            tapWebElement(scenario, "[data-operations-section=training-card]");
+            scenario.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
+            awaitTrue(scenario, "view==='club'&&operationsSection===null&&!document.getElementById('management-dialog').open");
+            scenario.onActivity(activity -> assertTrue("Operations emitted JavaScript errors: " + activity.consoleErrorsForTest(), activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
     @Test public void offlineGameSaveImportPauseBackAndRelaunch() throws Exception {
         String fingerprint;
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
@@ -264,13 +333,13 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "window.androidPortraitsReady===true");
             tapWebElement(scenario, "[data-workspace-report='staff-panel']");
             assertEquals("Coach screen must select the squad and display its faces", "true", evaluate(scenario,
-                "(()=>{document.querySelector('[data-staff-role]').open=true;const panel=document.getElementById('staff-panel');" +
+                "(()=>{const panel=document.getElementById('staff-panel');" +
                 "panel.scrollIntoView({block:'start',behavior:'instant'});const face=panel.querySelector('.staff-portrait').getBoundingClientRect();" +
                 "return view==='squad'&&!document.getElementById('squad-pane').hidden&&" +
                 "document.querySelector('[data-view=squad]').getAttribute('aria-current')==='page'&&face.width>0&&face.height>0&&face.top>=0&&face.bottom<innerHeight;})()"));
-            assertVisibleWebText(scenario, "#staff-heading", "코치 계약");
+            assertVisibleWebText(scenario, ".operations-staff h2", "코치 계약");
             screenshot(scenario, "android-coaches.png");
-            tapWebElement(scenario, "#management-close");
+            tapWebElement(scenario, "[data-operations-view=club]");
             assertEquals("true", evaluate(scenario,
                 "(()=>{save();const original=JSON.stringify(currentCampaignPayload());const file=CampaignFile.stringify(currentCampaignPayload());" +
                 "previewCampaignText(file);const restored=applyCampaignImport();return restored&&JSON.stringify(currentCampaignPayload())===original;})()"));

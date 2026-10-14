@@ -66,7 +66,7 @@ function routePlayerDetails(){
   individualTrainingSlot=p.id;individualTrainingNote='';if(d.development.recommendation.available)individualTrainingFocus=d.development.recommendation.focus;
   squadTab='training';closePlayerDetails({restore:false});setView('squad');$('individual-training-player')?.focus({preventScroll:true});
  }else{const target=d.source==='academy'?'academy':'market';closePlayerDetails({restore:false});setView(target);
-  const button=[...document.querySelectorAll('[data-player-detail]')].find(b=>b.dataset.playerDetail===d.identity&&b.getClientRects().length);button?.focus({preventScroll:true});button?.scrollIntoView({block:'center',behavior:'instant'});
+  const button=[...document.querySelectorAll('[data-player-detail]')].find(b=>b.dataset.playerDetail===d.identity&&b.getClientRects().length);button?.focus({preventScroll:true});if(!(typeof operationsSection!=='undefined'&&operationsSection))button?.scrollIntoView({block:'center',behavior:'instant'});
  }
 }
 function refreshPlayerDetails(){
