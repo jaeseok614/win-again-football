@@ -538,3 +538,10 @@ body.operations-page #individual-training .training-form-report>p{line-height:10
 
 /* Fixed page surfaces must not scroll when focus or a centred touch target moves. */
 body.operations-page .app>main,body.operations-page :is(#club-pane,#squad-pane,#market-pane):not([hidden]),#management-dialog[data-operations-section],#management-dialog[data-operations-section] #management-content{overflow:clip!important}
+
+/* Reserve extra rows for API34 Korean font metrics without dropping forecasts. */
+body.operations-page #training-card>.training-card{grid-template-rows:18px 44px minmax(0,1fr) 14px!important}
+body.operations-page #training-card .team-training-preview{grid-template-rows:14px 18px 18px minmax(0,1fr)!important}
+body.operations-page #training-card .team-training-metrics span{font-size:6px!important;line-height:8px!important}
+body.operations-page #training-card .team-training-metrics b{font-size:8px!important;line-height:10px!important}
+@media(max-height:350px){body.operations-page #training-card>.training-card{grid-template-rows:16px 44px minmax(0,1fr) 12px!important}body.operations-page #training-card .team-training-preview{grid-template-rows:12px 18px 10px minmax(0,1fr)!important}}
