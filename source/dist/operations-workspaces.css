@@ -535,3 +535,6 @@ body.operations-page #individual-training .training-session-panel{grid-template-
 @media(max-height:350px){body.operations-page #individual-training .training-session-panel{grid-template-rows:32px 28px minmax(0,1fr) 24px 44px 14px!important}}
 
 body.operations-page #individual-training .training-form-report>p{line-height:10px!important}
+
+/* Fixed page surfaces must not scroll when focus or a centred touch target moves. */
+body.operations-page .app>main,body.operations-page :is(#club-pane,#squad-pane,#market-pane):not([hidden]),#management-dialog[data-operations-section],#management-dialog[data-operations-section] #management-content{overflow:clip!important}

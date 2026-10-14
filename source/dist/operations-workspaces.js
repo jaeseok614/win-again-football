@@ -35,9 +35,9 @@ function prepareOperationsPage(){
 const operationsOpenOriginal=openManagementPanel;
 openManagementPanel=function(id,opener=document.activeElement,options={}){
  if(!operationsEntries.some(e=>e[0]===id)||managerGuideActive||options.modal===true){closeOperationsPage();return operationsOpenOriginal(id,opener,options);}
- closeOperationsPage();operationsSection=id;workspaceRouting=true;
+ closeOperationsPage();operationsSection=id;workspaceRouting=true;renderOperationsNav();
  try{if(squadOverviewDialog.open)squadOverviewDialog.close();operationsOpenOriginal(id,null,{...options,inline:true});managementDialog.dataset.operationsSection=id;}finally{workspaceRouting=false;}
- document.body.classList.add('operations-page','dense-workspace-view');prepareOperationsPage();
+ document.body.classList.add('operations-page','dense-workspace-view');prepareOperationsPage();managementDialog.querySelector('button[data-operations-section="'+id+'"]')?.focus({preventScroll:true});
 };
 const operationsRenderOriginal=render;render=function(){
  if(operationsSection&&operationsGroup(operationsSection)!==view)closeOperationsPage();
@@ -51,7 +51,7 @@ document.addEventListener('click',e=>{
  const b=e.target.closest('[data-management-open]');if(b&&operationsEntries.some(r=>r[0]===b.dataset.managementOpen)&&!managerGuideActive){e.preventDefault();e.stopPropagation();openManagementPanel(b.dataset.managementOpen,b);}
 },true);
 managementDialog.addEventListener('close',()=>{if(managementDialog.open)return;operationsSection=null;delete managementDialog.dataset.operationsSection;managementDialog.querySelector('.operations-nav')?.remove();document.body.classList.remove('operations-page');});
-window.addEventListener('resize',()=>{if(operationsSection)render();});
+window.addEventListener('resize',()=>{if(operationsSection&&!managementDialog.contains(document.activeElement?.closest('input,textarea')))render();});
 const operationsTrainingOriginal=renderIndividualTraining;
 renderIndividualTraining=function(){
  operationsTrainingOriginal();

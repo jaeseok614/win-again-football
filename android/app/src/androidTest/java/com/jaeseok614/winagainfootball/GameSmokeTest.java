@@ -262,6 +262,7 @@ public final class GameSmokeTest {
             for (String screen : screens) {
                 if (!screen.equals("training-card")) tapWebElement(scenario, "[data-operations-section='" + screen + "']");
                 awaitTrue(scenario, "operationsSection==='" + screen + "'&&document.getElementById('management-dialog').open");
+                assertEquals("Opening an operation must not focus an editable field", "true", evaluate(scenario, "!document.activeElement.closest('input,textarea')"));
                 assertOperationsFits(scenario, screen);
                 assertEquals("Reading management pages must not alter the campaign", original, evaluate(scenario, "JSON.stringify(season)"));
                 screenshot(scenario, "android-operations-" + screen + ".png");

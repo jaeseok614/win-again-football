@@ -91,6 +91,6 @@ document.addEventListener('click',e=>{
  e.preventDefault();e.stopPropagation();if($('match-popup').open)closeMatchPopup();setView('tactics');
 },true);
 const pageTacticsOpen=openTacticsEditor;openTacticsEditor=function(kind,opener){if(kind==='tactics'&&!managerGuideActive){setView('tactics');return;}pageTacticsOpen(kind,opener);};
-window.addEventListener('resize',()=>{if(appSessionStarted&&['tactics','squad','market'].includes(view))render();});
+window.addEventListener('resize',()=>{if(appSessionStarted&&['tactics','squad','market'].includes(view)&&!(typeof operationsSection!=='undefined'&&operationsSection))render();});
 
 for(const dialog of [managementDialog,squadOverviewDialog])dialog.addEventListener('close',()=>{if(!dialog.open&&appSessionStarted&&!managerGuideActive&&['squad','market'].includes(view)&&!workspaceRouting){render();document.querySelector('.view-nav [data-view="'+view+'"]')?.focus({preventScroll:true});}});
