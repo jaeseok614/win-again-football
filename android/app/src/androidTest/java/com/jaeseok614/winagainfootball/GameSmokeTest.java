@@ -576,6 +576,8 @@ public final class GameSmokeTest {
             tapWebElement(scenario, "#club-story-dialog [data-story-choice='honest']");
             awaitTrue(scenario, "ClubStory.scene(season,'1:arrival').step===2");
             assertEquals("Canonical answers and saves survive the expanded prose", "true", evaluate(scenario, "(()=>{const copy=S.restore(JSON.parse(JSON.stringify(season)));return JSON.stringify(copy)===JSON.stringify(season)&&ClubStory.scene(copy,'1:arrival').answered.map(r=>r.choice).join(',')==='listen,honest';})()"));
+            evaluate(scenario, "(()=>{storyDialog.close();F.begin(state);state.paused=true;setView('club');openManagementPanel('club-life-panel');return true;})()");
+            assertEquals("Unavailable interviews have a named disabled waiting filter", "true", evaluate(scenario, "(()=>{const q=document.getElementById('voice-press-phase');return q.disabled&&q.options.length===1&&q.options[0].textContent==='다음 인터뷰 대기'&&!!document.querySelector('.voice-press-side .voice-empty')&&!document.querySelector('.voice-press-side [data-life-answer]');})()"));
             scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
         }
     }
