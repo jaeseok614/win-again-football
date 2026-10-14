@@ -1,3 +1,5 @@
+2026-10-14 추가: 감독의 속마음·인물별 말투·큰 대화 장면과 홈의 기사/기자 질문을 추가했습니다. [서사/참고 범위](docs/MANAGER_VOICE_2026-10-14.md). 저장/선택/물리 규칙 유지. 검증과 새 APK는 HANDOFF 최신 항목 참조.
+
 2026-10-14 최신: 큰 경기장(62%)/짧은 핵심 관전/득점 자동 진행, 전체 리그·유소년 보고서의 가로 통합. [설계](docs/SINGLE_SCREEN_WORKSPACES_2026-10-14.md). 로컬172 suites/1329checks와 8가로 화면, Android14/15 각각11검사 및 새APK Drive 교체 완료. 원격 Source도 전체172 suites/1329checks와 공개 자산 일치 검증 성공. 정확한 APK/서명 변경 설치 절차는 HANDOFF 최신 항목을 확인하세요.
 
 2026-10-13 설치판: 풋몹식 실제12기록+점유율/가로 화면 겹침 수정, 로컬·원격171 suites/1325checks 및 Android14/15 각각10검사 성공. 기존 Drive에 match-statistics.apk만 교체했습니다. [설계](docs/PHONE_WORKSPACES_2026-10-13.md), HANDOFF의 정확한 검사/서명/원격Source 상태 참조.

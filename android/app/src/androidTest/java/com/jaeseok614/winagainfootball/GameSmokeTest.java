@@ -291,11 +291,11 @@ public final class GameSmokeTest {
             assertEquals("The journal opens inside the management dialog", "true", evaluate(scenario,
                 "(()=>{const panel=document.getElementById('club-life-panel');" +
                 "panel.scrollIntoView({block:'start',behavior:'instant'});return view==='club'&&!mobileDashboardExpanded&&" +
-                "document.getElementById('management-dialog').open&&document.getElementById('management-content').contains(panel)&&getComputedStyle(panel).display!=='none'&&panel.querySelectorAll('.media-review').length===3&&" +
+                "document.getElementById('management-dialog').open&&document.getElementById('management-content').contains(panel)&&getComputedStyle(panel).display!=='none'&&panel.querySelectorAll('.voice-article').length===3&&" +
                 "!panel.querySelector('details.life-newspaper');})()"));
-            assertVisibleWebText(scenario, "#life-club-heading", "오늘의 축구 헤드라인");
+            assertVisibleWebText(scenario, "#life-club-heading", "기자실");
             screenshot(scenario, "android-interviews.png");
-            assertVisibleWebText(scenario, "#life-club-heading", "오늘의 축구 헤드라인");
+            assertVisibleWebText(scenario, "#life-club-heading", "기자실");
         }
         try (ActivityScenario<MainActivity> reopened = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(reopened);
@@ -348,7 +348,7 @@ public final class GameSmokeTest {
             }
             awaitTrue(scenario, "appSessionStarted&&view==='club'&&document.getElementById('launch-screen').hidden");
             assertEquals(before, evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})"));
-            assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display==='none'&&document.querySelectorAll('.media-review').length===3&&!!document.querySelector('.management-headline')"));
+            assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display==='none'&&document.querySelectorAll('#club-press-desk .voice-article').length===3&&!!document.querySelector('#club-press-desk .voice-interview')"));
             assertEquals("New stadium illustration must be visible on the default home", "true", evaluate(scenario,
                 "(()=>{const art=document.querySelector('#mobile-command-center .club-growth-picture');return !!art&&art.getBoundingClientRect().width>0&&getComputedStyle(art).backgroundImage.includes('data:image/webp');})()"));
             evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset,ClubArt.storyAsset,ClubArt.momentAsset,ClubArt.deadballAsset,ClubArt.memoryAsset,ClubArt.voiceAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048&&widths[5]===2048&&widths[6]===1672&&widths[7]===960&&widths[8]===1536&&widths[9]===768).catch(()=>window.newArtDecoded=false);return true;})()");
@@ -554,6 +554,28 @@ public final class GameSmokeTest {
                 "(()=>{const failures=[],choose=tab=>{const select=document.getElementById('life-review-tab');select.value=tab;select.dispatchEvent(new Event('change'));};for(const tab of ['성적표','약속','경기']){choose(tab);let pages=0;do{const body=document.querySelector('#rebirth-dialog .rebirth-body');if(body.scrollHeight>body.clientHeight+1||body.scrollWidth>body.clientWidth+1)failures.push(tab+':'+rebirthReviewPage);const next=document.querySelector('[data-life-review-page=\"1\"]');if(!next||next.disabled)break;if(++pages>100){failures.push('unbounded review');break;}next.click();}while(true);}choose('약속');const promise=RebirthReview.read(season).promises.at(-1),body=document.querySelector('#rebirth-dialog .rebirth-body'),goals=promise&&promise.games.reduce((n,g)=>n+g.score[0],0);if(!promise||promise.metric!=='goals'||promise.success||promise.value!==goals||!body.textContent.includes(promise.target)||!body.textContent.includes('실제 '+goals+' 득점')||!body.textContent.includes('미달성')||!promise.games.every(g=>body.textContent.includes(g.year+'시즌 '+g.round+'R · '+g.score.join(' : '))))failures.push('actual missed promise');return failures;})()"));
             screenshot(scenario, "android-life-review.png");
             assertEquals(before, evaluate(scenario, "JSON.stringify(season)"));
+            scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
+    @Test public void managerInnerVoiceAndHomeInterviewsKeepRealAnswers() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;setView('club');return true;})()");
+            assertEquals("Home exposes the three recorded-fact articles and the actual reporter", "true", evaluate(scenario, "(()=>{const h=document.getElementById('club-press-desk'),n=document.querySelector('.view-nav').getBoundingClientRect();return h.querySelectorAll('.voice-article').length===3&&h.querySelectorAll('[data-life-answer]').length===3&&h.textContent.includes('(속마음)')&&h.getBoundingClientRect().bottom<=n.top;})()"));
+            assertEquals("0", evaluate(scenario, "season.clubLife.press.length"));
+            screenshot(scenario, "android-manager-press-home.png");
+            tapWebElement(scenario, "#club-press-desk [data-life-answer='protect']");
+            awaitTrue(scenario, "season.clubLife.press.length===1&&season.clubLife.press[0].choice==='protect'&&!!document.querySelector('#club-press-desk .voice-saved')");
+            evaluate(scenario, "openClubStory('1:arrival');true");
+            awaitTrue(scenario, "document.getElementById('club-story-dialog').open&&document.querySelectorAll('#club-story-dialog .story-block').length===3");
+            assertEquals("The whole opening beat and inner thought fit together", "true", evaluate(scenario, "(()=>{const r=document.querySelector('#club-story-dialog .story-reading');return r.textContent.includes('(속마음)')&&r.textContent.includes('자네는')&&r.scrollHeight<=r.clientHeight+1&&!document.querySelector('#club-story-dialog .story-choices').hidden&&ClubStory.scene(season,'1:arrival').step===0;})()"));
+            screenshot(scenario, "android-manager-inner-voice.png");
+            tapWebElement(scenario, "#club-story-dialog [data-story-choice='listen']");
+            awaitTrue(scenario, "ClubStory.scene(season,'1:arrival').step===1&&document.querySelector('#club-story-dialog .story-reading').textContent.includes('도망가진')");
+            tapWebElement(scenario, "#club-story-dialog [data-story-choice='honest']");
+            awaitTrue(scenario, "ClubStory.scene(season,'1:arrival').step===2");
+            assertEquals("Canonical answers and saves survive the expanded prose", "true", evaluate(scenario, "(()=>{const copy=S.restore(JSON.parse(JSON.stringify(season)));return JSON.stringify(copy)===JSON.stringify(season)&&ClubStory.scene(copy,'1:arrival').answered.map(r=>r.choice).join(',')==='listen,honest';})()"));
             scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
         }
     }

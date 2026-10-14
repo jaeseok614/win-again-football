@@ -41,6 +41,17 @@ clubs and selected-round fixtures must appear together without table pagination.
 Use compact columns plus selected-club totals on phones. Read
 docs/SINGLE_SCREEN_WORKSPACES_2026-10-14.md and test real later-campaign states.
 
+## Manager voice and visible press (2026-10-14)
+
+Use original Korean dialogue with distinct owner/coach/player/reporter voices and
+explicit manager inner thoughts. The owner dislikes overly formal, very short
+conversation cards. Group narration, thought and question into dense readable beats;
+preserve every archived sentence, actual answer ID, promise and focus effect.
+Expose article headlines and the actual current interview on the home screen.
+All reporters/outlets and quotes are fictional; scores and standings use confirmed
+records and actual promotion/relegation boundaries. Read
+docs/MANAGER_VOICE_2026-10-14.md. Viewing must never submit an answer or spend.
+
 ## Match facts and entry routes (2026-10-13)
 
 The landscape match side rail compares actual displayed-match facts, inspired by

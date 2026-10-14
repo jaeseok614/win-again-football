@@ -14,12 +14,13 @@ for(const [width,height] of [[568,280],[568,320],[640,360],[740,360],[844,390],[
  }
  await p.evaluate(()=>{managerGuideActive=false;$('manager-guide').close();openClubStory('1:arrival');});
  const before=await p.evaluate(()=>ClubStory.fingerprint(season));
- for(let page=0;page<3;page++){
+ const pages=await p.evaluate(()=>clubStoryPages(ClubStory.scene(season,clubStoryEvent)).length);
+ for(let page=0;page<pages;page++){
   if(page)await p.locator('[data-story-page=next]').click();
   const story=await p.evaluate(()=>{const d=$('club-story-dialog'),r=d.querySelector('.story-reading'),buttons=[...d.querySelectorAll('button')].filter(e=>e.getClientRects().length);return {page:clubStoryPage,scroll:d.scrollHeight-d.clientHeight,reading:r.scrollHeight-r.clientHeight,inside:buttons.every(e=>{const q=e.getBoundingClientRect();return q.left>=0&&q.right<=innerWidth&&q.bottom<=innerHeight&&q.height>=44})};});
   assert.equal(story.page,page);assert.equal(story.scroll,0);assert.ok(story.reading<=1,JSON.stringify({width,height,page,story}));assert.ok(story.inside);
  }
- assert.equal(await p.evaluate(()=>ClubStory.fingerprint(season)),before,'reading must not answer');await p.locator('[data-story-page=previous]').click();assert.equal(await p.evaluate(()=>clubStoryPage),1);
+ assert.equal(await p.evaluate(()=>ClubStory.fingerprint(season)),before,'reading must not answer');if(pages>1){await p.locator('[data-story-page=previous]').click();assert.equal(await p.evaluate(()=>clubStoryPage),pages-2);}
  await p.evaluate(()=>{$('club-story-dialog').close();setView('club');openManagerNotebook();});await p.waitForFunction(()=>!!notebookRows);
  assert.deepEqual(await p.evaluate(()=>[notebookDialog.scrollHeight-notebookDialog.clientHeight,...[...notebookDialog.querySelectorAll('.notebook-card')].map(e=>e.scrollHeight-e.clientHeight)]),[0,0,0]);
  await p.evaluate(()=>notebookDialog.close());console.log('PASS landscape reading and match '+width+'x'+height);
@@ -31,6 +32,6 @@ for(const id of ['staff-panel','transfer-search-panel','club-life-panel','indivi
  if(id==='transfer-search-panel'){await p.locator('#transfer-position').selectOption('FW');assert.ok(await p.locator('.market-card').count()>0);assert.ok((await p.locator('.market-card .position').allTextContents()).every(s=>s==='FW'));}
  await p.locator('#management-close').click();
 }
-await p.evaluate(()=>openClubStory('1:arrival'));for(let i=0;i<2;i++)await p.locator('[data-story-page=next]').click();await p.locator('[data-story-choice]').first().click();assert.equal(await p.evaluate(()=>ClubStory.scene(season,'1:arrival').step),1);await p.locator('[data-story-page=next]').click();await p.locator('[data-story-choice]').first().click();assert.equal(await p.evaluate(()=>ClubStory.scene(season,'1:arrival').step),2);
+await p.evaluate(()=>openClubStory('1:arrival'));while(await p.locator('.story-choices').evaluate(e=>e.hidden))await p.locator('[data-story-page=next]').click();await p.locator('[data-story-choice]').first().click();assert.equal(await p.evaluate(()=>ClubStory.scene(season,'1:arrival').step),1);while(await p.locator('.story-choices').evaluate(e=>e.hidden))await p.locator('[data-story-page=next]').click();await p.locator('[data-story-choice]').first().click();assert.equal(await p.evaluate(()=>ClubStory.scene(season,'1:arrival').step),2);
 assert.deepEqual(errors,[]);console.log('PASS management routing, filter-only search and explicit story choices');
 }finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1});

@@ -1,0 +1,98 @@
+/* Dialogue reads as a full beat; thoughts and spoken words remain distinct. */
+.story-block{margin:0 0 7px;min-width:0;word-break:keep-all}.story-block>b{font-size:calc(var(--story-prose-size,12px) - 1px);line-height:1.2;color:#d1e4b1;display:block;margin-bottom:2px}.story-block p{font-size:var(--story-prose-size,12px);line-height:1.35;margin:0;white-space:pre-line;word-break:keep-all;overflow-wrap:break-word;color:#e6edf0}
+.story-thought{padding:4px 7px;border-left:2px solid #c5e48f;background:#192c34;border-radius:0 5px 5px 0}.story-thought>b{color:#e3c68e}.story-thought p{color:#d4ded2}
+.voice-article,.voice-interview{min-width:0;min-height:0;border:1px solid #365148;border-radius:5px;background:#15292b;padding:4px;box-sizing:border-box;word-break:keep-all}
+.voice-article header,.voice-interview header,.voice-desk-heading,.voice-press-centre>header{display:flex;align-items:center;justify-content:space-between;gap:3px;font-size:8px;line-height:10px;color:#b7cfa6}
+.voice-article h3,.voice-interview h3{font-size:10px;line-height:1.3;margin:3px 0;color:#eff0e2}.voice-article p,.voice-interview p{font-size:9px;line-height:1.3;margin:3px 0;color:#c1d0cc}.voice-article small{display:block;font-size:7px;line-height:9px;color:#b3c6a1}
+.voice-reviews{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;min-height:0;min-width:0}.voice-inner{border-left:2px solid #dfc48f;padding-left:4px;color:#d0d6bb!important}.voice-inner b{color:#dfc48f}.voice-answers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;margin-top:auto;min-height:44px}
+.voice-answers button{min-width:0;min-height:44px;height:44px;padding:3px;background:#243d34;border:1px solid #74915c;border-radius:5px;color:#e7efd7;word-break:keep-all;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.voice-answers strong{font-size:9px;line-height:11px}.voice-answers span{font-size:8px;line-height:9px;color:#c4d4ce}.voice-saved p{font-size:9px;line-height:1.25}.voice-saved b{color:#cde599}
+@media(orientation:landscape){
+ #club-story-dialog .story-reading{padding:6px;scrollbar-gutter:auto}#club-story-dialog .story-block:last-child{margin-bottom:0}#club-story-dialog .story-choices button{height:44px;min-height:44px}
+ body.management-view #club-pane{display:grid;grid-template-columns:minmax(0,.34fr) minmax(0,.66fr);grid-template-rows:minmax(0,1fr) 44px;gap:4px}
+ body.management-view #mobile-command-center{grid-column:1;grid-row:1;min-height:0}body.management-view #club-pane .mobile-command-card{padding:3px;gap:2px;grid-template-rows:20px minmax(0,1fr) 30px 18px 90px}
+ body.management-view #club-pane .mobile-command-card>.club-growth{display:flex;max-height:50px;min-height:0}body.management-view #club-pane .club-growth figcaption{display:none}
+ body.management-view #club-pane .mobile-command-actions{gap:2px}body.management-view #club-pane .mobile-command-actions button{height:44px;min-height:44px;padding:2px;font-size:9px;line-height:11px}
+ body.management-view #club-pane .mobile-command-top strong{font-size:9px;line-height:11px}body.management-view #club-pane .mobile-command-top>div>span{font-size:8px;line-height:9px}
+ body.management-view #club-pane .mobile-kpis b{font-size:12px;line-height:14px}body.management-view #club-pane .mobile-kpis span,body.management-view #club-pane .mobile-kpis small{font-size:7px;line-height:8px}body.management-view #club-pane .mobile-kpis>div{padding:0}
+ body.management-view #club-pane .mobile-next{padding:0;font-size:8px;line-height:10px}body.management-view #club-pane .mobile-next b{font-size:9px;line-height:10px}
+ body.management-view #management-hub-club{grid-column:1/-1;grid-row:2;height:44px;min-height:0;padding:0;align-self:stretch}
+ body.management-view #management-hub-club .management-entries{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;height:44px}
+ body.management-view #management-hub-club .management-entries button{height:44px;min-height:44px;padding:3px;display:flex;align-items:center;justify-content:center;gap:0}
+ body.management-view #management-hub-club .management-entries strong{font-size:10px;line-height:12px;white-space:normal}body.management-view #management-hub-club .management-entries span{display:none}
+ #club-press-desk{grid-column:2;grid-row:1;min-height:0;min-width:0;display:grid;grid-template-rows:12px minmax(0,1fr) minmax(88px,.95fr);gap:3px;overflow:hidden}#club-press-desk[hidden]{display:none}
+ #club-press-desk .voice-desk-heading{font-size:8px;line-height:10px}#club-press-desk .voice-interview{display:flex;flex-direction:column;gap:1px}
+ #club-press-desk .voice-interview h3{font-size:9px;line-height:10px;margin:1px 0}#club-press-desk .voice-inner{font-size:7.5px;line-height:9px;margin:0}
+ #club-press-desk .voice-article{padding:3px}#club-press-desk .voice-article h3{font-size:9px;line-height:10px;margin:1px 0}#club-press-desk .voice-article p{font-size:8px;line-height:9px;margin:1px 0}#club-press-desk .voice-article small{font-size:7px;line-height:8px}
+ #management-dialog:has(.voice-press-centre){max-width:1500px;width:calc(100vw - 12px);padding:6px;gap:3px}#management-dialog:has(.voice-press-centre)>header{height:44px;min-height:44px}#management-dialog:has(.voice-press-centre) h2{font-size:14px}
+ #management-dialog:has(.voice-press-centre) .management-switch{position:absolute;top:6px;right:70px;left:160px;font-size:0;height:44px}#management-dialog:has(.voice-press-centre) .management-switch select{font-size:10px;min-height:44px;height:44px}
+ #management-dialog:has(.voice-press-centre) #management-content{padding:0;overflow:hidden;scrollbar-gutter:auto}
+ #management-content>#club-life-panel{height:100%;min-height:0}
+ .voice-press-centre{height:100%;min-height:0;display:grid;grid-template-columns:minmax(0,.60fr) minmax(0,.40fr);grid-template-rows:14px minmax(0,1fr) 44px;gap:4px;overflow:hidden}
+ .voice-press-centre>header{grid-column:1/-1;grid-row:1}.voice-press-centre>.voice-reviews{grid-column:1;grid-row:2;min-height:0}
+ .voice-press-side{grid-column:2;grid-row:2/4;display:grid;grid-template-rows:44px minmax(0,1fr);gap:3px;min-height:0;min-width:0}
+ .voice-press-side>label,.voice-news-record>label{font-size:0;line-height:0;min-width:0}.voice-press-side select,.voice-news-record select{height:44px;min-height:44px;font-size:9px;padding:3px;width:100%}
+ .voice-press-side .voice-interview{display:flex;flex-direction:column;min-height:0;gap:3px}.voice-press-side .voice-interview h3{font-size:10px;line-height:12px;margin:0}.voice-press-side .voice-inner{font-size:9px;line-height:11px;margin:0}
+ .voice-news-record{grid-column:1;grid-row:3;display:grid;grid-template-columns:minmax(90px,.4fr) minmax(0,.6fr);gap:3px;min-height:0;min-width:0}.voice-news-record>div{font-size:8px;line-height:10px;padding:2px;background:#1a2f2b;min-height:0;overflow:auto}.voice-news-record b{font-size:9px;line-height:10px}.voice-news-record p{margin:0}
+ .voice-press-centre>.life-note{position:absolute;bottom:8px;left:8px;right:8px;margin:0;padding:4px;font-size:9px;line-height:10px;background:#243c29;pointer-events:none}
+}
+@media(orientation:landscape) and (max-height:350px){
+ body.management-view #club-pane .mobile-command-card{grid-template-rows:18px minmax(0,1fr) 24px 14px 90px}body.management-view #club-pane .mobile-command-card>.club-growth{display:none}
+ #club-press-desk .voice-desk-heading span{display:none}#club-press-desk .voice-article header{font-size:6.5px;line-height:8px}#club-press-desk .voice-article h3{font-size:7.5px;line-height:8.5px}#club-press-desk .voice-article p{font-size:7px;line-height:8px}
+ .voice-press-side .voice-interview h3{font-size:8px;line-height:10px}.voice-press-side .voice-inner{font-size:8px;line-height:9px}.voice-answers span{font-size:7px;line-height:8px}.voice-article p{font-size:8px;line-height:10px}
+}
+
+@media(orientation:landscape){
+ body.management-view:has(#club-pane:not([hidden])) .app>.view-nav{position:static!important;inset:auto;order:2;flex:0 0 auto}
+ body.management-view #club-pane .mobile-command-card{grid-template-columns:minmax(0,1fr);grid-template-rows:20px minmax(0,1fr) 34px 14px 90px}
+ body.management-view #club-pane .mobile-command-card>.mobile-command-top{grid-row:1!important;grid-column:1!important}
+ body.management-view #club-pane .mobile-command-card>.club-growth{grid-row:2!important;grid-column:1!important;min-height:0;height:100%;max-height:none}
+ body.management-view #club-pane .mobile-command-card>.mobile-kpis{grid-row:3!important;grid-column:1!important}
+ body.management-view #club-pane .mobile-command-card>.mobile-next{grid-row:4!important;grid-column:1!important}
+ body.management-view #club-pane .mobile-command-card>.mobile-command-actions{grid-row:5!important;grid-column:1!important}
+ body.management-view #club-pane .mobile-kpis>div:nth-child(3) b{font-size:9px;line-height:12px}
+ #club-press-desk{grid-template-rows:12px minmax(0,1fr) 108px}
+ #club-story-dialog .story-block{margin:0 0 3px}#club-story-dialog .story-block>b{line-height:1.1;margin-bottom:1px}#club-story-dialog .story-block p{line-height:1.22}#club-story-dialog .story-thought{padding:2px 4px}
+ #management-dialog:has(.voice-press-centre)>header{min-width:0;display:grid;grid-template-columns:140px minmax(0,1fr) 48px;gap:3px}#management-dialog:has(.voice-press-centre)>header>div{grid-column:1}#management-dialog:has(.voice-press-centre)>header>button{grid-column:3;width:48px;padding:3px}
+ #management-dialog:has(.voice-press-centre) .management-switch{left:150px;right:58px;display:block;box-sizing:border-box;padding:0;margin:0}#management-dialog:has(.voice-press-centre) .management-switch select{width:100%;margin:0}
+ .voice-answers button span{line-height:8px;font-size:7px}
+}
+@media(orientation:landscape) and (max-height:350px){
+ body.management-view #club-pane .mobile-command-card{grid-template-rows:18px minmax(0,1fr) 25px 14px 90px}
+ #club-press-desk{grid-template-rows:10px minmax(0,1fr) 102px;gap:2px}#club-press-desk .voice-article small{font-size:6.5px;line-height:7px}#club-press-desk .voice-interview{padding:3px}#club-press-desk .voice-interview h3{font-size:8px;line-height:9px}#club-press-desk .voice-inner{font-size:7px;line-height:8px}
+ .voice-answers button strong{font-size:8px;line-height:9px}
+}
+@media(orientation:landscape) and (max-height:300px){
+ #club-story-dialog .story-dialog-head{grid-row:1;grid-column:1;padding:2px}#club-story-dialog .story-dialog-head h2{font-size:11px;line-height:12px;margin:0}#club-story-dialog .story-dialog-head small{font-size:7px;line-height:8px}
+ #club-story-dialog .story-reading{grid-column:1/-1}#club-story-dialog .story-choices,#club-story-dialog>[data-story-action]{grid-column:1/-1}#club-story-dialog .story-complete{display:none}
+}
+
+@media(orientation:landscape) and (max-height:350px){#club-press-desk .voice-article p{display:none}#club-press-desk .voice-article h3{font-size:7px;line-height:8px}}
+@media(orientation:landscape){#management-dialog:has(.voice-press-centre) .management-switch{color:transparent;overflow:hidden;font-size:0!important}#management-dialog:has(.voice-press-centre) .management-switch select{color:#edf4ed}}
+
+@media(orientation:landscape){
+ body.management-view #club-pane .mobile-command-actions #open-season-calendar,body.management-view #club-pane .mobile-command-actions [data-open-league]{display:none}
+ body.management-view #club-pane .mobile-command-card{grid-template-rows:20px minmax(0,1fr) 34px 14px 44px}
+ body.management-view #club-pane .mobile-command-actions{grid-template-rows:44px;height:44px}
+ #management-dialog:has(.voice-press-centre) .management-switch{width:auto!important;min-width:0}
+ .voice-article p{font-size:var(--voice-prose-size,9px)!important;line-height:1.2!important}.voice-article h3{font-size:calc(var(--voice-prose-size,9px) + 1px)!important;line-height:1.15!important}
+ #club-press-desk .voice-article p{font-size:var(--voice-prose-size,8px)!important}#club-press-desk .voice-article h3{font-size:var(--voice-prose-size,8px)!important}
+}
+@media(orientation:landscape) and (max-height:350px){body.management-view #club-pane .mobile-command-card{grid-template-rows:18px minmax(0,1fr) 25px 14px 44px}}
+@media(orientation:landscape) and (max-height:300px){
+ #club-story-dialog .story-reading{padding:4px}#club-story-dialog .story-block p{line-height:1.15}#club-story-dialog .story-block[data-story-speaker=장면]:first-child>b{display:none}
+ #club-press-desk{grid-template-rows:10px minmax(0,1fr) 80px}#club-press-desk .voice-inner{display:none}#club-press-desk .voice-interview h3{font-size:7px;line-height:8px}
+ #club-press-desk .voice-reviews{overflow:auto}
+}
+
+@media(orientation:landscape) and (max-height:300px){#club-story-dialog .story-reading{padding:3px}#club-story-dialog .story-thought{padding:1px 4px}}
+
+@media(orientation:landscape){
+ #management-dialog:has(.voice-press-centre)[open]{grid-template-columns:140px minmax(0,1fr) 48px;grid-template-rows:44px minmax(0,1fr);gap:3px}
+ #management-dialog:has(.voice-press-centre)>header{display:contents}#management-dialog:has(.voice-press-centre)>header>div{grid-column:1;grid-row:1}#management-dialog:has(.voice-press-centre)>header>button{grid-column:3;grid-row:1}
+ #management-dialog:has(.voice-press-centre) .management-switch{position:static;grid-column:2;grid-row:1;width:100%!important;height:44px}
+ #management-dialog:has(.voice-press-centre) #management-content{grid-column:1/-1;grid-row:2}
+ .voice-press-centre>header .life-note{position:static;border:0;background:none;padding:0;margin:0;font-size:8px;line-height:10px}
+}
+
+@media(orientation:landscape) and (max-height:300px){#club-press-desk{grid-template-rows:10px minmax(0,1fr) 72px}#club-press-desk .voice-article small{display:none}#club-press-desk .voice-article{padding:2px}#club-press-desk .voice-interview{padding:2px}#club-press-desk .voice-interview h3{font-size:7px;line-height:8px}}
