@@ -573,6 +573,7 @@ public final class GameSmokeTest {
             tapWebElement(scenario, ".view-nav [data-view=squad]");
             awaitTrue(scenario, "view==='squad'&&!document.querySelector(':modal')&&document.querySelectorAll('#squad-overview-dialog [data-squad-detail]').length===18");
             assertEquals("The full squad, all six preview attributes and lower actions fit", "true", evaluate(scenario, "(()=>{const list=document.querySelector('.squad-overview-list'),facts=document.querySelector('.squad-preview-body'),nav=document.querySelector('.view-nav').getBoundingClientRect();return list.scrollHeight<=list.clientHeight+1&&facts.scrollHeight<=facts.clientHeight+1&&facts.querySelectorAll('dl>div').length===6&&[...document.querySelectorAll('#squad-overview-dialog footer button')].every(b=>b.getBoundingClientRect().bottom<=nav.top)&&JSON.stringify(season)===denseBefore;})()"));
+            assertEquals("Squad heading text stays inside its header", "true", evaluate(scenario, "(()=>{const e=document.querySelector('#squad-overview-dialog>header h2'),r=e.getBoundingClientRect(),h=e.closest('header').getBoundingClientRect();return r.top>=h.top&&r.bottom<=h.bottom&&e.scrollWidth<=e.clientWidth+1;})()"));
             screenshot(scenario, "android-inline-squad.png");
             tapWebElement(scenario, "#squad-overview-detail");
             awaitTrue(scenario, "!!document.querySelector('#player-detail-dialog:modal')");
@@ -600,6 +601,7 @@ public final class GameSmokeTest {
             tapWebElement(scenario, "[data-workspace-filter=FW]");
             awaitTrue(scenario, "transferFilters.position==='FW'&&document.getElementById('transfer-query').value===''&&document.querySelectorAll('[data-market-select]').length>0&&document.querySelectorAll('[data-workspace-filter]').length===5");
             assertEquals(beforeFilters, evaluate(scenario, "JSON.stringify(season)"));
+            assertEquals("Every inline filter action keeps text inside its own button", "true", evaluate(scenario, "(()=>{const g=document.querySelector('.transfer-filter-toggles').getBoundingClientRect();return [...document.querySelectorAll('.transfer-filter-toggles button')].every(e=>{const r=e.getBoundingClientRect();return r.left>=g.left&&r.right<=g.right&&e.scrollWidth<=e.clientWidth+1&&e.scrollHeight<=e.clientHeight+1;});})()"));
             screenshot(scenario, "android-inline-market.png");
             scenario.onActivity(activity -> assertTrue(activity.consoleErrorsForTest().isEmpty()));
         }
