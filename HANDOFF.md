@@ -1,6 +1,14 @@
-# 최신 개발 — 감독 속마음과 홈 기자실
+# 최신 완료 — 감독 속마음과 홈 기자실
 
-[설계/공식 작품소개 참고](docs/MANAGER_VOICE_2026-10-14.md). 인물별 창작 대사·단계별 속마음·큰 대화 단위, 홈3기사/현재 인터뷰와 기자실 전체 본문·필터를 추가했다. 실제 강등선 기사 분류 수정. 대답/출전 약속/집중도/저장/경제/물리 규칙은 유지한다. 로컬 전체172 suites/1322checks 통과 뒤 삽화를 고정패널로 옮긴 표시 기대값을 보완한 수첩13checks 재통과=173 suites/1335checks 확인. 새서사5/언론6/PWA14/성능10/Android자산11 성공, 홈·기사·대화8가로크기 및 기존읽기7크기/가이드/기사필터/실제답변·저장 불변성 성공. 원격 Source/API34·35와 새APK 교체는 진행 중이며 아래 Drive는 이전 single-screen 검증판이다.
+- [설계/공식 작품소개 참고](docs/MANAGER_VOICE_2026-10-14.md). 인물별 창작 대사·단계별 속마음·큰 대화 단위, 홈3기사/현재 인터뷰와 기자실 전체 본문·필터를 추가했다. 실제 강등선 기사 분류와 인터뷰가 없는 경기 중 빈 필터를 수정했다. 대답/출전 약속/집중도/저장/경제/물리 규칙은 유지한다.
+- 기능52adf8a242fa5ddf78c836d7ec8dfe63247cee01, 삽화07502db6203256f37f4bb7733addfe80084d4ec0, 최종216da01fb8424308716cf97398b34bcd7a3c914e/tree9637f9000c3ddb7fd41259027442e1ea8c5d17d9. PR25 draft/main 미병합.
+- 로컬 전체172 suites/1322checks 뒤 표시 기대값을 보완한 수첩13checks 재통과=173/1335. 새서사5/언론6/PWA14/성능10/Android자산11, 홈·기사·대화8가로크기 및 기존읽기7크기/실제답변·복원/기사필터/경기중대기·읽기불변성 성공. 별도의 새 데스크톱 Chrome첫실행3회오류0(휴대폰 시간 측정 아님).
+- 최종 [Source38489388230](https://github.com/jaeseok614/win-again-football/actions/runs/38489388230)/job115610724765 전체173 suites/1335checks·PWA14·공개 자산 재생성 일치 completed/success. 직전07502의 Source38488143006 및 Android38488143008도 성공.
+- 최종 [Android38489388227](https://github.com/jaeseok614/win-again-football/actions/runs/38489388227): API35 원job115610724883(재검사 결과의 기존성공 참조job115614255630), API34 재검사job115614254478 각각12tests/실패0/오류0/건너뛰기0. APK/AAB/lint 성공. API35 ZIP11860978931 SHA2564ea6b3f7e2253469a7d16e63fac22329de7442950b74fd05ed163a29381c7d23 및 API34 ZIP11861113602 SHA2568dbd7a92d65800a09ed13ef7249072ef82a629c5091d729342b5a22cf64db151의 XML12/0/0/0·홈기사/기자/속마음/대기필터 실제 캡처 확인. work/manager-voice-api34-* 및 api35-*.
+- API34 첫job115610725073는 첫awaitReady의evaluate15초 응답 제한에서 실패하고 나머지11검사는 성공했다. ZIP11861084166 SHA256be1c0db3e7d4bcae4b1071bd54fa66c5790cd2041d3ffe082dbd117e8c73071d 및 stack/guestlog 보존. 같은 시각 에뮬레이터 Google서비스 ANR 기록. 코드/검사/시간 제한 변경 없이 해당job만 재실행하여12/12성공했다.
+- PWA4,799,386바이트/shelld07ec9856209, Android4,798,779바이트/SHA256b203752f5436822fc3977c5e088eb399c28831c88a81811fa658f79498d4c95c. 재검사APK artifact11861167692 ZIP SHA2568d3823f3338d7ddc7e5139eb56f3da14ba2063f69b551af1c6cce25c99f5a896 검증, APK 내부HTML이 로컬 Android 파일과 바이트 동일.
+- APK5,608,501바이트/SHA256c6cd9ff6ad7fc160ca99d0176307de129fa36232c09ac083a4ac9778451b38e4만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261014-manager-voice.apk로 교체(2026-10-14 00:39:40UTC). 파일ID/이름/MIME/크기/부모폴더 재조회 성공. 로컬 work/win-again-20261014-manager-voice.apk 및 work/manager-voice-apk-verification.json. 개인 저장/ZIP/AAB/키는 올리지 않았다.
+- 테스트 서명6c6f9ee65ea55a3344d39c3d3d199c858aea38ef8f7cf95c652e5f6498724ceb→327a6d72cb318d6c9df3bc18b329174ccfdad7f26080228f9ba6fd7ca7deac8f 변경. 저장 내보내기→기존 앱 제거→새APK 설치→저장 불러오기 필요. 자동 삭제 없음. 문서만 [skip ci]로 마무리하며 검증한 기능은216da01이다.
 
 # 최신 완료 — 큰 경기장과 짧은 핵심 관전·한 화면 관리
 
