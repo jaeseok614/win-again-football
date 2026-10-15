@@ -62,13 +62,13 @@ public final class GameSmokeTest {
         android.util.Log.i("GameSmoke", "offline-game:await-ready");
         long until = System.nanoTime() + TimeUnit.SECONDS.toNanos(45);
         while (System.nanoTime() < until) {
-            if ("true".equals(evaluate(scenario, "!!(window.WinAgainAndroid && typeof season !== 'undefined' && document.getElementById('primary'))"))) {
-                AtomicReference<Boolean> nativeReady = new AtomicReference<>(false);
-                scenario.onActivity(activity -> nativeReady.set(activity.gameReadyForTest()));
-                if (nativeReady.get()) {
-                    android.util.Log.i("GameSmoke", "offline-game:ready");
-                    return;
-                }
+            // A navigation can discard a JavaScript callback. Wait for the real
+            // native page/integrity/loader readiness before probing its document.
+            AtomicReference<Boolean> nativeReady = new AtomicReference<>(false);
+            scenario.onActivity(activity -> nativeReady.set(activity.gameReadyForTest()));
+            if (nativeReady.get() && "true".equals(evaluate(scenario, "!!(window.WinAgainAndroid && typeof season !== 'undefined' && document.getElementById('primary'))"))) {
+                android.util.Log.i("GameSmoke", "offline-game:ready");
+                return;
             }
             Thread.sleep(100);
         }
