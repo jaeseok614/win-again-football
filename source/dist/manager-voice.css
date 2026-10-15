@@ -125,3 +125,5 @@
  #club-press-desk .voice-article header,#club-press-desk .newsroom-thumb{display:none}
  #club-press-desk .voice-article h3{font-size:6.5px!important;line-height:1.15!important;margin:0}
 }
+
+@media(orientation:landscape){body.management-view #club-pane .mobile-command-actions button{word-break:keep-all;overflow-wrap:break-word}}
