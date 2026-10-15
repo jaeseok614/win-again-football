@@ -835,6 +835,42 @@ public final class GameSmokeTest {
         }
     }
 
+    @Test public void playerThreadsUseConfirmedFactsAndInlineSelection() throws Exception {
+        String saved;
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(50,{suspensions:true});while(season.round<12){while(season.match.phase!=='full'){if(!F.running(season.match))F.begin(season.match);F.finishSegment(season.match);}season=S.settle(season);}state=season.match;setView('club');openManagerNotebook(null,{tab:'series'});return true;})()");
+            awaitTrue(scenario,"!!notebookRows");
+            String before=evaluate(scenario,"JSON.stringify(season)");
+            assertEquals("All six story names fit beside a single selected report","true",evaluate(scenario,"notebookSeriesRead().length===6&&document.querySelectorAll('[data-notebook-series]').length===6&&document.querySelectorAll('.serial-card').length===1"));
+            for(String kind : new String[]{"link-v1","red-v1"}) {
+                tapWebElement(scenario,"[data-notebook-series='"+kind+"']");
+                assertEquals("Every story selector and episode action has a visible 44px target","true",evaluate(scenario,"(()=>{const d=document.getElementById('manager-notebook');return d.scrollHeight<=d.clientHeight+1&&[...d.querySelectorAll('.serial-selector button,.serial-card,.serial-card h3,.serial-card small,.serial-report-evidence dt,.serial-report-evidence dd,.serial-stages button')].every(e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight&&e.scrollWidth<=e.clientWidth+1&&e.scrollHeight<=e.clientHeight+1&&(e.tagName!=='BUTTON'||r.height>=44);});})()"));
+                assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
+                tapWebElement(scenario,"[data-notebook-event='1:thread-"+kind+"-1']");
+                assertEquals("The actual player's identity and all confirmed evidence are visible","true",evaluate(scenario,"(()=>{const d=ClubStory.scene(season,clubStoryEvent);return !!F.identityProfile(d.actor)&&d.serial.facts.length===3&&document.querySelectorAll('.story-evidence dd').length===3;})()"));
+                while("true".equals(evaluate(scenario,"document.querySelector('.story-choices').hidden")))tapWebElement(scenario,"[data-story-page=next]");
+                tapWebElement(scenario,"[data-story-choice=practical]");
+                tapWebElement(scenario,"[data-story-choice=honest]");
+                assertEquals("The final answer is shown immediately","true",evaluate(scenario,"ClubStory.scene(season,clubStoryEvent).step===2&&clubStoryPages(ClubStory.scene(season,clubStoryEvent))[clubStoryPage].kind==='complete-reply'"));
+                screenshot(scenario,"android-thread-"+kind+".png");
+                tapWebElement(scenario,"#club-story-dialog footer [data-story-close]");
+                awaitTrue(scenario,"notebookDialog.open&&!!notebookRows");
+                assertEquals("The same inline story selection returns",kind,evaluate(scenario,"notebookSeriesSelection"));
+                before=evaluate(scenario,"JSON.stringify(season)");
+            }
+            screenshot(scenario,"android-six-story-workspace.png");
+            evaluate(scenario,"(()=>{notebookDialog.close();while(season.round<14){while(season.match.phase!=='full'){if(!F.running(season.match))F.begin(season.match);F.finishSegment(season.match);}season=S.settle(season);}state=season.match;render();setView('club');save();return true;})()");
+            assertEquals("Later replies echo both exact answers and the two actual league results","true",evaluate(scenario,"StoryThreads.events(season).filter(e=>e.serial.episode===2).length===2&&StoryThreads.events(season).filter(e=>e.serial.episode===2).every(e=>{const old=StoryThreads.events(season).find(p=>p.serial.id===e.serial.id&&p.serial.episode===1);return old.actor===e.actor&&e.scene.includes(old.options[2])&&e.scene.includes(old.turns[0][1][1])&&season.statistics.records.filter(g=>g.competition==='league'&&g.round>12&&g.round<=14).every(g=>e.scene.includes(g.round+'R '+g.score.join(' : ')));})"));
+            saved=evaluate(scenario,"JSON.stringify(season)");
+            scenario.onActivity(activity -> assertTrue("New player stories generated JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+        }
+        try(ActivityScenario<MainActivity> reopened=ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(reopened);
+            assertEquals("Both explicit player dialogues reload byte for byte",saved,evaluate(reopened,"JSON.stringify(season)"));
+        }
+    }
+
     @Test public void serialMeetingsUseRealLaterGamesAndPersistExplicitAnswers() throws Exception {
         String answers;
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
@@ -844,8 +880,9 @@ public final class GameSmokeTest {
             String before = evaluate(scenario, "JSON.stringify(season)");
             tapWebElement(scenario, "#manager-notebook [data-notebook-tab='series']");
             assertEquals("All available story arcs and actual episode actions fit the landscape screen", "true", evaluate(scenario,
-                "(()=>{const d=document.getElementById('manager-notebook');return document.querySelectorAll('.serial-card').length===StorySerial.read(season).length&&d.scrollHeight<=d.clientHeight+1&&[...d.querySelectorAll('.serial-card,.serial-stages button')].every(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&e.scrollHeight<=e.clientHeight+1;});})()"));
+                "(()=>{const d=document.getElementById('manager-notebook');return document.querySelectorAll('.serial-card').length===(notebookSeriesRead().length>2?1:notebookSeriesRead().length)&&document.querySelectorAll('[data-notebook-series]').length===(notebookSeriesRead().length>2?notebookSeriesRead().length:0)&&d.scrollHeight<=d.clientHeight+1&&[...d.querySelectorAll('.serial-card,.serial-stages button')].every(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&e.scrollHeight<=e.clientHeight+1;});})()"));
             assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
+            if ("true".equals(evaluate(scenario,"!!document.querySelector('[data-notebook-series=board]')"))) tapWebElement(scenario,"[data-notebook-series=board]");
             tapWebElement(scenario, "#manager-notebook [data-notebook-event='1:serial-board-1']");
             assertEquals("The original scene and all three confirmed evidence facts remain visible", "true", evaluate(scenario,
                 "(()=>{const d=document.getElementById('club-story-dialog'),art=d.querySelector('.drama-art'),facts=d.querySelector('.story-evidence'),r=facts.getBoundingClientRect();return d.open&&getComputedStyle(art).backgroundImage.includes('data:image/webp')&&facts.querySelectorAll('dd').length===3&&r.top>=0&&r.bottom<=innerHeight&&facts.scrollHeight<=facts.clientHeight+1;})()"));

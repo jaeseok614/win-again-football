@@ -1,4 +1,4 @@
-self.WIN_AGAIN_CACHE_REVISION = "c98cec2489dc";
+self.WIN_AGAIN_CACHE_REVISION = "b4ce6d923a9a";
 self.WIN_AGAIN_ASSETS = [
   "./style.css?v=22",
   "./coach-guide.css?v=22",
@@ -86,6 +86,7 @@ self.WIN_AGAIN_ASSETS = [
   "./story-contracts.js?v=1",
   "./story-notebook.js?v=1",
   "./story-serial.js?v=1",
+  "./story-threads.js?v=1",
   "./club-story.js?v=28",
   "./english-pyramid.js?v=1",
   "./pyramid-schedule.js?v=1",
@@ -241,5 +242,6 @@ self.WIN_AGAIN_ASSETS = [
   "./assets/club-memory-v1.webp?v=1",
   "./assets/club-voices-v1.webp?v=1",
   "./assets/touchline-drama-v1.webp?v=1",
-  "./assets/touchline-resolution-v1.webp?v=1"
+  "./assets/touchline-resolution-v1.webp?v=1",
+  "./assets/player-threads-v1.webp?v=1"
 ];
