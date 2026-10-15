@@ -545,3 +545,9 @@ body.operations-page #training-card .team-training-preview{grid-template-rows:14
 body.operations-page #training-card .team-training-metrics span{font-size:6px!important;line-height:8px!important}
 body.operations-page #training-card .team-training-metrics b{font-size:8px!important;line-height:10px!important}
 @media(max-height:350px){body.operations-page #training-card>.training-card{grid-template-rows:16px 44px minmax(0,1fr) 12px!important}body.operations-page #training-card .team-training-preview{grid-template-rows:12px 18px 10px minmax(0,1fr)!important}}
+
+body.operations-page #training-card .training-art>.club-growth-campus{display:flex!important;flex-direction:column;height:100%!important;min-height:0!important;width:100%;margin:0;padding:0;overflow:hidden}
+body.operations-page #training-card .training-art .club-growth-picture{flex:1;min-height:0!important;height:auto!important;aspect-ratio:auto}
+body.operations-page #training-card .training-art .club-growth figcaption{flex:0 0 auto;padding:2px;gap:0;line-height:9px}
+body.operations-page #training-card .training-art .club-growth figcaption strong{font-size:8px;line-height:10px}
+body.operations-page #training-card .training-art .club-growth figcaption span{display:none}

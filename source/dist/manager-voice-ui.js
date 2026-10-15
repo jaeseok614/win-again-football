@@ -17,7 +17,7 @@ function voiceCurrentQuestion(status){return status.after&&!status.after.answere
 function voiceHomeQuestion(status){if(voiceHomeAnswered?.seed!==season.seed)voiceHomeAnswered=null;const held=voiceHomeAnswered&&[status.before,status.after].find(q=>q?.id===voiceHomeAnswered.id&&q.phase===voiceHomeAnswered.phase&&q.answered);if(held)return held;voiceHomeAnswered=null;return voiceCurrentQuestion(status);}
 function renderVoiceHome(){
  if(!appSessionStarted||view!=='club'){if(!voiceDesk.hidden)voiceDesk.hidden=true;return;}
- if(voiceDesk.hidden)voiceDesk.hidden=false;const press=ClubLife.pressStatus(season),news=ClubLife.news(season),question=voiceHomeQuestion(press),key=JSON.stringify([innerHeight<300,voiceHomeAnswered,season.year,season.round,season.competition,state?.phase,season.clubLife.press,news[0]?.id,season.statistics?.records?.length,season.finance?.ledger?.length,Object.values(season.squad).map(p=>p.identity)]);
+ if(voiceDesk.hidden)voiceDesk.hidden=false;ClubArt.fitDrama?.($('mobile-command-center'));const press=ClubLife.pressStatus(season),news=ClubLife.news(season),question=voiceHomeQuestion(press),key=JSON.stringify([innerHeight<300,voiceHomeAnswered,season.year,season.round,season.competition,state?.phase,season.clubLife.press,news[0]?.id,season.statistics?.records?.length,season.finance?.ledger?.length,Object.values(season.squad).map(p=>p.identity)]);
  if(voiceHomeSeason===season&&voiceHomeKey===key)return;voiceHomeSeason=season;voiceHomeKey=key;
  const active=voiceDesk.contains(document.activeElement)?document.activeElement.closest('[data-news-article],[data-life-press],[data-voice-review]'):null,focus=active?{...active.dataset}:null;
  voiceDesk.innerHTML='<header class="voice-desk-heading"><b>기사가 보는 우리 · 기자의 질문</b><span>가상 언론 · 기록 기반</span></header><div class="voice-reviews">'+MediaRoom.read(season).map(a=>voiceArticleMarkup(a,true)).join('')+'</div>'+voiceInterviewMarkup(question,true);if(focus){const selector=focus.newsArticle?'[data-news-article="'+focus.newsArticle+'"]':focus.voiceReview?'[data-voice-review="'+focus.voiceReview+'"]':focus.lifePress?'[data-life-press="'+focus.lifePress+'"][data-life-answer="'+focus.lifeAnswer+'"]':null;if(selector)voiceDesk.querySelector(selector)?.focus({preventScroll:true});}requestAnimationFrame(fitVoiceArticles);
@@ -40,3 +40,5 @@ window.addEventListener('resize',()=>{renderVoiceHome();if($('club-story-dialog'
 // The section is rendered before it is mounted and shown. Fit the final dialog
 // at its actual size before the first paint, including Android's short viewport.
 if(typeof MutationObserver!=='undefined')new MutationObserver(()=>{if(managementDialog.open)fitVoiceArticles();}).observe(managementDialog,{attributes:true,attributeFilter:['open']});
+
+if(typeof ResizeObserver!=='undefined'&&$('mobile-command-center'))new ResizeObserver(()=>ClubArt.fitDrama?.($('mobile-command-center'))).observe($('mobile-command-center'));

@@ -28,10 +28,11 @@
  function drama(kind='locker',ending=false){const name=Object.hasOwn(dramas,kind)?kind:'locker',[i,label]=dramas[name];return '<div class="drama-art'+(ending===true?' drama-ending-art':'')+'" role="img" aria-label="'+esc(ending===true?resolutionLabels[name]:label)+' · 창작 장면 일러스트" data-drama-scene="'+name+'" style="--drama-x:'+(i%2)*100+'%;--drama-y:'+Math.floor(i/2)*100+'%"></div>';}
  function fitDrama(scope=root.document){
   if(!scope?.querySelectorAll)return 0;let fitted=0;
-  for(const node of scope.querySelectorAll('.drama-art,.memory-art,.story-art[data-story-scene],.club-art')){
+  const fit=(node,i,cols,rows,ratio)=>{const r=node.getBoundingClientRect();if(r.width<=0||r.height<=0)return false;const w=Math.max(r.width,r.height*ratio),h=w/ratio;node.style.backgroundSize=(w*cols)+'px '+(h*rows)+'px';node.style.backgroundPosition=(-(i%cols)*w-(w-r.width)/2)+'px '+(-Math.floor(i/cols)*h-(h-r.height)/2)+'px';return true;};
+  for(const node of scope.querySelectorAll('.drama-art,.memory-art,.story-art[data-story-scene],.club-art,.club-growth-picture')){
+   if(node.classList?.contains('club-growth-picture')){const x=parseFloat(node.style.getPropertyValue('--growth-x'))/50,y=parseFloat(node.style.getPropertyValue('--growth-y'))/100;if(Number.isInteger(x)&&x>=0&&x<=2&&Number.isInteger(y)&&y>=0&&y<=1&&fit(node,y*3+x,3,2,16/9))fitted++;continue;}
    const sets=[[node.dataset.dramaScene,dramas,2,2,1.5],[node.dataset.memoryScene,memories,2,3,2.25],[node.dataset.storyScene,storyScenes,3,2,16/9],[node.dataset.momentScene,moments,2,2,1672/941],[node.dataset.deadballScene,deadballs,2,2,1.5],[node.dataset.clubScene,scenes,3,2,16/9]],set=sets.find(([key,items])=>Object.hasOwn(items,key));if(!set)continue;
-   const [key,items]=set,r=node.getBoundingClientRect();if(r.width<=0||r.height<=0)continue;const promotion=items===scenes&&key==='promotion',i=promotion?0:items[key][0],cols=promotion?1:set[2],rows=promotion?1:set[3],ratio=promotion?1672/941:set[4],w=Math.max(r.width,r.height*ratio),h=w/ratio;
-   node.style.backgroundSize=(w*cols)+'px '+(h*rows)+'px';node.style.backgroundPosition=(-(i%cols)*w-(w-r.width)/2)+'px '+(-Math.floor(i/cols)*h-(h-r.height)/2)+'px';fitted++;
+   const [key,items]=set,promotion=items===scenes&&key==='promotion';if(fit(node,promotion?0:items[key][0],promotion?1:set[2],promotion?1:set[3],promotion?1672/941:set[4]))fitted++;
   }
   return fitted;
  }

@@ -1,4 +1,4 @@
-self.WIN_AGAIN_CACHE_REVISION = "5f2f4a5ddd00";
+self.WIN_AGAIN_CACHE_REVISION = "220069fce784";
 self.WIN_AGAIN_ASSETS = [
   "./style.css?v=22",
   "./coach-guide.css?v=22",

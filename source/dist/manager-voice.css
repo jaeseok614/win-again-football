@@ -98,3 +98,20 @@
 @media(orientation:landscape) and (max-height:300px){#club-press-desk{grid-template-rows:10px minmax(0,1fr) 72px}#club-press-desk .voice-article small{display:none}#club-press-desk .voice-article{padding:2px}#club-press-desk .voice-interview{padding:2px}#club-press-desk .voice-interview h3{font-size:7px;line-height:8px}}
 
 @media(orientation:landscape){body.management-view #mobile-command-center{align-self:stretch;height:100%;box-sizing:border-box}}
+
+/* At the minimum landscape height, keep the complete dashboard and 44px actions; the decorative stadium has no spare row. */
+@media(orientation:landscape) and (max-height:280px){
+ body.management-view #club-pane .mobile-command-card{padding:2px;gap:1px;grid-template-rows:12px 20px 8px 44px}
+ body.management-view #club-pane .mobile-command-card>.club-growth{display:none!important}
+ body.management-view #club-pane .mobile-command-card>.mobile-command-top{grid-row:1!important}
+ body.management-view #club-pane .mobile-command-top>div>span{display:none}
+ body.management-view #club-pane .mobile-command-top strong{font-size:8px;line-height:10px}
+ body.management-view #club-pane .mobile-command-card>.mobile-kpis{grid-row:2!important;grid-template-columns:.6fr .6fr 1.6fr 1fr;gap:2px}
+ body.management-view #club-pane .mobile-kpis span,body.management-view #club-pane .mobile-kpis small{font-size:6px;line-height:7px}
+ body.management-view #club-pane .mobile-kpis b{font-size:10px;line-height:12px}
+ body.management-view #club-pane .mobile-kpis>div:nth-child(3) b{font-size:8px;line-height:12px}
+ body.management-view #club-pane .mobile-command-card>.mobile-next{grid-row:3!important;font-size:6px;line-height:8px}
+ body.management-view #club-pane .mobile-next b{font-size:7px;line-height:8px}
+ body.management-view #club-pane .mobile-next small{display:none}
+ body.management-view #club-pane .mobile-command-card>.mobile-command-actions{grid-row:4!important}
+}
