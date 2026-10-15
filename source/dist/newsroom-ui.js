@@ -7,7 +7,7 @@ function openNewsArticle(key,opener=document.activeElement){
  pauseForPlanning();articleReturn=opener;articleSnapshot=item;
  articleDialog.innerHTML='<header><div><small>'+escapeText(item.outlet+' · '+item.tag)+'</small><h2 id="news-article-title">'+escapeText(item.headline)+'</h2></div><button type="button" id="news-article-close">닫기</button></header><figure>'+newsroomArt(item.art)+'<figcaption>구단 현장 일러스트 · '+item.year+'시즌</figcaption></figure><section class="news-article-copy" aria-label="기사 전문"><p class="news-article-fact">'+escapeText(item.fact)+'</p>'+item.paragraphs.map(p=>'<p>'+escapeText(p)+'</p>').join('')+'<small>게임 속 가상 언론 · 기록을 바탕으로 작성한 기사</small></section><footer><span>전체 기사 '+item.paragraphs.length+'문단</span><button type="button" id="news-article-return">요약으로 돌아가기</button></footer>';
  const close=()=>articleDialog.close();$('news-article-close').onclick=close;$('news-article-return').onclick=close;
- if(!articleDialog.open)articleDialog.showModal();$('news-article-close').focus({preventScroll:true});return true;
+ if(!articleDialog.open)articleDialog.showModal();ClubArt.fitDrama?.(articleDialog);$('news-article-close').focus({preventScroll:true});return true;
 }
 articleDialog.addEventListener('close',()=>{articleSnapshot=null;if(articleReturn?.isConnected)articleReturn.focus({preventScroll:true});articleReturn=null;});
 voiceArticleMarkup=function(item,brief=false){
@@ -21,3 +21,5 @@ const newsroomCentreRender=renderVoicePressCentre;renderVoicePressCentre=functio
 };
 document.addEventListener('click',e=>{const card=e.target.closest('[data-news-article]');if(card){e.preventDefault();openNewsArticle(card.dataset.newsArticle,card);}});
 document.addEventListener('keydown',e=>{const card=e.target.closest('.newsroom-summary[data-news-article]');if(card&&['Enter',' '].includes(e.key)){e.preventDefault();openNewsArticle(card.dataset.newsArticle,card);}});
+
+window.addEventListener('resize',()=>{if(articleDialog.open)ClubArt.fitDrama?.(articleDialog);});

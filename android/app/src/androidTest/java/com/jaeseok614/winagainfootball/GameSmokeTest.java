@@ -186,6 +186,8 @@ public final class GameSmokeTest {
         awaitTrue(scenario,"(()=>{const element=document.querySelector("+quotedSelector+");if(!element)return false;const r=element.getBoundingClientRect();return r.width>0&&r.height>0;})()");
         evaluate(scenario, "document.querySelector(" + quotedSelector + ").scrollIntoView({block:'center',behavior:'instant'});true");
         awaitWebViewFrame(scenario); awaitAppWindowFocus(scenario);
+        assertEquals("A physical touch must hit the visible control, not an overlying dialog: " + selector, "true", evaluate(scenario,
+            "(()=>{const e=document.querySelector("+quotedSelector+"),r=e?.getBoundingClientRect();if(!r)return false;const top=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return !!top&&(top===e||e.contains(top));})()"));
         String pointJson = "null";
         // A DOM node can be replaced while the software-rendered frame commits.
         // Reacquire the actual visible element; do not retry or simulate a click.
@@ -442,7 +444,7 @@ public final class GameSmokeTest {
             assertEquals("true", evaluate(scenario, "getComputedStyle(document.getElementById('club-life-panel')).display==='none'&&document.querySelectorAll('#club-press-desk .voice-article').length===3&&!!document.querySelector('#club-press-desk .voice-interview')"));
             assertEquals("New stadium illustration must be visible on the default home", "true", evaluate(scenario,
                 "(()=>{const art=document.querySelector('#mobile-command-center .club-growth-picture');return !!art&&art.getBoundingClientRect().width>0&&getComputedStyle(art).backgroundImage.includes('data:image/webp');})()"));
-            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset,ClubArt.storyAsset,ClubArt.momentAsset,ClubArt.deadballAsset,ClubArt.memoryAsset,ClubArt.voiceAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048&&widths[5]===2048&&widths[6]===1672&&widths[7]===960&&widths[8]===1536&&widths[9]===768).catch(()=>window.newArtDecoded=false);return true;})()");
+            evaluate(scenario, "(()=>{window.newArtDecoded=false;Promise.all([Portraits.expandedAsset,ClubArt.asset,ClubArt.promotionAsset,Portraits.extraAsset,ClubGrowth.asset,ClubArt.storyAsset,ClubArt.momentAsset,ClubArt.deadballAsset,ClubArt.memoryAsset,ClubArt.voiceAsset,ClubArt.dramaAsset].map(src=>{const image=new Image();image.src=src;return image.decode().then(()=>image.naturalWidth);})).then(widths=>window.newArtDecoded=widths[0]===1254&&widths[1]===2048&&widths[2]===1672&&widths[3]===1254&&widths[4]===2048&&widths[5]===2048&&widths[6]===1672&&widths[7]===960&&widths[8]===1536&&widths[9]===768&&widths[10]===1536).catch(()=>window.newArtDecoded=false);return true;})()");
             awaitTrue(scenario, "window.newArtDecoded===true");
             assertEquals("Opponent lineup must retain eleven distinct faces in the expanded atlas", "true", evaluate(scenario,
                 "(()=>{const rows=Opposition.roster(S.opponentFor(season)),indices=rows.map(p=>Portraits.index(p));return new Set(indices).size===11&&rows.every(p=>Portraits.html(p).includes('--portrait-size:800% 800%'));})()"));
@@ -471,6 +473,9 @@ public final class GameSmokeTest {
             assertEquals("Reading every story page must preserve the campaign", storyBefore, evaluate(scenario, "JSON.stringify(season)"));
             screenshot(scenario, "android-story-chapter.png");
             tapWebElement(scenario, "#club-story-dialog footer [data-story-close]");
+            awaitTrue(scenario, "!document.getElementById('club-story-dialog').open&&document.getElementById('manager-notebook').open&&!!notebookRows&&notebookTab==='complete'");
+            assertEquals("Returning to the same notebook does not answer or change the campaign", storyBefore, evaluate(scenario,"JSON.stringify(season)"));
+            tapWebElement(scenario,"#manager-notebook [data-notebook-close]");
             awaitTrue(scenario, "!document.getElementById('club-story-dialog').open&&!document.getElementById('manager-notebook').open");
 
             tapWebElement(scenario, "#mobile-match-action");
@@ -853,6 +858,11 @@ public final class GameSmokeTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
             evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(614,{suspensions:true});for(let i=0;i<3;i++){while(season.match.phase!=='full'){if(!F.running(season.match))F.begin(season.match);F.finishSegment(season.match);}season=S.settle(season);}state=season.match;voiceHomeAnswered=null;voiceHomeKey='';setView('club');return true;})()");
+            awaitTrue(scenario,"document.getElementById('club-story-dialog').open&&!clubStoryRequired");
+            String untouched=evaluate(scenario,"JSON.stringify(season)");
+            tapWebElement(scenario,"#club-story-dialog footer [data-story-close]");
+            awaitTrue(scenario,"!document.getElementById('club-story-dialog').open&&!document.getElementById('manager-notebook').open");
+            assertEquals("Closing the automatically delivered story is not an answer",untouched,evaluate(scenario,"JSON.stringify(season)"));
             tapWebElement(scenario, "#club-press-desk [data-life-press='after'][data-life-answer='protect']");
             awaitTrue(scenario,"!!document.querySelector('#club-press-desk [data-voice-review=after] .voice-saved')");
             assertEquals("The post-match answer and journalist reaction stay on home", "true", evaluate(scenario,

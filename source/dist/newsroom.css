@@ -25,3 +25,7 @@
 #news-article-dialog>footer{grid-column:1/-1;grid-row:3;display:flex;justify-content:space-between;align-items:center;padding:0;margin:0;border:0}
 #news-article-dialog>footer span{font-size:9px;line-height:11px}
 @media(max-height:350px){#news-article-dialog h2{font-size:13px;line-height:16px}.news-article-copy p{font-size:11px;line-height:1.45;margin-bottom:8px}.newsroom-thumb{height:22px}#club-press-desk .newsroom-summary p{font-size:7px;line-height:8px}}
+
+/* Each thumbnail owns its artwork; scene overlays must never cover article text. */
+.newsroom-thumb>.story-art,#news-article-dialog>figure>.story-art{position:relative!important;inset:auto!important;z-index:auto!important;transform:none!important;max-width:none}
+.newsroom-thumb .story-art:after,#news-article-dialog>figure>.story-art:after{display:none}
