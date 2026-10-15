@@ -7,7 +7,7 @@ assert.ok(Number.isInteger(seed)&&seed>=0&&Number.isInteger(years)&&years>=1&&ye
 fs.mkdirSync(output,{recursive:true});const start=performance.now(),report={seed,rebirth,rule:9,requestedSeasons:years,games:[],checks:0,arcs:[],pressTopics:[],seasons:[],readMs:[]};let s=S.create(seed,{suspensions:true,rebirth}),played=0,topics=new Set();
 const check=()=>{assert.deepEqual(S.restore(JSON.parse(JSON.stringify(s))),s);report.checks++;};
 const read=()=>{const before=JSON.stringify(s),t=performance.now(),arcs=Serial.read(s);Story.read(s);const status=Life.pressStatus(s);for(const q of [status.before,status.after])if(q)topics.add(Voice.press(s,q).context.topic);for(const style of ['broadcast','analysis','players'])News.get(s,'review:'+style);assert.equal(JSON.stringify(s),before);report.readMs.push(performance.now()-t);report.checks++;return arcs;};
-function answerStories(){for(const e of Serial.events(s)){const id=s.year+':'+e.key,d=Story.scene(s,id);if(d.step===0)Story.choose(s,id,0,'practical',Story.fingerprint(s));if(Story.scene(s,id).step===1)Story.choose(s,id,1,'honest',Story.fingerprint(s));}}
+function answerStories(){for(const e of Serial.events(s)){const id=s.year+':'+e.key,d=Story.scene(s,id);if(d.readOnly)continue;if(d.step===0)Story.choose(s,id,0,'practical',Story.fingerprint(s));if(Story.scene(s,id).step===1)Story.choose(s,id,1,'honest',Story.fingerprint(s));}}
 while(s.year<=years&&played<limit){
  if(rebirth){const r=R.read(s);if(r.status!=='active'){report.end={status:r.status,round:s.round,year:s.year};break;}if(r.pending)s=R.choose(s,'steady');}
  if(S.ready(s)){

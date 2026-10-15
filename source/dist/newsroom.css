@@ -29,3 +29,7 @@
 /* Each thumbnail owns its artwork; scene overlays must never cover article text. */
 .newsroom-thumb>.story-art,#news-article-dialog>figure>.story-art{position:relative!important;inset:auto!important;z-index:auto!important;transform:none!important;max-width:none}
 .newsroom-thumb .story-art:after,#news-article-dialog>figure>.story-art:after{display:none}
+
+#news-article-dialog button{background:#213c42;color:#eff3e8;border:1px solid #5a7779;border-radius:6px;font-weight:600}
+#news-article-dialog #news-article-return{background:#2e4435;color:#e7f1cc;border-color:#8caf7b}
+#news-article-dialog button:focus-visible{outline:2px solid #d4f39e;outline-offset:-3px}

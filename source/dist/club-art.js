@@ -28,8 +28,13 @@
  function drama(kind='locker',ending=false){const name=Object.hasOwn(dramas,kind)?kind:'locker',[i,label]=dramas[name];return '<div class="drama-art'+(ending===true?' drama-ending-art':'')+'" role="img" aria-label="'+esc(ending===true?resolutionLabels[name]:label)+' · 창작 장면 일러스트" data-drama-scene="'+name+'" style="--drama-x:'+(i%2)*100+'%;--drama-y:'+Math.floor(i/2)*100+'%"></div>';}
  function fitDrama(scope=root.document){
   if(!scope?.querySelectorAll)return 0;let fitted=0;
-  for(const node of scope.querySelectorAll('.drama-art,.memory-art,.story-art[data-story-scene]')){const drama=Object.hasOwn(dramas,node.dataset.dramaScene),memory=Object.hasOwn(memories,node.dataset.memoryScene),story=Object.hasOwn(storyScenes,node.dataset.storyScene);if(!drama&&!memory&&!story)continue;const r=node.getBoundingClientRect();if(r.width<=0||r.height<=0)continue;const i=drama?dramas[node.dataset.dramaScene][0]:memory?memories[node.dataset.memoryScene][0]:storyScenes[node.dataset.storyScene][0],ratio=drama?1.5:memory?2.25:16/9,cols=story?3:2,rows=memory?3:2,w=Math.max(r.width,r.height*ratio),h=w/ratio;node.style.backgroundSize=(w*cols)+'px '+(h*rows)+'px';node.style.backgroundPosition=(-(i%cols)*w-(w-r.width)/2)+'px '+(-Math.floor(i/cols)*h-(h-r.height)/2)+'px';fitted++;}
+  for(const node of scope.querySelectorAll('.drama-art,.memory-art,.story-art[data-story-scene],.club-art')){
+   const sets=[[node.dataset.dramaScene,dramas,2,2,1.5],[node.dataset.memoryScene,memories,2,3,2.25],[node.dataset.storyScene,storyScenes,3,2,16/9],[node.dataset.momentScene,moments,2,2,1672/941],[node.dataset.deadballScene,deadballs,2,2,1.5],[node.dataset.clubScene,scenes,3,2,16/9]],set=sets.find(([key,items])=>Object.hasOwn(items,key));if(!set)continue;
+   const [key,items]=set,r=node.getBoundingClientRect();if(r.width<=0||r.height<=0)continue;const promotion=items===scenes&&key==='promotion',i=promotion?0:items[key][0],cols=promotion?1:set[2],rows=promotion?1:set[3],ratio=promotion?1672/941:set[4],w=Math.max(r.width,r.height*ratio),h=w/ratio;
+   node.style.backgroundSize=(w*cols)+'px '+(h*rows)+'px';node.style.backgroundPosition=(-(i%cols)*w-(w-r.width)/2)+'px '+(-Math.floor(i/cols)*h-(h-r.height)/2)+'px';fitted++;
+  }
   return fitted;
  }
+
  const api={fitDrama,resolutionAsset,dramaAsset,dramas:Object.freeze(dramas),drama,voiceAsset,voices:Object.freeze(voices),voice,memoryAsset,memories:Object.freeze(memories),memory,managerAsset,manager,deadballAsset,deadballs,deadball,asset,promotionAsset,storyAsset,momentAsset,moments,seasonScene,scenes:Object.freeze(scenes),storyScenes:Object.freeze(storyScenes),html,story,moment};root.ClubArt=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

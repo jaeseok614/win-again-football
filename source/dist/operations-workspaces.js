@@ -31,6 +31,7 @@ function prepareOperationsPage(){
  if(operationsSection==='club-overview'){const hero=panel.querySelector('.club-hero'),metrics=panel.querySelector('.season-metrics');if(hero&&!hero.querySelector('.club-growth'))hero.querySelector('.club-identity').insertAdjacentHTML('beforebegin',ClubGrowth.html(season.league.division));if(metrics&&!metrics.querySelector('[data-ops-club-fact]'))metrics.insertAdjacentHTML('beforeend','<div data-ops-club-fact><span>현재 구단 자금</span><strong>'+(season.finance.balance<0?'−':'')+moneyLabel(season.finance.balance)+'</strong></div><div data-ops-club-fact><span>출전 가능한 선수</span><strong>'+Object.values(season.squad).filter(p=>F.isAvailable(state?.players[p.id]||p)).length+' / 18</strong></div>');}
  if(operationsSection==='finance-plan-panel')panel.querySelector('.finance-plan-collapse').open=true;
  if(operationsSection==='suspensions-panel')panel.querySelectorAll('details').forEach(d=>d.open=true);
+ ClubArt.fitDrama?.(panel);
 }
 const operationsOpenOriginal=openManagementPanel;
 openManagementPanel=function(id,opener=document.activeElement,options={}){
