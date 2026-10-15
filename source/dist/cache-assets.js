@@ -1,4 +1,4 @@
-self.WIN_AGAIN_CACHE_REVISION = "5caab695c392";
+self.WIN_AGAIN_CACHE_REVISION = "5d082c9a8185";
 self.WIN_AGAIN_ASSETS = [
   "./style.css?v=22",
   "./coach-guide.css?v=22",
@@ -240,5 +240,6 @@ self.WIN_AGAIN_ASSETS = [
   "./assets/manager-arrival-v1.webp?v=1",
   "./assets/club-memory-v1.webp?v=1",
   "./assets/club-voices-v1.webp?v=1",
-  "./assets/touchline-drama-v1.webp?v=1"
+  "./assets/touchline-drama-v1.webp?v=1",
+  "./assets/touchline-resolution-v1.webp?v=1"
 ];

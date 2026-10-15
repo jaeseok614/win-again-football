@@ -30,7 +30,7 @@
 
 기자실은 기존 질문과 답변 문장을 유지하면서 추가 질문을 붙인다. 최근 리그 3연승/3연패, 재대결, 퇴장, 후보 득점, 멀티골, 무실점과 승부차기를 실제 확정 기록으로 구분한다. 과거 질문의 시점 뒤에 일어난 결과는 질문 근거에 넣지 않는다. 새 시즌 첫 기사에 지난 시즌 개인 기록을 현재 기록처럼 붙이지 않는다. 기존 구단 기사 본문과 저장된 기자 답변의 의미는 보존한다.
 
-기자실의 기사 세 편·기록 필터·추가 질문·답변 버튼을 함께 배치한다. 화면에 마운트되기 전의 숨겨진 크기로 글자를 보정하지 않도록, dialog의 실제 열림 상태에서도 다시 측정한다. 전문 기사는 명시적인 긴 글 읽기 예외로 내부 스크롤을 쓰고 제목·닫기·복귀는 고정한다. 기사 삽화의 장면 오버레이가 본문을 덮던 문제와 전문에서 그림이 음수 z-index 뒤로 숨던 문제를 실제 안드로이드 캡처로 찾아 수정했다. 세 아틀라스는 각 원본 장면 비율(3:2 / 9:4 / 16:9)을 유지해 패널 안에 맞추며 이웃 장면이 섞이지 않는다.
+기자실의 기사 세 편·기록 필터·추가 질문·답변 버튼을 함께 배치한다. 화면에 마운트되기 전의 숨겨진 크기로 글자를 보정하지 않도록, dialog의 실제 열림 상태에서도 다시 측정한다. 전문 기사는 명시적인 긴 글 읽기 예외로 내부 스크롤을 쓰고 제목·닫기·복귀는 고정한다. 기사 삽화의 장면 오버레이가 본문을 덮던 문제와 전문에서 그림이 음수 z-index 뒤로 숨던 문제를 실제 안드로이드 캡처로 찾아 수정했다. 이야기·기억·현장 아틀라스는 각 원본 장면 비율(3:2 / 9:4 / 16:9)을 유지해 패널 안에 맞추며 이웃 장면이 섞이지 않는다.
 
 ## 원본 삽화와 패키징
 
@@ -40,7 +40,15 @@
 - 참조: 기존 창작 `manager-arrival-v1.webp`, `club-voices-v1.webp`의 감독·구단주·코치·팬 동일 인물.
 - 생성: 내장 imagegen. 투명 배경 없음. 원본은 ignored QA 작업 폴더에도 보관했다.
 - 변환: RGB WebP quality84/method6, 244,512바이트. 재도색이나 구도 변경 없이 배포 형식만 압축했다.
-- 아틀라스 한 장을 CSS로 나누어 쓰고 PWA/Android에 한 번만 포함한다. 경기 틱이나 네트워크 요청은 늘리지 않는다.
+- 첫 면담 아틀라스와 마무리 아틀라스를 각각 CSS로 나누어 쓰고 PWA/Android에 한 번씩만 포함한다. 경기 틱이나 네트워크 요청은 늘리지 않는다.
+
+## 결말의 원본 삽화
+
+- `source/dist/assets/touchline-resolution-v1.webp`: 1536×1024, 2×2/각768×512, RGB WebP quality84/method6, **259,776바이트**.
+- 원본 `C:/Users/황재석/.codex/generated_images/01a0f9b0-5ed6-7323-9be3-fd40b239f4dd/exec-c03493f5-b0e5-4dd6-96d1-0c6325e253c9.png`. 기존 첫 면담 아틀라스를 같은 창작 인물의 참조로 사용한 내장 imagegen 결과다.
+- 장갑을 내려놓은 골키퍼, 자기 상태를 먼저 말하는 선수, 판단 기준을 남기는 구단주, 새 팬에게 자리를 내주는 팬 대표. 승리·치료·선발·투자를 보장하는 그림은 쓰지 않는다. 3화와 완료한 연속 사건 카드에서만 선택한다.
+- 셸의 추가 base64 346,368바이트와 소규모 선택 코드를 실측해 검사 상한을 5,350,000→5,700,000바이트로 제한했다. 얼굴·장면 자산의 중복 금지, 네트워크 없는 실행과 Android 단일 포함 검사는 유지한다.
+- 정규 일정이 끝났지만 마지막 경기 세부 기록이 부분 기록인 경우에도, 존재하지 않는 다음 리그 경기를 기다리라는 안내를 하지 않는다. 후속 대화 개방 조건과 확정 기록만 읽는 조건은 유지한다.
 
 ## 검증 진행
 
@@ -54,4 +62,10 @@
 
 ```text
 Use case: illustration-story. Asset type: one production game background atlas, exactly a seamless 2 by 2 grid of four equal rectangular narrative panels, total wide 3:2 composition, each quadrant its own wide 3:2 illustration, no border, no gutters, no text, no speech bubbles, no lettering, no logos. Reference image 1 establishes our ORIGINAL fictional Korean football manager identity: Korean man about 30, tousled short black hair, navy zip tracksuit with cream piping, serious but humane face. Reference image 2 establishes the existing fictional cast: top-right a middle-aged brown-haired female club owner, bottom-left a Black middle-aged assistant coach with short salt-and-pepper beard, bottom-right an elderly local fan in a flat cap and navy cream scarf. This is a NEW atlas, do not overwrite the reference composition. Preserve these original identities across the four panels. Cinematic hand-painted Korean sports graphic-novel presentation, clear readable silhouettes and expressive acting, natural anatomy, subdued navy/forest green/cream palette, warm practical light, professional release-quality illustration. TOP LEFT: cramped lower-league locker room after training, manager stands quietly with the assistant coach, a benched player seen mostly from behind clenches a folded bib; human tension, no fight. TOP RIGHT: quiet medical room, manager sits beside an anonymous injured player viewed from the back with one knee wrapped, an empty pair of football boots in foreground; patient, restrained emotion. BOTTOM LEFT: tiny football club office at night, the female owner places a plain ledger and contract on the desk opposite the manager, a clear difference between authority and mutual responsibility; no readable writing on papers. BOTTOM RIGHT: rain-soaked away-ground bus bay at dawn, manager and elderly scarfed supporter face one another beside the bus, assistant coach in background, small English lower-league stands; defiant hope after a difficult away trip. Each panel must work as a standalone game scene cropped from that quadrant. Preserve honest low-budget club textures. Do not use existing comic characters, artists' signature styles, real team marks or real football stars.
+```
+
+## 마무리 삽화에 보낸 정확한 프롬프트
+
+```text
+Use case: illustration-story. Create ONE new production game atlas, exactly a seamless 2 by 2 grid of four equal narrative illustrations, total 3:2 landscape composition, no borders or gutters, no text, speech bubbles, numbers, lettering, logos or real club marks. Reference image is our ORIGINAL fictional cast and established visual world; preserve the same fictional Korean manager (about 30, tousled short black hair, navy tracksuit with cream piping), the Black middle-aged assistant coach, the brown-haired middle-aged female club owner and the elderly bearded fan with a flat cap and navy/cream scarf. This is a NEW set of final-episode illustrations, not a repaint of the reference. Each quadrant must be an independently composed wide 3:2 panel with its important human interaction in the central two-thirds so it survives a vertical crop. Cinematic natural painted sports graphic-novel presentation consistent with the reference, restrained expressions, convincing anatomy and hands, richly observed small lower-league club textures, navy/forest/cream palette, warmer and more open light than the tense first meetings. TOP LEFT: quiet locker room after a candid meeting; manager and anonymous goalkeeper viewed from behind sit at the same level, gloves set on the bench between them, assistant coach in the background, the manager listening rather than giving a speech, relief without a promised starting place. TOP RIGHT: a recovery-room doorway after honest conversation; anonymous adult player viewed from the back, carrying plain boots, pauses to speak openly to the manager, both relaxed but thoughtful, no injury or treatment claim, no victory celebration. BOTTOM LEFT: modest club office in morning light; same female owner closes a ledger while manager places a plain unmarked sheet beside it, mutual respect and accountability, no money changing hands, no trophies or guaranteed investment. BOTTOM RIGHT: small covered football stand on an ordinary overcast matchday; the same elderly supporter moves his folded scarf from an empty seat to welcome a new adult fan, manager and assistant stand nearby at the aisle, a small human sense of belonging, no victorious score or giant stadium. Keep every panel original and grounded. Do not imitate a named artist, existing comic character or famous football player. Render all four quadrants edge to edge.
 ```

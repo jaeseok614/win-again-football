@@ -97,7 +97,7 @@
   return out;
  }
  function read(s,year=s.year){
-  const rows=games(s,year),all=events(s,year),receipts=s.clubStory?.records||[],seasonComplete=rows.at(-1)?.round>=(root.Season?.roundCountForYear?.(s,year)||46),end=year!==s.year||!!(s.rebirth&&(root.Rebirth||(typeof require==='function'?require('./rebirth.js'):null))?.read(s)?.status!=='active');
+  const rows=games(s,year),all=events(s,year),receipts=s.clubStory?.records||[],seasonComplete=Math.max(year===s.year?s.round:0,rows.at(-1)?.round||0)>=(root.Season?.roundCountForYear?.(s,year)||46),end=year!==s.year||!!(s.rebirth&&(root.Rebirth||(typeof require==='function'?require('./rebirth.js'):null))?.read(s)?.status!=='active');
   return definitions.flatMap(def=>{const stages=all.filter(e=>e.serial.id===def.id);if(!stages.length)return [];const latest=stages.at(-1),done=receipts.filter(r=>r.event===year+':'+latest.key&&r.step===1)[0],after=done?rows.filter(g=>g.round>done.atRound).slice(0,2):[];
    const actor=latest.actor,departed=!!actor&&year===s.year&&!Object.values(s.squad||{}).some(p=>p.identity===actor),finished=latest.serial.episode===3&&!!done;
    return [{id:def.id,title:def.title,drama:def.drama,year,actor:actor||def.relation,finished,departed,waiting:!finished&&!!done,remaining:done?Math.max(0,2-after.length):null,readOnly:end,status:finished?'함께 남긴 세 장면':end?'지난 기록 · 읽기 전용':departed?'선수단을 떠난 인물의 기록':done?(seasonComplete?'이 시즌에 남은 이야기':'다음 리그 '+Math.max(0,2-after.length)+'경기 결과를 기다리는 중'):receipts.some(r=>r.event===year+':'+latest.key)?'대화 이어가기':'새 장면 도착',stages:stages.map(e=>({event:year+':'+e.key,episode:e.serial.episode,title:e.title,round:e.round,step:receipts.filter(r=>r.event===year+':'+e.key).length})),facts:latest.serial.facts}];});
