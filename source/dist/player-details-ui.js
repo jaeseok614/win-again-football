@@ -10,6 +10,10 @@ function playerIdentityMarkup(d){
  const esc=playerUiText,bio=[['나이',d.age+'세'],['키',d.heightCm===null?'미확인':d.heightCm+' cm'],['국적',d.scouting?.country||'미등록'],['주급',moneyLabel(d.wage)],['기준 이적료',moneyLabel(d.fee)],['성장 한계',d.current.potential+' / 100']];
  return '<section class="player-bio" aria-label="선수 기본 정보"><dl>'+bio.map(([k,v])=>'<div><dt>'+k+'</dt><dd>'+esc(v)+'</dd></div>').join('')+'</dl><div class="player-footprint"><b>주발 '+esc(d.feet.label)+'</b><span>왼발 '+d.feet.left+'/5 · 오른발 '+d.feet.right+'/5</span></div><div class="player-current-state"><b data-detail-tone="'+detailTone(d.overall)+'">종합 '+d.overall+'</b><span>체력 '+(d.current.energy===null?'미확인':Math.round(d.current.energy))+' · 컨디션 '+esc(d.matchCondition.label)+(d.matchCondition.score===null?'':' '+d.matchCondition.score)+'</span><small>'+esc(d.condition.label)+(d.injury?' · '+esc(H.kindLabel(d.injury.kind)):'')+'</small></div><div class="player-preferred"><h3>선호 포지션</h3><ul>'+d.preferredPositions.map(code=>'<li><b>'+code+'</b><span>'+esc(d.positions.find(p=>p.code===code).label.replace('미드필더','중원').replace('윙포워드','윙').replace('수비수','수비'))+'</span></li>').join('')+'</ul></div></section>';
 }
+function playerRecentMarkup(d){
+ const r=d.recent,esc=playerUiText,rows=r?.matches||[],result={win:'승',draw:'무',loss:'패'};
+ return '<section class="player-recent-report"><h3>최근 출전 · 최대 5경기</h3><p class="player-rate-summary">이번 시즌 90분당 골 <b>'+(d.per90?d.per90.goals.toFixed(2):'—')+'</b> · 도움 <b>'+(d.per90?d.per90.assists.toFixed(2):'—')+'</b></p><table><thead><tr><th>대회 · 상대</th><th>출전</th><th>골</th><th>도움</th><th>팀 결과</th></tr></thead><tbody>'+rows.map(m=>'<tr><th>'+esc(m.year+'시즌 · '+m.competition)+'<small>'+esc(m.opponent)+'</small></th><td>'+m.minutes+'분</td><td>'+m.goals+'</td><td>'+m.assists+'</td><td data-form-result="'+m.outcome+'">'+result[m.outcome]+' '+m.score.join(':')+'</td></tr>').join('')+'</tbody></table>'+(!rows.length?'<p class="player-recent-empty">'+(d.owned?'확정된 출전 기록이 아직 없습니다.':'입단 전 경기 기록은 등록되지 않았습니다.')+'</p>':'')+'<p class="player-recent-note">최근: 이전 시즌·컵 포함 · 90분당: 이번 시즌 확정·추적 기록</p></section>';
+}
 function playerDetailMarkup(d){
  const p=d.owned?Object.values(season.squad).find(person=>person.identity===d.identity):F.identityProfile(d.identity);
  const r=d.records,g=d.development?.growth,experience=d.development?.experience;
@@ -19,7 +23,7 @@ function playerDetailMarkup(d){
  return `<div class="player-detail-content">
   <div class="detail-topline"><span class="eyebrow">${d.owned?'우리 선수':'스카우트 보고서'} / ${season.year} 시즌</span><button id="player-detail-close" class="detail-close" aria-label="선수 상세 닫기">닫기 <span aria-hidden="true">×</span></button></div>
   <div class="detail-hero">${Portraits.html(p,{size:'large'})}<div><span class="detail-nickname">${playerUiText(d.nickname)}</span><h2 id="player-detail-name">${playerUiText(d.name)}</h2><p>${playerUiText(detailRoles[d.pos])}${d.no!==null?' · #'+d.no:''}<span>${d.owned?(d.condition.starting?'현재 선발 명단':'우리 구단 등록 선수'):(d.source==='academy'?'발견한 유소년':'영입 시장 후보')}</span></p></div></div>
-  ${playerIdentityMarkup(d)}
+  ${playerIdentityMarkup(d)}${playerRecentMarkup(d)}
   <p id="player-detail-description" class="detail-intro">${playerUiText(d.tagline)}</p>
   <blockquote class="detail-quote">${playerUiText(PlayerCharacter.info(p).quote)}</blockquote>
   <div class="detail-summary"><div><span>${d.primaryLabel} · 현재 능력</span><strong>${d.current.primary}<small> / ${d.current.potential}</small></strong></div><div><span>남은 성장 여유</span><strong>${d.current.growthHeadroom}<small> 포인트</small></strong></div><div><span>현재 체력</span><strong class="${d.condition.status==='caution'?'detail-warning':''}">${d.current.energy===null?'—':detailNumber(d.current.energy)}<small>${d.current.energy===null?' 영입 전':' / 100'}</small></strong></div></div>

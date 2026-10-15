@@ -760,7 +760,7 @@ public final class GameSmokeTest {
             evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeGoalScene();matchCeremonyHold=false;ceremonyPending=null;managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;customPositions={};tacticalRoles={};setView('match');return true;})()");
             tapWebElement(scenario, "#primary");
             tapWebElement(scenario, "#ceremony-ready");
-            awaitTrue(scenario, "state.continuousSetup?.version===9 && state.continuous.tick>20");
+            awaitTrue(scenario, "state.continuousSetup?.version===10 && state.continuous.tick>20");
             assertEquals("The native live field uses the actual ball and all 22 names", "true", evaluate(scenario,
                 "(()=>{state.paused=true;drawField();return document.getElementById('match-names')._labels.length===22 && Math.hypot(lastMotionFrame.ball.x-F.continuousFrame(state).ball.x,lastMotionFrame.ball.y-F.continuousFrame(state).ball.y)<0.01 && document.documentElement.scrollHeight<=innerHeight+1;})()"));
             String replayProof = evaluate(scenario,
@@ -935,6 +935,38 @@ public final class GameSmokeTest {
             assertEquals(saved,evaluate(scenario,"JSON.stringify(season)"));
             screenshot(scenario,"android-contextual-press-article.png");
             scenario.onActivity(activity -> assertTrue("Contextual press generated JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
+    @Test public void physicalShapePreviewAndRecentAppearancesFitLandscape() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeGoalScene();matchCeremonyHold=false;ceremonyPending=null;managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;customPositions={};tacticalRoles={};setView('match');openMatchPopup('analysis');return true;})()");
+            awaitTrue(scenario, "document.querySelectorAll('[data-shape-player]').length===22&&document.querySelectorAll('[data-shape-name]').length===22");
+            String before = evaluate(scenario, "JSON.stringify(season)");
+            tapWebElement(scenario, "[data-tactics-preview=press]");
+            if ("true".equals(evaluate(scenario, "document.querySelector('[data-tactics-owner=theirs]').checkVisibility()"))) {
+                tapWebElement(scenario, "[data-tactics-owner=theirs]");
+                tapWebElement(scenario, "[data-tactics-zone=wide]");
+            } else {
+                evaluate(scenario, "(()=>{for(const [kind,value] of [['owner','theirs'],['zone','wide']]){const c=document.querySelector('[data-shape-filter='+kind+']');c.value=value;c.dispatchEvent(new Event('change'));}return true;})()");
+            }
+            assertEquals("Reading the actual solver must not write the campaign", before, evaluate(scenario, "JSON.stringify(season)"));
+            tapWebElement(scenario, ".shape-apply");
+            awaitTrue(scenario, "state.tactic==='press'&&state.phase==='prep'&&!state.continuousSetup");
+            tapWebElement(scenario, ".match-popup-header [data-match-popup-close]");
+            evaluate(scenario, "(()=>{const r=Opposition.preview(season);F.enableStoppage(state);F.enableContinuous(state,{opponentFormation:r.teams[1].formation,opponentPlayers:r.teams[1].players});F.begin(state);F.advanceContinuous(state,723);state.paused=true;render();openMatchPopup('analysis');return true;})()");
+            before = evaluate(scenario, "JSON.stringify(season)");
+            tapWebElement(scenario, "[data-shape-mode=current]");
+            awaitTrue(scenario, "teamShapeMode==='current'&&document.querySelectorAll('[data-shape-name]').length===22");
+            assertEquals(before, evaluate(scenario, "JSON.stringify(season)"));
+            assertEquals("The native report must keep all primary controls inside the viewport", "true", evaluate(scenario, "[...document.querySelectorAll('.team-shape-board button')].filter(e=>e.checkVisibility()).every(e=>{const r=e.getBoundingClientRect();return r.height>=43.9&&r.left>=0&&r.right<=innerWidth+1&&r.top>=0&&r.bottom<=innerHeight+1;})&&document.documentElement.scrollHeight<=innerHeight+1"));
+            screenshot(scenario, "android-physical-shape.png");
+            tapWebElement(scenario, ".match-popup-header [data-match-popup-close]");
+            evaluate(scenario, "(()=>{season=S.create(41);for(let i=0;i<6;i++){while(season.match.phase!=='full'){if(!F.running(season.match))F.begin(season.match);F.finishSegment(season.match);}season=S.settle(season);}state=season.match;setView('squad');openPlayerDetails('sp_f1');const c=document.querySelector('#player-detail-dialog .report-page-select');c.value='최근 출전';c.dispatchEvent(new Event('change'));return true;})()");
+            awaitTrue(scenario, "document.querySelectorAll('.player-recent-report tbody tr').length===5");
+            assertEquals("The new candidate portraits keep identity-specific cells", "true", evaluate(scenario, "MarketRoster.players.every((p,i)=>Portraits.index(p)===156+i&&Portraits.html(p).includes('data-portrait-atlas=\"4\"'))"));
+            screenshot(scenario, "android-player-recent.png");
         }
     }
 

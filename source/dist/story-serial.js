@@ -3,7 +3,7 @@
  const football=()=>root.Football||(typeof require==='function'?require('./engine.js'):null),own='brynwell';
  const firstChoices=['listen','bold','practical'],lastChoices=['commit','honest'];
  const definitions=[{id:'keeper',title:'골문 너머의 목소리',relation:'captain',speaker:'골키퍼',drama:'locker'},{id:'workload',title:'괜찮다는 말의 무게',relation:'captain',speaker:'선수',drama:'medical'},{id:'away',title:'돌아오는 버스의 불빛',relation:'fans',speaker:'팬 대표',drama:'away'},{id:'board',title:'작은 구단의 큰 장부',relation:'board',speaker:'구단주',drama:'office'}];
- const fullRecord=g=>g.statisticsOriginMinute===0&&(!g.unassignedGoals||Number.isInteger(g.continuousVersion)&&g.continuousVersion>=1&&g.continuousVersion<=9&&Array.isArray(g.ownGoals)&&g.ownGoals.length===g.unassignedGoals&&g.unassignedGoals<=g.score[0]);
+ const fullRecord=g=>g.statisticsOriginMinute===0&&(!g.unassignedGoals||Number.isInteger(g.continuousVersion)&&g.continuousVersion>=1&&g.continuousVersion<=10&&Array.isArray(g.ownGoals)&&g.ownGoals.length===g.unassignedGoals&&g.unassignedGoals<=g.score[0]);
  function games(s,year){return ((year===s.year?s.statistics?.records:s.statistics?.archive?.find(a=>a.year===year)?.records)||[]).filter(g=>g.competition==='league'&&fullRecord(g)).slice().sort((a,b)=>a.round-b.round);}
  const points=rows=>rows.reduce((n,g)=>n+(g.score[0]>g.score[1]?3:g.score[0]===g.score[1]?1:0),0),goals=(rows,team)=>rows.reduce((n,g)=>n+g.score[team],0),minutes=(rows,actor)=>rows.reduce((n,g)=>n+(g.players.find(p=>p.identity===actor)?.minutes||0),0);
  const particle=(name,closed,open)=>{const code=String(name).codePointAt(String(name).length-1);return name+(code>=0xac00&&code<=0xd7a3&&(code-0xac00)%28?closed:open);};

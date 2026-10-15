@@ -54,8 +54,11 @@
   const completed=matchesThrough(s,s.round);let minutes=0;for(const identity of identities){const profile=F.identityProfile(identity),base=c.baselines[identity],played=c.minutes[identity];if(!profile||profile.identity!==identity||!positions.includes(profile.pos)||!Number.isInteger(base)||base<0||base>99||!Number.isInteger(played)||played<0||played>completed*103)fail();minutes+=played;}
   const receiptIds=new Set(entries.filter(e=>['match','cup','europe'].includes(e.type)).map(e=>e.id));
   const tracked=(s.statistics?.records||[]).filter(r=>receiptIds.has(r.id));
-  const lost=tracked.reduce((sum,r)=>sum+(r.cards||[]).filter(e=>e.team===0&&e.card==='red').reduce((n,e)=>n+F.clockLimits(r).full-e.minute,0),0);
-  if(minutes!==completed*990+tracked.reduce((n,r)=>n+(F.clockLimits(r).full-90)*11,0)-lost)fail();
+  // Continuous appearances are validated from exact played ticks. Two players
+  // sharing a fractional minute may each round up; the old whole-minute total
+  // rejects a legitimate substitution between clock-minute boundaries.
+  const adjustment=tracked.reduce((sum,r)=>sum+(r.continuousVersion?r.players.reduce((n,p)=>n+p.minutes,0)-990:(F.clockLimits(r).full-90)*11-(r.cards||[]).filter(e=>e.team===0&&e.card==='red').reduce((n,e)=>n+F.clockLimits(r).full-e.minute,0)),0);
+  if(minutes!==completed*990+adjustment)fail();
   // When every career match is tracked, check each identity, including sold players.
   if(tracked.length===completed)for(const identity of identities){const actual=tracked.reduce((n,r)=>n+r.players.filter(p=>p.identity===identity).reduce((v,p)=>v+p.minutes,0),0);if(c.minutes[identity]!==actual)fail();}
   const current=progress(s);if(Object.keys(c.missions).length!==3||boards.length!==Object.values(c.missions).filter(r=>r!==null).length)fail();

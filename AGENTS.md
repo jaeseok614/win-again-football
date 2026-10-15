@@ -105,13 +105,17 @@ history is not payment entitlement proof. Read docs/REBIRTH_LOOP_2026-10-11.md.
 ## Full continuous engine direction (2026-10-12, supersedes hybrid notes below)
 
 The owner requested whole-match continuous football. New confirmed kickoffs use
-continuousSetup.version=9, a shared 100ms physical world for the actual two elevens.
+continuousSetup.version=10, a shared 100ms physical world for the actual two elevens.
 The minute opportunity sampler is not used for those matches. Live and replay read
 the same physical coordinates, contacts and recorded statistics. Preserve valid v10
 running/confirmed matches and the released spatial version1 solver. Never change a
 released continuous rule underneath saved receipts; future changes need explicit
 versioning. Store and validate tick-level command journals, appearances, cards,
 segments and measured statistics. Read docs/CONTINUOUS_FOOTBALL_ENGINE_2026-10-12.md.
+New rule10 adds physical arrival-based pass/shot choices, formation-bounded support
+pockets, shared-snapshot avoidance and reacted goalkeeper acceleration. Read
+docs/REA_FOOTBALL_RULE10_2026-10-15.md. Preserve published rules1–9 exactly;
+future physics changes require11+. Analysis uses the real read-only target solver.
 Read docs/CONTINUOUS_TACTICAL_AI_2026-10-12.md for version3 arrival-based
 press/cover, fatigue, safe passing and goalkeeper containment. Preserve released
 continuous versions1/2/3/4/5/6 and their exact receipts too. Read

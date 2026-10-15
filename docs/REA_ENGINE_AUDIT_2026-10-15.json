@@ -1,0 +1,3502 @@
+{
+  "analysisDate": "2026-10-15",
+  "reaVersion": "6.5.0",
+  "references": [
+    {
+      "name": "websoccer",
+      "evidenceId": "ev_7531ccf92e56000d063a178ea22782c28ea171488fc916a802127fb37b45b020",
+      "artifact": "dfd765f1ec4aa0bdd4a2b4c6c8b066d62f2951307a4aa1b2475d7acaf0dbf78e",
+      "stats": {
+        "relevant_files": 39,
+        "nested_asar_containers": 0,
+        "text_bytes_read": 335390,
+        "invalid_utf8_files": 0,
+        "parsed_javascript_files": 35,
+        "visited_ast_nodes": 49640,
+        "findings": 603,
+        "modules": 0,
+        "parse_failures": 0
+      },
+      "coverage": {
+        "status": "partial",
+        "truncated": false,
+        "omitted_count": null,
+        "limits": []
+      },
+      "semanticCoverage": {
+        "status": "unknown",
+        "truncated": false
+      },
+      "relevant": [
+        {
+          "kind": "javascript-asset",
+          "label": "src/game/ai.js",
+          "properties": {
+            "path": "src/game/ai.js",
+            "bytes": 12488,
+            "inventory_artifact_id": "art_f78d726e4b34f007a97476bf7913b8e7cb6979553c44b8d2afb3dee781ae4095",
+            "unpacked": false,
+            "file_kind": "javascript",
+            "text_status": "included",
+            "parse_status": "complete",
+            "json_parse_status": null,
+            "json_top_level_keys": [],
+            "omitted_json_top_level_keys": 0,
+            "vendor_markers": []
+          },
+          "authority": "artifact-bytes",
+          "state": "observed"
+        },
+        {
+          "kind": "javascript-asset",
+          "label": "src/game/sim.js",
+          "properties": {
+            "path": "src/game/sim.js",
+            "bytes": 25980,
+            "inventory_artifact_id": "art_487a54d9b6fd485d8f3a4e29c849e77e63d3ced3001cbe142af31ef4a2ea9743",
+            "unpacked": false,
+            "file_kind": "javascript",
+            "text_status": "included",
+            "parse_status": "complete",
+            "json_parse_status": null,
+            "json_top_level_keys": [],
+            "omitted_json_top_level_keys": 0,
+            "vendor_markers": []
+          },
+          "authority": "artifact-bytes",
+          "state": "observed"
+        }
+      ],
+      "limitations": [
+        "CommonJS and ESM binding relationships were recovered from inert syntax and resolved only within the inventoried artifact container.",
+        "Graph coverage is incomplete; unavailable facts remain explicit and must not be read as absence.",
+        "JavaScript and HTML were parsed as inert text; bundle bootstrap code was never executed.",
+        "Static imports, entrypoints, workers, endpoints, and storage relationships do not prove runtime execution.",
+        "Static paths and relationships may remain unresolved when expressions are dynamic or obfuscated.",
+        "Webpack/Rspack factories were recovered from AST literals; REA did not invoke push handlers or bundle bootstrap code."
+      ],
+      "repository": "https://github.com/markclausing/websoccer",
+      "commit": "e3628948208c4c89c781e86068d20320169f9fe5",
+      "license": "MIT"
+    },
+    {
+      "name": "touchlines",
+      "evidenceId": "ev_53391f1e467dcd0f0c8d2e98a16abd2cca8a636276b4a4a07b46e76cf8b45d23",
+      "artifact": "d7313de3db3a73060acbfdb098d40b2ae5f191b49de30aeb184d81bd669e2945",
+      "stats": {
+        "relevant_files": 468,
+        "nested_asar_containers": 0,
+        "text_bytes_read": 5823075,
+        "invalid_utf8_files": 0,
+        "parsed_javascript_files": 260,
+        "visited_ast_nodes": 228286,
+        "findings": 4012,
+        "modules": 0,
+        "parse_failures": 0
+      },
+      "coverage": {
+        "status": "partial",
+        "truncated": false,
+        "omitted_count": null,
+        "limits": []
+      },
+      "semanticCoverage": {
+        "status": "partial",
+        "truncated": true
+      },
+      "relevant": [
+        {
+          "kind": "javascript-asset",
+          "label": "GameEngine/Domain/SetPiecePositioning.ts",
+          "properties": {
+            "path": "GameEngine/Domain/SetPiecePositioning.ts",
+            "bytes": 3949,
+            "inventory_artifact_id": "art_887cbf7f52239450abf3a6e57f71e543dedd34f1d710d2d69cbbad504c8f896d",
+            "unpacked": false,
+            "file_kind": "javascript",
+            "text_status": "included",
+            "parse_status": "complete",
+            "json_parse_status": null,
+            "json_top_level_keys": [],
+            "omitted_json_top_level_keys": 0,
+            "vendor_markers": []
+          },
+          "authority": "artifact-bytes",
+          "state": "observed"
+        },
+        {
+          "kind": "javascript-asset",
+          "label": "GameEngine/Domain/OffBallMovement.ts",
+          "properties": {
+            "path": "GameEngine/Domain/OffBallMovement.ts",
+            "bytes": 18999,
+            "inventory_artifact_id": "art_369fc327b0a953e09ac2e45376181ab470c4d84de56f6bb08974afc13b723089",
+            "unpacked": false,
+            "file_kind": "javascript",
+            "text_status": "included",
+            "parse_status": "complete",
+            "json_parse_status": null,
+            "json_top_level_keys": [],
+            "omitted_json_top_level_keys": 0,
+            "vendor_markers": []
+          },
+          "authority": "artifact-bytes",
+          "state": "observed"
+        },
+        {
+          "kind": "javascript-asset",
+          "label": "GameEngine/Domain/AttackingPositioning.ts",
+          "properties": {
+            "path": "GameEngine/Domain/AttackingPositioning.ts",
+            "bytes": 3938,
+            "inventory_artifact_id": "art_f0525dc200a5dffc67e486990e813cfe75b26e750b508218cf52cd29dde509d2",
+            "unpacked": false,
+            "file_kind": "javascript",
+            "text_status": "included",
+            "parse_status": "complete",
+            "json_parse_status": null,
+            "json_top_level_keys": [],
+            "omitted_json_top_level_keys": 0,
+            "vendor_markers": []
+          },
+          "authority": "artifact-bytes",
+          "state": "observed"
+        },
+        {
+          "kind": "javascript-asset",
+          "label": "GameEngine/Domain/PassLanes.ts",
+          "properties": {
+            "path": "GameEngine/Domain/PassLanes.ts",
+            "bytes": 15352,
+            "inventory_artifact_id": "art_6b3dccf6c02afc55185014c992a995abee5fa8676ab6923f525d520192aaa781",
+            "unpacked": false,
+            "file_kind": "javascript",
+            "text_status": "included",
+            "parse_status": "complete",
+            "json_parse_status": null,
+            "json_top_level_keys": [],
+            "omitted_json_top_level_keys": 0,
+            "vendor_markers": []
+          },
+          "authority": "artifact-bytes",
+          "state": "observed"
+        },
+        {
+          "kind": "javascript-asset",
+          "label": "GameEngine/Domain/DefensivePositioning.ts",
+          "properties": {
+            "path": "GameEngine/Domain/DefensivePositioning.ts",
+            "bytes": 52246,
+            "inventory_artifact_id": "art_8ae81166612c3ec0c3f06b6f316c793c623e1372d67b92cf68c09f6c474e220e",
+            "unpacked": false,
+            "file_kind": "javascript",
+            "text_status": "included",
+            "parse_status": "complete",
+            "json_parse_status": null,
+            "json_top_level_keys": [],
+            "omitted_json_top_level_keys": 0,
+            "vendor_markers": []
+          },
+          "authority": "artifact-bytes",
+          "state": "observed"
+        },
+        {
+          "kind": "javascript-asset",
+          "label": "GameEngine/Domain/Positioning.ts",
+          "properties": {
+            "path": "GameEngine/Domain/Positioning.ts",
+            "bytes": 1982,
+            "inventory_artifact_id": "art_5a090b7d4bdce76972b4bf8fa509abe2bb1e0d5e67334d80d41d16aa908c8385",
+            "unpacked": false,
+            "file_kind": "javascript",
+            "text_status": "included",
+            "parse_status": "complete",
+            "json_parse_status": null,
+            "json_top_level_keys": [],
+            "omitted_json_top_level_keys": 0,
+            "vendor_markers": []
+          },
+          "authority": "artifact-bytes",
+          "state": "observed"
+        }
+      ],
+      "limitations": [
+        "CommonJS and ESM binding relationships were recovered from inert syntax and resolved only within the inventoried artifact container.",
+        "Graph coverage is incomplete; unavailable facts remain explicit and must not be read as absence.",
+        "JavaScript and HTML were parsed as inert text; bundle bootstrap code was never executed.",
+        "Static imports, entrypoints, workers, endpoints, and storage relationships do not prove runtime execution.",
+        "Static paths and relationships may remain unresolved when expressions are dynamic or obfuscated.",
+        "Webpack/Rspack factories were recovered from AST literals; REA did not invoke push handlers or bundle bootstrap code."
+      ],
+      "repository": "https://github.com/brenosss/touchlines",
+      "commit": "5c5c71a8a2fb9a02591445cf9114229a4b218253",
+      "license": "AGPL-3.0-or-later"
+    }
+  ],
+  "benchmark": {
+    "mode": "matched",
+    "seeds": [
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52
+    ],
+    "minutes": 96,
+    "ability": 60,
+    "initialEnergy": 95,
+    "halftimeReset": true,
+    "opponentCoach": "adaptive",
+    "substitutions": 0,
+    "talks": 0,
+    "rule9": {
+      "summary": [
+        {
+          "tactic": "balanced",
+          "matches": 12,
+          "ownGoals": 0.4166666666666667,
+          "conceded": 0.5833333333333334,
+          "shots": 5.083333333333333,
+          "passes": 1225,
+          "completion": 69.5710760581204,
+          "middlePassShare": 79.33635126517252,
+          "attackPossessionShare": 12.084798699981116,
+          "carryingMetres": 7364.081332698909,
+          "wins": 3,
+          "draws": 6,
+          "energy": 60.19160141955151,
+          "laneDrift": 3.6684310944638128,
+          "farLaneCrossingRate": 0.000030324899845439555
+        },
+        {
+          "tactic": "press",
+          "matches": 12,
+          "ownGoals": 0.3333333333333333,
+          "conceded": 0.25,
+          "shots": 4.75,
+          "passes": 1226.8333333333333,
+          "completion": 67.83785456568648,
+          "middlePassShare": 78.95481964669635,
+          "attackPossessionShare": 11.552311185210527,
+          "carryingMetres": 7524.853315789824,
+          "wins": 2,
+          "draws": 8,
+          "energy": 58.7710438374117,
+          "laneDrift": 3.6764981390673532,
+          "farLaneCrossingRate": 0.000039433842081819076
+        },
+        {
+          "tactic": "counter",
+          "matches": 12,
+          "ownGoals": 0.3333333333333333,
+          "conceded": 0.3333333333333333,
+          "shots": 4.833333333333333,
+          "passes": 1217.5,
+          "completion": 68.01263629752687,
+          "middlePassShare": 80.36360330191114,
+          "attackPossessionShare": 10.783820426541519,
+          "carryingMetres": 7604.023071663704,
+          "wins": 3,
+          "draws": 6,
+          "energy": 58.835127140652936,
+          "laneDrift": 3.641803119400946,
+          "farLaneCrossingRate": 0.00003620455485109732
+        },
+        {
+          "tactic": "lowBlock",
+          "matches": 12,
+          "ownGoals": 0.08333333333333333,
+          "conceded": 0.4166666666666667,
+          "shots": 3.5833333333333335,
+          "passes": 1230.5,
+          "completion": 70.33992513362965,
+          "middlePassShare": 81.05031174725761,
+          "attackPossessionShare": 9.718221133950616,
+          "carryingMetres": 7370.717207276935,
+          "wins": 1,
+          "draws": 6,
+          "energy": 59.91925784215287,
+          "laneDrift": 3.9659680502888643,
+          "farLaneCrossingRate": 0.0000329296704128242
+        }
+      ],
+      "matches": [
+        {
+          "seed": 41,
+          "tactic": "balanced",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            3,
+            5
+          ],
+          "passes": [
+            599,
+            616
+          ],
+          "completed": [
+            412,
+            445
+          ],
+          "xg": [
+            0.16178118657535703,
+            0.5386397969877059
+          ],
+          "energy": 60.41860829400786,
+          "laneDrift": 3.6961685543745055
+        },
+        {
+          "seed": 42,
+          "tactic": "balanced",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            0,
+            3
+          ],
+          "passes": [
+            667,
+            588
+          ],
+          "completed": [
+            471,
+            395
+          ],
+          "xg": [
+            0,
+            0.3100866122511422
+          ],
+          "energy": 60.20532754453734,
+          "laneDrift": 3.624523646764632
+        },
+        {
+          "seed": 43,
+          "tactic": "balanced",
+          "score": [
+            1,
+            2
+          ],
+          "shots": [
+            4,
+            2
+          ],
+          "passes": [
+            619,
+            623
+          ],
+          "completed": [
+            435,
+            455
+          ],
+          "xg": [
+            0.4363269625741193,
+            0.22167465804071673
+          ],
+          "energy": 60.1075182603786,
+          "laneDrift": 3.677625391110781
+        },
+        {
+          "seed": 44,
+          "tactic": "balanced",
+          "score": [
+            0,
+            2
+          ],
+          "shots": [
+            0,
+            3
+          ],
+          "passes": [
+            644,
+            627
+          ],
+          "completed": [
+            436,
+            426
+          ],
+          "xg": [
+            0,
+            0.13766005558826933
+          ],
+          "energy": 59.79914026837544,
+          "laneDrift": 3.7109268853220363
+        },
+        {
+          "seed": 45,
+          "tactic": "balanced",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            1,
+            2
+          ],
+          "passes": [
+            594,
+            626
+          ],
+          "completed": [
+            410,
+            433
+          ],
+          "xg": [
+            0.025499896354659067,
+            0.2593179478192661
+          ],
+          "energy": 60.458017662174974,
+          "laneDrift": 3.7373360066221952
+        },
+        {
+          "seed": 46,
+          "tactic": "balanced",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            0,
+            4
+          ],
+          "passes": [
+            609,
+            590
+          ],
+          "completed": [
+            432,
+            404
+          ],
+          "xg": [
+            0,
+            0.5189468241631194
+          ],
+          "energy": 60.39883252302093,
+          "laneDrift": 3.6286257088959264
+        },
+        {
+          "seed": 47,
+          "tactic": "balanced",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            3,
+            4
+          ],
+          "passes": [
+            592,
+            628
+          ],
+          "completed": [
+            417,
+            444
+          ],
+          "xg": [
+            0.22647081837886826,
+            0.1302732243734475
+          ],
+          "energy": 60.024460924268496,
+          "laneDrift": 3.683093206254799
+        },
+        {
+          "seed": 48,
+          "tactic": "balanced",
+          "score": [
+            0,
+            2
+          ],
+          "shots": [
+            1,
+            7
+          ],
+          "passes": [
+            571,
+            631
+          ],
+          "completed": [
+            390,
+            454
+          ],
+          "xg": [
+            0.17191017375515816,
+            0.5745948205418803
+          ],
+          "energy": 60.01941268433982,
+          "laneDrift": 3.6733645109269264
+        },
+        {
+          "seed": 49,
+          "tactic": "balanced",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            2,
+            2
+          ],
+          "passes": [
+            644,
+            589
+          ],
+          "completed": [
+            452,
+            414
+          ],
+          "xg": [
+            0.22813963102626245,
+            0.0689551371804153
+          ],
+          "energy": 60.52929512453669,
+          "laneDrift": 3.5912148204641707
+        },
+        {
+          "seed": 50,
+          "tactic": "balanced",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            5,
+            6
+          ],
+          "passes": [
+            620,
+            605
+          ],
+          "completed": [
+            409,
+            416
+          ],
+          "xg": [
+            0.6541060367318863,
+            0.5580372724326433
+          ],
+          "energy": 60.01302675200871,
+          "laneDrift": 3.6643292306755697
+        },
+        {
+          "seed": 51,
+          "tactic": "balanced",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            1,
+            1
+          ],
+          "passes": [
+            627,
+            605
+          ],
+          "completed": [
+            436,
+            414
+          ],
+          "xg": [
+            0.1536422419272087,
+            0.12105591502384988
+          ],
+          "energy": 60.2600758022533,
+          "laneDrift": 3.6676412890847994
+        },
+        {
+          "seed": 52,
+          "tactic": "balanced",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            1,
+            1
+          ],
+          "passes": [
+            638,
+            548
+          ],
+          "completed": [
+            447,
+            379
+          ],
+          "xg": [
+            0.03161490563400141,
+            0.02735045730658199
+          ],
+          "energy": 60.06550119471594,
+          "laneDrift": 3.66632388306941
+        },
+        {
+          "seed": 41,
+          "tactic": "press",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            1,
+            0
+          ],
+          "passes": [
+            663,
+            596
+          ],
+          "completed": [
+            469,
+            385
+          ],
+          "xg": [
+            0.13675273599152543,
+            0
+          ],
+          "energy": 58.64057518040828,
+          "laneDrift": 3.6519723300126823
+        },
+        {
+          "seed": 42,
+          "tactic": "press",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            3,
+            3
+          ],
+          "passes": [
+            615,
+            603
+          ],
+          "completed": [
+            421,
+            444
+          ],
+          "xg": [
+            0.29043574355484936,
+            0.17532644621278742
+          ],
+          "energy": 58.95926508167395,
+          "laneDrift": 3.605242380399171
+        },
+        {
+          "seed": 43,
+          "tactic": "press",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            6,
+            1
+          ],
+          "passes": [
+            570,
+            692
+          ],
+          "completed": [
+            385,
+            482
+          ],
+          "xg": [
+            0.5255461711845235,
+            0.16615266680760143
+          ],
+          "energy": 58.50781445843171,
+          "laneDrift": 3.7111264220787956
+        },
+        {
+          "seed": 44,
+          "tactic": "press",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            4,
+            2
+          ],
+          "passes": [
+            677,
+            594
+          ],
+          "completed": [
+            463,
+            367
+          ],
+          "xg": [
+            0.6345842625373687,
+            0.2634354964622898
+          ],
+          "energy": 58.274465905586794,
+          "laneDrift": 3.693201718040457
+        },
+        {
+          "seed": 45,
+          "tactic": "press",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            3,
+            1
+          ],
+          "passes": [
+            616,
+            598
+          ],
+          "completed": [
+            411,
+            383
+          ],
+          "xg": [
+            0.24662497147475543,
+            0.11329665236591253
+          ],
+          "energy": 58.69888722567002,
+          "laneDrift": 3.6987292019749898
+        },
+        {
+          "seed": 46,
+          "tactic": "press",
+          "score": [
+            2,
+            0
+          ],
+          "shots": [
+            3,
+            1
+          ],
+          "passes": [
+            665,
+            541
+          ],
+          "completed": [
+            462,
+            366
+          ],
+          "xg": [
+            0.3581142071718625,
+            0.12943618305291013
+          ],
+          "energy": 58.74098232524211,
+          "laneDrift": 3.696133401929086
+        },
+        {
+          "seed": 47,
+          "tactic": "press",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            2,
+            3
+          ],
+          "passes": [
+            604,
+            594
+          ],
+          "completed": [
+            409,
+            392
+          ],
+          "xg": [
+            0.06730050522902578,
+            0.318924110185142
+          ],
+          "energy": 58.30143446301712,
+          "laneDrift": 3.712995848085144
+        },
+        {
+          "seed": 48,
+          "tactic": "press",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            2,
+            1
+          ],
+          "passes": [
+            631,
+            607
+          ],
+          "completed": [
+            410,
+            401
+          ],
+          "xg": [
+            0.14070135567015615,
+            0.04370370982753311
+          ],
+          "energy": 58.34885152932959,
+          "laneDrift": 3.662489798737727
+        },
+        {
+          "seed": 49,
+          "tactic": "press",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            1,
+            3
+          ],
+          "passes": [
+            687,
+            584
+          ],
+          "completed": [
+            488,
+            390
+          ],
+          "xg": [
+            0.1073841091804071,
+            0.31431782272081604
+          ],
+          "energy": 59.266489540173936,
+          "laneDrift": 3.7183444471848066
+        },
+        {
+          "seed": 50,
+          "tactic": "press",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            3,
+            1
+          ],
+          "passes": [
+            612,
+            589
+          ],
+          "completed": [
+            416,
+            392
+          ],
+          "xg": [
+            0.11799090808899662,
+            0.15676415109212571
+          ],
+          "energy": 59.41939548887452,
+          "laneDrift": 3.652722857421247
+        },
+        {
+          "seed": 51,
+          "tactic": "press",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            3,
+            3
+          ],
+          "passes": [
+            624,
+            575
+          ],
+          "completed": [
+            446,
+            393
+          ],
+          "xg": [
+            0.23362654716166747,
+            0.1379361142284406
+          ],
+          "energy": 58.84691394018944,
+          "laneDrift": 3.660467254549693
+        },
+        {
+          "seed": 52,
+          "tactic": "press",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            6,
+            1
+          ],
+          "passes": [
+            606,
+            579
+          ],
+          "completed": [
+            434,
+            377
+          ],
+          "xg": [
+            0.6258389819581364,
+            0.06432154036757882
+          ],
+          "energy": 59.24745091034304,
+          "laneDrift": 3.654552008394442
+        },
+        {
+          "seed": 41,
+          "tactic": "counter",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            1,
+            6
+          ],
+          "passes": [
+            569,
+            608
+          ],
+          "completed": [
+            353,
+            430
+          ],
+          "xg": [
+            0.14420287063423443,
+            0.6882925913620108
+          ],
+          "energy": 58.28337674574177,
+          "laneDrift": 3.6549268840755764
+        },
+        {
+          "seed": 42,
+          "tactic": "counter",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            6,
+            2
+          ],
+          "passes": [
+            579,
+            615
+          ],
+          "completed": [
+            387,
+            432
+          ],
+          "xg": [
+            0.6219617396165036,
+            0.17345705386344257
+          ],
+          "energy": 58.15036058112514,
+          "laneDrift": 3.623238578953422
+        },
+        {
+          "seed": 43,
+          "tactic": "counter",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            4,
+            0
+          ],
+          "passes": [
+            610,
+            598
+          ],
+          "completed": [
+            408,
+            411
+          ],
+          "xg": [
+            0.34835637041689393,
+            0
+          ],
+          "energy": 59.03284180045545,
+          "laneDrift": 3.6339920693106667
+        },
+        {
+          "seed": 44,
+          "tactic": "counter",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            3,
+            2
+          ],
+          "passes": [
+            557,
+            644
+          ],
+          "completed": [
+            388,
+            464
+          ],
+          "xg": [
+            0.17847620548061618,
+            0.03847680566582244
+          ],
+          "energy": 60.08399802198321,
+          "laneDrift": 3.6590891019634957
+        },
+        {
+          "seed": 45,
+          "tactic": "counter",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            1,
+            1
+          ],
+          "passes": [
+            569,
+            655
+          ],
+          "completed": [
+            377,
+            459
+          ],
+          "xg": [
+            0.1601249799666234,
+            0.030883749235770065
+          ],
+          "energy": 59.12015694538494,
+          "laneDrift": 3.661225934863162
+        },
+        {
+          "seed": 46,
+          "tactic": "counter",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            2,
+            2
+          ],
+          "passes": [
+            579,
+            637
+          ],
+          "completed": [
+            383,
+            459
+          ],
+          "xg": [
+            0.1541324478058081,
+            0.1324034625717169
+          ],
+          "energy": 58.84396840367181,
+          "laneDrift": 3.6616403755051494
+        },
+        {
+          "seed": 47,
+          "tactic": "counter",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            1,
+            1
+          ],
+          "passes": [
+            566,
+            682
+          ],
+          "completed": [
+            337,
+            486
+          ],
+          "xg": [
+            0.043702642939313016,
+            0.10115303230704524
+          ],
+          "energy": 58.7207699011685,
+          "laneDrift": 3.65956285683669
+        },
+        {
+          "seed": 48,
+          "tactic": "counter",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            1,
+            6
+          ],
+          "passes": [
+            507,
+            703
+          ],
+          "completed": [
+            331,
+            512
+          ],
+          "xg": [
+            0.09723419159557675,
+            0.33499060898821575
+          ],
+          "energy": 58.74631040561576,
+          "laneDrift": 3.6569005017663847
+        },
+        {
+          "seed": 49,
+          "tactic": "counter",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            2,
+            3
+          ],
+          "passes": [
+            604,
+            645
+          ],
+          "completed": [
+            382,
+            453
+          ],
+          "xg": [
+            0.14100195177846078,
+            0.17263201434941267
+          ],
+          "energy": 58.40690848542531,
+          "laneDrift": 3.6636439190541514
+        },
+        {
+          "seed": 50,
+          "tactic": "counter",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            1,
+            1
+          ],
+          "passes": [
+            593,
+            618
+          ],
+          "completed": [
+            413,
+            418
+          ],
+          "xg": [
+            0.10383753579434249,
+            0.02787979059145633
+          ],
+          "energy": 59.21240304315596,
+          "laneDrift": 3.5620985007817083
+        },
+        {
+          "seed": 51,
+          "tactic": "counter",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            0,
+            2
+          ],
+          "passes": [
+            610,
+            633
+          ],
+          "completed": [
+            393,
+            433
+          ],
+          "xg": [
+            0,
+            0.2636889625111935
+          ],
+          "energy": 59.101883192756794,
+          "laneDrift": 3.6755116566198036
+        },
+        {
+          "seed": 52,
+          "tactic": "counter",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            8,
+            2
+          ],
+          "passes": [
+            598,
+            631
+          ],
+          "completed": [
+            385,
+            441
+          ],
+          "xg": [
+            0.7733997693697389,
+            0.20070970737632865
+          ],
+          "energy": 58.31854816135061,
+          "laneDrift": 3.589807053081147
+        },
+        {
+          "seed": 41,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            0,
+            2
+          ],
+          "passes": [
+            625,
+            600
+          ],
+          "completed": [
+            457,
+            435
+          ],
+          "xg": [
+            0,
+            0.14993130129989524
+          ],
+          "energy": 60.037286510669134,
+          "laneDrift": 4.083803942480944
+        },
+        {
+          "seed": 42,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            2,
+            3
+          ],
+          "passes": [
+            609,
+            594
+          ],
+          "completed": [
+            432,
+            410
+          ],
+          "xg": [
+            0.1539397324058373,
+            0.16533409555636264
+          ],
+          "energy": 59.76149546342376,
+          "laneDrift": 3.945975411967682
+        },
+        {
+          "seed": 43,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            0,
+            2
+          ],
+          "passes": [
+            635,
+            647
+          ],
+          "completed": [
+            441,
+            465
+          ],
+          "xg": [
+            0,
+            0.12992214116858053
+          ],
+          "energy": 60.14832216994513,
+          "laneDrift": 4.019179053003725
+        },
+        {
+          "seed": 44,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            0,
+            3
+          ],
+          "passes": [
+            587,
+            606
+          ],
+          "completed": [
+            408,
+            440
+          ],
+          "xg": [
+            0,
+            0.11730900431505628
+          ],
+          "energy": 59.56940620722776,
+          "laneDrift": 3.9794853702983013
+        },
+        {
+          "seed": 45,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            0,
+            4
+          ],
+          "passes": [
+            600,
+            580
+          ],
+          "completed": [
+            418,
+            408
+          ],
+          "xg": [
+            0,
+            0.21200813394535714
+          ],
+          "energy": 60.106505139961484,
+          "laneDrift": 3.9434348577493266
+        },
+        {
+          "seed": 46,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            1,
+            2
+          ],
+          "passes": [
+            562,
+            686
+          ],
+          "completed": [
+            387,
+            489
+          ],
+          "xg": [
+            0.21958643775056558,
+            0.1322005482272247
+          ],
+          "energy": 59.66913749760991,
+          "laneDrift": 3.9644133377417607
+        },
+        {
+          "seed": 47,
+          "tactic": "lowBlock",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            2,
+            4
+          ],
+          "passes": [
+            587,
+            625
+          ],
+          "completed": [
+            404,
+            445
+          ],
+          "xg": [
+            0.2782709482865552,
+            0.2801620554099405
+          ],
+          "energy": 59.776880735770476,
+          "laneDrift": 3.8987272780326587
+        },
+        {
+          "seed": 48,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            1,
+            2
+          ],
+          "passes": [
+            632,
+            646
+          ],
+          "completed": [
+            455,
+            448
+          ],
+          "xg": [
+            0.028081751254338753,
+            0.08411716696923172
+          ],
+          "energy": 59.313624885061664,
+          "laneDrift": 3.920004172612962
+        },
+        {
+          "seed": 49,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            0,
+            1
+          ],
+          "passes": [
+            648,
+            612
+          ],
+          "completed": [
+            445,
+            428
+          ],
+          "xg": [
+            0,
+            0.12915878546054846
+          ],
+          "energy": 59.689315951006975,
+          "laneDrift": 3.948089105964567
+        },
+        {
+          "seed": 50,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            1,
+            1
+          ],
+          "passes": [
+            649,
+            598
+          ],
+          "completed": [
+            465,
+            426
+          ],
+          "xg": [
+            0.04904509685137228,
+            0.14243133204049502
+          ],
+          "energy": 60.68056937792125,
+          "laneDrift": 4.002697681036072
+        },
+        {
+          "seed": 51,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            0,
+            2
+          ],
+          "passes": [
+            615,
+            598
+          ],
+          "completed": [
+            417,
+            398
+          ],
+          "xg": [
+            0,
+            0.28482716105259054
+          ],
+          "energy": 60.70952506753037,
+          "laneDrift": 3.962751752909225
+        },
+        {
+          "seed": 52,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            3,
+            7
+          ],
+          "passes": [
+            625,
+            600
+          ],
+          "completed": [
+            452,
+            414
+          ],
+          "xg": [
+            0.2765241279924142,
+            0.8459755333242289
+          ],
+          "energy": 59.56902509970643,
+          "laneDrift": 3.9230546396691404
+        }
+      ]
+    },
+    "rule10": {
+      "summary": [
+        {
+          "tactic": "balanced",
+          "matches": 12,
+          "ownGoals": 1.1666666666666667,
+          "conceded": 1.6666666666666667,
+          "shots": 14.5,
+          "passes": 1355.75,
+          "completion": 72.691757982093,
+          "middlePassShare": 77.66403148168975,
+          "attackPossessionShare": 13.320250868538812,
+          "carryingMetres": 6998.575196400692,
+          "wins": 4,
+          "draws": 3,
+          "energy": 58.04707304148722,
+          "laneDrift": 3.5220035696266074,
+          "farLaneCrossingRate": 0.00002410452871476935
+        },
+        {
+          "tactic": "press",
+          "matches": 12,
+          "ownGoals": 1.5,
+          "conceded": 0.6666666666666666,
+          "shots": 14.833333333333334,
+          "passes": 1386.4166666666667,
+          "completion": 69.95783596751279,
+          "middlePassShare": 75.6897076449594,
+          "attackPossessionShare": 13.871878249172601,
+          "carryingMetres": 7053.498896856319,
+          "wins": 6,
+          "draws": 4,
+          "energy": 56.73610380964982,
+          "laneDrift": 3.5317618512826847,
+          "farLaneCrossingRate": 0.000013148968016185813
+        },
+        {
+          "tactic": "counter",
+          "matches": 12,
+          "ownGoals": 0.25,
+          "conceded": 1.5,
+          "shots": 11,
+          "passes": 1379.0833333333333,
+          "completion": 68.85235074095965,
+          "middlePassShare": 77.71464144628949,
+          "attackPossessionShare": 12.278101675214941,
+          "carryingMetres": 7201.8346418293795,
+          "wins": 1,
+          "draws": 4,
+          "energy": 56.823489362449386,
+          "laneDrift": 3.5195378915498616,
+          "farLaneCrossingRate": 0.000017155213707049284
+        },
+        {
+          "tactic": "lowBlock",
+          "matches": 12,
+          "ownGoals": 0.6666666666666666,
+          "conceded": 1,
+          "shots": 11.666666666666666,
+          "passes": 1398.8333333333333,
+          "completion": 72.56728933041921,
+          "middlePassShare": 79.02570455505946,
+          "attackPossessionShare": 11.763645853653825,
+          "carryingMetres": 6992.11643653709,
+          "wins": 5,
+          "draws": 3,
+          "energy": 57.5335168033869,
+          "laneDrift": 3.8204437884911955,
+          "farLaneCrossingRate": 0.00002854648375269309
+        }
+      ],
+      "matches": [
+        {
+          "seed": 41,
+          "tactic": "balanced",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            13,
+            8
+          ],
+          "passes": [
+            664,
+            679
+          ],
+          "completed": [
+            501,
+            496
+          ],
+          "xg": [
+            0.8290039067065984,
+            0.5199482732732478
+          ],
+          "energy": 57.85944258787633,
+          "laneDrift": 3.4999555699336846
+        },
+        {
+          "seed": 42,
+          "tactic": "balanced",
+          "score": [
+            1,
+            2
+          ],
+          "shots": [
+            2,
+            12
+          ],
+          "passes": [
+            674,
+            650
+          ],
+          "completed": [
+            495,
+            482
+          ],
+          "xg": [
+            0.0679517510784801,
+            0.8114525928138796
+          ],
+          "energy": 58.479582270217264,
+          "laneDrift": 3.5655734052714716
+        },
+        {
+          "seed": 43,
+          "tactic": "balanced",
+          "score": [
+            1,
+            2
+          ],
+          "shots": [
+            8,
+            15
+          ],
+          "passes": [
+            666,
+            673
+          ],
+          "completed": [
+            503,
+            507
+          ],
+          "xg": [
+            0.5649688738516057,
+            1.1718397261939637
+          ],
+          "energy": 57.88023241428896,
+          "laneDrift": 3.531194376325341
+        },
+        {
+          "seed": 44,
+          "tactic": "balanced",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            8,
+            3
+          ],
+          "passes": [
+            728,
+            636
+          ],
+          "completed": [
+            534,
+            441
+          ],
+          "xg": [
+            0.49996412077143204,
+            0.2122962686155729
+          ],
+          "energy": 57.671740245639214,
+          "laneDrift": 3.525555674345383
+        },
+        {
+          "seed": 45,
+          "tactic": "balanced",
+          "score": [
+            0,
+            2
+          ],
+          "shots": [
+            3,
+            10
+          ],
+          "passes": [
+            650,
+            706
+          ],
+          "completed": [
+            450,
+            520
+          ],
+          "xg": [
+            0.14042002428193648,
+            0.7753440912384307
+          ],
+          "energy": 57.91096746741147,
+          "laneDrift": 3.5494628938471533
+        },
+        {
+          "seed": 46,
+          "tactic": "balanced",
+          "score": [
+            2,
+            1
+          ],
+          "shots": [
+            7,
+            3
+          ],
+          "passes": [
+            686,
+            674
+          ],
+          "completed": [
+            490,
+            473
+          ],
+          "xg": [
+            0.6472390032704602,
+            0.16385084909547942
+          ],
+          "energy": 57.82604948743282,
+          "laneDrift": 3.5182038880370077
+        },
+        {
+          "seed": 47,
+          "tactic": "balanced",
+          "score": [
+            1,
+            5
+          ],
+          "shots": [
+            6,
+            10
+          ],
+          "passes": [
+            686,
+            670
+          ],
+          "completed": [
+            502,
+            488
+          ],
+          "xg": [
+            0.47793720454290584,
+            0.7841442098634892
+          ],
+          "energy": 58.677120742309945,
+          "laneDrift": 3.55230742421345
+        },
+        {
+          "seed": 48,
+          "tactic": "balanced",
+          "score": [
+            2,
+            1
+          ],
+          "shots": [
+            5,
+            12
+          ],
+          "passes": [
+            646,
+            651
+          ],
+          "completed": [
+            477,
+            467
+          ],
+          "xg": [
+            0.7905269396427517,
+            0.652129911289062
+          ],
+          "energy": 58.03038618311856,
+          "laneDrift": 3.512595989801502
+        },
+        {
+          "seed": 49,
+          "tactic": "balanced",
+          "score": [
+            3,
+            2
+          ],
+          "shots": [
+            3,
+            11
+          ],
+          "passes": [
+            689,
+            656
+          ],
+          "completed": [
+            495,
+            469
+          ],
+          "xg": [
+            0.2652989583570733,
+            0.9483924219194597
+          ],
+          "energy": 58.01922216024851,
+          "laneDrift": 3.498237249712911
+        },
+        {
+          "seed": 50,
+          "tactic": "balanced",
+          "score": [
+            0,
+            2
+          ],
+          "shots": [
+            3,
+            5
+          ],
+          "passes": [
+            675,
+            705
+          ],
+          "completed": [
+            483,
+            510
+          ],
+          "xg": [
+            0.19520519959208965,
+            0.3844111434474936
+          ],
+          "energy": 57.746221890542124,
+          "laneDrift": 3.5362429321350333
+        },
+        {
+          "seed": 51,
+          "tactic": "balanced",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            7,
+            5
+          ],
+          "passes": [
+            677,
+            726
+          ],
+          "completed": [
+            477,
+            526
+          ],
+          "xg": [
+            0.6347023679409446,
+            0.4191414764845678
+          ],
+          "energy": 58.23425501395914,
+          "laneDrift": 3.4803886778176665
+        },
+        {
+          "seed": 52,
+          "tactic": "balanced",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            7,
+            8
+          ],
+          "passes": [
+            705,
+            697
+          ],
+          "completed": [
+            532,
+            507
+          ],
+          "xg": [
+            0.5057633921403606,
+            0.5462041294678522
+          ],
+          "energy": 58.229656034802396,
+          "laneDrift": 3.4943247540786917
+        },
+        {
+          "seed": 41,
+          "tactic": "press",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            9,
+            3
+          ],
+          "passes": [
+            787,
+            622
+          ],
+          "completed": [
+            583,
+            394
+          ],
+          "xg": [
+            0.5466959970514074,
+            0.24887511963956854
+          ],
+          "energy": 55.88964911101969,
+          "laneDrift": 3.50049414192957
+        },
+        {
+          "seed": 42,
+          "tactic": "press",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            8,
+            4
+          ],
+          "passes": [
+            749,
+            679
+          ],
+          "completed": [
+            535,
+            452
+          ],
+          "xg": [
+            0.5524223333802556,
+            0.3249251551867396
+          ],
+          "energy": 57.05110093307885,
+          "laneDrift": 3.5276992641159515
+        },
+        {
+          "seed": 43,
+          "tactic": "press",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            7,
+            4
+          ],
+          "passes": [
+            725,
+            666
+          ],
+          "completed": [
+            505,
+            429
+          ],
+          "xg": [
+            0.523628544962686,
+            0.14520548615255915
+          ],
+          "energy": 55.71282303490326,
+          "laneDrift": 3.4934393625926017
+        },
+        {
+          "seed": 44,
+          "tactic": "press",
+          "score": [
+            2,
+            0
+          ],
+          "shots": [
+            14,
+            4
+          ],
+          "passes": [
+            764,
+            648
+          ],
+          "completed": [
+            567,
+            441
+          ],
+          "xg": [
+            0.9852125933028387,
+            0.3147064893980946
+          ],
+          "energy": 56.77526404172894,
+          "laneDrift": 3.5208497684329676
+        },
+        {
+          "seed": 45,
+          "tactic": "press",
+          "score": [
+            0,
+            3
+          ],
+          "shots": [
+            9,
+            5
+          ],
+          "passes": [
+            726,
+            668
+          ],
+          "completed": [
+            524,
+            462
+          ],
+          "xg": [
+            0.5772156141896374,
+            0.3348663290505261
+          ],
+          "energy": 56.73641658420716,
+          "laneDrift": 3.57240448878012
+        },
+        {
+          "seed": 46,
+          "tactic": "press",
+          "score": [
+            3,
+            1
+          ],
+          "shots": [
+            11,
+            4
+          ],
+          "passes": [
+            743,
+            627
+          ],
+          "completed": [
+            519,
+            393
+          ],
+          "xg": [
+            0.9721534358838855,
+            0.24392322518070847
+          ],
+          "energy": 56.54520631815056,
+          "laneDrift": 3.546925665309539
+        },
+        {
+          "seed": 47,
+          "tactic": "press",
+          "score": [
+            5,
+            0
+          ],
+          "shots": [
+            24,
+            1
+          ],
+          "passes": [
+            697,
+            633
+          ],
+          "completed": [
+            513,
+            445
+          ],
+          "xg": [
+            1.6451058924743542,
+            0.07034659308994842
+          ],
+          "energy": 57.15656580273761,
+          "laneDrift": 3.574649323639648
+        },
+        {
+          "seed": 48,
+          "tactic": "press",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            8,
+            1
+          ],
+          "passes": [
+            747,
+            655
+          ],
+          "completed": [
+            555,
+            434
+          ],
+          "xg": [
+            0.5113772172699164,
+            0.01
+          ],
+          "energy": 57.315120287379635,
+          "laneDrift": 3.5375243084207275
+        },
+        {
+          "seed": 49,
+          "tactic": "press",
+          "score": [
+            2,
+            0
+          ],
+          "shots": [
+            6,
+            4
+          ],
+          "passes": [
+            708,
+            660
+          ],
+          "completed": [
+            518,
+            472
+          ],
+          "xg": [
+            0.46016518814435553,
+            0.24381193244542582
+          ],
+          "energy": 57.310671784923336,
+          "laneDrift": 3.514894759102098
+        },
+        {
+          "seed": 50,
+          "tactic": "press",
+          "score": [
+            2,
+            0
+          ],
+          "shots": [
+            21,
+            6
+          ],
+          "passes": [
+            712,
+            628
+          ],
+          "completed": [
+            523,
+            423
+          ],
+          "xg": [
+            1.5710135557949578,
+            0.49338750487067
+          ],
+          "energy": 56.58518884054813,
+          "laneDrift": 3.557311964544867
+        },
+        {
+          "seed": 51,
+          "tactic": "press",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            11,
+            1
+          ],
+          "passes": [
+            732,
+            693
+          ],
+          "completed": [
+            539,
+            471
+          ],
+          "xg": [
+            0.8108277255225597,
+            0.08500853493168033
+          ],
+          "energy": 56.62105684757695,
+          "laneDrift": 3.5269069455602167
+        },
+        {
+          "seed": 52,
+          "tactic": "press",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            10,
+            3
+          ],
+          "passes": [
+            692,
+            676
+          ],
+          "completed": [
+            491,
+            450
+          ],
+          "xg": [
+            0.6800597489018431,
+            0.17541819794951663
+          ],
+          "energy": 57.13418212954377,
+          "laneDrift": 3.5080422229639168
+        },
+        {
+          "seed": 41,
+          "tactic": "counter",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            3,
+            5
+          ],
+          "passes": [
+            633,
+            759
+          ],
+          "completed": [
+            406,
+            547
+          ],
+          "xg": [
+            0.18159503310196862,
+            0.3389080088453192
+          ],
+          "energy": 56.898328686596976,
+          "laneDrift": 3.422706721293476
+        },
+        {
+          "seed": 42,
+          "tactic": "counter",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            3,
+            4
+          ],
+          "passes": [
+            662,
+            724
+          ],
+          "completed": [
+            432,
+            531
+          ],
+          "xg": [
+            0.18076064135316458,
+            0.4546287785947011
+          ],
+          "energy": 56.85547717522769,
+          "laneDrift": 3.4845167695910413
+        },
+        {
+          "seed": 43,
+          "tactic": "counter",
+          "score": [
+            0,
+            2
+          ],
+          "shots": [
+            12,
+            7
+          ],
+          "passes": [
+            602,
+            745
+          ],
+          "completed": [
+            411,
+            557
+          ],
+          "xg": [
+            0.7011508379115595,
+            0.5105707722746832
+          ],
+          "energy": 56.52565817147772,
+          "laneDrift": 3.5302134630080686
+        },
+        {
+          "seed": 44,
+          "tactic": "counter",
+          "score": [
+            0,
+            5
+          ],
+          "shots": [
+            0,
+            13
+          ],
+          "passes": [
+            637,
+            775
+          ],
+          "completed": [
+            402,
+            551
+          ],
+          "xg": [
+            0,
+            0.9790684773190012
+          ],
+          "energy": 56.60937560677445,
+          "laneDrift": 3.5419858222813256
+        },
+        {
+          "seed": 45,
+          "tactic": "counter",
+          "score": [
+            0,
+            3
+          ],
+          "shots": [
+            4,
+            7
+          ],
+          "passes": [
+            619,
+            754
+          ],
+          "completed": [
+            405,
+            561
+          ],
+          "xg": [
+            0.32273603705668596,
+            0.5319752702356737
+          ],
+          "energy": 56.24353237379013,
+          "laneDrift": 3.5206826064360257
+        },
+        {
+          "seed": 46,
+          "tactic": "counter",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            3,
+            12
+          ],
+          "passes": [
+            645,
+            700
+          ],
+          "completed": [
+            435,
+            516
+          ],
+          "xg": [
+            0.2748480574781619,
+            0.7910191790076491
+          ],
+          "energy": 57.74765214953592,
+          "laneDrift": 3.526949876452888
+        },
+        {
+          "seed": 47,
+          "tactic": "counter",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            5,
+            4
+          ],
+          "passes": [
+            639,
+            732
+          ],
+          "completed": [
+            396,
+            510
+          ],
+          "xg": [
+            0.31826914992154665,
+            0.22696615733812964
+          ],
+          "energy": 56.32487839287429,
+          "laneDrift": 3.5637369175738915
+        },
+        {
+          "seed": 48,
+          "tactic": "counter",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            4,
+            11
+          ],
+          "passes": [
+            603,
+            776
+          ],
+          "completed": [
+            369,
+            568
+          ],
+          "xg": [
+            0.278994417217032,
+            0.667719273097224
+          ],
+          "energy": 56.491137811653644,
+          "laneDrift": 3.4967977619811856
+        },
+        {
+          "seed": 49,
+          "tactic": "counter",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            3,
+            4
+          ],
+          "passes": [
+            668,
+            752
+          ],
+          "completed": [
+            445,
+            533
+          ],
+          "xg": [
+            0.1557557736889979,
+            0.5159720403639119
+          ],
+          "energy": 56.94886840742377,
+          "laneDrift": 3.563534468499435
+        },
+        {
+          "seed": 50,
+          "tactic": "counter",
+          "score": [
+            0,
+            2
+          ],
+          "shots": [
+            0,
+            5
+          ],
+          "passes": [
+            641,
+            709
+          ],
+          "completed": [
+            442,
+            506
+          ],
+          "xg": [
+            0,
+            0.359815466049747
+          ],
+          "energy": 58.29995100792467,
+          "laneDrift": 3.5171956326398646
+        },
+        {
+          "seed": 51,
+          "tactic": "counter",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            6,
+            9
+          ],
+          "passes": [
+            607,
+            786
+          ],
+          "completed": [
+            380,
+            578
+          ],
+          "xg": [
+            0.4421312462296882,
+            0.5038046237142604
+          ],
+          "energy": 56.52928218838385,
+          "laneDrift": 3.4970634576902677
+        },
+        {
+          "seed": 52,
+          "tactic": "counter",
+          "score": [
+            0,
+            2
+          ],
+          "shots": [
+            4,
+            4
+          ],
+          "passes": [
+            657,
+            724
+          ],
+          "completed": [
+            413,
+            498
+          ],
+          "xg": [
+            0.2766451125052011,
+            0.5067320437884867
+          ],
+          "energy": 56.40773037772965,
+          "laneDrift": 3.5690712011508743
+        },
+        {
+          "seed": 41,
+          "tactic": "lowBlock",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            6,
+            3
+          ],
+          "passes": [
+            685,
+            708
+          ],
+          "completed": [
+            498,
+            518
+          ],
+          "xg": [
+            0.2858667289046612,
+            0.2259605405889854
+          ],
+          "energy": 57.03217744816848,
+          "laneDrift": 3.9005387177579256
+        },
+        {
+          "seed": 42,
+          "tactic": "lowBlock",
+          "score": [
+            1,
+            5
+          ],
+          "shots": [
+            4,
+            23
+          ],
+          "passes": [
+            689,
+            634
+          ],
+          "completed": [
+            506,
+            485
+          ],
+          "xg": [
+            0.2983167946800349,
+            1.5647564611967548
+          ],
+          "energy": 57.622304722242056,
+          "laneDrift": 3.8235870980203908
+        },
+        {
+          "seed": 43,
+          "tactic": "lowBlock",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            6,
+            7
+          ],
+          "passes": [
+            672,
+            717
+          ],
+          "completed": [
+            474,
+            521
+          ],
+          "xg": [
+            0.4518028151882746,
+            0.5235512060876216
+          ],
+          "energy": 58.27211096331415,
+          "laneDrift": 3.8333748662724823
+        },
+        {
+          "seed": 44,
+          "tactic": "lowBlock",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            5,
+            6
+          ],
+          "passes": [
+            734,
+            699
+          ],
+          "completed": [
+            535,
+            511
+          ],
+          "xg": [
+            0.2832502403328865,
+            0.3631244126356449
+          ],
+          "energy": 57.45837745613308,
+          "laneDrift": 3.7660959668887344
+        },
+        {
+          "seed": 45,
+          "tactic": "lowBlock",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            7,
+            5
+          ],
+          "passes": [
+            733,
+            664
+          ],
+          "completed": [
+            536,
+            481
+          ],
+          "xg": [
+            0.43996874722685,
+            0.2846894886859737
+          ],
+          "energy": 57.33566947732065,
+          "laneDrift": 3.736672322583181
+        },
+        {
+          "seed": 46,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            4,
+            3
+          ],
+          "passes": [
+            703,
+            720
+          ],
+          "completed": [
+            503,
+            523
+          ],
+          "xg": [
+            0.22188212136165036,
+            0.18735059307032254
+          ],
+          "energy": 57.287108540636176,
+          "laneDrift": 3.842239656478677
+        },
+        {
+          "seed": 47,
+          "tactic": "lowBlock",
+          "score": [
+            1,
+            0
+          ],
+          "shots": [
+            1,
+            8
+          ],
+          "passes": [
+            703,
+            717
+          ],
+          "completed": [
+            496,
+            530
+          ],
+          "xg": [
+            0.13250218430734725,
+            0.5385225330766228
+          ],
+          "energy": 56.99748546761963,
+          "laneDrift": 3.780172175847
+        },
+        {
+          "seed": 48,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            0
+          ],
+          "shots": [
+            7,
+            4
+          ],
+          "passes": [
+            667,
+            738
+          ],
+          "completed": [
+            464,
+            558
+          ],
+          "xg": [
+            0.4009269974585654,
+            0.3465828404487462
+          ],
+          "energy": 57.36824487323776,
+          "laneDrift": 3.7616686764903444
+        },
+        {
+          "seed": 49,
+          "tactic": "lowBlock",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            7,
+            10
+          ],
+          "passes": [
+            665,
+            716
+          ],
+          "completed": [
+            486,
+            520
+          ],
+          "xg": [
+            0.40546026228486187,
+            0.7862305378276769
+          ],
+          "energy": 57.463098438122046,
+          "laneDrift": 3.869706661874828
+        },
+        {
+          "seed": 50,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            3
+          ],
+          "shots": [
+            0,
+            6
+          ],
+          "passes": [
+            678,
+            720
+          ],
+          "completed": [
+            474,
+            533
+          ],
+          "xg": [
+            0,
+            0.4125621229515294
+          ],
+          "energy": 58.02542827262408,
+          "laneDrift": 3.9099644583150206
+        },
+        {
+          "seed": 51,
+          "tactic": "lowBlock",
+          "score": [
+            1,
+            1
+          ],
+          "shots": [
+            4,
+            5
+          ],
+          "passes": [
+            728,
+            666
+          ],
+          "completed": [
+            529,
+            478
+          ],
+          "xg": [
+            0.29071916264767295,
+            0.5389998440897944
+          ],
+          "energy": 57.672643288993676,
+          "laneDrift": 3.763302636662089
+        },
+        {
+          "seed": 52,
+          "tactic": "lowBlock",
+          "score": [
+            0,
+            1
+          ],
+          "shots": [
+            3,
+            6
+          ],
+          "passes": [
+            689,
+            741
+          ],
+          "completed": [
+            487,
+            533
+          ],
+          "xg": [
+            0.16287150332742137,
+            0.46043954047690394
+          ],
+          "energy": 57.867552692231015,
+          "laneDrift": 3.858002224703669
+        }
+      ]
+    }
+  },
+  "actualFirstOpponent": {
+    "seeds": [
+      41,
+      42,
+      43,
+      44
+    ],
+    "summary": [
+      {
+        "tactic": "balanced",
+        "matches": 4,
+        "ownGoals": 6.5,
+        "conceded": 0.75,
+        "shots": 40.75,
+        "passes": 1330.5,
+        "completion": 73.09735261545254,
+        "middlePassShare": 67.23833845572405,
+        "attackPossessionShare": 18.856801687494368,
+        "carryingMetres": 10262.8010578878,
+        "wins": 4,
+        "draws": 0,
+        "energy": 54.89340456074489,
+        "laneDrift": 3.4803174427530044,
+        "farLaneCrossingRate": 0.000050749496425739476
+      },
+      {
+        "tactic": "press",
+        "matches": 4,
+        "ownGoals": 7.75,
+        "conceded": 0.75,
+        "shots": 48,
+        "passes": 1350.75,
+        "completion": 72.20692181858598,
+        "middlePassShare": 63.30732431816044,
+        "attackPossessionShare": 21.992406540209934,
+        "carryingMetres": 10084.216169080659,
+        "wins": 4,
+        "draws": 0,
+        "energy": 54.12133798252657,
+        "laneDrift": 3.5053227688699544,
+        "farLaneCrossingRate": 0.00006824704831746308
+      },
+      {
+        "tactic": "counter",
+        "matches": 4,
+        "ownGoals": 4,
+        "conceded": 0.5,
+        "shots": 31.5,
+        "passes": 1343,
+        "completion": 68.90273344223522,
+        "middlePassShare": 69.09336127880005,
+        "attackPossessionShare": 17.219022190397965,
+        "carryingMetres": 9705.14115207773,
+        "wins": 4,
+        "draws": 0,
+        "energy": 55.28869052915289,
+        "laneDrift": 3.483330291010989,
+        "farLaneCrossingRate": 0.00013758079274155436
+      },
+      {
+        "tactic": "lowBlock",
+        "matches": 4,
+        "ownGoals": 10.75,
+        "conceded": 0.5,
+        "shots": 42,
+        "passes": 1378.5,
+        "completion": 72.20301546014278,
+        "middlePassShare": 68.30387090830921,
+        "attackPossessionShare": 18.70923388833444,
+        "carryingMetres": 10235.612578616296,
+        "wins": 4,
+        "draws": 0,
+        "energy": 54.3236124186643,
+        "laneDrift": 3.783448141378341,
+        "farLaneCrossingRate": 0.000035208720125260617
+      }
+    ],
+    "matches": [
+      {
+        "seed": 41,
+        "tactic": "balanced",
+        "score": [
+          6,
+          1
+        ],
+        "shots": [
+          49,
+          3
+        ],
+        "passes": [
+          661,
+          639
+        ],
+        "completed": [
+          511,
+          485
+        ],
+        "xg": [
+          4.167989554149827,
+          0.19527197789542017
+        ],
+        "energy": 54.41344734113915,
+        "laneDrift": 3.5304821438018656
+      },
+      {
+        "seed": 42,
+        "tactic": "balanced",
+        "score": [
+          7,
+          1
+        ],
+        "shots": [
+          24,
+          6
+        ],
+        "passes": [
+          710,
+          676
+        ],
+        "completed": [
+          512,
+          509
+        ],
+        "xg": [
+          2.086013002551987,
+          0.45759464192389476
+        ],
+        "energy": 55.005638009489736,
+        "laneDrift": 3.432488660746817
+      },
+      {
+        "seed": 43,
+        "tactic": "balanced",
+        "score": [
+          6,
+          1
+        ],
+        "shots": [
+          28,
+          9
+        ],
+        "passes": [
+          691,
+          637
+        ],
+        "completed": [
+          495,
+          449
+        ],
+        "xg": [
+          2.2611227825795024,
+          0.7025346218989021
+        ],
+        "energy": 55.41074107900751,
+        "laneDrift": 3.4935130786171356
+      },
+      {
+        "seed": 44,
+        "tactic": "balanced",
+        "score": [
+          7,
+          0
+        ],
+        "shots": [
+          36,
+          8
+        ],
+        "passes": [
+          677,
+          631
+        ],
+        "completed": [
+          489,
+          440
+        ],
+        "xg": [
+          2.908845633033597,
+          0.4828634502587305
+        ],
+        "energy": 54.743791813343165,
+        "laneDrift": 3.4647858878461983
+      },
+      {
+        "seed": 41,
+        "tactic": "press",
+        "score": [
+          8,
+          1
+        ],
+        "shots": [
+          44,
+          3
+        ],
+        "passes": [
+          699,
+          647
+        ],
+        "completed": [
+          530,
+          453
+        ],
+        "xg": [
+          4.1342922085544735,
+          0.25658537733420483
+        ],
+        "energy": 53.13943194293672,
+        "laneDrift": 3.529280030643513
+      },
+      {
+        "seed": 42,
+        "tactic": "press",
+        "score": [
+          9,
+          0
+        ],
+        "shots": [
+          44,
+          6
+        ],
+        "passes": [
+          659,
+          668
+        ],
+        "completed": [
+          468,
+          481
+        ],
+        "xg": [
+          3.895034714783522,
+          0.43892842726819026
+        ],
+        "energy": 54.32308106242566,
+        "laneDrift": 3.5410433142009032
+      },
+      {
+        "seed": 43,
+        "tactic": "press",
+        "score": [
+          6,
+          1
+        ],
+        "shots": [
+          37,
+          7
+        ],
+        "passes": [
+          736,
+          613
+        ],
+        "completed": [
+          543,
+          449
+        ],
+        "xg": [
+          3.193666474387527,
+          0.4987851735183372
+        ],
+        "energy": 54.586741826988586,
+        "laneDrift": 3.489714369530325
+      },
+      {
+        "seed": 44,
+        "tactic": "press",
+        "score": [
+          8,
+          1
+        ],
+        "shots": [
+          48,
+          3
+        ],
+        "passes": [
+          730,
+          651
+        ],
+        "completed": [
+          530,
+          447
+        ],
+        "xg": [
+          4.8019511489037825,
+          0.18409442387171396
+        ],
+        "energy": 54.436097097755294,
+        "laneDrift": 3.4612533611050758
+      },
+      {
+        "seed": 41,
+        "tactic": "counter",
+        "score": [
+          4,
+          0
+        ],
+        "shots": [
+          26,
+          10
+        ],
+        "passes": [
+          669,
+          688
+        ],
+        "completed": [
+          430,
+          496
+        ],
+        "xg": [
+          2.4583704180100048,
+          0.6173395754783797
+        ],
+        "energy": 55.09749648440122,
+        "laneDrift": 3.47750599870926
+      },
+      {
+        "seed": 42,
+        "tactic": "counter",
+        "score": [
+          6,
+          1
+        ],
+        "shots": [
+          23,
+          8
+        ],
+        "passes": [
+          671,
+          699
+        ],
+        "completed": [
+          445,
+          521
+        ],
+        "xg": [
+          2.0202574359826304,
+          0.7790121677998435
+        ],
+        "energy": 54.922660989136865,
+        "laneDrift": 3.486364937013992
+      },
+      {
+        "seed": 43,
+        "tactic": "counter",
+        "score": [
+          3,
+          1
+        ],
+        "shots": [
+          16,
+          15
+        ],
+        "passes": [
+          654,
+          668
+        ],
+        "completed": [
+          412,
+          479
+        ],
+        "xg": [
+          1.3682046150486977,
+          1.0231160050479944
+        ],
+        "energy": 55.82132209672009,
+        "laneDrift": 3.4748094470907485
+      },
+      {
+        "seed": 44,
+        "tactic": "counter",
+        "score": [
+          3,
+          0
+        ],
+        "shots": [
+          22,
+          6
+        ],
+        "passes": [
+          675,
+          648
+        ],
+        "completed": [
+          444,
+          475
+        ],
+        "xg": [
+          1.6527984537414948,
+          0.3920294423550368
+        ],
+        "energy": 55.31328254635339,
+        "laneDrift": 3.4946407812299563
+      },
+      {
+        "seed": 41,
+        "tactic": "lowBlock",
+        "score": [
+          13,
+          1
+        ],
+        "shots": [
+          36,
+          6
+        ],
+        "passes": [
+          709,
+          658
+        ],
+        "completed": [
+          502,
+          482
+        ],
+        "xg": [
+          3.128813793456505,
+          0.9335083245789044
+        ],
+        "energy": 54.41512161971324,
+        "laneDrift": 3.7700133788750736
+      },
+      {
+        "seed": 42,
+        "tactic": "lowBlock",
+        "score": [
+          11,
+          0
+        ],
+        "shots": [
+          42,
+          5
+        ],
+        "passes": [
+          722,
+          672
+        ],
+        "completed": [
+          529,
+          486
+        ],
+        "xg": [
+          3.2777636355236943,
+          0.31832148477985245
+        ],
+        "energy": 53.945096724892174,
+        "laneDrift": 3.7829141994285878
+      },
+      {
+        "seed": 43,
+        "tactic": "lowBlock",
+        "score": [
+          8,
+          1
+        ],
+        "shots": [
+          29,
+          7
+        ],
+        "passes": [
+          693,
+          706
+        ],
+        "completed": [
+          498,
+          528
+        ],
+        "xg": [
+          2.247784889061952,
+          0.5064645575866156
+        ],
+        "energy": 54.43700440200013,
+        "laneDrift": 3.8240260075075745
+      },
+      {
+        "seed": 44,
+        "tactic": "lowBlock",
+        "score": [
+          11,
+          0
+        ],
+        "shots": [
+          36,
+          7
+        ],
+        "passes": [
+          713,
+          641
+        ],
+        "completed": [
+          495,
+          462
+        ],
+        "xg": [
+          3.3667786628208853,
+          0.4846125017486572
+        ],
+        "energy": 54.49722692805166,
+        "laneDrift": 3.7568389797021275
+      }
+    ]
+  },
+  "formation": [
+    {
+      "version": 9,
+      "seed": 41,
+      "score": [
+        4,
+        1
+      ],
+      "nearBallTeammates": 0.7268078889700511,
+      "meanTargetShift": 1.0431937405300087,
+      "targetShiftsOver4m": 0,
+      "targetShiftSamples": 217520,
+      "maxTargetShift": 3.000000000000008
+    },
+    {
+      "version": 9,
+      "seed": 42,
+      "score": [
+        7,
+        0
+      ],
+      "nearBallTeammates": 0.6783083867902114,
+      "meanTargetShift": 1.0499290568884343,
+      "targetShiftsOver4m": 0,
+      "targetShiftSamples": 219474,
+      "maxTargetShift": 3.0000000000000075
+    },
+    {
+      "version": 9,
+      "seed": 43,
+      "score": [
+        5,
+        0
+      ],
+      "nearBallTeammates": 0.6738394584139265,
+      "meanTargetShift": 1.0605253068360097,
+      "targetShiftsOver4m": 0,
+      "targetShiftSamples": 216760,
+      "maxTargetShift": 3.0000000000000075
+    },
+    {
+      "version": 10,
+      "seed": 41,
+      "score": [
+        6,
+        1
+      ],
+      "nearBallTeammates": 0.5964694181999005,
+      "meanTargetShift": 1.1025786687208465,
+      "targetShiftsOver4m": 0,
+      "targetShiftSamples": 212812,
+      "maxTargetShift": 3.0000000000000084
+    },
+    {
+      "version": 10,
+      "seed": 42,
+      "score": [
+        7,
+        1
+      ],
+      "nearBallTeammates": 0.6590214067278287,
+      "meanTargetShift": 1.1127523614680221,
+      "targetShiftsOver4m": 0,
+      "targetShiftSamples": 219882,
+      "maxTargetShift": 3.0000000000000075
+    },
+    {
+      "version": 10,
+      "seed": 43,
+      "score": [
+        6,
+        1
+      ],
+      "nearBallTeammates": 0.6302906680265171,
+      "meanTargetShift": 1.109988297296896,
+      "targetShiftsOver4m": 0,
+      "targetShiftSamples": 219257,
+      "maxTargetShift": 3.000000000000008
+    }
+  ],
+  "viewing": {
+    "speed": "normal",
+    "watch": "key",
+    "viewport": [
+      844,
+      364
+    ],
+    "elapsedMs": 104930,
+    "score": [
+      8,
+      2
+    ],
+    "shots": [
+      40,
+      7
+    ],
+    "tick": 60000,
+    "valid": true,
+    "halfTimeReturned": true,
+    "longTasks": 13,
+    "measurement": "Desktop headless Chrome; not a phone FPS guarantee; concurrent local verification"
+  }
+}
