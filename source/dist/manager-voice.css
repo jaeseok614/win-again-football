@@ -115,3 +115,13 @@
  body.management-view #club-pane .mobile-next small{display:none}
  body.management-view #club-pane .mobile-command-card>.mobile-command-actions{grid-row:4!important}
 }
+
+@media(orientation:landscape) and (max-height:280px){
+ #club-press-desk{grid-template-rows:minmax(0,1fr) 72px;gap:2px}
+ #club-press-desk>.voice-desk-heading{display:none}
+ #club-press-desk>.voice-reviews{grid-row:1;overflow:hidden;gap:2px}
+ #club-press-desk>.voice-interview{grid-row:2}
+ #club-press-desk .voice-article{padding:1px}
+ #club-press-desk .voice-article header,#club-press-desk .newsroom-thumb{display:none}
+ #club-press-desk .voice-article h3{font-size:6.5px!important;line-height:1.15!important;margin:0}
+}
