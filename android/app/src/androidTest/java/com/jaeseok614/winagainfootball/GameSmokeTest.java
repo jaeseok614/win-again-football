@@ -826,7 +826,7 @@ public final class GameSmokeTest {
             tapWebElement(reopened,"#manager-notebook [data-notebook-event^='1:']");
             awaitTrue(reopened,"document.getElementById('club-story-dialog').open&&ClubStory.scene(season,clubStoryEvent).readOnly");
             assertEquals("Historical conversations expose no new choice","0",evaluate(reopened,"String(document.querySelectorAll('#club-story-dialog [data-story-choice]').length)"));
-            nativeBack(reopened);
+            reopened.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
             awaitTrue(reopened,"document.getElementById('manager-notebook').open&&!!notebookRows&&notebookTab==='history'&&notebookYear==='1'&&notebookPage===1");
             assertEquals("Filtering, reading and returning must preserve every campaign byte",historical,evaluate(reopened,"JSON.stringify(season)"));
             screenshot(reopened,"android-notebook-season-filter.png");
