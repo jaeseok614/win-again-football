@@ -1,8 +1,12 @@
-# 최신 진행 — 선수의 판단과 책임, 가로 수첩
+# 최신 완료 — 선수의 판단과 책임, 가로 수첩
 
-- 독립된 도움/퇴장 두 갈래6화, 창작4컷과 실제 두 경기 후속 대화를 추가했다. 이전 선택 문장을 정확히 기억하며 현재 징계/선발/전술은 직접 확인·결정한다. 기존4갈래12화와 저장/연속규칙은 보존했다. [설계·정확한 생성 프롬프트](docs/PLAYER_THREADS_2026-10-15.md).
-- 세 갈래 이상은 가로 목록+선택 보고로 모든 이름·회차를 한 화면에 배치한다. 복귀 선택을 유지하고 긴 답변/상태 글씨/기록 넘침을 수정했다. 새 모델13그룹·수첩10그룹, 새9가로크기/6완료전문5크기 및 기존12전문7크기의 브라우저 검증을 통과했다. 최종 Source/Android14·15 검증을 진행한다.
-- 아직 배포 파일을 교체하지 않았다. 현재 Drive의 검증 APK는 아래 cd3288bd판이다. 새 설치 파일은 동일 ID로 교체하기 전에 정확한 커밋·자산·서명을 확인한다.
+- 도움/퇴장의 두 새 갈래6화와 창작4컷, 실제 리그 두 경기·이전 두 답변을 기억하는 후속 면담을 추가했다. 기존4갈래12화/저장/경제/공개 연속1–9는 보존한다. 세 갈래 이상은 모든 이름+선택 보고를 한 가로 화면에 표시하고, 선택·종류·페이지·시즌 복귀와 긴 대답/근거/상태 문구의 경계를 고쳤다. [설계·정확한 생성 프롬프트·증빙](docs/PLAYER_THREADS_2026-10-15.md).
+- 기능 **7d94b2f3af25d1fc18c3fb6b5642faa5d50575d1** /tree **799580c765967d6c2a5cf31023739ed05dd550f2**. [Source38683111860](https://github.com/jaeseok614/win-again-football/actions/runs/38683111860) job116251845991 completed/success: **178 suites /1390checks**, PWA14/Android 자산/공개 생성물 일치. 로컬178/1390, 새9가로 크기/6완료전문5크기와 기존12전문7크기도 통과했다.
+- [Android38683111871](https://github.com/jaeseok614/win-again-football/actions/runs/38683111871): API34 job116251868036/API35 job116251868196 각각 **17/0/0/0**, APK/AAB/lint 성공. XML439.526초/239.96초. 새 이야기 선택·답변·근거·저장·복귀와 두 API 캡처를 확인했다. verification11948683936 SHA256ec660f33e97dcf28fe32cff2fa35913bffec81142c1a30d712d70df33e9fc7a3 /verification11949541176 SHA256852453568879ca0f5fb2e3ea12a6407fd441990c6d8f125a67934869b2fb2418.
+- 기존 연속9의31R 저장 복사본에서 실제4경기를 진행해 새6면담/12답변을 완결하고11개 보존 검사를 통과했다. 이전 모든 답변 prefix/기존4갈래 완결/전체 export·restore가 유지됐다. 사용자 저장을 읽거나 바꾸지 않았다.
+- PWA6040435/shell04d86df676e8. Android게임6040209/SHA256ec641c97cceaf92a30a3ce26c767cbafbd44a71abd07e0c335b82b3c3f0b298e. APK artifact11948219976/ZIP SHA25606affd84d76f08d729440f002403c9922c50f4dff1a1b316e965787454ddbb14. 설치 파일 **6450837바이트 /SHA256cda92bb9f97b7458fe8e3a70d08a87cd07159bd6e6f8975733168e3e17cc75c6**, 내부HTML 바이트 동일.
+- 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view)에 **win-again-20261015-player-threads.apk**만 교체했다. 동일ID/MIME/6450837바이트/부모/수정2026-10-15T04:57:44.972Z를 재조회했고, 다시 내려받은 원격 원본도 SHA256/전체 바이트가 같았다. work/story-threads-20261015/release-evidence.json, final-apk-verification.json, drive-readback-verification.json.
+- 테스트 서명69aad9a0…→91be0a8e… 변경. **이전 앱에서 저장 내보내기→이전 앱 제거→새APK설치→저장 불러오기** 필요. schema10/saveKey 유지, 자동 저장 삭제/시즌 이동 없음. PR25 draft, main 미병합. 이후 마무리는 문서만 변경한다.
 
 # 최신 완료 — 확정 경기로 이어지는 감독 이야기와 기자실
 

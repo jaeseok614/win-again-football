@@ -36,10 +36,31 @@
 
 ## 검증 및 설치판
 
-최종 실행 결과와 설치 파일 증빙은 아래에 기록한다. 기존 배포 APK는 새 버전의 Source/Android 검증을 통과한 뒤에만 같은 Drive ID로 교체한다.
+아래 최종 검증에서 동일 커밋의 Source/Android14·15 성공과 기존 Drive ID의 APK 교체·원본 읽기 확인을 기록했다.
 
 ## 이미지 생성에 보낸 정확한 프롬프트
 
 ```text
 Use case: illustration-story. Create ONE new production game atlas, exactly a seamless 2 by 2 grid of four equal rectangular narrative panels, total 1536x1024 landscape composition, each panel 768x512 wide 3:2. No borders, gutters, lettering, speech bubbles, captions, logos, shirt names or numbers. The reference is our original fictional Korean manager, about 30, tousled black hair and navy tracksuit with cream piping, and Black middle-aged assistant coach; preserve their identities, painted cinematic sports graphic-novel look, forest/navy/cream palette and modest English lower-league club. This is a NEW set of illustrations. TOP LEFT: after a match, the manager listens at eye level to an anonymous adult outfield player seen only from behind, folded towel in his hands, a phone placed face down on the bench; feeling overlooked after assisting a teammate, restrained uncertainty, no goalkeeper gloves. TOP RIGHT: tense empty locker room after a dismissal, the manager and assistant sit across from an anonymous adult outfield player seen from behind with head down, a plain navy jersey folded on the empty bench between them; accountability without humiliation, no referee, no actual red card prop, no violence. BOTTOM LEFT: later on the training ground, two anonymous adult outfield teammates seen from behind discuss where to pass with open palms, manager listens alongside them, a ball rests on the grass; mutual understanding, no celebration or guaranteed goal. BOTTOM RIGHT: later in the same small locker room, the formerly isolated anonymous outfield player seen from behind pulls out an empty stool for a teammate while the manager stands back, a plain navy jersey hangs on the hook; a chance to talk, not a guaranteed starting place or forgiveness. Do not make player faces identifiable: use back views and central gestures so the illustrations suit many actual fictional squad identities. Keep the important interaction in the central two-thirds of each quadrant for safe vertical cropping. Grounded emotional acting, believable hands/anatomy, natural practical lighting, detailed but quiet club textures. No real stars, real team branding, named-artist imitation or existing comic characters. All four panels reach their quadrant edges.
 ```
+
+## 추가 실제 경기 확인
+
+기존 연속9 저장의 31R에서 시작해 두 새 갈래의 첫 질문을 직접 답했다. 같은 선수의 32·33R 뒤2화, 34·35R 뒤3화를 모두 마쳤다. 4실제 연속 경기/6회 면담/12명시적 답변과11개 보존 검사를 통과했다. 점수는0:0,5:0,5:0,4:0, 실제 tick은56400/59400/58800/57600이었다. 기존 네 갈래의 완결과 이전 모든 답변 prefix가 바이트 그대로 남았고, 새 전체 저장의 내보내기/불러오기까지 같았다. 이는 별도 복사본 검증이며 사용자 저장은 읽거나 바꾸지 않았다.
+
+새 브라우저 검사는568×252,568×284,568×320,640×360,740×360,844×364,844×390,915×412,1280×720에서 여섯 이름·회차·확정 근거·질문과44px 조작을 확인했다. 6개의 완결 전문은5크기에서 모든 페이지를 읽고, 기존12화는7크기에서 기존 연속9 저장으로 재확인했다. 선택/본문/이전 두 답변/복귀/전체 JSON 불변과 명시적12답변·새 두 경기·저장 재로드를 확인했다.
+
+모바일 검사 자체의 WebView 문자열을 JSON으로 해석하도록 고쳤다. 초기 문서 탐색 중의 검사 요청도 피하도록 실제 네이티브 페이지/무결성/로더 완료를 먼저 확인한 뒤 문서를 검사한다. 기존45초 초기 준비 제한,15초 응답 제한과 모든 검사 항목은 유지한다.
+
+## 최종 검증과 배포
+
+최종 기능/검증 커밋 **7d94b2f3af25d1fc18c3fb6b5642faa5d50575d1**, tree **799580c765967d6c2a5cf31023739ed05dd550f2**. 이후 마무리 커밋은 문서만 바꾼다.
+
+- [Source38683111860](https://github.com/jaeseok614/win-again-football/actions/runs/38683111860), job116251845991: **178 suites /1,390checks**, PWA14, Android 오프라인 자산 및 공개 생성물의 소스 일치 성공. 로컬 전체 검사도178/1390이다.
+- [Android38683111871](https://github.com/jaeseok614/win-again-football/actions/runs/38683111871): API34 job116251868036/API35 job116251868196, 모두 completed/success. 각 **17tests /실패0 /오류0 /건너뛰기0**, APK/AAB/lint 성공. 새 이야기 선택·확정 근거·직접 답변·마지막 반응·선택 복귀·두 실제 리그 경기·완전한 저장 재로드를 포함한다.
+- API34 verification11948683936: ZIP SHA256 `ec660f33e97dcf28fe32cff2fa35913bffec81142c1a30d712d70df33e9fc7a3`, XML17/0/0/0,439.526초. API35 verification11949541176: ZIP SHA256 `852453568879ca0f5fb2e3ea12a6407fd441990c6d8f125a67934869b2fb2418`, XML17/0/0/0,239.96초. 두 API의 실제 수첩/새 대화 캡처와 기존 경기 화면을 직접 확인했다.
+- PWA **6,040,435바이트 /shell04d86df676e8**. Android 게임 **6,040,209바이트 /SHA256 `ec641c97cceaf92a30a3ce26c767cbafbd44a71abd07e0c335b82b3c3f0b298e`**. 18개 WebP 포함과 신규 아틀라스 단일 포함을 정확히 검사한다.
+- API34 APK artifact11948219976, ZIP SHA256 `06affd84d76f08d729440f002403c9922c50f4dff1a1b316e965787454ddbb14`. 내부 게임 HTML이 로컬 최종 자산과 바이트 동일하다. APK **6,450,837바이트 /SHA256 `cda92bb9f97b7458fe8e3a70d08a87cd07159bd6e6f8975733168e3e17cc75c6`**.
+- 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view)에 **win-again-20261015-player-threads.apk**만 교체했다. ID1nSujeFdST1on5jVkSCNrH2CleLCibWkc /MIMEapplication/vnd.android.package-archive /6450837바이트 /부모0ACEDMU5UjS2_Uk9PVA /수정2026-10-15T04:57:44.972Z를 재조회했다. 원격 원본을 다시 내려받은 전체 바이트와 SHA256도 검증 APK와 같다.
+- 서명은 이전 `69aad9a0c273707f09ce65a40fbdecfe80951fe0dd2bd700a9f7528bda8d08c2` → 새 `91be0a8e7d97b102641f55a706683464b8e66b4a27e39134a2bba66141763537`. **기존 앱에서 저장 내보내기 → 기존 앱 제거 → 새 APK 설치 → 저장 불러오기** 순서가 필요하다. 사용자 저장 자동 삭제·시즌 전환은 하지 않는다.
+- 브랜치 codex/football-realism-20261012, PR25 draft/main 미병합. 이번 파일은 테스트용 debug APK다. 새 서사/가로 배치를 검증했으며, 새 경기 물리·전술 밸런스 변경이나 스토어 심사/시장 성과 검증으로 부르지 않는다.
