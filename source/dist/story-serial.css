@@ -81,3 +81,8 @@
  #club-story-dialog[data-story-serial=true] .story-evidence dt{font-size:7px;line-height:1.3}
  .serial-card p{font-size:7px;line-height:1.15}.serial-card h3{font-size:9px}.serial-card small{font-size:7px}.serial-card>.drama-art{display:none}.serial-card{grid-template-columns:minmax(0,1fr)}
 }
+
+#manager-notebook>header>div{min-width:0;flex:1}
+#manager-notebook .notebook-year-filter{height:44px;min-height:44px;flex:0 0 136px;max-width:136px;min-width:0;padding:3px 5px;font-size:10px;color:#edf3de;background:#203c35;border:1px solid #65816c;border-radius:5px}
+#manager-notebook .notebook-year-filter:focus-visible{outline:2px solid #d4f39e;outline-offset:-3px}
+@media(max-width:740px){#manager-notebook .notebook-year-filter{flex-basis:110px;max-width:110px;font-size:9px}#manager-notebook:has(.notebook-year-filter)>header h2{font-size:12px}}

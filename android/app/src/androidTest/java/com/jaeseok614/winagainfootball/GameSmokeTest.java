@@ -815,6 +815,23 @@ public final class GameSmokeTest {
             assertEquals(receipt,evaluate(reopened,"JSON.stringify(season.clubStory.records.filter(r=>r.event==='1:notebook-first'))"));
             assertEquals("The same explicit answers restore into the completed scene", "true", evaluate(reopened,
                 "(()=>{const d=ClubStory.scene(season,'1:notebook-first');return d.step===2&&d.answered[0].choice==='practical'&&d.answered[1].choice==='honest'&&!!d.reply;})()"));
+            evaluate(reopened,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41);for(let y=0;y<2;y++){while(!S.ready(season)){while(season.match.phase!=='full'){if(!F.running(season.match))F.begin(season.match);F.finishSegment(season.match);}season=S.settle(season);}season=S.nextSeason(season);}state=season.match;managementMeetingKey=season.seed+':'+season.year+':'+season.round;setView('club');openManagerNotebook();return true;})()");
+            awaitTrue(reopened,"!!notebookRows");
+            tapWebElement(reopened,"#manager-notebook [data-notebook-tab=history]");
+            String historical=evaluate(reopened,"JSON.stringify(season)");
+            assertEquals("The inline season filter is a visible 44px control inside its header","true",evaluate(reopened,"(()=>{const e=document.querySelector('[data-notebook-year]'),r=e?.getBoundingClientRect(),h=e?.parentElement.getBoundingClientRect();return !!r&&r.height>=44&&r.left>=h.left&&r.right<=h.right&&r.top>=h.top&&r.bottom<=h.bottom;})()"));
+            evaluate(reopened,"(()=>{const e=document.querySelector('[data-notebook-year]');e.value='1';e.dispatchEvent(new Event('change',{bubbles:true}));return true;})()");
+            awaitTrue(reopened,"notebookYear==='1'&&notebookPage===0&&[...document.querySelectorAll('[data-notebook-event]')].every(e=>e.dataset.notebookEvent.startsWith('1:'))");
+            tapWebElement(reopened,"#manager-notebook [data-notebook-page='1']");
+            tapWebElement(reopened,"#manager-notebook [data-notebook-event^='1:']");
+            awaitTrue(reopened,"document.getElementById('club-story-dialog').open&&ClubStory.scene(season,clubStoryEvent).readOnly");
+            assertEquals("Historical conversations expose no new choice","0",evaluate(reopened,"String(document.querySelectorAll('#club-story-dialog [data-story-choice]').length)"));
+            nativeBack(reopened);
+            awaitTrue(reopened,"document.getElementById('manager-notebook').open&&!!notebookRows&&notebookTab==='history'&&notebookYear==='1'&&notebookPage===1");
+            assertEquals("Filtering, reading and returning must preserve every campaign byte",historical,evaluate(reopened,"JSON.stringify(season)"));
+            screenshot(reopened,"android-notebook-season-filter.png");
+            reopened.onActivity(activity -> assertTrue("Season filter generated JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+
         }
     }
 
