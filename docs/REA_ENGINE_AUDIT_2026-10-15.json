@@ -3498,5 +3498,235 @@
     "halfTimeReturned": true,
     "longTasks": 13,
     "measurement": "Desktop headless Chrome; not a phone FPS guarantee; concurrent local verification"
+  },
+  "releaseValidation": {
+    "functionalCommit": "71e60ed2de158509d38bf743512d5339404b814e",
+    "functionalTree": "9172672dbfdd29bbab09a9e072d0090849f9e2b0",
+    "source": {
+      "id": 38700994967,
+      "head": "71e60ed2de158509d38bf743512d5339404b814e",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/jaeseok614/win-again-football/actions/runs/38700994967",
+      "suites": 182,
+      "checks": 1419,
+      "pwaGroups": 14,
+      "publicAssetsIdentical": true
+    },
+    "android": {
+      "id": 38700994752,
+      "head": "71e60ed2de158509d38bf743512d5339404b814e",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/jaeseok614/win-again-football/actions/runs/38700994752",
+      "jobs": [
+        {
+          "id": 116308855073,
+          "name": "Android API 35",
+          "conclusion": "success"
+        },
+        {
+          "id": 116308855291,
+          "name": "Android API 34",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 11956890327,
+          "name": "win-again-android-verification-api35-f55844ecbfba5fee263dd61ecf25c13446fac1e6",
+          "digest": "sha256:830c22cf02929255a50ff41fd198b7f990bdbf9f92c684991a7f6f8a33efa45f",
+          "head": "71e60ed2de158509d38bf743512d5339404b814e"
+        },
+        {
+          "id": 11956750731,
+          "name": "win-again-android-api35-f55844ecbfba5fee263dd61ecf25c13446fac1e6",
+          "digest": "sha256:221f7523275391a89ccfa450bf6e635ddb3b96d0113a5049e628c43eef53f829",
+          "head": "71e60ed2de158509d38bf743512d5339404b814e"
+        },
+        {
+          "id": 11956713463,
+          "name": "win-again-android-verification-api34-f55844ecbfba5fee263dd61ecf25c13446fac1e6",
+          "digest": "sha256:25cecdcda2b26f616da10e41bac0cd2dc72c1efe0e5b4f113b931a675a559786",
+          "head": "71e60ed2de158509d38bf743512d5339404b814e"
+        },
+        {
+          "id": 11955553730,
+          "name": "win-again-android-api34-f55844ecbfba5fee263dd61ecf25c13446fac1e6",
+          "digest": "sha256:ed030dbe50c6f1ad80419d17ec0d002f26ce34bf01822e606e3f35679d5ee107",
+          "head": "71e60ed2de158509d38bf743512d5339404b814e"
+        }
+      ],
+      "native": [
+        {
+          "name": "com.jaeseok614.winagainfootball.GameSmokeTest",
+          "tests": "18",
+          "failures": "0",
+          "errors": "0",
+          "skipped": "0",
+          "time": "252.855",
+          "timestamp": "2026-10-15T07:52:59",
+          "hostname": "localhost",
+          "artifact_sha256": "25cecdcda2b26f616da10e41bac0cd2dc72c1efe0e5b4f113b931a675a559786"
+        },
+        {
+          "name": "com.jaeseok614.winagainfootball.GameSmokeTest",
+          "tests": "18",
+          "failures": "0",
+          "errors": "0",
+          "skipped": "0",
+          "time": "366.33",
+          "timestamp": "2026-10-15T07:55:21",
+          "hostname": "localhost",
+          "artifact_sha256": "830c22cf02929255a50ff41fd198b7f990bdbf9f92c684991a7f6f8a33efa45f"
+        }
+      ]
+    },
+    "browser": {
+      "sizes": 9,
+      "scenarios": 216,
+      "denseWorkspacesSizes": 8,
+      "playerProfileSizes": 8
+    },
+    "fullPhysicalSeason": {
+      "seed": 41,
+      "version": 10,
+      "games": 49,
+      "leagueGames": 46,
+      "cupGames": 3,
+      "ending": {
+        "year": 1,
+        "round": 46,
+        "rank": {
+          "id": "brynwell",
+          "name": "토투넘 핫스퍼",
+          "en": "Brynwell Rovers",
+          "short": "토투넘",
+          "code": "TT",
+          "color": "#c8f36e",
+          "style": "빠른 유망주를 가진 작은 시민 구단",
+          "attack": 70,
+          "defense": 70,
+          "middle": 71,
+          "speed": 68,
+          "played": 46,
+          "won": 44,
+          "drawn": 2,
+          "lost": 0,
+          "gf": 326,
+          "ga": 53,
+          "points": 134,
+          "gd": 273,
+          "rank": 1
+        },
+        "balance": 631900,
+        "records": 49,
+        "cupChampion": "redmere"
+      },
+      "explicitNext": {
+        "year": 2,
+        "division": 4
+      },
+      "userSaveUsed": false
+    },
+    "recruitedCampaign": {
+      "seed": 37,
+      "version": 10,
+      "rows": [
+        {
+          "round": 1,
+          "competition": "league",
+          "score": [
+            9,
+            1
+          ],
+          "identity": "r_m2",
+          "face": 167,
+          "appearances": 1,
+          "per90": {
+            "minutes": 98,
+            "goals": 0,
+            "assists": 1.84
+          }
+        },
+        {
+          "round": 2,
+          "competition": "league",
+          "score": [
+            6,
+            1
+          ],
+          "identity": "r_m2",
+          "face": 167,
+          "appearances": 2,
+          "per90": {
+            "minutes": 198,
+            "goals": 0,
+            "assists": 0.91
+          }
+        },
+        {
+          "round": 3,
+          "competition": "league",
+          "score": [
+            5,
+            3
+          ],
+          "identity": "r_m2",
+          "face": 167,
+          "appearances": 3,
+          "per90": {
+            "minutes": 298,
+            "goals": 0,
+            "assists": 0.6
+          }
+        }
+      ]
+    },
+    "pwa": {
+      "bytes": 6264298,
+      "sha256": "64d63600fb4f4c834d37387188f9db68319026762219863a77b181667ac17436",
+      "revision": "44afb1f0d43b"
+    },
+    "apk": {
+      "bytes": 6613309,
+      "sha256": "9dc512f95127978cee989e9a9404948596bd171808ac6cd3dda79cbbf9acd0fe",
+      "game": {
+        "schema": 1,
+        "applicationId": "com.jaeseok614.winagainfootball",
+        "versionName": "1.0.0",
+        "versionCode": 1,
+        "saveKey": "win-again-season-v17",
+        "bytes": 6264072,
+        "sha256": "a4d6bb2964d8cfb2c5b83c06b4e3aec71396c0ac8d4fd36f331d1d0e359afc0c"
+      },
+      "previousSigner": [
+        "91be0a8e7d97b102641f55a706683464b8e66b4a27e39134a2bba66141763537"
+      ],
+      "newSigner": [
+        "c000500b6411321741a4edc266392e8005ae933f88e9ed0640986e0190e55c36"
+      ],
+      "sameSigner": false
+    },
+    "drive": {
+      "id": "1nSujeFdST1on5jVkSCNrH2CleLCibWkc",
+      "name": "win-again-20261015-rea-football.apk",
+      "bytes": 6613309,
+      "modifiedTime": "2026-10-15T08:00:50.676Z",
+      "parentIds": [
+        "0ACEDMU5UjS2_Uk9PVA"
+      ],
+      "url": "https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk",
+      "rawReadback": {
+        "bytes": 6613309,
+        "sha256": "9dc512f95127978cee989e9a9404948596bd171808ac6cd3dda79cbbf9acd0fe",
+        "exact": true
+      }
+    },
+    "interimNative": {
+      "commit": "99d8e74daad5507b94468daf644e71eeb4f58d4c",
+      "run": 38699674515,
+      "api35Failure": "Old paginated report test queried a removed report-page-select; updated to actual integrated board, 4 instructions, 22 names, inner glyph/viewport/44px bounds. No app physics or threshold change."
+    }
   }
 }
