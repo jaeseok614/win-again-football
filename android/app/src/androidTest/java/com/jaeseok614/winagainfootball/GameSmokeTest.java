@@ -856,7 +856,7 @@ public final class GameSmokeTest {
                 screenshot(scenario,"android-thread-"+kind+".png");
                 tapWebElement(scenario,"#club-story-dialog footer [data-story-close]");
                 awaitTrue(scenario,"notebookDialog.open&&!!notebookRows");
-                assertEquals("The same inline story selection returns",kind,evaluate(scenario,"notebookSeriesSelection"));
+                assertEquals("The same inline story selection returns",kind,new JSONTokener(evaluate(scenario,"notebookSeriesSelection")).nextValue().toString());
                 before=evaluate(scenario,"JSON.stringify(season)");
             }
             screenshot(scenario,"android-six-story-workspace.png");
