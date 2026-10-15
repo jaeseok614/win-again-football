@@ -19,14 +19,14 @@
  const thoughts={board:'좋은 말만 하면 문은 쉽게 열린다. 그 다음 장부와 결과표까지 책임지는 건 내 몫이다.',coach:'이 사람은 내 전술이 예쁜지보다 선수들이 실행할 수 있는지를 본다. 듣기 싫어도 끝까지 듣자.',captain:'주장의 말 뒤에는 라커룸 전체가 서 있다. 한 사람의 표정으로 팀 전체를 단정하지 말자.',rookie:'기다리는 입장은 길다. 내가 쉽게 던진 약속은 저 아이에겐 매일 세는 날짜가 된다.',fans:'이 팀을 사랑한 시간은 내가 제일 짧다. 아는 척하기 전에 어떤 주말을 보냈는지부터 듣자.'};
  function story(s,d){
   if(!d)return d;const b=beats[d.key]||{},index=['listen','bold','practical'].indexOf(d.answered[0]?.choice),out={...d,choices:d.choices.map(c=>({...c}))};
-  out.scene=b.scene||d.scene;out.options=b.options||d.options;out.thought=b.thought||thoughts[d.relation]||'전생의 기억이 다음 골을 넣어주진 않는다. 여기선 내가 직접 판단하고 책임져야 한다.';
+  out.scene=b.scene||d.scene;out.options=b.options||d.options;out.thought=b.thought||d.thought||thoughts[d.relation]||'전생의 기억이 다음 골을 넣어주진 않는다. 여기선 내가 직접 판단하고 책임져야 한다.';
   if(d.step===0){out.question=b.question||d.question;if(b.options)out.choices=out.choices.map((c,i)=>({...c,label:b.options[i]}));}
   if(index>=0&&b.replies)out.reaction=b.replies[index];
   if(d.question==='감독님, 오늘의 답을 다음 행동에서도 이어갈 수 있을까요?')out.question=d.relation==='board'?'좋아. 다음 선택에서도 그 말을 지킬 건가?':'말은 들었어요. 다음 행동에서도 같은 기준을 지킬 수 있죠?';
   if(d.reply==='“그 말을 기억하겠습니다. 다음 행동을 기다릴게요.”')out.reply=d.relation==='board'?'좋아. 그 말은 기억하겠네. 이제 행동을 보자.':d.relation==='coach'?'오케이. 다음 훈련에선 그 기준부터 확인하죠.':'알겠어요. 다음에 제 이름을 부를 때도 그 말을 기억해 주세요.';
   if(d.reply==='“조건까지 솔직하게 말해 주셔서 감사합니다. 함께 확인하죠.”')out.reply=d.relation==='board'?'좋아. 빈 약속보단 그게 낫네. 조건부터 같이 보자.':'그럼 기준을 같이 봐요. 좋은 말만 듣겠다는 뜻은 아니니까.';
-  if(d.step===1)out.thought=d.key==='rookie'?'출전 약속은 분위기를 좋게 만드는 문장이 아니다. 다음 두 리그 경기의 실제 시간을 내줘야 한다.':index===1?'세게 말하는 건 쉽다. 이제 그 말 뒤에 선수들을 혼자 세워두면 안 된다.':index===0?'들었다고 끝이 아니다. 다음 행동이 없으면 오늘 대화도 그냥 좋은 말로 남는다.':'계획은 그럴듯하다. 실제 명단과 일정에 들어갈 때도 같은 기준을 지킬 수 있을까.';
-  if(d.step===2)out.thought=d.mission?'약속은 남았다. 기록으로 지킬 수 있는지 확인하자. 내 기억보다 선수의 실제 출전 시간이 더 정확하다.':'말은 기록됐고, 경기는 아직 남아 있다. 오늘의 대답을 다음 선택으로 보여주자.';
+  if(d.step===1&&!d.serial)out.thought=d.key==='rookie'?'출전 약속은 분위기를 좋게 만드는 문장이 아니다. 다음 두 리그 경기의 실제 시간을 내줘야 한다.':index===1?'세게 말하는 건 쉽다. 이제 그 말 뒤에 선수들을 혼자 세워두면 안 된다.':index===0?'들었다고 끝이 아니다. 다음 행동이 없으면 오늘 대화도 그냥 좋은 말로 남는다.':'계획은 그럴듯하다. 실제 명단과 일정에 들어갈 때도 같은 기준을 지킬 수 있을까.';
+  if(d.step===2&&!d.serial)out.thought=d.mission?'약속은 남았다. 기록으로 지킬 수 있는지 확인하자. 내 기억보다 선수의 실제 출전 시간이 더 정확하다.':'말은 기록됐고, 경기는 아직 남아 있다. 오늘의 대답을 다음 선택으로 보여주자.';
   return out;
  }
  function split(text,limit){
@@ -37,6 +37,12 @@
   if(d.step===0){const scene=split(d.scene,Math.max(180,limit-d.thought.length-d.question.length-30));return scene.map((text,i)=>page([block('장면',text),...(i===scene.length-1?[block('속마음',d.thought),block(d.questionSpeaker||d.name,d.question)]:[])]));}
   if(d.step===1)return [page([block(d.name,d.reaction),block('속마음',d.thought),block(d.name,d.question)])];
   const first=d.answered[0],original=d.options?.[['listen','bold','practical'].indexOf(first?.choice)];
+  if(d.serial){
+   const budget=Math.max(150,Math.floor(limit*.6));
+   function fragments(text){return split(text,budget-24).flatMap(part=>{if(part.length<=budget-24)return [part];const parts=[];let line='';for(const word of part.split(/\s+/)){if(line&&line.length+word.length+1>budget-24){parts.push(line);line='';}line+=(line?' ':'')+word;}if(line)parts.push(line);return parts;});}
+   function group(blocks,kind){const out=[];let current=[],used=0;const flush=()=>{if(current.length)out.push({...page(current),kind:current.some(b=>b.finalReply)?'complete-reply':kind});current=[];used=0;};for(const b of blocks)for(const text of fragments(b.text)){const cost=text.length+b.speaker.length+10;if(current.length&&used+cost>budget)flush();current.push({...b,text});used+=cost;}flush();return out;}
+   return [...group([block('장면',d.scene)],'complete-scene'),...group([block('감독',original||'첫 대답'),block(d.name,d.reaction),block(d.name,d.question)],'complete-first-answer'),...group([block('감독',d.finalLabel),{...block(d.name,d.reply),finalReply:true}],'complete-last-answer'),...group([block('속마음',d.thought),...(d.impact?[block('경기력 반영',d.impact)]:[])],'complete-outcome')];
+  }
   return [page([block('장면',d.scene),block('속마음',d.thought)]),page([block('감독',original||'첫 대답'),block(d.name,d.reaction),block(d.name,d.question)]),page([block('감독',d.finalLabel),block(d.name,d.reply),block('속마음',d.thought),...(d.impact?[block('경기력 반영',d.impact)]:[])])];
  }
  function press(s,q){
@@ -44,7 +50,7 @@
   const question=before?q.opponent+'전입니다. '+(division===5?'이름값은 위 리그인데 무대는 5부죠. ':'')+'기대가 부담입니까, 아니면 결과로 답할 겁니까?':q.penalties?'승부차기 '+(win?'끝에 올라섰습니다. 긴 승부를 버틴 선수들에게 뭐라고 했습니까?':'끝에 멈췄습니다. 아쉬운 장면 하나에 책임을 몰아줄 생각은 없습니까?'):win?q.score.join(' : ')+' 승리입니다. 선수들이 잘한 겁니까, 감독의 준비가 맞아떨어진 겁니까?':draw?q.score.join(' : ')+'로 끝났습니다. 얻은 승점이라고 봅니까, 놓친 경기라고 봅니까?':q.score.join(' : ')+' 패배입니다. 전술도 교체도 감독의 선택이었죠. 팬들에게 뭐라고 하실 겁니까?';
   const answers=before?['상대를 얕보진 않아. 오늘 준비한 것부터 제대로 해보자.','이길 생각으로 나간다. 말한 만큼 내가 먼저 준비할게.','부담은 내가 받는다. 선수들은 자기 역할에 집중하면 돼.']:['한 경기로 전부를 설명하진 않을게. 잘한 건 살리고 놓친 건 고치자.','선수들이 버텨줬다. 이 결과의 책임도 다음 준비도 내 몫이다.','선수 한 명에게 결과를 씌우지 마. 명단과 지시는 내가 정했다.'];
   const choice=['modest','confident','protect'].indexOf(q.choice),reaction=choice===0?'큰 약속보다 다음 준비를 보겠다는 답이군요. 다음 경기에서 확인하겠습니다.':choice===1?'분명히 말씀하셨습니다. 결과가 달라져도 그 책임을 피하지 않으실 거죠?':'선수들을 보호하겠다는 말, 오늘 기사에도 남기겠습니다. 다음 선택도 지켜보죠.';
-  return {...q,reporter:before?'정유라 기자':'강태욱 기자',outlet:before?'풋볼 인사이드':'터치라인 스포츠',question,thought:before?'첫 질문부터 날이 서 있네. 큰소리는 기사 한 줄이면 끝나지만, 그 부담은 선수들이 뛴다.':win?'기분 좋다고 뭐든 약속하진 말자. 다음 상대는 오늘의 환호를 기다려주지 않는다.':'마이크 앞에서 핑계를 찾으면 라커룸에서 아무도 내 말을 안 믿는다.',answers,spoken:choice>=0?answers[choice]:null,reaction:q.answered?reaction:null};
+  return {...q,context:(root.PressContext||(typeof require==='function'?require('./press-context.js'):null))?.read(s,q)||null,reporter:before?'정유라 기자':'강태욱 기자',outlet:before?'풋볼 인사이드':'터치라인 스포츠',question,thought:before?'첫 질문부터 날이 서 있네. 큰소리는 기사 한 줄이면 끝나지만, 그 부담은 선수들이 뛴다.':win?'기분 좋다고 뭐든 약속하진 말자. 다음 상대는 오늘의 환호를 기다려주지 않는다.':'마이크 앞에서 핑계를 찾으면 라커룸에서 아무도 내 말을 안 믿는다.',answers,spoken:choice>=0?answers[choice]:null,reaction:q.answered?reaction:null};
  }
  const api={story,pages,press};root.ManagerVoice=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

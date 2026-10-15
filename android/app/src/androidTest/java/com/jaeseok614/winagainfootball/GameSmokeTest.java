@@ -813,6 +813,67 @@ public final class GameSmokeTest {
         }
     }
 
+    @Test public void serialMeetingsUseRealLaterGamesAndPersistExplicitAnswers() throws Exception {
+        String answers;
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{suspensions:true});for(let i=0;i<6;i++){while(season.match.phase!=='full'){if(!F.running(season.match))F.begin(season.match);F.finishSegment(season.match);}season=S.settle(season);}state=season.match;setView('club');save();openManagerNotebook();return true;})()");
+            awaitTrue(scenario, "!!notebookRows");
+            String before = evaluate(scenario, "JSON.stringify(season)");
+            tapWebElement(scenario, "#manager-notebook [data-notebook-tab='series']");
+            assertEquals("All available story arcs and actual episode actions fit the landscape screen", "true", evaluate(scenario,
+                "(()=>{const d=document.getElementById('manager-notebook');return document.querySelectorAll('.serial-card').length===StorySerial.read(season).length&&d.scrollHeight<=d.clientHeight+1&&[...d.querySelectorAll('.serial-card,.serial-stages button')].every(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&e.scrollHeight<=e.clientHeight+1;});})()"));
+            assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
+            tapWebElement(scenario, "#manager-notebook [data-notebook-event='1:serial-board-1']");
+            assertEquals("The original scene and all three confirmed evidence facts remain visible", "true", evaluate(scenario,
+                "(()=>{const d=document.getElementById('club-story-dialog'),art=d.querySelector('.drama-art'),facts=d.querySelector('.story-evidence'),r=facts.getBoundingClientRect();return d.open&&getComputedStyle(art).backgroundImage.includes('data:image/webp')&&facts.querySelectorAll('dd').length===3&&r.top>=0&&r.bottom<=innerHeight&&facts.scrollHeight<=facts.clientHeight+1;})()"));
+            reachStoryQuestion(scenario);
+            tapWebElement(scenario, "#club-story-dialog [data-story-choice='practical']");
+            reachStoryQuestion(scenario);
+            tapWebElement(scenario, "#club-story-dialog [data-story-choice='honest']");
+            awaitTrue(scenario,"ClubStory.scene(season,'1:serial-board-1').step===2");
+            answers=evaluate(scenario,"JSON.stringify(season.clubStory.records.filter(r=>r.event==='1:serial-board-1'))");
+            scenario.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
+            awaitTrue(scenario,"document.getElementById('manager-notebook').open&&!!notebookRows&&notebookTab==='series'");
+            assertEquals("A follow-up cannot appear before two later confirmed league games", "true", evaluate(scenario,"ClubStory.scene(season,'1:serial-board-2')===null"));
+        }
+        try (ActivityScenario<MainActivity> reopened = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(reopened);
+            assertEquals(answers,evaluate(reopened,"JSON.stringify(season.clubStory.records.filter(r=>r.event==='1:serial-board-1'))"));
+            evaluate(reopened,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;for(let i=0;i<2;i++){while(season.match.phase!=='full'){if(!F.running(season.match))F.begin(season.match);F.finishSegment(season.match);}season=S.settle(season);}state=season.match;render();setView('club');openClubStory('1:serial-board-2');return true;})()");
+            reachStoryQuestion(reopened);
+            assertEquals("Follow-up remembers the actual earlier answer and both later scores", "true", evaluate(reopened,
+                "(()=>{const d=ClubStory.scene(season,'1:serial-board-2'),rows=season.statistics.records.filter(g=>g.competition==='league'&&g.round>6&&g.round<=8),body=document.querySelector('#club-story-dialog .story-reading');return d.serial.episode===2&&d.scene.includes('현재 자금·주급')&&rows.length===2&&rows.every(g=>d.scene.includes(g.round+'R '+g.score.join(' : ')))&&body.scrollHeight<=body.clientHeight+1;})()"));
+            screenshot(reopened,"android-serial-followup.png");
+            reopened.onActivity(activity -> assertTrue("Serial narrative generated JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
+    @Test public void contextualPressRetainsTheReplyAndOpensTheNextRealQuestion() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(614,{suspensions:true});for(let i=0;i<3;i++){while(season.match.phase!=='full'){if(!F.running(season.match))F.begin(season.match);F.finishSegment(season.match);}season=S.settle(season);}state=season.match;voiceHomeAnswered=null;voiceHomeKey='';setView('club');return true;})()");
+            tapWebElement(scenario, "#club-press-desk [data-life-press='after'][data-life-answer='protect']");
+            awaitTrue(scenario,"!!document.querySelector('#club-press-desk [data-voice-review=after] .voice-saved')");
+            assertEquals("The post-match answer and journalist reaction stay on home", "true", evaluate(scenario,
+                "(()=>{const card=document.querySelector('#club-press-desk [data-voice-review=after]'),raw=ClubLife.pressStatus(season).after,q=ManagerVoice.press(season,raw);return card.textContent.includes(q.spoken)&&card.textContent.includes(q.reaction)&&raw.choice==='protect'&&voiceHomeAnswered.id===raw.id;})()"));
+            String saved=evaluate(scenario,"JSON.stringify(season)");
+            tapWebElement(scenario,"#club-press-desk [data-voice-review=after]");
+            awaitTrue(scenario,"document.getElementById('management-dialog').open&&document.getElementById('voice-press-phase').value==='before'");
+            assertEquals(saved,evaluate(scenario,"JSON.stringify(season)"));
+            assertEquals("The exact confirmed context, all prose and three answers fit the actual phone", "true", evaluate(scenario,
+                "(()=>{const side=document.querySelector('.voice-press-side .voice-interview'),context=ManagerVoice.press(season,ClubLife.pressStatus(season).before).context;return side.textContent.includes(context.question)&&side.textContent.includes(context.fact)&&side.scrollHeight<=side.clientHeight+1&&[...side.querySelectorAll('h3,p,button')].every(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&e.scrollHeight<=e.clientHeight+1;});})()"));
+            tapWebElement(scenario,"#management-close");
+            tapWebElement(scenario,"#club-press-desk [data-news-article='review:analysis']");
+            awaitTrue(scenario,"document.getElementById('news-article-dialog').open");
+            assertEquals("Original full article and added factual paragraphs remain available", "true", evaluate(scenario,
+                "(()=>{const d=document.getElementById('news-article-dialog'),copy=d.querySelector('.news-article-copy'),close=document.getElementById('news-article-close'),back=document.getElementById('news-article-return');return copy.querySelectorAll(':scope>p').length===6&&d.scrollHeight<=d.clientHeight+1&&[close,back].every(e=>{const r=e.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight;});})()"));
+            assertEquals(saved,evaluate(scenario,"JSON.stringify(season)"));
+            screenshot(scenario,"android-contextual-press-article.png");
+            scenario.onActivity(activity -> assertTrue("Contextual press generated JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
     @Test public void nativeOriginValidationRejectsConfusableAndFileUrls() {
         assertTrue(MainActivity.isGameDocument(Uri.parse(MainActivity.GAME_URL + "#match")));
         assertFalse(MainActivity.isGameDocument(Uri.parse("https://appassets.androidplatform.net.evil.test/assets/game/index.html")));
