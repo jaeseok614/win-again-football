@@ -484,6 +484,93 @@
     "browserColdImport": true,
     "clubGrowthViewports": 6,
     "clubGrowthImagesInspected": true,
-    "interpretation": "Separate continuation from the existing valid legacy test archive; not a promotion reached by the new six-season career. Unoptimised carried lineup included a goalkeeper with keeping74 against keeping90 in the first opponent."
+    "interpretation": "Separate continuation from the existing valid legacy test archive; not a promotion reached by the new six-season career. Unoptimised carried lineup included a goalkeeper with keeping74 against keeping90 in the first opponent.",
+    "coachComparison": {
+      "sameOriginalSeed": true,
+      "formation": "442",
+      "entering": [
+        {
+          "identity": "sp_g1",
+          "name": "굴리엘모 비카리오우",
+          "primary": 88
+        },
+        {
+          "identity": "sp_d3",
+          "name": "페드로 포로우",
+          "primary": 86
+        },
+        {
+          "identity": "sp_m5",
+          "name": "파페 마타 사르르",
+          "primary": 87
+        },
+        {
+          "identity": "sp_f2",
+          "name": "도미닉 솔랑케잉",
+          "primary": 91
+        }
+      ],
+      "results": [
+        {
+          "name": "carried",
+          "goalkeeper": {
+            "id": "g2",
+            "identity": "sp_g2",
+            "keeping": 74
+          },
+          "lineup": [
+            "g2",
+            "d6",
+            "d5",
+            "d4",
+            "d1",
+            "m3",
+            "m2",
+            "m4",
+            "m1",
+            "f1",
+            "f4"
+          ],
+          "score": [
+            2,
+            3
+          ],
+          "shots": [
+            12,
+            29
+          ]
+        },
+        {
+          "name": "coach",
+          "goalkeeper": {
+            "id": "g1",
+            "identity": "sp_g1",
+            "keeping": 88
+          },
+          "lineup": [
+            "g1",
+            "d4",
+            "d1",
+            "d5",
+            "d3",
+            "m3",
+            "m1",
+            "m5",
+            "m2",
+            "f2",
+            "f4"
+          ],
+          "score": [
+            4,
+            2
+          ],
+          "shots": [
+            8,
+            15
+          ]
+        }
+      ],
+      "interpretation": "One same-seed/opponent/formation fixture; multiple players changed, so this does not isolate a goalkeeper-only effect or establish a general win rate."
+    }
   }
 }
