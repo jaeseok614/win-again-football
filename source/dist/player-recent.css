@@ -1,0 +1,18 @@
+#player-detail-dialog .player-recent-report{min-width:0;min-height:0;height:100%;display:flex;flex-direction:column;gap:5px}
+#player-detail-dialog .player-recent-report h3{font-size:13px;line-height:17px;margin:0;color:#d6f893}
+#player-detail-dialog .player-recent-report p{margin:0;word-break:keep-all;overflow-wrap:anywhere}
+#player-detail-dialog .player-rate-summary{font-size:11px;line-height:15px;color:#b6ced8}#player-detail-dialog .player-rate-summary b{color:#e3f7b5}
+#player-detail-dialog .player-recent-report table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:11px;line-height:14px}
+#player-detail-dialog .player-recent-report th:first-child{width:46%;text-align:left}#player-detail-dialog .player-recent-report th{font-weight:500;color:#b9d3dc}
+#player-detail-dialog .player-recent-report :is(th,td){padding:4px 2px;border-bottom:1px solid #314955;text-align:center;word-break:keep-all;overflow-wrap:anywhere}
+#player-detail-dialog .player-recent-report th small{display:block;font-size:10px;color:#e3ecee}
+#player-detail-dialog [data-form-result=win]{color:#d4f495}#player-detail-dialog [data-form-result=draw]{color:#f5da83}#player-detail-dialog [data-form-result=loss]{color:#f6ad9a}
+#player-detail-dialog .player-recent-note{margin-top:auto;font-size:10px;line-height:13px;color:#abc5ce}
+#player-detail-dialog .player-recent-empty{font-size:12px;line-height:17px;padding:8px;background:#152b34}
+@media(orientation:landscape) and (max-height:330px){#player-detail-dialog .player-recent-report{gap:2px}#player-detail-dialog .player-recent-report h3{font-size:10px;line-height:12px}#player-detail-dialog .player-rate-summary{font-size:9px;line-height:11px}#player-detail-dialog .player-recent-report table{font-size:9px;line-height:10px}#player-detail-dialog .player-recent-report th small{font-size:8px;line-height:10px}#player-detail-dialog .player-recent-report :is(th,td){padding:1px}#player-detail-dialog .player-recent-note{font-size:8px;line-height:10px}}
+
+#player-detail-dialog .report-page[aria-label="최근 출전"]{height:100%;min-height:0;box-sizing:border-box}
+@media(orientation:landscape) and (max-height:330px){#player-detail-dialog .player-recent-report th:first-child{width:56%}#player-detail-dialog .player-recent-report th small{display:inline;margin-left:4px}}
+
+#player-detail-dialog .player-recent-report th:first-child{width:58%}#player-detail-dialog .player-recent-report th small{display:inline;margin-left:4px}
+@media(orientation:landscape) and (max-height:330px){#player-detail-dialog .player-recent-report th:first-child{width:56%}}

@@ -1,6 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const F=require('./dist/engine.js'),S=require('./dist/season.js'),Movement=require('./dist/movement.js'),Opposition=require('./dist/opposition.js'),T=Movement.timing;
+const MP=require('./dist/match-pitch.js');
 const copy=x=>JSON.parse(JSON.stringify(x));let groups=0;
 function test(name,fn){fn();groups++;console.log('PASS '+name);}
 function harness(){
@@ -10,7 +11,7 @@ function harness(){
  Object.defineProperty(nodes.get('movement-controls'),'innerHTML',{get(){return this.markup||'';},set(value){this.markup=value;nodes.get('movement-label').textContent='';}});
  for(const id of season.match.lineup)node('player-'+id);
  nodes.get('players').querySelector=selector=>nodes.get('player-'+(/data-player="([^"]+)"/.exec(selector)?.[1]))||null;
- const context=vm.createContext({F,S,Movement,Opposition,season,state:season.match,lastEvent:null,lastEventAt:0,view:'match',innerWidth:1000,document:{hidden:false,addEventListener:(name,fn)=>listeners.set(name,fn)},performance:{now:()=>env.time},$:id=>nodes.get(id)||null,motionEnabled:()=>env.effects&&!env.reduced,positions:()=>Movement.frame({match:context.state,motion:false}).own.map(p=>({...p,p:context.state.players[p.id]}))});
+ const context=vm.createContext({F,S,Movement,MatchPitch:MP,Opposition,season,state:season.match,lastEvent:null,lastEventAt:0,view:'match',innerWidth:1000,document:{hidden:false,addEventListener:(name,fn)=>listeners.set(name,fn)},performance:{now:()=>env.time},$:id=>nodes.get(id)||null,motionEnabled:()=>env.effects&&!env.reduced,positions:()=>Movement.frame({match:context.state,motion:false}).own.map(p=>({...p,p:context.state.players[p.id]}))});
  vm.runInContext(fs.readFileSync(path.join(__dirname,'dist/movement-ui.js'),'utf8'),context,{filename:'movement-ui.js'});
  const frame=ms=>{env.time=ms;return copy(context.motionFrame(ms));},snapshot=()=>copy(context.movementSnapshot());
  frame(0);context.renderMovementControls();
@@ -55,7 +56,7 @@ test('preview stops after twenty-four display seconds including a restart and ef
 test('drawMotionActors places active own players and draws eleven opposing jerseys and a ball',()=>{
  const h=harness();F.begin(h.context.state);let numbers=0,arcs=0;const noop=()=>{},canvas=new Proxy({fillText(){numbers++;},arc(){arcs++;}},{get(target,key){return key in target?target[key]:noop;},set(target,key,value){target[key]=value;return true;}});
  h.env.time=80;h.context.drawMotionActors(canvas,500,600);assert.equal(numbers,33);assert.ok(arcs>=2);
- for(const player of h.snapshot().frame.own){const style=h.nodes.get('player-'+player.id).style;assert.equal(style.left,'0px');assert.equal(style.top,'0px');assert.equal(style.transform,'translate('+500*player.x/100+'px,'+600*player.y/100+'px) translate(-50%,-16px)');assert.equal(style.marginLeft,'');assert.equal(style.marginTop,'');}
+ for(const player of MP.frame(h.snapshot().frame).own){const style=h.nodes.get('player-'+player.id).style;assert.equal(style.left,'0px');assert.equal(style.top,'0px');assert.equal(style.transform,'translate('+500*player.x/100+'px,'+600*player.y/100+'px) translate(-50%,-16px)');assert.equal(style.marginLeft,'');assert.equal(style.marginTop,'');}
 });
 test('foot updates are scoped to cached leg elements and pause preserves the stride',()=>{
  const h=harness(),legs=new Map(),queries=new Map(),tilts=new Map(),noop=()=>{},canvas=new Proxy({},{get:()=>noop,set:()=>true});

@@ -14,13 +14,15 @@ function tacticsDiagram(d,tactic){
 function previewTacticsDiagram(owner,zone,focusAttribute){
  if(typeof TacticsVisualizer==='undefined'||!Object.hasOwn(TacticsVisualizer.owners,owner)||!Object.hasOwn(TacticsVisualizer.zones,zone))return;
  const d=readTacticsPlan();if(!d.valid)return;const host=document.getElementById('tactics-board'),details=host.querySelector('details');if(details)tacticsBoardOpen=details.open;
- tacticsDiagramOwner=owner;tacticsDiagramZone=zone;host.innerHTML=tacticsBoardMarkup(d,tacticsPreview||d.context.tactic,tacticsBoardOpen);
+ tacticsDiagramOwner=owner;tacticsDiagramZone=zone;host.innerHTML=tacticsBoardMarkup(d,tacticsPreview||d.context.tactic,tacticsBoardOpen);if(typeof queueTeamShapeFit==='function')queueTeamShapeFit();
  host.querySelector('[data-tactics-'+focusAttribute+'="'+(focusAttribute==='owner'?owner:zone)+'"]')?.focus({preventScroll:true});
 }
 
 function tacticsBoardMarkup(d,previewTactic,open=true){
  if(!d.valid)return '';
  const selected=d.previews.find(p=>p.tactic===previewTactic)||d.previews.find(p=>p.tactic===d.context.tactic),label=d.previews.find(p=>p.tactic===d.context.tactic).label,opponent=S.club(d.context.opponentId),period={prep:'킥오프 전',half:'하프타임',late:'65분 작전 시간'}[d.context.phase]||d.context.minute+'분 작전 타임',heading='전술 분석';
+ if(typeof TeamShape!=='undefined'&&TeamShape.canRead(season))return teamShapeBoard(d,selected.tactic);
+ if(d.continuous){const descriptions={balanced:'한 명이 압박하고 수비는 커버합니다. 안전한 패스 출구를 찾습니다.',press:'두 명이 공을 압박하고 나머지는 커버합니다. 전력질주 체력 소모가 큽니다.',counter:'공을 되찾은 직후 빠른 침투와 전진 패스를 노립니다.',lowBlock:'수비 라인을 내려 골문 앞 공간을 좁힙니다.'};return '<section class="tactics-board continuous-tactics"><h3>현재 경기 지시 · '+escapeText(label)+'</h3><p>현재 선발 평균 체력 '+Math.round(d.condition.averageEnergy)+' · 최저 '+Math.round(d.condition.minimumEnergy)+'</p><div class="tactics-choice-grid" role="group" aria-label="전술 미리보기">'+d.previews.map(p=>'<button type="button" class="tactics-choice" data-tactics-preview="'+p.tactic+'" aria-pressed="'+(p.tactic===selected.tactic)+'"><strong>'+escapeText(p.label)+'</strong><small>'+descriptions[p.tactic]+'</small></button>').join('')+'</div><div class="tactics-effect"><p>'+descriptions[selected.tactic]+'</p><button type="button" class="secondary" data-tactics-apply="'+selected.tactic+'" '+(selected.tactic===d.context.tactic?'disabled':'')+'>'+(selected.tactic===d.context.tactic?'현재 경기 지시':'이 전술로 지시 변경')+'</button></div><p class="tactics-assumption">선수의 실제 위치·패스 선택·압박 이동에 적용합니다. 슈팅 위치와 상대의 대응에 따라 결과가 달라집니다.</p></section>';}
  const cards=d.previews.map(p=>`<button type="button" class="tactics-choice ${p.tactic===d.recommendation.tactic?'coach-choice':''}" data-tactics-preview="${p.tactic}" aria-pressed="${p.tactic===selected.tactic}" aria-label="${p.label} 미리보기" aria-describedby="tactics-description-${p.tactic}"><span class="tactics-choice-title">${p.label}<small>${p.tactic===d.context.tactic?'현재 지시':p.tactic===d.recommendation.tactic?'코치 제안':'미리보기'}</small></span><span class="tactics-chance-values"><b>${tacticsNumber(p.expectedChances.ours)}</b><i>:</i><b>${tacticsNumber(p.expectedChances.opponent)}</b></span><span class="tactics-choice-caption">우리 : 상대 찬스 지표</span><span class="tactics-cost">선발 평균 체력 소모 <strong>−${tacticsNumber(p.averageCost)}</strong></span><span id="tactics-description-${p.tactic}" class="sr-only">${p.tactic===d.context.tactic?'현재 경기 지시. ':''}${p.tactic===d.recommendation.tactic?'코치가 제안한 전술. ':''}다음 ${d.segment.minutes}분의 현재 체력 기준 찬스 지표: 우리 ${tacticsNumber(p.expectedChances.ours)}, 상대 ${tacticsNumber(p.expectedChances.opponent)}. 선발 평균 체력 소모 ${tacticsNumber(p.averageCost)}.</span></button>`).join('');
  const comparisons=d.current.comparisons.map(p=>`<div class="tactics-comparison"><div><span>${p.label}</span><b>${tacticsNumber(p.ours)} <i>/</i> <em>${tacticsNumber(p.opponent)}</em></b></div><div class="tactics-bars" aria-hidden="true"><i style="width:${Math.min(100,p.ours)}%"></i><i style="width:${Math.min(100,p.opponent)}%"></i></div></div>`).join('');
  const energyAfter=selected.energy.reduce((sum,p)=>sum+p.after,0)/11,tired=[...d.lineup].sort((a,b)=>a.energy-b.energy).slice(0,3),effect={balanced:'공격과 수비의 균형을 유지합니다.',press:'균형 대비 우리 찬스 비율 +18%, 상대 +13%. 90분 기준 추가 체력 소모 8입니다.',counter:'균형 대비 우리 찬스 비율 −10%, 상대 −8%. 빠른 공격진에는 역습 보너스가 붙습니다.',lowBlock:'균형 대비 우리 찬스 비율 −14%, 상대 −28%, 수비 지표 +8%. 체력 추가 소모는 없습니다.'}[selected.tactic];
@@ -36,14 +38,14 @@ function renderTacticsBoard(){
  if(!d.valid){host.innerHTML='';tacticsBoardFingerprint=null;tacticsPreviewContext=null;return;}
  const context=JSON.stringify([d.context.seed,d.context.year,d.context.competition,d.context.round,d.context.stage,d.context.phase,d.context.minute,d.context.paused,d.segment.end,d.context.formation,d.context.tactic,d.lineup.map(p=>p.identity)]);
  if(context!==tacticsPreviewContext){tacticsPreview=d.context.tactic;tacticsPreviewContext=context;tacticsDiagramOwner='ours';tacticsDiagramZone='back';tacticsDiagramCache=null;}
- tacticsBoardFingerprint=d.fingerprint;host.innerHTML=tacticsBoardMarkup(d,tacticsPreview,tacticsBoardOpen);
+ tacticsBoardFingerprint=d.fingerprint;host.innerHTML=tacticsBoardMarkup(d,tacticsPreview,tacticsBoardOpen);if(typeof queueTeamShapeFit==='function')queueTeamShapeFit();
 }
 function previewTactics(tactic){
  if(!['balanced','press','counter','lowBlock'].includes(tactic))return;
  const d=readTacticsPlan();if(!d.valid)return;
  const host=document.getElementById('tactics-board'),details=host.querySelector('details');if(details)tacticsBoardOpen=details.open;
  tacticsPreview=tactic;tacticsBoardFingerprint=d.fingerprint;
- host.innerHTML=tacticsBoardMarkup(d,tactic,tacticsBoardOpen);host.querySelector(`[data-tactics-preview="${tactic}"]`)?.focus({preventScroll:true});
+ host.innerHTML=tacticsBoardMarkup(d,tactic,tacticsBoardOpen);if(typeof queueTeamShapeFit==='function')queueTeamShapeFit();host.querySelector(`[data-tactics-preview="${tactic}"]`)?.focus({preventScroll:true});
 }
 function applyTacticsPreview(tactic){
  const expected=tacticsBoardFingerprint;

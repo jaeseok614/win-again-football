@@ -15,17 +15,19 @@
    return true;
   },
   handleBack() {
-   const dialog = document.activeElement?.closest?.('dialog[open]') || [...document.querySelectorAll('dialog[open]')].at(-1);
+   const focused = document.activeElement?.closest?.('dialog[open]');
+   const dialog = focused && !focused.dataset?.inlineWorkspace ? focused : [...document.querySelectorAll('dialog[open]')].filter(node => !node.dataset?.inlineWorkspace).at(-1);
    if (dialog) {
     const event = new Event('cancel', { cancelable: true });
     if (dialog.dispatchEvent(event)) dialog.close();
     return true;
    }
-   if (typeof tacticsBoardOpen !== 'undefined' && tacticsBoardOpen) {
+   if (typeof tacticsBoardOpen !== 'undefined' && tacticsBoardOpen && (typeof view === 'undefined' || view === 'match')) {
     if (typeof collapseTacticsBoard === 'function') collapseTacticsBoard();
     if (typeof render === 'function') render();
     return true;
    }
+   if (typeof operationsSection !== 'undefined' && operationsSection && typeof closeOperationsPage === 'function') { closeOperationsPage(); if (typeof setView === 'function') setView('club'); return true; }
    if (typeof view !== 'undefined' && view !== 'club' && typeof setView === 'function') {
     setView('club'); return true;
    }

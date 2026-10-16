@@ -56,7 +56,7 @@ body.match-popup-ready.match-view:not(.launch-mode){height:100dvh;overflow:hidde
 #match-popup .pitch-player-tools,#match-popup .pitch-swap-options{margin:12px 0}
 #match-popup #pitch-swap-options{display:none!important}
 @media(max-height:650px){.match-popup-ready.match-view #match-pane>.chapter{display:none}.match-popup-ready.match-view .app{padding:4px;gap:3px}.match-popup-ready.match-view #match-pane>.scoreboard{min-height:54px;padding:3px 8px}.match-popup-ready.match-view #matchday-live>.commentary{flex-basis:36px;max-height:36px}.match-popup-nav{padding:4px 8px}.match-popup-header{padding:7px 10px}}
-@media(max-height:450px) and (min-width:600px){#match-live-actions{grid-template-columns:1fr 1fr}.match-popup-ready.match-view .view-nav{flex-basis:44px}.match-popup-ready.match-view #match-pane>.scoreboard{min-height:48px}.match-popup-ready.match-view #matchday-live>.commentary{flex-basis:32px;max-height:32px}}
+@media(max-height:450px) and (min-width:500px){#match-live-actions{grid-template-columns:1fr 1fr}.match-popup-ready.match-view .view-nav{flex-basis:44px}.match-popup-ready.match-view #match-pane>.scoreboard{min-height:48px}.match-popup-ready.match-view #matchday-live>.commentary{flex-basis:32px;max-height:32px}}
 .set-piece-plan{display:grid;gap:10px;margin:18px 0;padding:15px;border:1px solid #c8f36e2c;border-radius:7px;background:#c8f36e05}.set-piece-plan h3{margin:3px 0 5px;font-size:17px}.set-piece-plan>div>p,.set-piece-note{font-size:11px;line-height:1.7;color:var(--muted);margin:0}.set-piece-role{display:grid;grid-template-columns:minmax(105px,.7fr) minmax(145px,1.3fr);align-items:center;gap:10px;font-size:12px}.set-piece-role>span{font-weight:600}.set-piece-role small{display:block;color:var(--muted);font-size:10px;font-weight:400;margin-top:3px}.set-piece-role select{width:100%;min-width:0;min-height:40px;padding:7px 9px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:5px;font:inherit}.set-piece-role select:focus-visible{outline:2px solid var(--lime);outline-offset:2px}.set-piece-note{border-top:1px solid var(--line);padding-top:9px}
 @media(max-width:520px){.set-piece-plan{padding:12px}.set-piece-role{grid-template-columns:1fr;gap:4px}.set-piece-role select{min-height:44px}}
 
@@ -69,9 +69,9 @@ body.match-popup-ready.match-view:not(.launch-mode){height:100dvh;overflow:hidde
 #match-live-stats span{display:block;font-size:10px;line-height:14px;color:#c1d2db;white-space:nowrap}
 #match-live-stats strong{display:block;font:700 13px/18px system-ui;color:#f1f6f7}
 #match-live-stats .fatigue-low{color:#ffd1a0}
-.match-popup-ready.match-view #matchday-live>.commentary{flex:0 0 78px;min-height:78px;max-height:78px;gap:8px;padding:7px 6px;align-items:flex-start;background:#0b1820;border-color:#46565e;border-radius:5px;overflow:hidden}
-.match-popup-ready.match-view #matchday-live>.commentary p{font-size:15px;line-height:21px;font-weight:500;color:#f5f8fa;-webkit-line-clamp:3;overflow-wrap:anywhere}
-.match-popup-ready.match-view #matchday-live>.commentary .minute-label{flex:0 0 32px;min-width:0;margin-top:1px;color:#dcffa5;font:700 14px/21px system-ui;text-align:center}
+.match-popup-ready.match-view #matchday-live>.commentary{flex:0 0 60px;min-height:60px;max-height:60px;gap:8px;padding:7px 6px;align-items:flex-start;background:#0b1820;border-color:#46565e;border-radius:5px;overflow:hidden}
+.match-popup-ready.match-view #matchday-live>.commentary p{font-size:15px;line-height:21px;font-weight:500;color:#f5f8fa;-webkit-line-clamp:2;overflow-wrap:anywhere}
+.match-popup-ready.match-view #matchday-live>.commentary .minute-label{flex:0 0 44px;min-width:0;margin-top:1px;color:#dcffa5;font:700 14px/21px system-ui;text-align:center}
 .match-popup-ready.match-view #match-live-actions :is(button.primary,button.secondary){font-size:13px;line-height:1.35}
 .match-popup-ready.match-view .match-quick-menu button{font-size:12px}
 .match-popup-ready.match-view #match-live-actions .main-action{display:grid;grid-template-columns:minmax(0,1fr) 74px 84px;gap:5px}
@@ -93,17 +93,17 @@ body.match-popup-ready.match-view:not(.launch-mode){height:100dvh;overflow:hidde
 #broadcast-strip .match-moment[data-kind=save]{color:#b5e9ff}
 #broadcast-strip .match-moment[data-kind=concede]{color:#ffceb8}
 #broadcast-strip:has(.match-moment:not([hidden])) :is(.broadcast-on,#live-play-label){display:none}
-@media(max-height:650px){.match-popup-ready.match-view #match-pane>.scoreboard{min-height:52px}.match-popup-ready.match-view #matchday-live{padding:4px;gap:3px}.match-popup-ready.match-view #matchday-live>.commentary{flex-basis:74px;min-height:74px;max-height:74px;padding-block:5px}.match-popup-ready.match-view #match-live-stats{flex-basis:39px}}
-@media(max-height:450px) and (min-width:600px){.match-popup-ready.match-view #matchday-live>.commentary{flex-basis:55px;min-height:55px;max-height:55px}.match-popup-ready.match-view #matchday-live>.commentary p{-webkit-line-clamp:2}.match-popup-ready.match-view #match-live-stats{flex-basis:36px}.match-popup-ready.match-view #match-pane>.scoreboard{min-height:44px}}
-@media(max-height:450px) and (min-width:600px){
- .match-popup-ready.match-view #matchday-live{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,.55fr);grid-template-rows:30px minmax(65px,.65fr) minmax(80px,1fr);gap:4px}
- .match-popup-ready.match-view #matchday-live>.broadcast-strip{grid-column:1/-1;grid-row:1}
- .match-popup-ready.match-view #matchday-live>.pitch{grid-column:1;grid-row:2/4;height:100%;min-height:0}
+@media(max-height:650px){.match-popup-ready.match-view #match-pane>.scoreboard{min-height:52px}.match-popup-ready.match-view #matchday-live{padding:4px;gap:3px}.match-popup-ready.match-view #matchday-live>.commentary{flex-basis:54px;min-height:54px;max-height:54px;padding-block:5px}.match-popup-ready.match-view #match-live-stats{flex-basis:39px}}
+@media(max-height:450px) and (min-width:500px){.match-popup-ready.match-view #matchday-live>.commentary{flex-basis:55px;min-height:55px;max-height:55px}.match-popup-ready.match-view #matchday-live>.commentary p{-webkit-line-clamp:2}.match-popup-ready.match-view #match-live-stats{flex-basis:36px}.match-popup-ready.match-view #match-pane>.scoreboard{min-height:44px}}
+@media(max-height:450px) and (min-width:500px){
+ .match-popup-ready.match-view #matchday-live{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,.55fr);grid-template-rows:48px minmax(0,1fr);gap:4px}
+ .match-popup-ready.match-view #matchday-live>.broadcast-strip{grid-column:2;grid-row:1;height:100%;min-height:0;flex-wrap:wrap}
+ .match-popup-ready.match-view #matchday-live>.pitch{grid-column:1;grid-row:2;height:100%;min-height:0}
  .match-popup-ready.match-view #match-live-stats{grid-column:2;grid-row:2;grid-template-columns:repeat(2,minmax(0,1fr));height:100%}
  .match-popup-ready.match-view #match-live-stats>div:nth-child(2){border:0}
- .match-popup-ready.match-view #matchday-live>.commentary{grid-column:2;grid-row:3;height:100%;min-height:0;max-height:none;padding:5px}
- .match-popup-ready.match-view #matchday-live>.commentary p{font-size:14px;line-height:20px;-webkit-line-clamp:5}
- .match-popup-ready.match-view #matchday-live>.commentary .minute-label{flex-basis:28px}
+ .match-popup-ready.match-view #matchday-live>.commentary{grid-column:1;grid-row:1;height:100%;min-height:0;max-height:none;padding:3px 5px}
+ .match-popup-ready.match-view #matchday-live>.commentary p{font-size:14px;line-height:20px;-webkit-line-clamp:2}
+ .match-popup-ready.match-view #matchday-live>.commentary .minute-label{flex-basis:44px}
 }
 
 .match-popup-ready.match-view #match-live-actions .main-action:has(#pause[hidden]):has(#matchday-roster[hidden]){grid-template-columns:1fr}
@@ -186,3 +186,38 @@ body.match-popup-ready.match-view:not(.launch-mode){height:100dvh;overflow:hidde
 #match-ceremony .preparation-current{font-size:11px;margin:0;line-height:1.4}.preparation-note{font-size:10px;color:#b7cebd;line-height:1.4}.coach-preparation button:focus-visible{outline:3px solid #f0df91;outline-offset:2px}
 @media(max-height:650px){.coach-preparation{gap:5px}.preparation-priority{padding:7px}.preparation-checks>div{padding:3px}.preparation-context>button{padding:5px 7px!important}#match-ceremony .preparation-priority h3{font-size:14px}.coach-preparation header small{font-size:10px}}
 @media(max-height:450px) and (min-width:640px){.coach-preparation{max-width:none;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:5px 12px}.coach-preparation>header{grid-column:1;grid-row:1}.preparation-checks{grid-column:2;grid-row:1}.preparation-priority{grid-column:1;grid-row:2/5}.preparation-context{grid-column:2;grid-row:2}.preparation-form{grid-column:2;grid-row:3}.preparation-current{grid-column:2;grid-row:4}.preparation-note{grid-column:1/-1;grid-row:5}#match-ceremony .coach-preparation small{grid-column:auto}}
+/* Both actual elevens stay visible together on phones. Detail buttons open full profiles. */
+#match-ceremony .preview-teams{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+#match-ceremony .preview-team[data-side]{display:flex;min-width:0}
+#match-ceremony .preview-team header h3{font-size:13px;line-height:18px}
+#match-ceremony .preview-team header>span{font-size:10px;line-height:14px;min-height:28px}
+.preview-lineup{flex:1;min-height:0;display:grid;grid-template-rows:repeat(11,minmax(0,1fr));gap:2px}
+#match-ceremony .preview-lineup .preview-player{position:static;transform:none;display:grid;grid-template-columns:22px minmax(0,1fr) 29px;align-items:center;width:100%;min-width:0;min-height:0;height:auto;text-align:left;padding:2px 3px;background:#1e392f;border:0;border-radius:3px;color:#edf6e7;gap:2px;line-height:12px}
+.preview-lineup .preview-player span{font-size:10px;line-height:12px;white-space:normal;overflow-wrap:anywhere;word-break:keep-all}
+.preview-lineup .preview-player small{font-size:9px;color:#b8ccbe}
+.preview-lineup .preview-player b{position:static;font-size:10px;text-align:right;color:#d9eeaf}
+.preview-lineup .is-key{box-shadow:inset 2px 0 #d4e990}
+#match-ceremony .preview-team .preview-keys{display:none}
+@media(max-height:450px){#match-ceremony[data-kind="preview"] #ceremony-squads:not(.coach-preparation-open){display:flex;flex-direction:column;gap:3px}#match-ceremony .preview-lineup{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr))}#match-ceremony .preview-team header>span{min-height:14px}#ceremony-roster{flex-basis:44px}}
+
+@media(max-height:450px){#match-ceremony[data-kind="preview"] #ceremony-squads:not(.coach-preparation-open){height:auto;min-height:0}#match-ceremony .preview-teams{height:auto;min-height:0}#match-ceremony .preview-lineup{min-height:0}}
+
+/* Keep the live call directly above the pitch; ambient text stays out of its two lines. */
+.match-popup-ready.match-view #commentary #crowd-caption{display:none}
+
+@media(orientation:landscape){
+ #match-ceremony[data-kind=preview] .ceremony-content{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:44px minmax(0,1fr) 44px;gap:4px}
+ #match-ceremony[data-kind=preview] #ceremony-squads:not(.coach-preparation-open){display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);height:100%;position:relative;padding:0;gap:0}
+ #match-ceremony .preview-heading h2{font-size:15px}
+ #match-ceremony #ceremony-roster{position:absolute;right:60px;top:-48px;width:136px;height:44px;font-size:10px}
+ #match-ceremony .preview-heading{padding-right:200px;position:relative}
+ #match-ceremony #ceremony-close{position:absolute;right:0;top:0;height:44px}
+ #match-ceremony .preview-teams{height:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ #match-ceremony .preview-team header>span{min-height:14px}
+ #match-ceremony .preview-lineup{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));gap:3px}
+ #match-ceremony .preview-lineup .preview-player{box-sizing:border-box;grid-template-columns:22px minmax(0,1fr) 30px;min-height:22px;padding:2px 3px;gap:3px}
+ #match-ceremony .preview-lineup .preview-player>*{grid-column:auto;grid-row:auto;min-width:0;line-height:12px}
+ #match-ceremony .preview-lineup .preview-player span{font-size:10px;word-break:keep-all;overflow-wrap:normal}
+ #match-ceremony .preview-keys{display:none}
+ #match-ceremony .preview-roster small{grid-column:auto}
+}

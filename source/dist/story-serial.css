@@ -1,0 +1,112 @@
+/* One shared atlas; the scene, confirmed evidence and choices stay together. */
+.drama-art{background-size:200% 200%;background-position:var(--drama-x) var(--drama-y);background-repeat:no-repeat;aspect-ratio:3/2;min-width:0;min-height:0}
+.story-serial-context{position:relative;z-index:1;margin-top:8px;display:grid;gap:5px}
+.story-serial-context>strong{font-size:11px;line-height:1.4;color:#d8ecae;word-break:keep-all;overflow-wrap:break-word}
+.story-evidence{margin:0;display:grid;gap:5px;padding:8px;background:#0d1d24ed;border:1px solid #62736a;border-radius:6px;word-break:keep-all}
+.story-evidence>div{min-width:0}.story-evidence dt{font-size:9px;line-height:1.3;color:#c1cbb5}.story-evidence dd{margin:1px 0 0;font-size:11px;line-height:1.35;color:#f0f1e5;overflow-wrap:break-word}
+.story-serial-context>small{font-size:9px!important;line-height:1.35;color:#ccd8d1}
+.story-serial-context>button{background:#24392d;color:#e2edd6;border:1px solid #6c8757;min-height:44px}
+#club-story-dialog .story-dialog-head>.drama-art{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;z-index:-1;opacity:.8}
+#club-story-dialog[data-story-serial=true] .story-block p{line-height:1.35}
+#club-story-dialog[data-story-serial=true] .story-dialog-head:after{background:linear-gradient(#0b1b27ef 0%,#0b1b2760 38%,#0b1b27df 75%)}
+.notebook-series{grid-column:1;grid-row:3;min-height:0;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:5px;overflow:hidden}
+.serial-card{display:grid;grid-template-columns:minmax(0,.27fr) minmax(0,.73fr);gap:5px;min-height:0;min-width:0;padding:5px;background:#182e31;border:1px solid #54715c;border-radius:7px;box-sizing:border-box;word-break:keep-all}
+.serial-card>.drama-art{height:100%;aspect-ratio:auto;border-radius:4px}
+.serial-card>div:last-child{display:grid;grid-template-rows:auto auto minmax(0,1fr) 44px;gap:2px;min-width:0;min-height:0}
+.serial-card h3{font-size:12px;line-height:1.3;margin:0;color:#ebefd9}.serial-card small{font-size:9px;line-height:1.3;color:#c3d5b8}.serial-card p{font-size:9px;line-height:1.3;margin:0;color:#d3dfda;overflow:auto}
+.serial-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;min-height:44px}
+.serial-stages button{min-width:0;min-height:44px;padding:3px!important;font-size:10px!important;line-height:1.25;word-break:keep-all;white-space:normal}
+.serial-stages button span{display:block;font-size:8px;color:#cbd9c3}.serial-stages button[disabled]{opacity:.65}
+.serial-stages button[data-serial-state=complete]{border-color:#c9e395;background:#263e30}.serial-stages button[data-serial-state=pending]{border-color:#e2cc91;background:#3b3d2e}
+.notebook-tabs:has([data-notebook-tab=series]){grid-template-columns:repeat(4,minmax(0,1fr))}
+#manager-notebook:has(.notebook-series)>footer{grid-template-columns:minmax(0,1fr)}
+#manager-notebook:has(.notebook-series)>footer>span{font-size:10px;line-height:1.3;text-align:center;color:#c5d4c1;white-space:normal;word-break:keep-all}
+@media(orientation:landscape){
+ #manager-notebook[open]{grid-template-rows:44px 44px minmax(0,1fr) 44px}
+ #manager-notebook:has(.notebook-series)[open]{grid-template-rows:44px 44px minmax(0,1fr) 24px}
+ #manager-notebook>header small{display:block;font-size:10px;line-height:1.2}
+ #manager-notebook>header h2{font-size:clamp(14px,2vw,18px);line-height:1.2;margin:2px 0 0}
+ #club-story-dialog[data-story-serial=true] .story-dialog-head{display:flex;flex-direction:column;padding:9px;gap:3px;grid-row:1/4}
+ #club-story-dialog[data-story-serial=true] .story-complete{display:block;grid-column:2;grid-row:3}
+ #club-story-dialog[data-story-serial=true] .story-dialog-head>div:not(.drama-art){width:100%;max-width:100%}
+ #club-story-dialog[data-story-serial=true] .story-dialog-head h2{font-size:17px;line-height:1.25;margin:4px 0}
+ #club-story-dialog[data-story-serial=true] .story-serial-context{margin-top:auto;width:100%}
+ #club-story-dialog[data-story-serial=true] .story-serial-context>strong{font-size:10px}
+ #club-story-dialog[data-story-serial=true] .story-evidence{padding:5px;gap:3px}
+ #club-story-dialog[data-story-serial=true] .story-evidence dt{font-size:8px}
+ #club-story-dialog[data-story-serial=true] .story-evidence dd{font-size:9px;line-height:1.3}
+ #club-story-dialog[data-story-serial=true] .story-serial-context>button{font-size:10px;padding:3px}
+}
+@media(orientation:landscape) and (max-height:350px){
+ #manager-notebook:has(.notebook-series)[open]{grid-template-rows:44px 44px minmax(0,1fr) 24px}
+ .notebook-series:has(.serial-card:nth-child(3)){grid-template-columns:repeat(4,minmax(0,1fr))}
+ .serial-card>div:last-child{grid-template-rows:auto minmax(0,1fr) 44px}
+ /* The overview keeps episode actions together; complete evidence is in each scene. */
+ .serial-card p{display:none}
+ #manager-notebook .serial-card small{font-size:8px;line-height:1.2}
+ #manager-notebook .serial-stages button{min-width:0}
+ #club-story-dialog[data-story-serial=true] .story-dialog-head{padding:5px}
+ #club-story-dialog[data-story-serial=true] .story-dialog-head h2{font-size:12px;line-height:1.25;margin:1px 0}
+ #club-story-dialog[data-story-serial=true] .story-serial-context{margin-top:3px;gap:3px}
+ #club-story-dialog[data-story-serial=true] .story-evidence{padding:4px;gap:2px}
+ #club-story-dialog[data-story-serial=true] .story-evidence dt{font-size:7px}
+ #club-story-dialog[data-story-serial=true] .story-evidence dd{font-size:8px;line-height:1.2}
+ .serial-card h3{font-size:10px}.serial-card small,.serial-card p{font-size:8px;line-height:1.2}.serial-card{padding:3px;gap:3px;grid-template-columns:minmax(0,.22fr) minmax(0,.78fr)}
+}
+@media(orientation:landscape) and (max-height:300px){
+ #manager-notebook[open]{grid-template-rows:44px 44px minmax(0,1fr) 44px}
+ #manager-notebook:has(.notebook-series)[open]{grid-template-rows:44px 44px minmax(0,1fr) 24px}
+ #manager-notebook .notebook-card{display:grid;grid-template-columns:42px minmax(0,1fr) 62px;grid-template-rows:10px minmax(0,1fr) 22px;gap:2px 4px;padding:4px;overflow:hidden}
+ #manager-notebook .notebook-card>div:last-child{display:contents}
+ #manager-notebook .notebook-card>:is(.memory-art,.drama-art){grid-column:1;grid-row:1/4;height:100%;width:100%;max-height:none;min-height:0;aspect-ratio:auto;align-self:stretch}
+ #manager-notebook .notebook-card>div>small{grid-column:2;grid-row:1;font-size:7.5px;line-height:1.3}
+ #manager-notebook .notebook-card h3{grid-column:2;grid-row:2;min-height:0;font-size:9px;line-height:1.25;align-self:center}
+ #manager-notebook .notebook-card p{grid-column:2;grid-row:3;font-size:8.5px;line-height:1.25;margin:0;-webkit-line-clamp:2}
+ #manager-notebook .notebook-card button{grid-column:3;grid-row:1/4;align-self:center;height:44px;min-height:44px;box-sizing:border-box;margin:0;padding:3px;width:62px;font-size:9px;line-height:1.25}
+ #club-story-dialog[data-story-serial=true][open]{grid-template-rows:28px minmax(0,1fr) 44px 44px;gap:4px 8px}
+ #club-story-dialog[data-story-serial=true] .story-dialog-head{grid-column:1;grid-row:1/4;display:flex;padding:4px}
+ #club-story-dialog[data-story-serial=true] .story-dialog-head>div:not(.drama-art){display:block}
+ #club-story-dialog[data-story-serial=true] .story-dialog-head h2{font-size:11px;line-height:12px}
+ #club-story-dialog[data-story-serial=true] .story-speaker{grid-column:2;grid-row:1;height:28px;min-height:0}
+ #club-story-dialog[data-story-serial=true] .story-speaker .player-portrait,#club-story-dialog[data-story-serial=true] .story-speaker .narrative-portrait{height:24px;width:24px;flex-basis:24px}
+ #club-story-dialog[data-story-serial=true] .story-speaker b{font-size:10px}#club-story-dialog[data-story-serial=true] .story-speaker small{font-size:7px;margin:0}
+ #club-story-dialog[data-story-serial=true] .story-reading{grid-column:2}
+ #club-story-dialog[data-story-serial=true] .story-choices{grid-column:2}
+ #club-story-dialog[data-story-serial=true] .story-serial-context{margin-top:auto;gap:2px}
+ #club-story-dialog[data-story-serial=true] .story-serial-context>strong{font-size:8px;line-height:1.2}
+ #club-story-dialog[data-story-serial=true] .story-serial-context>small{font-size:7px!important;line-height:1.25}
+ #club-story-dialog[data-story-serial=true] .story-evidence{grid-template-columns:auto minmax(0,1fr);gap:2px 4px;padding:3px}
+ #club-story-dialog[data-story-serial=true] .story-evidence>div{display:contents}
+ #club-story-dialog[data-story-serial=true] .story-evidence dd{font-size:7.5px;line-height:1.3;margin:0}
+ #club-story-dialog[data-story-serial=true] .story-evidence dt{font-size:7px;line-height:1.3}
+ .serial-card p{font-size:7px;line-height:1.15}.serial-card h3{font-size:9px}.serial-card small{font-size:7px}.serial-card>.drama-art{display:none}.serial-card{grid-template-columns:minmax(0,1fr)}
+}
+
+#manager-notebook>header>div{min-width:0;flex:1}
+#manager-notebook .notebook-year-filter{height:44px;min-height:44px;flex:0 0 136px;max-width:136px;min-width:0;padding:3px 5px;font-size:10px;color:#edf3de;background:#203c35;border:1px solid #65816c;border-radius:5px}
+#manager-notebook .notebook-year-filter:focus-visible{outline:2px solid #d4f39e;outline-offset:-3px}
+@media(max-width:740px){#manager-notebook .notebook-year-filter{flex-basis:110px;max-width:110px;font-size:9px}#manager-notebook:has(.notebook-year-filter)>header h2{font-size:12px}}
+
+/* More stories share one inline list and one report, never six squeezed reports. */
+.notebook-series.serial-workspace{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-rows:minmax(0,1fr)}
+.serial-selector{min-height:0;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(44px,1fr);gap:4px}
+#manager-notebook .serial-selector button{display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;min-height:44px;box-sizing:border-box;padding:5px;word-break:keep-all;overflow-wrap:break-word;text-align:left;background:#162b30;border:1px solid #567069;color:#e9efda}
+#manager-notebook .serial-selector button[aria-pressed=true]{border-color:#d0e992;background:#314535;box-shadow:inset 3px 0 #c9e78e}
+.serial-selector b{font-size:11px;line-height:1.3}#manager-notebook .serial-selector small{font-size:8px;line-height:1.3;color:#cbd9c2}
+@media(orientation:landscape) and (max-height:350px){
+ .serial-workspace>.serial-selector:has(button:nth-child(5)){grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
+ #manager-notebook .serial-selector button{padding:3px;gap:2px}
+ .serial-selector b{font-size:9px;line-height:1.2}#manager-notebook .serial-selector small{font-size:7px;line-height:1.2}
+ .serial-workspace>.serial-card{grid-template-columns:minmax(0,.25fr) minmax(0,.75fr)}
+}
+@media(orientation:landscape) and (max-height:300px){
+ .serial-selector b{font-size:9px;line-height:1.2}#manager-notebook .serial-selector small{font-size:7.5px;line-height:1.25}
+ .serial-workspace>.serial-card{grid-template-columns:minmax(0,1fr)}
+}
+
+@media(orientation:landscape) and (max-height:350px){#club-story-dialog .story-choices button{padding:3px;line-height:1.25}}
+
+.serial-report-evidence{min-height:0;min-width:0;display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:3px;margin:0}
+.serial-report-evidence>div{min-height:0;min-width:0;display:grid;grid-template-columns:57px minmax(0,1fr);gap:4px;align-items:center;padding:3px;background:#10262a;border:1px solid #405d51;border-radius:4px}
+.serial-report-evidence dt{font-size:8px;line-height:1.3;color:#c4d2c5}.serial-report-evidence dd{min-width:0;margin:0;font-size:10px;line-height:1.3;color:#e1ecb9;word-break:keep-all;overflow-wrap:break-word}
+@media(orientation:landscape) and (max-height:350px){.serial-card .serial-report-evidence{display:none}}

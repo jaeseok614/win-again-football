@@ -59,6 +59,10 @@ test('Android back closes game dialogs before switching tabs or exiting',()=>{
 });
 test('Android back dismisses the focused child report even when its parent is later in DOM order',()=>{setup();const child={dispatchEvent:()=>true,close:()=>closed++},parent={dispatchEvent:()=>true,close:()=>{throw Error('Parent must remain open');}};dialogs=[child,parent];context.document.activeElement={closest:()=>child};assert.equal(context.WinAgainAndroid.handleBack(),true);assert.equal(closed,1);});
 
+test('Android back skips inline workspaces but closes a focused child report',()=>{setup();const inline={dataset:{inlineWorkspace:'squad'},close(){throw Error('Inline page must not close like a modal');}},child={dispatchEvent:()=>true,close:()=>closed++};dialogs=[inline,child];context.document.activeElement={closest:()=>inline};context.view='squad';context.tacticsBoardOpen=true;context.collapseTacticsBoard=()=>{throw Error('Hidden match analysis must not consume page back');};assert.equal(context.WinAgainAndroid.handleBack(),true);assert.equal(closed,1);dialogs=[inline];assert.equal(context.WinAgainAndroid.handleBack(),true);assert.equal(context.view,'club');});
+
+test('Android back returns the home-mounted operations page to the main home',()=>{setup();context.view='club';context.operationsSection='training-card';let restored=0;context.closeOperationsPage=()=>{restored++;context.operationsSection=null;};assert.equal(context.WinAgainAndroid.handleBack(),true);assert.equal(restored,1);assert.equal(context.view,'club');assert.equal(pauses,0);assert.equal(saves,0);});
+
 test('Android pause saves the campaign without automatically resuming play',()=>{
  setup();context.WinAgainAndroid.pause();assert.equal(pauses,1);assert.equal(saves,1);assert.equal(renders,1);
 });
@@ -84,7 +88,9 @@ test('Android pause saves the campaign without automatically resuming play',()=>
   assert.match(html,/Content-Security-Policy/);assert.match(html,/connect-src 'none'/);assert.match(html,/window\.WinAgainAndroid/);
   assert.doesNotMatch(html,/<script src=|<link rel="(?:stylesheet|manifest)"|navigator\.serviceWorker\.register/);
   assert.match(html,/id="campaign-import-file"|id=\\"campaign-import-file\\"/);
-  assert.equal((html.match(/data:image\/webp;base64,/g)||[]).length,12);
+  assert.equal((html.match(/data:image\/webp;base64,/g)||[]).length,19);
+  const threadAtlas=fs.readFileSync(path.join(__dirname,'dist/assets/player-threads-v1.webp')).toString('base64');assert.equal(html.split(threadAtlas).length-1,1);
+  assert.match(html,/class="launch-manager"/);assert.doesNotMatch(html,/manager-arrival-v1\.webp|club-memory-v1\.webp|club-voices-v1\.webp|touchline-drama-v1\.webp|touchline-resolution-v1\.webp|player-threads-v1\.webp/);
   assert.doesNotMatch(html,/player-faces-v1[78]\.webp|club-growth-v[12]\.webp|club-chapters-v1\.webp|club-moments-v1\.webp/);
   console.log('PASS Android bundle is complete, deterministic, offline and retains the shared importer');
  }finally{fs.rmSync(temp,{recursive:true,force:true});}

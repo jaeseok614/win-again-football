@@ -1,7 +1,7 @@
 (function(root){
  'use strict';
  const S=root.Season||(typeof require==='function'?require('./season.js'):null),F=root.Football||(typeof require==='function'?require('./engine.js'):null),Flow=root.MatchFlow||(typeof require==='function'?require('./match-flow.js'):null),T=root.Training||(typeof require==='function'?require('./training.js'):null);
- const format='win-again-campaign',version=1,maxBytes=16*1024*1024,dangerous=new Set(['__proto__','prototype','constructor']),views=['club','match','squad','market','academy','cup'];
+ const format='win-again-campaign',version=1,maxBytes=16*1024*1024,dangerous=new Set(['__proto__','prototype','constructor']),views=['club','match','tactics','squad','market','academy','cup'];
  const tooLarge=()=>{throw Error('백업 파일은 16MiB 이하만 불러올 수 있어요.');};
  function bytes(text){
   if(typeof TextEncoder!=='undefined')return new TextEncoder().encode(text).length;

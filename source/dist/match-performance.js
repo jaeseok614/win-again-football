@@ -13,7 +13,7 @@
  function makeRows(players,{score=[0,0],events=[],cards=[],detailed=false,limited=false}={}){
   if(!Array.isArray(players)||!Array.isArray(score)||score.length!==2)return [];
   const playerEvents=new Map(),cardCounts=counts(cards);
-  for(const event of events){if(event?.team!==undefined&&event.team!==0)continue;const id=event?.actorId||event?.scorerId;if(typeof id!=='string')continue;const current=playerEvents.get(id)||{shots:0,chances:0,goals:0,assists:0},attackEvent=['goal','shot','chance'].includes(event.type);if(attackEvent&&['goal','shot'].includes(event.type))current.shots++;if(attackEvent)current.chances++;if(event.scorerId===id)current.goals++;if(typeof event.assistId==='string'){
+  for(const event of events){if(event?.team!==undefined&&event.team!==0)continue;const id=event?.actorId||event?.scorerId;if(typeof id!=='string')continue;const current=playerEvents.get(id)||{shots:0,chances:0,goals:0,assists:0},attackEvent=['goal','shot','chance','attempt'].includes(event.type);if(Number.isInteger(event.tick)?event.type==='attempt'||event.type==='goal'&&!event.shotTick:attackEvent&&['goal','shot'].includes(event.type))current.shots++;if(attackEvent)current.chances++;if(event.scorerId===id)current.goals++;if(typeof event.assistId==='string'){
     const assist=playerEvents.get(event.assistId)||{shots:0,chances:0,goals:0,assists:0};assist.assists++;playerEvents.set(event.assistId,assist);
    }playerEvents.set(id,current);
   }

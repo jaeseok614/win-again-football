@@ -1,6 +1,6 @@
 (function(root){
  'use strict';
- const routes=Object.freeze({cross:'크로스',cutback:'컷백',through_ball:'침투 패스',dribble:'개인 돌파',combination:'패스 연계',corner:'코너킥',freeKick:'직접 프리킥'});
+ const routes=Object.freeze({cross:'크로스',cutback:'컷백',through_ball:'침투 패스',dribble:'개인 돌파',combination:'패스 연계',long_shot:'중거리 슈팅',corner:'코너킥',freeKick:'직접 프리킥'});
  const blank=()=>({chances:0,blocked:0,shots:0,goals:0});
  function routeFor(event){if(event.setPiece)return Object.hasOwn(routes,event.setPiece)&&['corner','freeKick'].includes(event.setPiece)?event.setPiece:null;return Object.hasOwn(routes,event.action)&&!['corner','freeKick'].includes(event.action)?event.action:null;}
  function read(match,{pendingEvent=null}={}){

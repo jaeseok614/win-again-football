@@ -1,4 +1,12 @@
 /* Action rows are defined once in match-popup.css. */
+.manager-art{position:relative;width:100%;height:100%;background-size:cover;background-position:68% 40%;border-radius:9px}
+.manager-art>span{position:absolute;bottom:8px;left:10px;color:#fff;font-size:10px;text-shadow:0 1px 4px #000}
+#manager-guide-art{height:150px;flex-shrink:0;position:relative;margin-top:10px;border:1px solid #526156;border-radius:10px;overflow:hidden}
+#manager-guide-art .manager-art>span{display:none}
+.arrival-caption{position:absolute;inset:auto 0 0;padding:25px 10px 8px;background:linear-gradient(transparent,#071713eb);color:#eef8e1;display:flex;justify-content:space-between;align-items:end;gap:8px;font-size:11px}
+.arrival-caption span{font-size:10px;color:#d5e7c5}
+@media(max-width:360px){#manager-guide-art{height:125px}.arrival-caption{display:block}.arrival-caption span{display:block;margin-top:3px}}
+@media(max-height:450px) and (min-width:600px){#manager-guide[open]:has(#manager-guide-art:not([hidden])){grid-template-columns:180px minmax(0,1fr) 155px;gap:8px 12px}#manager-guide-art{grid-column:1;grid-row:2/5;height:210px;margin:0}#manager-guide:has(#manager-guide-art:not([hidden])) h2{grid-column:2/4;grid-row:2}#manager-guide:has(#manager-guide-art:not([hidden])) #manager-guide-copy{grid-column:2;grid-row:3/5}#manager-guide:has(#manager-guide-art:not([hidden])) .manager-guide-actions{grid-column:3;grid-row:3}#manager-guide:has(#manager-guide-art:not([hidden]))>small{grid-column:3;grid-row:4}.arrival-caption{display:block}.arrival-caption span{display:block;margin-top:3px}}
 .match-popup-ready.match-view #players .player:disabled{opacity:1;cursor:default;pointer-events:none}
 .tactical-pitch{height:340px;position:relative;background:linear-gradient(90deg,transparent 49.7%,#92ac9277 50%,transparent 50.3%),#163c31;border:1px solid #8da895;border-radius:8px;margin:14px 0}
 .tactical-pitch:before{content:'';position:absolute;inset:8px;border:1px solid #92ac9288;pointer-events:none}
@@ -53,3 +61,5 @@
  #squad-overview-dialog.manager-guided .squad-overview-list{grid-row:3}
  #squad-overview-dialog.manager-guided footer{grid-column:1/-1;grid-row:4}
 }
+
+#manager-guide .manager-guide-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}#manager-guide-open{grid-column:1/-1}#manager-guide-next{grid-column:1/-1}#manager-guide-back:not([hidden])~#manager-guide-next{grid-column:2}#manager-guide-skip{grid-column:1/-1;color:#b8c8b7;background:transparent}

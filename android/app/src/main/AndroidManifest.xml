@@ -8,7 +8,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:usesCleartextTraffic="false">
         <activity android:name=".MainActivity" android:exported="true"
-            android:resizeableActivity="true" android:enableOnBackInvokedCallback="true">
+            android:screenOrientation="sensorLandscape" android:resizeableActivity="true" android:enableOnBackInvokedCallback="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

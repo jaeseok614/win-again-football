@@ -1,0 +1,553 @@
+
+/* Primary management pages; only long records and full player reports drill down. */
+body.operations-page .app{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr) 44px!important;height:100dvh!important;padding:6px 6px 0!important;align-items:stretch!important}
+body.operations-page .app>.masthead{display:none!important}
+body.operations-page .app>main{grid-row:1!important;grid-column:1!important;height:100%!important;max-height:none!important;min-height:0!important;align-self:stretch!important}
+body.operations-page .app>.view-nav{grid-row:2!important;grid-column:1!important}
+body.operations-page :is(#club-pane,#squad-pane,#market-pane):not([hidden]){display:block!important;grid-template-columns:none!important;grid-template-rows:none!important;width:100%;height:100%!important;min-height:0!important;margin:0!important;padding:0!important}
+body.operations-page :is(#club-pane,#squad-pane,#market-pane)>:not(#management-dialog){display:none!important}
+#management-dialog[data-operations-section]{width:100%!important;height:100%!important;max-height:none!important;margin:0!important;position:static!important;display:grid!important;grid-template-columns:108px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important;gap:5px!important;padding:2px!important;overflow:hidden!important}
+#management-dialog[data-operations-section]>:is(header,.management-switch){display:none!important}
+#management-dialog[data-operations-section] #management-content{grid-column:2!important;grid-row:1!important;display:block!important;min-width:0;min-height:0!important;height:100%!important;padding:0!important;overflow:hidden!important}
+.operations-nav{display:flex!important;flex-direction:column;min-width:0;min-height:0!important;gap:4px;padding:3px;background:#183127;border:1px solid #456154;border-radius:5px}
+.operations-nav h2{font-size:10px!important;line-height:13px!important;margin:0}
+.operations-context{display:flex!important;align-items:center;gap:3px;font-size:8px!important;line-height:11px!important}
+.operations-context .narrative-portrait{display:block!important;width:26px;height:26px!important;min-width:26px;border-radius:4px}
+.operations-nav>nav{display:grid!important;grid-template-columns:1fr 1fr!important;gap:3px}
+.operations-nav>nav button{box-sizing:border-box;min-width:0;min-height:30px!important;height:30px!important;margin:0;padding:2px;font-size:8px!important;line-height:10px!important;white-space:normal;word-break:keep-all}
+.operations-nav button[aria-pressed=true],.operations-staff-candidates button[aria-pressed=true]{background:#455e2d!important;color:#edffd4;border-color:#cae99a}
+.operations-return{margin-top:auto;display:grid!important;grid-template-columns:1fr!important;gap:2px}
+.operations-return button{box-sizing:border-box;min-width:0;min-height:36px!important;height:36px!important;padding:2px;margin:0;font-size:9px!important}
+.operations-panel{height:100%!important;min-width:0;min-height:0!important;box-sizing:border-box}
+.operations-panel :is(h1,h2,h3,p){word-break:keep-all;overflow-wrap:break-word}
+.operations-panel :is(button,select,input){box-sizing:border-box;max-width:100%}
+/* Individual training: every player, selected effect, recent form and actual action. */
+body.operations-page #individual-training .training-centre{display:grid!important;grid-template-rows:24px 24px minmax(0,1fr)!important;gap:3px;height:100%!important;padding:3px}
+body.operations-page #individual-training .training-centre-heading{min-height:0!important;margin:0;align-items:center}
+body.operations-page #individual-training .training-centre-heading h2{font-size:12px!important;line-height:14px!important;margin:0}
+body.operations-page #individual-training .training-centre-heading p{display:none!important}
+body.operations-page #individual-training .training-week-badge{font-size:8px!important;padding:2px;line-height:12px!important}
+body.operations-page #individual-training .training-summary{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:3px;margin:0}
+body.operations-page #individual-training .training-summary>div{padding:1px 3px;display:flex!important;align-items:center;justify-content:space-between;gap:2px;min-width:0}
+body.operations-page #individual-training .training-summary span{font-size:7px!important;line-height:9px!important}
+body.operations-page #individual-training .training-summary strong{font-size:10px!important;line-height:12px!important;white-space:nowrap}
+body.operations-page #individual-training .training-centre-layout{display:grid!important;grid-template-columns:minmax(0,.43fr) minmax(0,.57fr)!important;gap:4px;min-height:0!important;height:100%!important}
+body.operations-page #individual-training .training-roster-panel{display:grid!important;grid-template-rows:32px 22px 10px minmax(0,1fr)!important;min-height:0!important;padding:2px;gap:2px;overflow:hidden}
+body.operations-page #individual-training .training-roster-toolbar{gap:2px;min-height:0!important}
+body.operations-page #individual-training .training-roster-toolbar :is(input,select){min-width:0;min-height:32px!important;height:32px!important;font-size:8px!important;padding:2px}
+body.operations-page #individual-training .training-position-filters{display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:2px;margin:0}
+body.operations-page #individual-training .training-position-filters button{min-height:22px!important;height:22px!important;padding:0;font-size:8px!important}
+body.operations-page #individual-training .training-roster-count{font-size:7px!important;line-height:10px!important;margin:0}
+body.operations-page #individual-training .training-roster-list{display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:repeat(9,minmax(0,1fr))!important;gap:2px;overflow:hidden;min-height:0!important;max-height:none;height:100%!important}
+body.operations-page #individual-training .training-roster-player{display:grid!important;grid-template-rows:minmax(0,1fr) 10px!important;min-height:0!important;height:100%!important;margin:0;padding:1px 2px;gap:0;text-align:left}
+body.operations-page #individual-training .training-player-top{gap:2px;min-height:0!important}
+body.operations-page #individual-training .training-player-copy strong{font-size:7px!important;line-height:8px!important;white-space:normal;overflow:visible;text-overflow:clip}
+body.operations-page #individual-training .training-player-copy small{font-size:6px!important;line-height:7px!important}
+body.operations-page #individual-training .training-roster-player .player-portrait{height:14px!important;width:14px;min-width:14px}
+body.operations-page #individual-training .training-player-metrics{font-size:6px!important;line-height:8px!important;display:flex!important;justify-content:space-between;gap:1px}
+body.operations-page #individual-training .training-player-metrics b{font-size:8px!important;line-height:9px!important}
+body.operations-page #individual-training :is(.training-player-form,.training-player-growth,.training-player-footnotes){display:none!important}
+body.operations-page #individual-training .training-session-panel{display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:28px 24px minmax(0,1fr) 38px 44px 18px!important;min-height:0!important;padding:2px;gap:2px;overflow:hidden}
+body.operations-page #individual-training .training-session-panel>:is(label,select,.training-program-label,.training-next-match,details){display:none!important}
+body.operations-page #individual-training .training-selected-heading{grid-column:1/-1;grid-row:1;gap:3px;margin:0}
+body.operations-page #individual-training .training-selected-heading .player-portrait{height:24px!important;width:24px;min-width:24px}
+body.operations-page #individual-training .training-selected-heading h3{font-size:10px!important;line-height:12px!important;margin:0}
+body.operations-page #individual-training .training-selected-heading :is(span,small){font-size:7px!important;line-height:8px!important}
+body.operations-page #individual-training .profile-inline-button{min-height:26px!important;height:26px!important;min-width:32px;padding:2px;font-size:8px!important;margin-left:auto}
+body.operations-page #individual-training .training-selected-stats{grid-column:1/-1;grid-row:2;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:2px;margin:0}
+body.operations-page #individual-training .training-selected-stats>div{padding:1px 2px;display:grid!important;grid-template-columns:1fr auto!important;gap:0}
+body.operations-page #individual-training .training-selected-stats :is(span,small){font-size:6px!important;line-height:8px!important}
+body.operations-page #individual-training .training-selected-stats strong{font-size:11px!important;line-height:12px!important}
+body.operations-page #individual-training .training-form-report{grid-column:2;grid-row:3;min-height:0!important;margin:0;padding:2px;overflow:hidden}
+body.operations-page #individual-training .training-form-report header{display:block!important;font-size:7px!important;line-height:9px!important}
+body.operations-page #individual-training .training-form-report header small{display:none!important}
+body.operations-page #individual-training .training-form-report ul{display:grid!important;gap:1px;margin:2px 0;padding:0}
+body.operations-page #individual-training .training-form-report li{font-size:6px!important;line-height:8px!important;padding:1px;gap:1px;min-height:0!important}
+body.operations-page #individual-training .training-form-report p{font-size:6px!important;line-height:8px!important;margin:0}
+body.operations-page #individual-training .training-form-report>small{display:none!important}
+body.operations-page #individual-training .training-program-grid{grid-column:1;grid-row:3;display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:1fr 1fr!important;gap:2px;margin:0;min-height:0!important}
+body.operations-page #individual-training .training-program-grid button{min-height:0!important;height:100%!important;min-width:0;padding:2px;display:flex!important;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;white-space:normal;word-break:keep-all}
+body.operations-page #individual-training .training-program-grid :is(strong,b){font-size:8px!important;line-height:10px!important}
+body.operations-page #individual-training .training-program-grid :is(span,small){font-size:6px!important;line-height:8px!important}
+body.operations-page #individual-training .individual-training-preview{grid-column:1/-1;grid-row:4;padding:2px;margin:0;display:grid!important;grid-template-columns:1fr 1fr!important;gap:0 2px;min-height:0!important}
+body.operations-page #individual-training .individual-training-preview :is(span,small,p){font-size:7px!important;line-height:9px!important;margin:0}
+body.operations-page #individual-training .individual-training-preview strong{font-size:10px!important;line-height:12px!important}
+body.operations-page #individual-training #train-individual{grid-column:1/-1;grid-row:5;min-height:44px!important;height:44px!important;min-width:0;padding:2px;font-size:10px!important;margin:0}
+body.operations-page #individual-training :is(.individual-training-reason,.individual-training-note){grid-column:1/-1;grid-row:6;font-size:7px!important;line-height:9px!important;margin:0;padding:0}
+body.operations-page #individual-training.operations-training-completed .individual-training-reason{display:none!important}
+/* Whole-team training shows the actual eighteen-player forecast at once. */
+body.operations-page #training-card>.training-card{display:grid!important;grid-template-rows:22px 44px minmax(0,1fr) 18px!important;gap:3px;padding:3px;height:100%!important;margin:0}
+body.operations-page #training-card .panel-heading{margin:0}
+body.operations-page #training-card .panel-heading h2{font-size:12px!important;line-height:14px!important;margin:0}
+body.operations-page #training-card .panel-heading span{font-size:8px!important;line-height:10px!important}
+body.operations-page #training-card .training-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:4px;margin:0}
+body.operations-page #training-card .training-actions :is(select,button){height:44px!important;min-height:44px!important;padding:3px;font-size:10px!important}
+body.operations-page #training-card #team-training-preview{display:grid!important;grid-template-columns:90px minmax(0,1fr)!important;gap:4px;min-height:0!important;height:100%!important;overflow:hidden}
+body.operations-page #training-card .training-art{grid-column:1;grid-row:1;margin:0;min-height:0!important;height:100%!important;overflow:hidden}
+body.operations-page #training-card .training-art>:is(.club-art,.campus-art){display:block!important;position:static;inset:auto;min-height:0!important;height:100%!important;width:100%;margin:0}
+body.operations-page #training-card .team-training-preview{grid-column:2;grid-row:1;display:grid!important;grid-template-rows:14px 24px 20px minmax(0,1fr)!important;min-height:0!important;padding:2px;gap:2px}
+body.operations-page #training-card .team-training-preview>strong{font-size:9px!important;line-height:12px!important}
+body.operations-page #training-card .team-training-metrics{display:grid!important;grid-template-columns:1fr 1fr!important;gap:2px;margin:0}
+body.operations-page #training-card .team-training-metrics span{font-size:7px!important;line-height:9px!important}
+body.operations-page #training-card .team-training-metrics b{font-size:9px!important;line-height:11px!important}
+body.operations-page #training-card .team-training-preview>p{font-size:7px!important;line-height:9px!important;margin:0}
+body.operations-page #training-card .team-training-preview details{margin:0;min-height:0!important;overflow:hidden}
+body.operations-page #training-card .team-training-preview summary{display:none!important}
+body.operations-page #training-card .team-training-preview ul,.operations-team-current ul{display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:repeat(9,minmax(0,1fr))!important;gap:2px;margin:0;padding:0;height:100%!important;list-style:none}
+body.operations-page #training-card .team-training-preview li{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:2px;padding:0 2px;min-height:0!important;margin:0;align-items:center}
+body.operations-page #training-card .team-training-preview li strong{display:block!important;font-size:8px!important;line-height:10px!important}
+body.operations-page #training-card .team-training-preview li small{display:block!important;font-size:7px!important;line-height:9px!important}
+body.operations-page #training-card .team-energy{font-size:7px!important;line-height:10px!important;white-space:normal}
+body.operations-page #training-card>.training-card>p{font-size:7px!important;line-height:9px!important;margin:0}
+.operations-team-current{grid-column:1/-1;display:grid!important;grid-template-rows:18px minmax(0,1fr)!important;gap:3px;min-height:0!important}
+.operations-team-current h3{font-size:10px!important;margin:0;line-height:14px!important}
+.operations-team-current li{display:grid!important;grid-template-columns:1fr auto!important;gap:0 2px;font-size:8px!important;line-height:10px!important;padding:0 2px;background:#1b342c}
+.operations-team-current li span{grid-column:1;font-size:7px!important}.operations-team-current li b{grid-column:2;grid-row:1/3;font-size:8px!important}
+body.operations-page #training-card #team-training-preview>.team-training-reason{grid-column:1/-1;font-size:8px!important;line-height:10px!important;margin:0}
+body.operations-page #training-card #team-training-preview:has(.operations-team-current){grid-template-columns:1fr!important;grid-template-rows:20px minmax(0,1fr)!important}
+/* Coach list and selected real quote; original delegated contract handler survives. */
+.operations-staff{display:grid!important;grid-template-rows:24px minmax(0,1fr)!important;gap:4px;height:100%!important;min-height:0!important}
+.operations-staff>header{display:flex!important;justify-content:space-between;gap:4px;align-items:center}
+.operations-staff h2{font-size:12px!important;margin:0;line-height:14px!important}
+.operations-staff>header span{font-size:8px!important;line-height:10px!important}
+.operations-staff-layout{display:grid!important;grid-template-columns:1fr 1fr!important;min-height:0!important;gap:5px}
+.operations-staff-list{display:grid!important;grid-template-rows:12px 75px 12px minmax(0,1fr)!important;gap:3px;min-height:0!important}
+.operations-staff-list h3{font-size:9px!important;line-height:11px!important;margin:0}
+.operations-staff-contracts{display:grid!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;gap:1px}
+.operations-staff-contracts>:is(button,div){display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:2px;align-items:center;background:#1b352c;border:0;border-radius:2px;padding:0 2px;min-height:0!important;font-size:7px!important;line-height:9px!important}
+.operations-staff-contracts .staff-portrait{display:none!important}
+.operations-staff-contracts :is(b,strong){font-size:7px!important;line-height:9px!important}
+.operations-staff-candidates{display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;gap:2px;min-height:0!important}
+.operations-staff-candidates button{display:grid!important;grid-template-columns:18px minmax(0,1fr)!important;grid-template-rows:1fr 1fr!important;align-items:center;gap:0 2px;min-height:0!important;padding:1px 2px;text-align:left}
+.operations-staff-candidates .staff-portrait{width:18px;height:18px!important;grid-row:1/3}
+.operations-staff-candidates strong{font-size:8px!important;line-height:10px!important;white-space:normal;word-break:keep-all}
+.operations-staff-candidates span:not(.staff-portrait){font-size:7px!important;line-height:9px!important;grid-column:2}
+.operations-staff-profile{display:flex!important;flex-direction:column;gap:4px;min-height:0!important;padding:5px;border:1px solid #415e4f;border-radius:5px;background:#173129}
+.operations-staff-profile>header{display:flex!important;gap:4px;align-items:center}
+.operations-staff-profile>header .staff-portrait{width:30px;height:30px!important}
+.operations-staff-profile h3{font-size:12px!important;line-height:14px!important;margin:0}
+.operations-staff-profile>header span{font-size:8px!important;line-height:10px!important}
+.operations-staff-profile p{font-size:9px!important;line-height:12px!important;margin:0}
+.operations-staff-profile dl{display:grid!important;gap:3px;font-size:9px!important;line-height:12px!important;margin:0}
+.operations-staff-profile dl>div{display:flex!important;justify-content:space-between;gap:3px}
+.operations-staff-profile dd{margin:0;font-weight:bold;color:#cde990}
+.operations-staff-profile .operations-staff-rules{font-size:7px!important;line-height:9px!important}
+.operations-staff-actions{margin-top:auto;display:grid!important;grid-template-columns:1fr 1fr!important;gap:2px}
+.operations-staff-actions button{height:44px!important;min-height:44px!important;min-width:0;padding:2px;font-size:9px!important;line-height:11px!important}
+.operations-staff-actions:has([data-staff-action=hire]){grid-template-columns:1fr!important}
+.operations-staff-actions small{grid-column:1/-1;font-size:7px!important;line-height:9px!important}
+.operations-staff-profile .staff-note{font-size:7px!important;line-height:9px!important;margin:0}
+/* Board status beside every meeting topic and recent promise receipt. */
+body.operations-page #owner-board-panel .owner-board-card{display:grid!important;grid-template-columns:minmax(0,.37fr) minmax(0,.63fr)!important;grid-template-rows:30px 58px 26px minmax(0,1fr) 22px!important;gap:4px;padding:4px;height:100%!important;margin:0}
+body.operations-page #owner-board-panel .owner-board-heading{grid-column:1;grid-row:1;gap:3px;align-items:center}
+.operations-owner-face .narrative-portrait{display:block!important;width:26px;height:26px!important;border-radius:4px}
+body.operations-page #owner-board-panel .owner-board-heading h2{font-size:11px!important;line-height:13px!important;margin:0}
+body.operations-page #owner-board-panel .owner-board-heading .eyebrow{display:none!important}
+body.operations-page #owner-board-panel .owner-trust{font-size:8px!important;line-height:10px!important;padding:2px;margin-left:auto}
+body.operations-page #owner-board-panel .owner-trust b{font-size:14px!important}
+body.operations-page #owner-board-panel .owner-confidence{grid-column:1;grid-row:2;margin:0;padding:3px}
+body.operations-page #owner-board-panel .owner-confidence :is(strong,b){font-size:9px!important;line-height:12px!important}
+body.operations-page #owner-board-panel .owner-confidence small{font-size:7px!important;line-height:9px!important}
+body.operations-page #owner-board-panel .owner-confidence progress{height:5px!important;margin:2px 0;width:100%}
+body.operations-page #owner-board-panel .owner-board-card>p:not(.owner-status,.owner-promise-empty){grid-column:1;grid-row:3;font-size:7px!important;line-height:9px!important;margin:0}
+body.operations-page #owner-board-panel :is(.owner-promise,.owner-promise-empty){grid-column:1;grid-row:4;font-size:9px!important;line-height:13px!important;margin:0;padding:3px;align-self:start}
+body.operations-page #owner-board-panel .owner-promise :is(span,small){font-size:8px!important;line-height:11px!important}
+body.operations-page #owner-board-panel .owner-status{grid-column:1;grid-row:5;font-size:7px!important;line-height:9px!important;margin:0}
+body.operations-page #owner-board-panel details{grid-column:2;grid-row:1/-1;display:flex!important;flex-direction:column;gap:3px;min-height:0!important;padding:3px;overflow:hidden}
+body.operations-page #owner-board-panel details>summary{display:none!important}
+body.operations-page #owner-board-panel .owner-rules{font-size:7px!important;line-height:9px!important;margin:0}
+body.operations-page #owner-board-panel .owner-youth-label{display:flex!important;align-items:center;gap:3px;font-size:7px!important}
+body.operations-page #owner-board-panel .owner-youth-label select{min-height:32px!important;height:32px!important;padding:2px;font-size:9px!important;min-width:0;flex:1}
+body.operations-page #owner-board-panel .owner-choices{display:grid!important;grid-template-columns:1fr 1fr!important;gap:3px;margin:0}
+body.operations-page #owner-board-panel .owner-choices button{min-height:62px!important;padding:3px;display:flex!important;flex-direction:column;gap:2px;word-break:keep-all}
+body.operations-page #owner-board-panel .owner-choices strong{font-size:9px!important;line-height:11px!important}
+body.operations-page #owner-board-panel .owner-choices :is(span,small){font-size:7px!important;line-height:9px!important}
+body.operations-page #owner-board-panel .owner-history{display:grid!important;grid-template-columns:1fr 1fr!important;gap:2px;padding:0;margin:0;list-style:none}
+body.operations-page #owner-board-panel .owner-history li{font-size:7px!important;line-height:9px!important;padding:2px}
+body.operations-page #owner-board-panel .owner-history :is(strong,span){font-size:7px!important;line-height:9px!important}
+/* Body status retains actual depth, injuries, fatigue and explicit rotation. */
+body.operations-page #squad-health{display:grid!important;grid-template-columns:minmax(0,.38fr) minmax(0,.62fr)!important;grid-template-rows:minmax(0,1fr) 58px!important;gap:4px}
+body.operations-page #squad-health>:is(.health-hero,.club-faces){display:none!important}
+body.operations-page #squad-health .squad-depth{grid-column:1;grid-row:1;display:grid!important;grid-template-rows:22px minmax(0,1fr) 24px!important;gap:2px;padding:3px;margin:0;min-height:0!important}
+body.operations-page #squad-health .squad-depth .panel-heading{margin:0}
+body.operations-page #squad-health .squad-depth h2{font-size:10px!important;line-height:12px!important;margin:0}
+body.operations-page #squad-health .squad-depth .eyebrow{display:none!important}
+body.operations-page #squad-health .squad-depth .panel-heading>span{font-size:7px!important}
+body.operations-page #squad-health .squad-depth-grid{display:grid!important;grid-template-columns:1fr!important;grid-template-rows:repeat(4,minmax(0,1fr))!important;gap:2px;min-height:0!important}
+body.operations-page #squad-health .depth-card{padding:2px;display:grid!important;grid-template-columns:1fr 1fr!important;gap:1px;min-height:0!important}
+body.operations-page #squad-health .depth-card header{grid-column:1/-1;display:flex!important;gap:2px;align-items:center;margin:0}
+body.operations-page #squad-health .depth-card header :is(span,b,em){font-size:7px!important;line-height:9px!important;padding:0}
+body.operations-page #squad-health .depth-card>div{font-size:7px!important;line-height:9px!important;display:flex!important;gap:2px;align-items:center}
+body.operations-page #squad-health .depth-card strong{font-size:10px!important;line-height:11px!important}
+body.operations-page #squad-health .depth-card>p{font-size:6px!important;line-height:8px!important;margin:0;grid-column:1/-1}
+body.operations-page #squad-health .depth-card :is(button,.depth-ready){font-size:7px!important;line-height:9px!important;min-height:0!important;padding:0;margin:0}
+body.operations-page #squad-health .health-columns{grid-column:2;grid-row:1;display:grid!important;grid-template-columns:1fr 1fr!important;gap:3px;min-height:0!important}
+body.operations-page #squad-health :is(.medical-room,.load-room){padding:3px;margin:0;min-height:0!important}
+body.operations-page #squad-health .health-columns h2{font-size:9px!important;line-height:11px!important;margin:0}
+body.operations-page #squad-health .health-columns .panel-heading span{font-size:7px!important}
+body.operations-page #squad-health .health-columns .panel-heading{margin:0 0 3px;gap:2px}
+body.operations-page #squad-health .health-empty{padding:5px;font-size:8px!important;line-height:11px!important;min-height:0!important}
+body.operations-page #squad-health .health-empty p{font-size:8px!important;line-height:11px!important;margin:0}
+body.operations-page #squad-health .health-check{font-size:14px!important}
+body.operations-page #squad-health .health-footnote{font-size:6px!important;line-height:8px!important;margin:2px 0}
+body.operations-page #squad-health :is(.injury-list,.fatigue-list){display:grid!important;grid-template-columns:1fr!important;gap:2px;margin:0}
+body.operations-page #squad-health :is(.injury-card,.fatigue-row){padding:1px 2px;font-size:7px!important;line-height:9px!important;gap:2px;min-height:0!important}
+body.operations-page #squad-health .injury-card h3{font-size:8px!important;line-height:10px!important;margin:0}
+body.operations-page #squad-health .injury-rest strong{font-size:11px!important;line-height:13px!important}
+body.operations-page #squad-health :is(.injury-rest span,.fitness-badge,.position,.fatigue-row small){font-size:6px!important;line-height:8px!important;padding:0}
+body.operations-page #squad-health .fatigue-row strong{font-size:9px!important}
+body.operations-page #squad-health .rotation-panel{grid-column:1;grid-row:2;margin:0;padding:2px;display:grid!important;grid-template-rows:10px minmax(0,1fr)!important;gap:2px}
+body.operations-page #squad-health .rotation-panel :is(.eyebrow,h2,small){display:none!important}
+body.operations-page #squad-health .rotation-panel p{font-size:7px!important;line-height:9px!important;margin:0}
+body.operations-page #squad-health .rotation-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:2px}
+body.operations-page #squad-health .rotation-actions button{min-height:44px!important;height:44px!important;min-width:0;font-size:8px!important;line-height:10px!important;padding:1px;margin:0}
+body.operations-page #squad-health .medical-report{grid-column:2;grid-row:2;margin:0;padding:2px;font-size:7px!important;line-height:9px!important;min-height:0!important}
+body.operations-page #squad-health .medical-report :is(h2,span,p,b){font-size:7px!important;line-height:9px!important;margin:0}
+body.operations-page #squad-health .medical-report .panel-heading{margin:0 0 2px}
+body.operations-page #squad-health .rotation-preview{position:absolute;inset:4px;z-index:5;margin:0;padding:5px;background:#193128;display:flex!important;flex-direction:column;gap:4px}
+body.operations-page #squad-health .rotation-preview ul{display:grid!important;grid-template-columns:1fr 1fr!important;gap:3px;margin:0;padding:0;list-style:none}
+body.operations-page #squad-health .rotation-preview li{font-size:8px!important;line-height:11px!important;padding:2px}
+body.operations-page #squad-health .rotation-preview button{min-height:44px!important;margin-top:auto}
+body.operations-page #squad-health{position:relative}
+/* Saved XI: three plans, name/actions and complete eleven preview beside them. */
+body.operations-page #squad-plans-panel .squad-plans-card{display:grid!important;grid-template-columns:minmax(0,.4fr) minmax(0,.6fr)!important;grid-template-rows:24px 32px 32px 28px 44px minmax(0,1fr)!important;gap:3px;padding:4px;height:100%!important}
+body.operations-page #squad-plans-panel .squad-plans-card>p:first-of-type{display:none!important}
+body.operations-page #squad-plans-panel .squad-plans-heading{grid-column:1;grid-row:1;margin:0;gap:2px}
+body.operations-page #squad-plans-panel .squad-plans-heading .eyebrow{display:none!important}
+body.operations-page #squad-plans-panel .squad-plans-heading h2{font-size:10px!important;line-height:12px!important;margin:0}
+body.operations-page #squad-plans-panel .squad-plans-heading>span{font-size:6px!important;line-height:8px!important}
+body.operations-page #squad-plans-panel .squad-plan-slots{grid-column:1;grid-row:2;display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:2px;margin:0}
+body.operations-page #squad-plans-panel .squad-plan-slots button{min-height:32px!important;height:32px!important;padding:1px;font-size:8px!important;line-height:10px!important}
+body.operations-page #squad-plans-panel .squad-plan-name{grid-column:1;grid-row:3;display:flex!important;gap:2px;align-items:center;font-size:7px!important;min-width:0}
+body.operations-page #squad-plans-panel .squad-plan-name input{min-width:0;height:32px!important;min-height:32px!important;padding:2px;font-size:9px!important;flex:1}
+body.operations-page #squad-plans-panel .squad-plan-summary{grid-column:1;grid-row:4;font-size:8px!important;line-height:10px!important;margin:0}
+body.operations-page #squad-plans-panel .squad-plans-card>.squad-plan-actions{grid-column:1;grid-row:5;display:flex!important;gap:2px;margin:0}
+body.operations-page #squad-plans-panel .squad-plan-actions button{min-width:0;min-height:44px!important;height:44px!important;padding:1px;font-size:7px!important;line-height:9px!important;flex:1}
+body.operations-page #squad-plans-panel .squad-plans-card>:is(#squad-plan-status,.squad-plan-note){grid-column:1;grid-row:6;font-size:7px!important;line-height:9px!important;margin:0;align-self:end}
+body.operations-page #squad-plans-panel #squad-plan-status{align-self:start}
+body.operations-page #squad-plans-panel .squad-plan-preview{grid-column:2;grid-row:1/-1;display:flex!important;flex-direction:column;gap:3px;margin:0;padding:4px;min-height:0!important}
+body.operations-page #squad-plans-panel .squad-plan-preview h3{font-size:10px!important;line-height:12px!important;margin:0}
+body.operations-page #squad-plans-panel .squad-plan-preview :is(p,small){font-size:7px!important;line-height:9px!important;margin:0}
+body.operations-page #squad-plans-panel .squad-plan-eleven{display:grid!important;grid-template-columns:1fr 1fr!important;gap:2px;margin:0;padding:0;list-style:none}
+body.operations-page #squad-plans-panel .squad-plan-eleven li{font-size:8px!important;line-height:10px!important;padding:2px;display:grid!important;grid-template-columns:22px 1fr!important;gap:1px}
+body.operations-page #squad-plans-panel .squad-plan-eleven strong{font-size:8px!important;line-height:10px!important;word-break:keep-all}
+body.operations-page #squad-plans-panel .squad-plan-eleven small{grid-column:2}
+body.operations-page #squad-plans-panel .squad-plan-preview>.squad-plan-actions{margin-top:auto;display:flex!important;gap:2px}
+body.operations-page #squad-plans-panel .squad-plan-warnings{font-size:7px!important;line-height:9px!important;padding-left:12px;margin:0}
+/* Current finance and clearly labelled projections; long round-by-round history remains explicit. */
+body.operations-page #finance-detail>.finance-detail{display:grid!important;grid-template-columns:1fr .8fr!important;gap:4px;height:100%!important;padding:4px}
+body.operations-page #finance-detail .panel-heading{margin:0 0 3px}
+body.operations-page #finance-detail :is(h2,.finance-rules h2){font-size:12px!important;line-height:14px!important;margin:0}
+body.operations-page #finance-detail .ledger-row{padding:4px;gap:3px}
+body.operations-page #finance-detail .ledger-row :is(b,strong){font-size:9px!important;line-height:12px!important}
+body.operations-page #finance-detail .ledger-row small{font-size:7px!important;line-height:10px!important}
+body.operations-page #finance-detail :is(.finance-note,.finance-rules p,.finance-rules small){font-size:9px!important;line-height:13px!important;margin:4px 0}
+body.operations-page #finance-detail .finance-rules{padding:5px}
+body.operations-page #finance-plan-panel .finance-plan{height:100%!important;position:relative;padding:5px;margin:0}
+body.operations-page #finance-plan-panel .finance-plan-collapse{display:flex!important;flex-direction:column;gap:5px}
+body.operations-page #finance-plan-panel .finance-plan-collapse>summary{display:flex!important;gap:3px;align-items:center;margin:0}
+body.operations-page #finance-plan-panel .finance-plan-collapse>summary h2{font-size:12px!important;line-height:14px!important;margin:0}
+body.operations-page #finance-plan-panel .finance-plan-collapse>summary span{font-size:8px!important;line-height:10px!important}
+body.operations-page #finance-plan-panel .finance-plan-kpis{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:4px}
+body.operations-page #finance-plan-panel .finance-plan-kpis>div{padding:5px}
+body.operations-page #finance-plan-panel .finance-plan-kpis span{font-size:9px!important;line-height:12px!important}
+body.operations-page #finance-plan-panel .finance-plan-kpis strong{font-size:16px!important;line-height:20px!important}
+body.operations-page #finance-plan-panel :is(.finance-plan-note,.finance-plan-warning){font-size:9px!important;line-height:13px!important;margin:0}
+body.operations-page #finance-plan-panel .finance-plan-rounds>summary{min-height:44px!important;display:flex!important;align-items:center;font-size:10px!important}
+body.operations-page #finance-plan-panel .finance-plan-rounds[open]{position:absolute;inset:2px;background:#183229;z-index:8;padding:5px;overflow:auto}
+body.operations-page #finance-plan-panel .finance-plan-rounds[open]>summary{position:sticky;top:0;background:#183229}
+body.operations-page #finance-plan-panel .finance-plan-rounds[open]>summary:after{content:'닫기 ×';margin-left:auto}
+body.operations-page #club-overview{display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:minmax(0,1fr)!important;gap:5px}
+body.operations-page #club-overview>.club-hero{padding:6px;display:flex!important;flex-direction:column;justify-content:center;gap:5px}
+body.operations-page #club-overview :is(h1,h2){font-size:18px!important;line-height:22px!important;margin:0}
+body.operations-page #club-overview .season-metrics{display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:repeat(3,1fr)!important;gap:4px;margin:0}
+body.operations-page #club-overview .season-metrics>div{padding:5px}
+body.operations-page #club-overview .season-metrics span{font-size:9px!important;line-height:12px!important}
+body.operations-page #club-overview .season-metrics strong{font-size:20px!important;line-height:24px!important}
+body.operations-page #suspensions-panel .suspensions-card{padding:5px;height:100%!important}
+body.operations-page #suspensions-panel .suspensions-heading h2{font-size:12px!important;line-height:14px!important;margin:0}
+body.operations-page #suspensions-panel :is(p,small){font-size:8px!important;line-height:11px!important;margin:4px 0}
+body.operations-page #suspensions-panel .suspensions-list{display:grid!important;grid-template-columns:1fr 1fr!important;gap:3px}
+body.operations-page #suspensions-panel .suspension-row{font-size:8px!important;line-height:11px!important;padding:3px}
+@media(max-height:350px){
+ .operations-nav>nav button{min-height:26px!important;height:26px!important;font-size:7px!important}
+ .operations-return{grid-template-columns:1fr 1fr!important}.operations-return button{height:44px!important;min-height:44px!important;font-size:8px!important}
+ body.operations-page #individual-training .training-centre{grid-template-rows:20px 20px minmax(0,1fr)!important;gap:2px}
+ body.operations-page #individual-training .training-roster-list{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(6,minmax(0,1fr))!important}
+ body.operations-page #individual-training .training-roster-player .player-portrait{display:none!important}
+ body.operations-page #individual-training .training-player-copy strong{font-size:6px!important;line-height:7px!important}
+ body.operations-page #individual-training .training-player-copy small{font-size:5.5px!important;line-height:6px!important}
+ body.operations-page #individual-training .training-session-panel{grid-template-rows:24px 22px minmax(0,1fr) 32px 44px 18px!important}
+ body.operations-page #individual-training .training-selected-heading h3{font-size:8px!important;line-height:10px!important}
+ body.operations-page #individual-training .training-selected-heading small{font-size:6px!important;line-height:7px!important}
+ .operations-staff-list{grid-template-rows:10px 60px 10px minmax(0,1fr)!important}
+ .operations-staff-profile{padding:3px;gap:3px}.operations-staff-profile h3{font-size:10px!important;line-height:12px!important}.operations-staff-profile :is(p,dl){font-size:8px!important;line-height:10px!important}
+ body.operations-page #owner-board-panel .owner-board-card{grid-template-columns:minmax(0,.34fr) minmax(0,.66fr)!important;grid-template-rows:28px 54px 26px minmax(0,1fr) 22px!important;gap:2px}
+ body.operations-page #owner-board-panel .owner-choices button{min-height:52px!important}
+}
+@media(max-width:660px){
+ #management-dialog[data-operations-section]{grid-template-columns:88px minmax(0,1fr)!important;gap:3px!important}
+ body.operations-page #training-card #team-training-preview{grid-template-columns:58px minmax(0,1fr)!important}
+ body.operations-page #individual-training .training-centre-layout{grid-template-columns:minmax(0,.48fr) minmax(0,.52fr)!important}
+ body.operations-page #individual-training .training-roster-player .player-portrait{display:none!important}
+ .operations-staff-candidates .staff-portrait{height:14px!important;width:14px}.operations-staff-candidates button{grid-template-columns:14px minmax(0,1fr)!important}
+ body.operations-page #owner-board-panel .owner-board-heading{flex-wrap:wrap}
+ body.operations-page #owner-board-panel .owner-trust{font-size:6px!important;line-height:8px!important}
+}
+
+/* Override managed-panel defaults without hiding any primary content. */
+body.operations-page #management-content>:is(#squad-health,#club-overview){display:grid!important}
+body.operations-page #management-content>#training-card{display:block!important}
+body.operations-page #management-content{scrollbar-gutter:auto}
+body.operations-page #squad-health .depth-card>div{grid-column:1/-1;margin-top:0}
+body.operations-page #squad-health .squad-depth-grid{margin-bottom:0}
+body.operations-page #squad-health .depth-card header em{width:auto}
+body.operations-page #squad-plans-panel .squad-plans-card{box-sizing:border-box}
+body.operations-page #finance-detail>.finance-detail{box-sizing:border-box}
+body.operations-page #suspensions-panel .suspensions-card{box-sizing:border-box}
+
+body.operations-page #management-content>.operations-panel{margin:0!important;padding:0!important}
+.operations-nav button,.operations-staff-candidates button,.operations-staff-contracts button{background:#243e34;color:#e3f0e9;border:1px solid #476153;border-radius:4px}
+body.operations-page #individual-training .training-centre{margin:0}
+body.operations-page #individual-training .training-centre-layout{align-items:stretch}
+body.operations-page #individual-training :is(.training-roster-panel,.training-session-panel){height:100%!important}
+body.operations-page #individual-training .training-player-metrics{margin:0;flex-wrap:nowrap}
+body.operations-page #individual-training .training-selected-stats strong{margin:0}
+body.operations-page #individual-training .training-selected-stats small{grid-column:1/-1}
+body.operations-page #individual-training .training-form-report header strong{font-size:7px!important;line-height:9px!important}
+body.operations-page #individual-training .training-form-report li :is(span,strong,small){font-size:6px!important;line-height:8px!important}
+body.operations-page #individual-training .training-form-report li>span:first-child{min-width:12px;height:12px!important;padding:0;font-size:6px!important}
+body.operations-page #individual-training .training-form-report li{grid-template-columns:12px minmax(0,1fr) auto auto!important}
+body.operations-page #individual-training .training-program-grid :is(span,small){margin:0}
+body.operations-page #individual-training .individual-training-preview :is(strong,em,span,small,p){margin:0;padding:0}
+body.operations-page #individual-training .individual-training-preview em{font-size:8px!important;line-height:10px!important}
+body.operations-page #training-card .team-training-preview{margin:0}
+body.operations-page #training-card .team-training-preview li small{margin:0}
+body.operations-page #training-card .team-training-metrics b{margin:0}
+body.operations-page #training-card .team-training-preview details{height:100%!important}
+body.operations-page #training-card .team-training-preview li>span:first-child{min-width:0}
+body.operations-page #training-card .team-training-preview li{border:0}
+body.operations-page #squad-health .depth-card small{font-size:7px!important;line-height:9px!important}
+body.operations-page #squad-health .rotation-panel{grid-template-rows:1fr!important;padding:0;border:0}
+body.operations-page #squad-health .rotation-panel>div:first-child{display:none!important}
+body.operations-page #squad-health .rotation-note{position:absolute;bottom:60px;left:0;right:0;margin:0;font-size:8px;line-height:10px;background:#193629;padding:3px;z-index:4}
+body.operations-page #squad-health .operations-rotation-actions{display:flex;gap:4px;margin-top:auto}
+body.operations-page #squad-health .operations-rotation-actions button{flex:1;margin:0;height:44px!important;min-height:44px!important;font-size:9px!important;line-height:12px!important}
+body.operations-page #owner-board-panel .operations-owner-meeting{display:flex;flex-direction:column;gap:3px}
+body.operations-page #owner-board-panel .owner-board-heading{height:30px!important}
+body.operations-page #finance-detail>.finance-detail{margin:0}
+.operations-finance-kpis{display:grid;gap:3px;margin:0 0 6px;font-size:10px;line-height:13px}
+.operations-finance-kpis>div{display:flex;justify-content:space-between;gap:3px}
+.operations-finance-kpis dd{font-weight:bold;color:#cde9a4;margin:0}
+.operations-staff-deal{min-width:0;display:flex;flex-direction:column;gap:2px}
+.operations-staff-deal button{width:100%}
+body.operations-page #squad-plans-panel .squad-plan-slots button{display:flex;align-items:center;gap:3px}
+body.operations-page #squad-plans-panel .squad-plans-card{margin:0}
+body.operations-page #suspensions-panel .suspensions-card>header{display:flex;justify-content:space-between;gap:3px}
+body.operations-page #suspensions-panel .suspensions-card h2{font-size:12px!important;line-height:14px!important;margin:0}
+body.operations-page #suspensions-panel .suspensions-card>header span{font-size:8px!important;line-height:10px!important}
+body.operations-page #suspensions-panel summary{display:none!important}
+body.operations-page #suspensions-panel ul{display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:0;list-style:none;margin:0}
+body.operations-page #suspensions-panel li{display:flex;flex-direction:column;padding:2px;font-size:8px;line-height:10px;border:1px solid #3e5548;border-radius:4px}
+
+body.operations-page #training-card .team-training-preview ul{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(6,minmax(0,1fr))!important}
+body.operations-page #training-card .team-training-preview li{grid-template-rows:10px minmax(9px,1fr)!important;gap:0 2px;align-items:start;padding:0 1px}
+body.operations-page #training-card .team-training-preview li>span:first-child{display:contents!important}
+body.operations-page #training-card .team-training-preview li strong{grid-column:1/-1;grid-row:1;font-size:7px!important;line-height:9px!important}
+body.operations-page #training-card .team-training-preview li small{grid-column:1;grid-row:2;font-size:6px!important;line-height:8px!important}
+body.operations-page #training-card .team-energy{grid-column:2;grid-row:2;font-size:6px!important;line-height:8px!important}
+@media(max-height:350px){body.operations-page #training-card .team-training-preview{grid-template-rows:12px 22px 18px minmax(0,1fr)!important;gap:1px}body.operations-page #training-card .team-training-preview li strong{font-size:6px!important;line-height:8px!important}}
+
+@media(max-height:350px){body.operations-page #training-card>.training-card{grid-template-rows:16px 44px minmax(0,1fr) 12px!important;gap:2px}body.operations-page #training-card .team-training-preview{grid-template-rows:12px 18px 10px minmax(0,1fr)!important}body.operations-page #training-card .team-training-preview li{grid-template-rows:9px minmax(8px,1fr)!important;gap:0 1px}body.operations-page #training-card .team-training-preview ul{gap:1px}body.operations-page #training-card .panel-heading{gap:2px}body.operations-page #training-card .panel-heading span{font-size:6px!important;line-height:8px!important}}
+
+body.operations-page #training-card .training-art .club-art>span{position:absolute;left:2px;right:2px;bottom:2px;max-width:calc(100% - 4px);font-size:6px!important;line-height:8px!important;word-break:keep-all}
+body.operations-page #training-card .training-art .club-art{position:relative}
+
+body.operations-page #individual-training .training-player-metrics :is(span,b){font-size:6px!important;line-height:8px!important;margin:0}
+body.operations-page #individual-training .training-selected-stats strong{font-size:9px!important;line-height:13px!important}
+body.operations-page #individual-training .training-selected-heading>div{min-width:0}
+@media(max-height:350px){
+ body.operations-page #individual-training .training-centre{grid-template-rows:16px 18px minmax(0,1fr)!important}
+ body.operations-page #individual-training .training-roster-panel{grid-template-rows:28px 18px 8px minmax(0,1fr)!important;gap:1px;padding:1px}
+ body.operations-page #individual-training .training-roster-toolbar :is(input,select){height:28px!important;min-height:28px!important}
+ body.operations-page #individual-training .training-position-filters button{height:18px!important;min-height:18px!important;font-size:6px!important;line-height:8px!important}
+ body.operations-page #individual-training .training-roster-count{font-size:6px!important;line-height:8px!important}
+ body.operations-page #individual-training .training-roster-list{gap:1px;padding:1px}
+ body.operations-page #individual-training .training-roster-player{padding:0 1px;grid-template-rows:minmax(0,1fr) 8px!important}
+ body.operations-page #individual-training .training-player-copy strong{font-size:6px!important;line-height:7px!important}
+ body.operations-page #individual-training .training-player-copy small{font-size:5px!important;line-height:6px!important}
+ body.operations-page #individual-training .training-session-panel{grid-template-rows:32px 24px minmax(0,1fr) 28px 44px 14px!important;gap:1px;padding:1px}
+ body.operations-page #individual-training .training-selected-heading :is(span,small){font-size:6px!important;line-height:8px!important}
+ body.operations-page #individual-training .training-program-grid button{padding:1px;gap:0}
+ body.operations-page #individual-training .training-program-grid :is(strong,b){font-size:6px!important;line-height:8px!important}
+ body.operations-page #individual-training .training-program-grid :is(span,small){font-size:5.5px!important;line-height:7px!important}
+ body.operations-page #individual-training .individual-training-preview :is(span,small,p){font-size:6px!important;line-height:8px!important}
+ body.operations-page #individual-training .individual-training-preview strong{font-size:8px!important;line-height:10px!important}
+ body.operations-page #individual-training .individual-training-reason{font-size:6px!important;line-height:8px!important}
+}
+
+body.operations-page #individual-training .training-player-metrics{white-space:nowrap}
+body.operations-page #individual-training .training-player-metrics :is(span,b){display:inline!important}
+body.operations-page #individual-training .training-player-metrics>span{display:block!important}
+body.operations-page #individual-training .training-selected-heading small{font-size:6px!important;line-height:8px!important}
+
+body.operations-page :is(#club-pane,#squad-pane,#market-pane)[hidden]{display:none!important}
+body.operations-page .app>main{margin:0!important;padding:0!important;display:block!important}
+body.operations-page #individual-training .training-selected-heading{align-items:flex-start}
+body.operations-page #individual-training .training-selected-heading small{font-size:5.5px!important;line-height:7px!important}
+
+body.operations-page #individual-training .training-selected-heading>div{font-size:7px!important;line-height:8px!important}
+.operations-staff-profile>header>div{font-size:8px!important;line-height:10px!important}
+
+body.operations-page #individual-training [data-ability-band=elite]{color:#8de5af!important}
+body.operations-page #individual-training [data-ability-band=strong]{color:#ede592!important}
+body.operations-page #individual-training [data-ability-band=steady]{color:#b9d4eb!important}
+body.operations-page #individual-training [data-ability-band=developing]{color:#efb0a4!important}
+
+@media(max-width:660px){.operations-staff-candidates strong{font-size:7px!important;line-height:9px!important}.operations-staff-candidates span:not(.staff-portrait){font-size:6px!important;line-height:8px!important}.operations-staff-candidates button{gap:0 1px;padding:0 1px}.operations-staff-contracts :is(b,strong,span){font-size:6px!important;line-height:8px!important}}
+
+.operations-staff-candidates .staff-portrait{width:18px!important;height:18px!important;min-width:0!important;min-height:0!important;max-width:100%;align-self:center}
+@media(max-width:660px){.operations-staff-candidates .staff-portrait{width:14px!important;height:14px!important}}
+
+body.operations-page #staff-panel .operations-staff-candidates .staff-portrait{width:18px!important;height:18px!important;min-width:0!important;min-height:0!important;max-width:100%}
+@media(max-width:660px){body.operations-page #staff-panel .operations-staff-candidates .staff-portrait{width:14px!important;height:14px!important}}
+
+body.operations-page #squad-health .depth-card>p{display:none!important}
+body.operations-page #squad-health .depth-card{grid-template-rows:9px minmax(0,1fr) 10px!important;grid-template-columns:1fr!important}
+body.operations-page #squad-health .depth-card>:is(button,.depth-ready){grid-column:1;grid-row:3}
+body.operations-page #squad-health .squad-depth>.health-footnote{font-size:6px!important;line-height:8px!important}
+
+body.operations-page #squad-health .depth-card>div{min-height:0;line-height:13px!important}
+body.operations-page #squad-health .depth-card>div :is(small,i){font-size:6px!important;line-height:9px!important}
+body.operations-page #squad-health .depth-card strong{font-size:9px!important;line-height:13px!important}
+
+body.operations-page #squad-health{grid-template-rows:minmax(0,1fr) 44px!important}
+body.operations-page #squad-health .squad-depth{grid-template-rows:20px minmax(0,1fr) 18px!important}
+
+body.operations-page #squad-health .squad-depth>.health-footnote{margin:0}
+
+body.operations-page #squad-health .fatigue-list{grid-template-columns:1fr 1fr!important;gap:1px}
+body.operations-page #squad-health .fatigue-row{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;padding:1px;font-size:6px!important;line-height:8px!important}
+body.operations-page #squad-health .fatigue-row b{font-size:6px!important;line-height:8px!important;word-break:keep-all}
+body.operations-page #squad-health .fatigue-row small{font-size:5px!important;line-height:7px!important;display:block!important}
+body.operations-page #squad-health .fatigue-row strong{font-size:8px!important;line-height:11px!important}
+
+body.operations-page #squad-plans-panel .squad-plan-slots :is(b,span){font-size:7px!important;line-height:10px!important}
+
+body.operations-page #squad-plans-panel .squad-plan-eleven li>span{font-size:7px!important;line-height:10px!important}
+
+body.operations-page #finance-detail>.finance-detail{grid-template-rows:28px minmax(0,1fr)!important}
+body.operations-page #finance-detail .operations-finance-kpis{grid-column:1/-1;grid-row:1;grid-template-columns:repeat(3,minmax(0,1fr))!important;margin:0;font-size:8px!important;line-height:11px!important}
+body.operations-page #finance-detail .operations-finance-kpis>div{display:grid!important;grid-template-columns:1fr auto!important;align-items:center;background:#20392f;padding:2px;border-radius:4px}
+body.operations-page #finance-detail .operations-finance-kpis dd{font-size:9px!important;line-height:12px!important}
+body.operations-page #finance-detail .finance-detail>div:not(.finance-rules){grid-column:1;grid-row:2;min-height:0}
+body.operations-page #finance-detail .finance-rules{grid-column:2;grid-row:2;min-height:0;padding:3px}
+body.operations-page #finance-detail .finance-rules :is(p,small){font-size:8px!important;line-height:11px!important;margin:3px 0}
+body.operations-page #finance-detail .finance-rules .eyebrow{font-size:7px!important;line-height:9px!important}
+body.operations-page #finance-detail .finance-rules h2{font-size:10px!important;line-height:12px!important}
+body.operations-page #finance-detail .ledger-row{padding:2px;gap:2px}
+body.operations-page #finance-detail .ledger-row small{font-size:6px!important;line-height:8px!important}
+
+body.operations-page #club-overview .season-metrics strong{font-size:16px!important;line-height:24px!important}
+body.operations-page #club-overview>.club-hero{display:grid!important;grid-template-rows:64px minmax(0,1fr) 44px!important;gap:3px;padding:3px}
+body.operations-page #club-overview>.club-hero>div:first-child{grid-row:1;font-size:7px!important;line-height:9px!important}
+body.operations-page #club-overview>.club-hero .eyebrow{font-size:6px!important;line-height:8px!important}
+body.operations-page #club-overview>.club-hero h2{font-size:12px!important;line-height:16px!important;margin:0}
+body.operations-page #club-overview>.club-hero p{font-size:7px!important;line-height:9px!important;margin:0}
+body.operations-page #club-overview .club-growth{grid-row:2;margin:0;height:100%!important;max-height:none;min-height:0!important;aspect-ratio:auto;display:grid!important;grid-template-rows:minmax(0,1fr) 14px!important}
+body.operations-page #club-overview .club-growth-picture{min-height:0!important;height:100%!important;aspect-ratio:auto}
+body.operations-page #club-overview .club-growth figcaption{padding:1px 2px;font-size:6px!important;line-height:8px!important}
+body.operations-page #club-overview .club-growth figcaption :is(strong,span){font-size:6px!important;line-height:8px!important}
+body.operations-page #club-overview .club-identity{grid-row:3;min-height:0;font-size:8px!important;line-height:10px!important;gap:3px}
+body.operations-page #club-overview .club-identity .club-mark{width:28px!important;height:28px!important;min-width:28px!important}
+body.operations-page #club-overview .club-identity small{font-size:6px!important;line-height:8px!important}
+
+body.operations-page .app{display:grid!important;gap:4px;box-sizing:border-box}
+
+body.operations-page .app>.view-nav{height:44px!important;min-height:44px!important;max-height:44px!important;box-sizing:border-box;padding:0 4px!important;display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:2px}
+body.operations-page .view-nav button{height:44px!important;min-height:44px!important;max-height:44px!important;padding:2px!important;box-sizing:border-box;font-size:9px!important;line-height:12px!important;display:flex!important;align-items:center;justify-content:center;white-space:normal;word-break:keep-all}
+body.operations-page .view-nav button:before{display:none!important}
+
+body.operations-page #management-dialog .operations-nav h2{margin:0!important}
+body.operations-page #management-dialog .operations-context .narrative-portrait,body.operations-page #owner-board-panel .operations-owner-face .narrative-portrait{width:26px!important;height:26px!important;min-width:26px!important;min-height:0!important;flex:0 0 26px}
+body.operations-page #management-dialog .operations-context>span{font-size:7px!important;line-height:10px!important}
+
+@media(min-height:351px) and (max-height:450px){body.operations-page #individual-training .training-roster-list{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(6,minmax(0,1fr))!important;padding:1px}body.operations-page #individual-training .training-roster-player .player-portrait{display:none!important}body.operations-page #individual-training .training-roster-player{grid-template-rows:minmax(0,1fr) 8px!important;padding:0 1px}body.operations-page #individual-training .training-player-copy strong{font-size:7px!important;line-height:8px!important}body.operations-page #individual-training .training-player-copy small{font-size:6px!important;line-height:7px!important}}
+
+body.operations-page #squad-health .rotation-panel{grid-template-columns:minmax(0,1fr)!important}
+body.operations-page #squad-health .rotation-actions{grid-column:1;grid-row:1;width:100%;min-width:0;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+body.operations-page #squad-health .rotation-actions button{width:100%;white-space:normal;word-break:keep-all}
+
+body.operations-page #training-card .operations-team-current ul{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(6,minmax(0,1fr))!important;gap:2px;min-height:0}
+body.operations-page #training-card .operations-team-current li{min-height:0;grid-template-rows:10px minmax(0,1fr)!important}
+body.operations-page #training-card .operations-team-current li strong{font-size:7px!important;line-height:9px!important}
+body.operations-page #training-card .operations-team-current li span{font-size:6px!important;line-height:8px!important}
+body.operations-page #training-card .operations-team-current li b{font-size:7px!important;line-height:9px!important}
+
+body.operations-page #suspensions-panel .operations-discipline{display:grid!important;grid-template-rows:20px 24px 12px minmax(0,1fr) 16px!important;gap:3px;height:100%!important;padding:3px;box-sizing:border-box}
+body.operations-page #suspensions-panel .operations-discipline header{display:flex;gap:3px;align-items:center;justify-content:space-between}
+body.operations-page #suspensions-panel .operations-discipline h2{font-size:12px!important;line-height:16px!important;margin:0}
+body.operations-page #suspensions-panel .operations-discipline header span{font-size:7px!important;line-height:10px!important}
+body.operations-page #suspensions-panel .operations-discipline nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
+body.operations-page #suspensions-panel .operations-discipline nav button{height:24px!important;min-height:24px!important;padding:2px;font-size:8px!important;line-height:11px!important;background:#243e34;color:#e3f0e9;border:1px solid #476153;border-radius:4px}
+body.operations-page #suspensions-panel .operations-discipline nav button[aria-pressed=true]{background:#455e2d;border-color:#cae99a}
+body.operations-page #suspensions-panel .operations-discipline>p{font-size:7px!important;line-height:9px!important;margin:0}
+body.operations-page #suspensions-panel .operations-discipline ul{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(6,minmax(0,1fr))!important;gap:2px;list-style:none;padding:0;margin:0;min-height:0}
+body.operations-page #suspensions-panel .operations-discipline li{display:flex;flex-direction:column;padding:1px;gap:0;min-height:0;font-size:6px!important;line-height:8px!important}
+body.operations-page #suspensions-panel .operations-discipline li strong{font-size:6px!important;line-height:8px!important}
+body.operations-page #suspensions-panel .operations-discipline li span{font-size:6px!important;line-height:8px!important}
+body.operations-page #suspensions-panel .operations-discipline li small{font-size:5px!important;line-height:7px!important;margin:0}
+
+body.operations-page #squad-health .depth-card button,body.operations-page #squad-health .depth-card button>span{font-size:6px!important;line-height:8px!important}
+body.operations-page #squad-health .depth-card button{padding:0;border:0}
+
+/* Android Korean font metrics need full line space, including secondary labels. */
+body.operations-page #individual-training .training-player-copy small{line-height:10px!important}
+body.operations-page #individual-training .training-selected-heading small{line-height:10px!important}
+body.operations-page #individual-training .training-session-panel{grid-template-rows:32px 24px minmax(0,1fr) 38px 44px 18px!important}
+@media(max-height:350px){body.operations-page #individual-training .training-player-copy small{font-size:5px!important;line-height:8px!important}body.operations-page #individual-training .training-session-panel{grid-template-rows:32px 24px minmax(0,1fr) 28px 44px 14px!important}}
+@media(min-height:351px) and (max-height:450px){body.operations-page #individual-training .training-player-copy small{font-size:5px!important;line-height:8px!important}body.operations-page #individual-training .training-roster-panel{grid-template-rows:28px 20px 10px minmax(0,1fr)!important}body.operations-page #individual-training .training-roster-toolbar :is(input,select){height:28px!important;min-height:28px!important}body.operations-page #individual-training .training-position-filters button{height:20px!important;min-height:20px!important}}
+
+@media(max-height:450px){
+ body.operations-page #individual-training .training-form-report>header{display:none!important}
+ body.operations-page #individual-training .training-form-report li{grid-template-columns:8px minmax(0,1fr) auto!important;padding:0;min-height:0!important;font-size:5px!important;line-height:8px!important}
+ body.operations-page #individual-training .training-form-report li small{display:none!important}
+ body.operations-page #individual-training .training-form-report li :is(span,strong){font-size:5px!important;line-height:8px!important}
+ body.operations-page #individual-training .training-form-report li>span:first-child{width:8px;min-width:8px;height:8px!important;font-size:5px!important;line-height:8px!important}
+ body.operations-page #individual-training .training-form-report ul{margin:0;gap:1px}
+ body.operations-page #individual-training .training-form-report>p{font-size:5px!important;line-height:7px!important;margin:0}
+}
+
+body.operations-page #squad-health .medical-report-lines{margin:0;padding:0;display:grid;gap:1px}
+body.operations-page #squad-health .medical-report-lines p{margin:0;padding:0;font-size:6px!important;line-height:8px!important}
+body.operations-page #squad-health .medical-report-lines :is(span,b){font-size:6px!important;line-height:8px!important}
+
+body.operations-page #squad-health .medical-report{font-size:6px!important;line-height:8px!important}
+body.operations-page #squad-health .medical-report .panel-heading{height:10px!important;min-height:0!important;gap:2px;margin:0 0 2px;padding:0;align-items:center}
+body.operations-page #squad-health .medical-report .panel-heading :is(h2,span){font-size:6px!important;line-height:8px!important;margin:0}
+body.operations-page #squad-health .medical-report p{font-size:6px!important;line-height:8px!important}
+
+body.operations-page #management-dialog #management-content small{line-height:1.7!important}
+
+body.operations-page #squad-health .medical-report .panel-heading{flex-direction:row!important}
+body.operations-page #squad-health .medical-report-lines p>span{display:inline-block!important;padding:0 2px;margin:0 2px 0 0;border-radius:2px}
+body.operations-page #individual-training .training-session-panel{grid-template-rows:32px 28px minmax(0,1fr) 38px 44px 18px!important}
+@media(max-height:350px){body.operations-page #individual-training .training-session-panel{grid-template-rows:32px 28px minmax(0,1fr) 24px 44px 14px!important}}
+
+body.operations-page #individual-training .training-form-report>p{line-height:10px!important}
+
+/* Fixed page surfaces must not scroll when focus or a centred touch target moves. */
+body.operations-page .app>main,body.operations-page :is(#club-pane,#squad-pane,#market-pane):not([hidden]),#management-dialog[data-operations-section],#management-dialog[data-operations-section] #management-content{overflow:clip!important}
+
+/* Reserve extra rows for API34 Korean font metrics without dropping forecasts. */
+body.operations-page #training-card>.training-card{grid-template-rows:18px 44px minmax(0,1fr) 14px!important}
+body.operations-page #training-card .team-training-preview{grid-template-rows:14px 18px 18px minmax(0,1fr)!important}
+body.operations-page #training-card .team-training-metrics span{font-size:6px!important;line-height:8px!important}
+body.operations-page #training-card .team-training-metrics b{font-size:8px!important;line-height:10px!important}
+@media(max-height:350px){body.operations-page #training-card>.training-card{grid-template-rows:16px 44px minmax(0,1fr) 12px!important}body.operations-page #training-card .team-training-preview{grid-template-rows:12px 18px 10px minmax(0,1fr)!important}}
+
+body.operations-page #training-card .training-art>.club-growth-campus{display:flex!important;flex-direction:column;height:100%!important;min-height:0!important;width:100%;margin:0;padding:0;overflow:hidden}
+body.operations-page #training-card .training-art .club-growth-picture{flex:1;min-height:0!important;height:auto!important;aspect-ratio:auto}
+body.operations-page #training-card .training-art .club-growth figcaption{flex:0 0 auto;padding:2px;gap:0;line-height:9px}
+body.operations-page #training-card .training-art .club-growth figcaption strong{font-size:8px;line-height:10px}
+body.operations-page #training-card .training-art .club-growth figcaption span{display:none}

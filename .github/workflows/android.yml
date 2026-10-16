@@ -61,7 +61,9 @@ jobs:
           target: google_apis
           profile: pixel_6
           ram-size: 3072M
-          emulator-options: -no-window -gpu software -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none -feature -Vulkan
+          # Explicit ANGLE/SwiftShader backend: automatic software selection
+          # crashed the host RenderThread on both API levels (2026-10-12).
+          emulator-options: -no-window -gpu swangle -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none -feature -Vulkan
           working-directory: android
           disable-animations: true
           script: |

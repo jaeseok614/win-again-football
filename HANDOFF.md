@@ -1,3 +1,378 @@
+# 최신 완료 — 연속11·가로 경기장·실제 슈팅 보고·가로 연습
+
+2026-10-16. [설계/공식 참고/측정 범위](docs/FOOTBALL_TRANSITIONS_2026-10-16.md), [전체 배포 증빙](docs/FOOTBALL_RULE11_RELEASE_2026-10-16.json), [같은 전력256경기 비교](docs/FOOTBALL_RULE11_BENCHMARK_2026-10-16.json).
+
+- 가능한 앞쪽 태클 선택, 골키퍼의 골대 각도/현재 깊이, 수비 복귀와 역습 출구/제한된 리드 패스, 크로스 수신 감속·실제 공중 접촉 헤더, 측면 프리킥 배달과 능력 기반 키커를 새 연속11에 적용했다. 새11만 각 틱의 물리/이벤트 정밀도를 고정해 Node·Chrome·Android의 전체 JSON을 같게 만든다. 공개1–10의 계산과 재생·부분 저장은 바꾸지 않는다.
+- 라이브·리플레이·연습 관전을 좌우 골대 경기장으로 통일했다. 실제 좌표/시간은 유지하며 22명 이름 위 공 표시와 경기장62%/통계38%를 유지한다. 완료된 실제 슈팅 지도·선수 얼굴/이름·거리·xG·결과/팀 필터와 선택 장면의 실제 재생을 연결했다. 원본 위치가 없는 득점은 만들어 표시하지 않고 공개 전 결과도 숨긴다. 연습의 전술/교체·배속/종료와 결과/재도전을 가로 한 화면에 배치했다.
+- 기능 cc4376b70982baf73cbc9041a5dc9c49946902b0, 최종 검사 6104dd44acd2b867ff6430d990c2fb22436a1991, tree6879195dc4ff1f93f1c1b62a69cd651762e2569f. 제품 source subtree19165ff989c1eb393d0314edd875a2fc97b8916e는 후속 네이티브 검사 수정 동안 동일했다. 최종 [Source38835809479](https://github.com/jaeseok614/win-again-football/actions/runs/38835809479)/job116764557994 completed/success: 로컬·원격187 suites/1,450checks, PWA14, Android 오프라인 자산과 공개 생성물 일치.
+- [Android38835809480](https://github.com/jaeseok614/win-again-football/actions/runs/38835809480): API34 job116764585836/API35 job116764586117 각각21tests·실패/오류/건너뛰기0, APK/AAB/lint 성공. 원본 XML476.307초/503.805초, verification12018979121 SHA256551fd9691399af7e18e9028b3d81d1094c9f0b1514f2fa68bab02350cd7c0d64 /verification12019616804 SHA2565ea8c9c091c3c477602e96060da5f82052f518cac6dc7b78286389cfd237f75b. 두 API의 새 슈팅/라이브/리플레이/연습 캡처를 직접 확인했다. 최종 검사는 WebView의 반환 JSON을 정확히 풀어 해시하고, 실제 표시 모델/버블링 변경 이벤트를 사용한다. 제품 동작/판정 기준을 줄여 통과시키지 않았다.
+- Node/Chrome 부분/전체 캠페인·두 자연 연습 전체 JSON과 cold restore, 공개1–10 고정값을 통과했다. 실제98분 경기를844×390·보통/핵심 관전에서 약91.2초에 플레이하고 자동 득점/하프타임/종료·퇴장 후21명·미확정0R를 확인했다. 이는 데스크톱 측정이며 휴대폰 속도 보장은 아니다.
+- 실제 슈팅9가로 크기568×252~1280×720와 모든 장면/44px/선택 재생·정지 복귀, 라이브/연습8크기와 실제 교체/전술/결과/재도전, 기존 선수단18명·영입·기사·12포메이션·23배치·키커·실제 교환/터치 드래그8크기를 통과했다. 영입 선수의 실제3경기 프리킥과 실제 퇴장 뒤 키커 대체·등록 신원/재정/기록/파일 복원도 확인했다. 코너는 별도의 합법적 경계 통과/재개/비행 조건이며 자연 발생 빈도의 증거로 취급하지 않는다.
+- 실제 연속11 전체49경기(46리그+3컵)의 정산·순위·재정·기록·복원과 별도 복사본의 명시적4부 승격을 확인했다. 추가로 새11의6시즌284경기(모든 시즌46리그)를 정산·복원·파일 왕복했다. 실제 순위는5부1위→4부1위→3부1위→2부24위 강등→3부4위 잔류→3부2위 승격이며1부에 도달하지 않았다. 회복 훈련과 가용 선발만 사용하고 영입/최강 선발/전술을 최적화하지 않았다. 별도 기존 정상1부 테스트 경력의 복사본에서 새11로39경기(38리그+1컵)를 완료하고 원본 불변·파일 왕복·Chrome cold import와1부 성장 이미지6크기를 확인했다. 이 별도1부는20위/3점(0승3무35패·42득점195실점)였으며, 첫 상대와 대조한 자동 선발GK의keeping74 대 상대90 등 전력/선발 차이가 있으므로 이를 동급 전력 균형의 증거로 삼지 않는다.
+- 동일 상대·시드·4-4-2의 추가 비교에서는 명시적 코치 선발(주 능력 우선)을 적용한 실제11 경기가 기존 선발2:3/슈팅12:29에서 추천 선발4:2/슈팅8:15로 바뀌었다. 골키퍼는keeping74→88이며 여러 선수가 함께 바뀌므로 골키퍼 단독 효과나 일반 승률로 해석하지 않는다. 미리보기는 원본/RNG를 바꾸지 않고 적용/두 경기 정산·복원을 통과했다.
+- 최종 테스트 APK win-again-20261016-horizontal-football.apk, 6,624,089바이트, SHA256bab949da925bc38589d874d7144c70a6ec6612e1e2b9f9b111415a6f9c4e13df. APK artifact12018936575의ZIP SHA25620daaa56d01e25631e6f5b8b06334e3bf6a0d9cd8f7272864d924f11dab9e037. 내부HTML6,295,697바이트/SHA2560439b702186ec6689471338501ddd5c599a6962e4f5816b808942891f2a71ef0가 로컬 최종 자산과 같다. PWA6,295,923바이트/shell336cd7e737f5.
+- 기존 [Drive 파일](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view)의 APK만 교체했다. ID·폴더를 유지하고 modified2026-10-16T01:48:56.210Z, 원격 원본 전체6,624,089바이트/SHA256도 재확인했다. ZIP/AAB/백업/키는 올리지 않았다.
+- 새 테스트 서명8ec4e18c51a6ae6b3fabde438b6ae820fac1f809597471e1d47092e7ad32b0ac는 이전c000500b6411321741a4edc266392e8005ae933f88e9ed0640986e0190e55c36와 다르다. 기존 앱에서 저장 내보내기 → 앱 제거 → 새APK 설치 → 저장 불러오기. 저장키win-again-season-v17·schema10·앱 ID·현재 시즌 유지, 사용자 저장은 테스트에 사용하지 않았다.
+- 같은 전력의 압박 득실차 우세+0.594→+0.266, 역습 슈팅4.45→5.70이지만 낮은 수비/높은 경합 빈도/자연 코너와 장기 난이도는 남은 과제다. 다음 물리 수정은 반드시12로 분리한다. 공개1–10의 기존 cross-V8 엄격 재생 한계도 소급 변경하지 않는다. PR25 Draft 유지, main3af6f7cb 미병합. 마무리 커밋은 문서만 [skip ci].
+
+# 이전 완료 — REA 참고 연속규칙10·선수 기록·24명 초상
+
+- WebSoccer/Touchlines 원본을 실제 rea-agents6.5.0 CLI로 분석했다. 새 연속10은 수비 도달 시간·공 속도에 따른 패스/슈팅 차단, 포메이션 안의 지원 위치, 열린 전진 패스, 달리는/측면 슈팅의 조준 오차와 골키퍼 반응을 보완한다. 실제22명 목표/현재 좌표와 미터 단위 대형 분석, 최근5출전/초 단위90분당, 영입24명 전용 창작 초상을 추가했다. 초 단위 교체 뒤 표시 분 올림이 경력 합계를 어긋나게 하던 정상 저장 검증도 고쳤다. [설계/공식 자료/재현](docs/REA_FOOTBALL_RULE10_2026-10-15.md), [수치/REA·설치 근거](docs/REA_ENGINE_AUDIT_2026-10-15.json), [그림 전체 프롬프트](docs/MARKET_PORTRAITS_2026-10-15_PROMPT.md).
+- 최종 기능/검사 **71e60ed2de158509d38bf743512d5339404b814e**, tree **9172672dbfdd29bbab09a9e072d0090849f9e2b0**. [Source38700994967](https://github.com/jaeseok614/win-again-football/actions/runs/38700994967)/job116308855449 completed/success: **182 suites/1,419checks**, PWA14·Android 자산·공개 생성물 일치. 로컬182/1419도 성공했다. 공개9 세 씨드의 부분/완료/정산 해시와1–9 보존,9완료 후10진행/저장도 통과했다. 새 연습은 실제75분0:1(씨드4/균형),80분3:2(씨드8/압박)이다.
+- [Android38700994752](https://github.com/jaeseok614/win-again-football/actions/runs/38700994752): API34 job116308855291/API35 job116308855073, 각각 **18/0/0/0** 및 APK/AAB/lint 성공. XML252.855초/366.33초. verification11956713463 SHA25625cecdcda2b26f616da10e41bac0cd2dc72c1efe0e5b4f113b931a675a559786 /verification11956890327 SHA256830c22cf02929255a50ff41fd198b7f990bdbf9f92c684991a7f6f8a33efa45f. 양 API의 실제 분석/최근 출전 캡처를 확인했다. 첫99d8e74 설치 검사는 이전 페이지 선택자를 찾던 테스트가 실패했고, 실제 통합 화면의4지시·22명 이름·내부 글씨/경계/44px 검증으로 수정했다. 제품 코드·판정 한도·검사 시간은 바꾸지 않았으며 최종71e60ed2가 이를 대체한다.
+- 가로9크기568×252~1280×720/216전개, 실제 현재 위치·명시적1회 지시·정지 복귀·최근5경기·미등록 후보를 확인했다. 기존 선수단/영입/12포메이션·배치 교환/기사와 선수 전체 보고도8크기를 통과했다. 후보 r_m2를 영입·키커 지정하고 실제10 경기3회/초 단위 교체/기록·얼굴·파일 왕복을 검증했다. 별도 연속10의 전체46리그+컵3,49경기를 정산·복원·파일 왕복하고 명시적 시즌 검토만으로4부로 이동했다. 씨드41,44승2무/134점/326득점53실점·잔액£631,900이다. 이는 통합 QA이며 실제 사용자 저장은 사용하지 않았다. 강한 우리 선수단의 대승과 같은 능력 표본의 압박 우세는 여전히 조정 과제다.
+- PWA **6,264,298바이트**, SHA25664d63600fb4f4c834d37387188f9db68319026762219863a77b181667ac17436 /cache revision44afb1f0d43b. Android 게임 **6,264,072바이트/SHA256a4d6bb2964d8cfb2c5b83c06b4e3aec71396c0ac8d4fd36f331d1d0e359afc0c**. APK artifact11955553730/ZIP SHA256ed030dbe50c6f1ad80419d17ec0d002f26ce34bf01822e606e3f35679d5ee107, 실제APK **6,613,309바이트/SHA2569dc512f95127978cee989e9a9404948596bd171808ac6cd3dda79cbbf9acd0fe**. 내부HTML이 로컬 최종 자산과 바이트 동일하다.
+- 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view)의 APK만 **win-again-20261015-rea-football.apk**로 교체했다. 동일ID/MIME/6,613,309바이트/부모0ACEDMU5UjS2_Uk9PVA/수정2026-10-15T08:00:50.676Z를 재조회하고, 원격 원본 전체 바이트/SHA256도 재검증했다. work/rea-tactics-20261015/release-evidence.json 및 drive-readback-verification.json. ZIP·AAB·키·저장 파일은 올리지 않았다.
+- 테스트 서명91be0a8e…→c000500b… 변경. **기존 앱에서 저장 내보내기→기존 앱 제거→새APK 설치→저장 불러오기** 필요. schema10/saveKey·앱 ID 유지, 자동 초기화/시즌 이동 없음. PR25 draft/main 미병합. 이 이후 후속 커밋은 최종 증빙 문서만 변경한다.
+
+# 최신 완료 — 선수의 판단과 책임, 가로 수첩
+
+- 도움/퇴장의 두 새 갈래6화와 창작4컷, 실제 리그 두 경기·이전 두 답변을 기억하는 후속 면담을 추가했다. 기존4갈래12화/저장/경제/공개 연속1–9는 보존한다. 세 갈래 이상은 모든 이름+선택 보고를 한 가로 화면에 표시하고, 선택·종류·페이지·시즌 복귀와 긴 대답/근거/상태 문구의 경계를 고쳤다. [설계·정확한 생성 프롬프트·증빙](docs/PLAYER_THREADS_2026-10-15.md).
+- 기능 **7d94b2f3af25d1fc18c3fb6b5642faa5d50575d1** /tree **799580c765967d6c2a5cf31023739ed05dd550f2**. [Source38683111860](https://github.com/jaeseok614/win-again-football/actions/runs/38683111860) job116251845991 completed/success: **178 suites /1390checks**, PWA14/Android 자산/공개 생성물 일치. 로컬178/1390, 새9가로 크기/6완료전문5크기와 기존12전문7크기도 통과했다.
+- [Android38683111871](https://github.com/jaeseok614/win-again-football/actions/runs/38683111871): API34 job116251868036/API35 job116251868196 각각 **17/0/0/0**, APK/AAB/lint 성공. XML439.526초/239.96초. 새 이야기 선택·답변·근거·저장·복귀와 두 API 캡처를 확인했다. verification11948683936 SHA256ec660f33e97dcf28fe32cff2fa35913bffec81142c1a30d712d70df33e9fc7a3 /verification11949541176 SHA256852453568879ca0f5fb2e3ea12a6407fd441990c6d8f125a67934869b2fb2418.
+- 기존 연속9의31R 저장 복사본에서 실제4경기를 진행해 새6면담/12답변을 완결하고11개 보존 검사를 통과했다. 이전 모든 답변 prefix/기존4갈래 완결/전체 export·restore가 유지됐다. 사용자 저장을 읽거나 바꾸지 않았다.
+- PWA6040435/shell04d86df676e8. Android게임6040209/SHA256ec641c97cceaf92a30a3ce26c767cbafbd44a71abd07e0c335b82b3c3f0b298e. APK artifact11948219976/ZIP SHA25606affd84d76f08d729440f002403c9922c50f4dff1a1b316e965787454ddbb14. 설치 파일 **6450837바이트 /SHA256cda92bb9f97b7458fe8e3a70d08a87cd07159bd6e6f8975733168e3e17cc75c6**, 내부HTML 바이트 동일.
+- 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view)에 **win-again-20261015-player-threads.apk**만 교체했다. 동일ID/MIME/6450837바이트/부모/수정2026-10-15T04:57:44.972Z를 재조회했고, 다시 내려받은 원격 원본도 SHA256/전체 바이트가 같았다. work/story-threads-20261015/release-evidence.json, final-apk-verification.json, drive-readback-verification.json.
+- 테스트 서명69aad9a0…→91be0a8e… 변경. **이전 앱에서 저장 내보내기→이전 앱 제거→새APK설치→저장 불러오기** 필요. schema10/saveKey 유지, 자동 저장 삭제/시즌 이동 없음. PR25 draft, main 미병합. 이후 마무리는 문서만 변경한다.
+
+# 최신 완료 — 확정 경기로 이어지는 감독 이야기와 기자실
+
+- 골키퍼·출전 부담·원정 팬·구단주 네 갈래12화와 창작8컷을 추가했다. 실제 두 경기와 이전 두 답변을 기억하며, 인물별 말투·속마음·완료 전문·시즌 필터·수첩 복귀를 제공한다. 기사 추가 질문은 확정 기록과 원래 최근3경기 순서만 읽는다.
+- 1부 캠퍼스 높이0, 그림 비율과 실제 준비 보고 교체 뒤 재보정, 기사 오버레이/숨은 그림/버튼 대비, 작은 홈 기사 제목과 한글 단어 잘림을 수정했다. 저장/선택/경제/공개연속1–9 규칙을 유지한다. [설계·공식 참고·정확한 이미지 프롬프트·전체 검증](docs/TOUCHLINE_STORIES_2026-10-15.md).
+- 최종 기능 **cd3288bd6578774b5c7df243e7d5e80b237423ff** / tree **31576a3802efba2685e7022bd29ea25522fb1dd1**. 로컬·[Source38672995803](https://github.com/jaeseok614/win-again-football/actions/runs/38672995803) job116220183529 completed/success, **177 suites /1,376checks**, PWA14·Android 자산·공개 생성물 일치 성공.
+- [Android38672995795](https://github.com/jaeseok614/win-again-football/actions/runs/38672995795): API34 job116220183956/API35 job116220183696 각각 **16/0/0/0** 및 APK/AAB/lint 성공. verification11945825186 SHA256c3b208bda329e47e4d8274a03439c5a8e7fe458bcf36dd5159c31074ff4a55f9 / verification11944752794 SHA2560d1956ea8782119aa8021379da9b78aa302e0c59b7562086159ba6d4414248ef. 실제 두 API의 서사/기사/수첩/운영/경기 캡처와 새 필터 경로를 확인했다.
+- 연속9의 실제647경기 경력과 별도8경기 해임 fixture, 5시즌309장면/20완결갈래/120답변, 전체 백업/새 삶을 확인했다. 1부 이미지 호환성 저장과 실제 연속9 승격 표본은 구분한다. 관전 표본은 핵심96.8초/빠름75.0초/전 경기1266.3초이며 점수·슈팅·12통계가 동일했다.
+- PWA5,690,907/shell6393fd6ef3da. Android게임5690681/SHA2567c2bcffe9ff518bfae09c8553b1e944af8234017a61b0f7d52b7dfe73c7d5772. API34 APK artifact11945391133 ZIP SHA256b6f9559d685d7102ff99c3d15b69a0db14878d99254dce2559f9b02f05b437fa. APK **6188085바이트/SHA25671f7c2dd2f660551a7f0c584807d3e388df333159718723cbc453c2211ff91bf**, 내부HTML이 로컬 자산과 바이트 동일하다.
+- 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 **win-again-20261015-touchline-stories.apk** APK만 교체했다. 파일ID/MIME/6188085바이트/부모0ACEDMU5UjS2_Uk9PVA/수정2026-10-15T03:00:49.185Z를 재조회하고, 다시 내려받은 전체 바이트의 SHA256도 일치했다. work/webtoon-release-20261015/release-evidence.json, final-apk-verification.json, drive-readback-verification.json.
+- 테스트 서명aed58205cb0141b3183bb265fba5b4b69520f03a789678d8a6f5ed962e32f077→69aad9a0c273707f09ce65a40fbdecfe80951fe0dd2bd700a9f7528bda8d08c2. **구단 저장 내보내기→기존 앱 제거→새APK설치→저장 불러오기** 필요. 자동 삭제/초기화/시즌 전환은 없다. PR25 draft/main 미병합. 후속 마무리는 문서만 [skip ci]이며 기능 검증 대상은cd3288bd다.
+
+> 아래는 이전 작업 당시의 기록입니다. 현재 설치판과 검증 대상은 위 최신 완료 항목을 사용하세요.
+
+# 이전 완료 — 경기 준비 보고 · 네 훈련 비교 · 실제 전후 결과
+
+- [공식 게임 참고와 설계](docs/PREPARATION_DESK_2026-10-14.md). 구단 현황에 실제 다음/현재 상대의 예상 포메이션·요주의 선수·4전력 비교, 최근 확정 리그5경기, 순위/승점/자금/출전 가능 인원을 함께 표시한다. 선발 체력, 주간 훈련 공유 잠금, 코치2경기 이내 계약 만료, 실제 이사회 신임/약속을 수석코치 보고로 연결한다. 경기 중 교체로 빠진 선수와 퇴장도 출전 가능 인원에서 제외한다. 종료 버튼은 실제 대회 성적으로 이동하고 시즌을 자동 전환하지 않는다.
+- 기술/속도/지구력/회복을44px 비교 버튼4개로 펼쳐, 실제 능력/체력 변화 인원과 평균 체력의 전후를 확인한 뒤 원래 Season.train으로 실행한다. 성공 후18명 실제 능력/체력의 전후 결과를 같은 화면에 표시하고 운영 화면 왕복에도 보존한다. 결과 표는 현재 앱 세션의 읽기 전용 메모리이며, 캠페인/시즌/주간/훈련종류/등록신원/실제값이 맞을 때만 표시한다. 저장된 과거 훈련 이력이나 미래 결과를 만들어내지 않는다. 저장키/시즌10/경기10·공개 연속1–9/공간1·물리/경제규칙과 기존 원본 아틀라스를 유지한다.
+- 최종 기능 **36062fce99c41f6ae94fdfa72574ec6270c47ab3**, tree **076ce69bbfab7eda4ee232bc0b5e9a293096a20d**. 로컬 전체175 suites/1,348checks 및 영향 검사 Android13/PWA14/성능10 통과. [Source38527611899](https://github.com/jaeseok614/win-again-football/actions/runs/38527611899)/job115731586551 completed/success: **175 suites/1,348checks**, PWA14, Android자산·공개 생성물 일치 모두 성공(07:33:43UTC). f4599a30/ff1139c6의 중간CI는 후속 정확성/종료 경로 수정으로 대체한 것이며 최종36062fce 검증과 구분한다.
+- [Android38527611942](https://github.com/jaeseok614/win-again-football/actions/runs/38527611942): API34 job115731702269/API35 job115731703067 각각 **14tests/실패0/오류0/건너뛰기0**, APK/AAB/lint 성공. 기존14검사에 실제 팀훈련 버튼·실행 전후/공유 잠금·준비보고 왕복·완료 후 대회 이동을 확장했다. API34 verification11876857629 ZIP SHA256771ea4b3f895c4699f18edbd176ae6cfcbc0a011651d1b5d6991322bc7de251a/XML14/0/0/0,time331.26. API35 verification11877380384 ZIP SHA256374711da3d6e2c22bf961f4b1a0f3c98d8dabe8c9a45ea7118c850965c33568b/XML14/0/0/0,time264.516. 실제 두 API의 준비/비교/18명 결과/종료 캡처를 확인했다. 검사/시간/글자 경계 조건을 완화하지 않았다.
+- 브라우저8크기(568×320~1280×720)/10운영,4훈련 버튼·실제 결과값/왕복/46R종료, 기존12포메이션/23자리·실제 터치/교환·선수단/영입/기사·저장 불변성 통과. 소수점 체력77.4567의18명 결과도8크기 내부 경계를 통과했다. 실제 seed41의5시즌 정산/명시적 nextSeason만으로5부1위→4부1위→3부1위→2부1위→1부3위, 자금£4,739,800/1부38경기의3가로 크기 구단·재정·훈련과 읽기 불변성 통과. 이는 자동화된 캠페인 QA이며 사용자 저장을 사용하거나 바꾸지 않았다. work/preparation-final-browser.log / preparation-dense-regression.log / preparation-promotion-qa.log / preparation-fraction-qa.log / preparation-route-api34-* / preparation-route-api35-*.
+- PWA **4,945,643바이트/shell daf995b99f42**. Android 게임 **4,945,417바이트/SHA2566b233e753e95cdb3ba3b6ad07aa23e0af48e25f7a4993fee31cdc9304890da67**. API34 APK artifact11876164235 ZIP SHA25619eb72364b36940ccb46d4811fb6f3927cdc5b6e180c69afa78d8b0c5f6bbcfc 검증. APK **5,643,525바이트/SHA25613f542045c3f756a2c145cd653c6101c31d788d2f987e3561dd587bee1ffb12d**. 내부 HTML은 로컬 최종 Android자산과 바이트 동일, appID com.jaeseok614.winagainfootball과 기존debug 접미사/saveKey win-again-season-v17 유지. work/preparation-apk-verification.json.
+- APK만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 **win-again-20261014-preparation-desk.apk**로 교체하고 ID/이름/MIME/5,643,525바이트/부모0ACEDMU5UjS2_Uk9PVA를 재조회했다. 수정2026-10-14T07:35:52.525Z, 파일ID1nSujeFdST1on5jVkSCNrH2CleLCibWkc와 폴더/공유 유지. 저장·ZIP·AAB·키는 업로드하지 않았다.
+- 테스트 서명663e626c4101ee9c6952143b1cf3ef57496b2d12a967005b3a48ef7528adfed3→ec9b8e123d68d4ba3fc6e3cbeb5cd31fe5234f0036a0cde1f2f263e7e56389a9 변경. **구단 저장 내보내기→기존 앱 제거→새APK 설치→저장 불러오기** 필요. 자동 삭제/초기화/시즌 전환은 없다. codex/football-realism-20261012 및 PR25 draft/main 미병합 유지. 마지막 후속은 검증 문서만 [skip ci]이며 기능 검증 대상은36062fce다.
+
+# 최신 추가 검증 — 시즌 종료의 대회 성적 연결
+
+- 구단 준비 보고의 종료 버튼을 실제 대회 성적 화면으로 연결했고 브라우저·Android 실제 클릭 검사를 추가했다. 기존8크기/10페이지·훈련결과/왕복/46R종료와5시즌4승격/1부38R·£4,739,800의3가로 크기 경계 및 읽기 불변성을 통과했다. 로컬 전체175 suites/1,348checks 성공. 원격 최종 코드의 전체·Android 검증은 진행 중이며 Drive는 이전 검증 APK를 유지한다.
+
+# 최신 진행 — 경기 준비 보고와 팀 훈련 비교
+
+- [설계/공식 게임 참고](docs/PREPARATION_DESK_2026-10-14.md). FM Mobile의 경기 전 정보 연결과 Top Eleven의 훈련 효과/체력 소모 비교를 참고해, 실제 상대/최근5리그결과·선발 체력·코치 계약 만료·이사회 약속을 구단 현황에 통합했다. 네 팀 훈련 종류는 펼친44px 버튼에서 실제 효과/체력을 비교하며 원래 실행을 유지한다.
+- 실제 팀훈련 성공 후18명 능력/체력의 전후 결과를 같은 화면에 표시한다. 이 표는 현재 앱 세션의 실제 실행 기록이고 저장 이력/미래 결과를 만들어내지 않는다. 캠페인/주간/등록/실제값 검증 뒤에만 재표시한다. 새 모델7그룹 통과(실제 교체/저장된 퇴장 인원의 출전 불가 포함).8가로 화면/기존10운영/실행·왕복과 원격 전체/Android14검사를 확인 중이다. 기존Drive APK는 검증한 management-pages판이며 이번 설치판 검증 전에는 교체하지 않는다.
+- 저장키·신원·시즌/경기10·공개연속1–9/공간1과 물리/경제규칙은 유지한다. 새 상세 지표를 보려고 훈련/계약/답변/선발이 자동 적용되지 않는다.
+
+# 최신 완료 — 훈련·구단 운영을 가로 한 화면에 통합
+
+- [설계/공식 FMM 참고](docs/OPERATIONS_WORKSPACES_2026-10-14.md). 팀·개인 훈련, 몸 상태, 코치 계약, 선발 계획, 구단주·약속, 재정 장부, 자금 계획, 구단 현황, 징계의 10개 업무를 실제 노드와 기존 실행 처리기를 사용하는 가로 페이지로 통합했다. 18명 능력/체력/성장 한계와 4개 실제 프로그램, 5역할/10코치 후보의 얼굴·계약 조건, 현재11명과 3계획, 실제6장부·신임/약속·부상·대회별 정지·현재 구단 규모를 함께 읽는다. 많은 정보의 전체 선수 보고서·46라운드 계산만 추가 읽기를 유지한다.
+- 8가로 크기(568×320,640×360,740×360,844×364,844×390,915×412,1024×768,1280×720)의 모든10페이지에서 실제 홈/하단/운영 메뉴·내부 글자/이미지/조작/부모 경계를 확인했다. 실제 개인회복52→100, 공유 주간잠금과18명 상태, 계약 견적/영입금/장부, 구단주 약속,11명계획 저장/미리보기/취소/적용, 부상/피로/선발제안·명시적적용,4팀훈련예상·상세왕복이 통과했다. 실제46리그+컵1경기를 정산·복원한 종료 시즌에서도10업무/3가로크기·최근5상대/결과·확정출전총계·6장부·징계를 읽으며 시즌을 넘기지 않는다. 팀 훈련은 종료 이유/18명 현재 능력을 읽기 전용으로 유지한다.
+- Android 실제 글자 높이·364/388px 가용 높이 차이·입력 자동 포커스/키보드·scrollIntoView 이동을 수정했다. 메뉴를 먼저 만들고 메뉴에 포커스하며, 고정 영역은 programmatic scroll로 이동하지 않게 하고 입력 중 resize는 실제 검색노드/포커스/내용을 보존한다. 기존 검사/제한/시간을 완화하거나 건너뛰지 않았다. 아래 진행 항목의 실패들은 당시 결과이며 최종 성공과 구분한다.
+- 최종 기능 **c7fb359412c72ad8d97f4565811e4b0d659c634c**, tree **77063ccd1e0b730802dd3aed019342a31de48018**. [Source38521367071](https://github.com/jaeseok614/win-again-football/actions/runs/38521367071)/job115711579859 completed/success: **174 suites/1,341checks**, PWA14그룹·Android자산 생성·공개 생성물 일치 모두 성공. 기존 전술12포메이션/23자리·터치 이동/동료교환·선수단/영입·기사·저장 불변성의8가로 브라우저 검사도 통과했다.
+- [Android38521367075](https://github.com/jaeseok614/win-again-football/actions/runs/38521367075): API34 job115711580182/API35 job115711579940 각각 **14tests/실패0/오류0/건너뛰기0**, APK/AAB/lint 성공. 새14번째는 실제10운영 터치/글자·훈련/계약/계획/뒤로가기·46R 종료이며 기존13검사를 보존한다. API34 verification11873948805 ZIP SHA2568cec7a84e8ad2e755bad6d2a5ebf95bea134455a3b0af2f78010bf999f9cf9a7, API35 verification11873384416 ZIP SHA256000d4263871cdd9c1b4917377957a704fbf50029828094c7f200ec0731596632 검증. XML14/0/0/0 및 실제 두 API의 운영10페이지와 실행/종료 상태 캡처를 직접 확인했다. work/operations-api34-* / operations-api35-* / operations-browser.log / dense-regression.log / probe-operations-keyboard.cjs.
+- PWA4,926,798바이트/shell447c39cc04f0. Android게임4,926,572바이트/SHA256ed9c7360eee3aecea9ef62be617cbadcfd0bdba820239ed47b44453fc50fbc2a. 시즌10/경기10·연속1–9/공간1·확정 결과/등록 신원/RNG와 저장키 win-again-season-v17을 보존한다. package com.jaeseok614.winagainfootball의 기존debug 접미사도 유지했다. 원본 오프라인 아틀라스를 재사용한다.
+- API34 APK artifact11873179091 ZIP SHA2567e68d6e3761dbf1df013b3d3874cff663555be297449d05f9a68e0b6f1ed2951 검증. 최종 APK **5,637,397바이트/SHA256200e55bd4f2f3aefbf68392814792b7a0e07745b7963357e74f14c4c0d2df858**, 내부 assets/game/index.html은 로컬 최종 Android자산과 바이트 동일하다. work/win-again-20261014-management-pages.apk / operations-apk-verification.json.
+- APK만 기존 [Drive 파일](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261014-management-pages.apk로 교체했다. 읽기 재확인: ID1nSujeFdST1on5jVkSCNrH2CleLCibWkc, MIME application/vnd.android.package-archive,5,637,397바이트, 부모0ACEDMU5UjS2_Uk9PVA, 수정2026-10-14T06:37:27.629Z. 기존 폴더/공유 유지. 저장·ZIP·AAB·키는 올리지 않았다.
+- 테스트 서명6c621c2d91fa241425cefb4ed9caaf7e2ccad840719d16b2ee3ee29dd730013b→663e626c4101ee9c6952143b1cf3ef57496b2d12a967005b3a48ef7528adfed3 변경: **구단 저장 내보내기→기존 앱 제거→새APK 설치→저장 불러오기** 필요. 자동 삭제/초기화/시즌 전환은 없다. 브랜치 codex/football-realism-20261012 및 PR25 draft/main 미병합 유지. 마지막 후속은 검증 문서만 [skip ci]로 기록하며 기능 검증 대상은 c7fb3594다.
+
+# 최신 진행 — 가로 훈련·구단 운영 페이지
+
+- [설계/공식 FMM 참고](docs/OPERATIONS_WORKSPACES_2026-10-14.md). 10개 운영 업무를 실제 노드와 기존 실행 핸들러를 사용하는 가로 페이지로 통합. 18명 훈련·실제 효과/비용, 10코치 후보/5계약 역할, 신임·약속/4면담, 부상·피로/선발 미리보기, 3계획/11선발, 실제 장부·자금 계획·리그 규모 삽화·대회별 징계 필터. 상세 선수/긴 계산 내역만 추가 읽기.
+- 모든 8가로 크기(568×320~1280×720)에서 10페이지의 실제 메뉴·내부 글자/이미지/조작 경계, 필터/선택 불변성·훈련 공유 잠금·실제 계약금/장부·약속·11계획·피로/부상/선발 제안/명시적 적용·4팀 훈련 예상 변화·선수 상세 복귀 성공. 기존 전술12포메이션/23위치·선수단/영입·기사·물리 터치 브라우저 검사도 성공.
+- 로컬 전체174 suites/1340checks 실행 성공 뒤 추가한 운영 뒤로가기 검사 포함 Android bridge/자산13checks와 PWA14 통과. 최신 원격 전체/실기 결과는 후속 완료 항목에 기록한다. 새 Android14검사(기존13 유지+운영 실제 터치/훈련/계약/계획/뒤로가기/46R 종료)를 추가했다. 실제 46리그 경기+컵1경기를 정산·복원한 종료 시즌에서도 3가로 크기/10업무가 한 화면에 들어오고 과거 기록을 바꾸지 않는다.
+- 최초 fb3fe284 Android38511939845는 양 API에서 기존13검사 성공, 새 운영 검사에서 한글 보조 문구의 실제 글자 높이 실패. 줄 높이와 실제 행 공간을 조정했으며 기준을 완화하지 않았다. 실패 APK는 Drive에 교체하지 않았다.
+- 007e420a Source38514360221/job115689699593 success(전체174/1341·PWA14·공개 자산 일치). Android35는 기존13검사 성공, 새 운영 검사에서 최소8px 글자의 기록 없음 안내 P가 7px 줄 높이를 넘는 실제 경계 실패. 10px 줄 높이와 실제 최근 경기 요약으로 수정했다. Android34 첫job115689699222는 Google GMS FontsProvider 프로세스 사망에 종속된 앱 PID4451을 ActivityManager가 SIG9 종료해 1/1만 실행됐다. ZIP11871089402 SHA256d1b34e79ccff5036b383b9d8fb619e3a6a102e107ef39de9493dc0298f7ab61b·guest 로그/XML 보존, 코드/기준 변경 없이 해당job 재실행을 시도했다.
+- 80c0be53 Android38517025536는 훈련 안내 글자 검사를 통과한 뒤 코치 진입에서 화면 이동을 검출했다. ZIP11871334356 SHA25642b939bb0798bdfcaaf3be362f6c5bd6e8b86eb177cf2c3100690ca7c409a0c8의 실제 개인훈련 캡처/JSON에서 자동 activeElement=training-search를 확인했다. 페이지를 열 때 메뉴를 먼저 배치·포커스해 자동 키보드를 막고, 고정 영역을 overflow:clip으로 바꾸며 입력 중 resize 재생성을 중단했다. 중앙으로 scrollIntoView 후 실제 메뉴 전환·포커스 불변성을 8가로/종료 시즌에서 추가 통과했다.
+- b6ad915c Android38519239704/API35 job115704886036 success: 14 tests/실패0/오류0/건너뛰기0, 10페이지·실제 터치/글자·훈련/계약/계획/뒤로가기와 전체46R 종료 포함. API34 job115704886349는 기존13검사 성공, 첫 팀 훈련18행의 세로 넘침을 검출했다. 실제 JSON의 API34 가용 높이는364px, API35는388px여서 예상 변화 행에16px 실제 공간을 추가하고 전체18명/효과/체력을 유지했다.검사/제한 완화 없음.
+- 패키지/저장키/시즌10·경기10·물리continuous1–9 규칙 유지. 새 APK의 원격 빌드·Android API34/35 검증 전이며 현재 Drive 설치 파일은 기존 dense-pages.apk다. 새 설치판을 검증하기 전에는 교체하지 않는다.
+
+# 최신 완료 — 포메이션·선수단·영입을 가로 한 화면에 통합
+
+- [설계/FM 공식 참고](docs/DENSE_PAGE_WORKSPACES_2026-10-14.md). 전술 첫 화면에 포메이션12개, 실제11명 배치, 선택 선수의 얼굴·6개 숫자/색상 능력·배치 종합,23개 위치 버튼과 공격/수비 지시·실제 키커/타깃3개를 함께 표시한다. 일반 전술 버튼은 이 페이지로 이동하며, 동료 위치를 누르면 원래 등록 신원을 유지하고 실제 배치 좌표를 교환한다. 선수단18명/전체6능력 미리보기와 영입8후보/현재 선수 비교도 실제 하단 메뉴에서 비모달 화면으로 직접 들어간다.
+- 짧은 홈 현황·현재 인터뷰·삽화 기사 요약은 첫 화면에, 원래 본문과 실제 확정 기록을 보존한 긴 기사 전문/선수 상세/많은 장부는 별도로 표시한다. 기존 원본 장면을 재사용한다. 보기·필터는 답변·지출·난수·결과를 바꾸지 않는다. 실제 노드를 이동/복원하고 기존 처리기를 사용한다. 등록 포지션/ID, 저장 키 win-again-season-v17, 시즌/경기10, 공개 연속1–9와 물리는 유지한다.
+- 최종 기능649fb2385a6447b5d0043cee6e91518f76a26a95/tree869e785f81c0d9a73062a0898252bda998ff89fa. codex/football-realism-20261012, PR25 draft/main 미병합. 로컬 전체174 suites/1340checks 및 후속 Android자산12/PWA14/성능10, 신규8가로크기×모든12포메이션의 카드 내부 글자/능력·겹침·얼굴·색상,23위치/키커, 실제 터치CM드래그·자리교환/등록 보존·필터 갱신/장부복귀·전문 읽기/키보드·저장불변성 통과. 기존 선수단/영입7크기 및 서사8크기도 통과했다.
+- 최종 [Source38501512905](https://github.com/jaeseok614/win-again-football/actions/runs/38501512905)/job115649307819 completed/success: 전체174 suites/1340checks, PWA14, 공개 자산 재생성 일치. 최종 [Android38501512910](https://github.com/jaeseok614/win-again-football/actions/runs/38501512910): API34 job115649307938/API35 job115649308127 각각13tests/실패0/오류0/건너뛰기0, APK/AAB/lint 성공. 결과 ZIP/XML 및 실제 전술·전체선수단·영입·기사전문 캡처 확인. API34 증빙artifact11866496869 SHA25642926e2a0e00bd669b7056a5382f6ad49bd0a351bd7dd0d28e37dc0e24ccbaa6, API35 artifact11866720936 SHA256db06e4611a9c02d5325c9a4e806128502fac80314b5ba2a5fb0bf2d7179dd96f. work/dense-api34-* 및 api35-*.
+- 실제 네이티브 검사에서 발견한 페이지 전환 재진입, 터치 드래그의 브라우저 스크롤 취소, 숨긴 전술 분석이 페이지 뒤로가기를 소비하는 문제를 수정했다. 구형 메뉴를 누르던 검사 경로도 실제 새 메뉴로 바꿨다. 네이티브 캡처의 제목/필터 글자 잘림을 수정하고, 필터 버튼의 border-box·1px 안쪽 여백·명시적8px 글자와 엄격한 내부 경계 검사를 유지한다. 선택 얼굴을 레이블용 span 스타일 초기화에서 제외했다. 최초063da049 Android38497966453 두 API의4실패, 중간d26418e8 Android38500243696 필터 경계 실패(API14에는 guide-next 조회 실패도 관찰됨)는 최종 성공 결과와 혼동하지 않는다. 최종13검사를 생략하거나 시간 제한/경계 조건을 완화하지 않았다.
+- PWA4,842,898바이트/shellc3fccfc7e1fe, Android4,842,465바이트/SHA2568d4ee6667e22f36337ce1db3f42930f7f8dc17e876b12a31027bce114c96e224. API34 APK artifact11866510727 ZIP SHA2564d9478f3c04cecd1907265837b4fa02dd92393c6af57284c83d0f4295d650995 검증. APK 내부 HTML이 로컬 최종 Android 파일과 바이트 동일하다.
+- 검증 APK5,620,113바이트/SHA25696f9cf02b4c540f8ff73c51ba445da36a4d0e0503e228a605f7f29dd4aaa1f90만 기존 [Drive 파일](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view)에 win-again-20261014-dense-pages.apk로 교체(2026-10-14 02:42:08UTC). 파일ID/이름/MIME/크기/기존 부모폴더를 재조회했다. work/win-again-20261014-dense-pages.apk, work/dense-apk-verification.json, work/dense-delivery-state.json. 개인 저장/ZIP/AAB/키는 올리지 않았다.
+- 기존 테스트 서명327a6d72cb318d6c9df3bc18b329174ccfdad7f26080228f9ba6fd7ca7deac8f→6c621c2d91fa241425cefb4ed9caaf7e2ccad840719d16b2ee3ee29dd730013b. 저장 내보내기→기존 앱 제거→새APK 설치→현재 저장 불러오기 필요. 자동 삭제/시즌 전환 없음. 기능 검증 대상은649fb238이며, 마무리는 문서만 [skip ci]로 커밋한다.
+
+# 최신 완료 — 감독 속마음과 홈 기자실
+
+- [설계/공식 작품소개 참고](docs/MANAGER_VOICE_2026-10-14.md). 인물별 창작 대사·단계별 속마음·큰 대화 단위, 홈3기사/현재 인터뷰와 기자실 전체 본문·필터를 추가했다. 실제 강등선 기사 분류와 인터뷰가 없는 경기 중 빈 필터를 수정했다. 대답/출전 약속/집중도/저장/경제/물리 규칙은 유지한다.
+- 기능52adf8a242fa5ddf78c836d7ec8dfe63247cee01, 삽화07502db6203256f37f4bb7733addfe80084d4ec0, 최종216da01fb8424308716cf97398b34bcd7a3c914e/tree9637f9000c3ddb7fd41259027442e1ea8c5d17d9. PR25 draft/main 미병합.
+- 로컬 전체172 suites/1322checks 뒤 표시 기대값을 보완한 수첩13checks 재통과=173/1335. 새서사5/언론6/PWA14/성능10/Android자산11, 홈·기사·대화8가로크기 및 기존읽기7크기/실제답변·복원/기사필터/경기중대기·읽기불변성 성공. 별도의 새 데스크톱 Chrome첫실행3회오류0(휴대폰 시간 측정 아님).
+- 최종 [Source38489388230](https://github.com/jaeseok614/win-again-football/actions/runs/38489388230)/job115610724765 전체173 suites/1335checks·PWA14·공개 자산 재생성 일치 completed/success. 직전07502의 Source38488143006 및 Android38488143008도 성공.
+- 최종 [Android38489388227](https://github.com/jaeseok614/win-again-football/actions/runs/38489388227): API35 원job115610724883(재검사 결과의 기존성공 참조job115614255630), API34 재검사job115614254478 각각12tests/실패0/오류0/건너뛰기0. APK/AAB/lint 성공. API35 ZIP11860978931 SHA2564ea6b3f7e2253469a7d16e63fac22329de7442950b74fd05ed163a29381c7d23 및 API34 ZIP11861113602 SHA2568dbd7a92d65800a09ed13ef7249072ef82a629c5091d729342b5a22cf64db151의 XML12/0/0/0·홈기사/기자/속마음/대기필터 실제 캡처 확인. work/manager-voice-api34-* 및 api35-*.
+- API34 첫job115610725073는 첫awaitReady의evaluate15초 응답 제한에서 실패하고 나머지11검사는 성공했다. ZIP11861084166 SHA256be1c0db3e7d4bcae4b1071bd54fa66c5790cd2041d3ffe082dbd117e8c73071d 및 stack/guestlog 보존. 같은 시각 에뮬레이터 Google서비스 ANR 기록. 코드/검사/시간 제한 변경 없이 해당job만 재실행하여12/12성공했다.
+- PWA4,799,386바이트/shelld07ec9856209, Android4,798,779바이트/SHA256b203752f5436822fc3977c5e088eb399c28831c88a81811fa658f79498d4c95c. 재검사APK artifact11861167692 ZIP SHA2568d3823f3338d7ddc7e5139eb56f3da14ba2063f69b551af1c6cce25c99f5a896 검증, APK 내부HTML이 로컬 Android 파일과 바이트 동일.
+- APK5,608,501바이트/SHA256c6cd9ff6ad7fc160ca99d0176307de129fa36232c09ac083a4ac9778451b38e4만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261014-manager-voice.apk로 교체(2026-10-14 00:39:40UTC). 파일ID/이름/MIME/크기/부모폴더 재조회 성공. 로컬 work/win-again-20261014-manager-voice.apk 및 work/manager-voice-apk-verification.json. 개인 저장/ZIP/AAB/키는 올리지 않았다.
+- 테스트 서명6c6f9ee65ea55a3344d39c3d3d199c858aea38ef8f7cf95c652e5f6498724ceb→327a6d72cb318d6c9df3bc18b329174ccfdad7f26080228f9ba6fd7ca7deac8f 변경. 저장 내보내기→기존 앱 제거→새APK 설치→저장 불러오기 필요. 자동 삭제 없음. 문서만 [skip ci]로 마무리하며 검증한 기능은216da01이다.
+
+# 최신 완료 — 큰 경기장과 짧은 핵심 관전·한 화면 관리
+
+- [설계/참조](docs/SINGLE_SCREEN_WORKSPACES_2026-10-14.md): 경기장62%/기록판38%, 반복 공격 표시 제한, 실제 골 그림2.6초 자동 닫기, 전체24/20구단과12/10경기 동시 표시, 유소년3후보/비용과 전술 하단 버튼 정렬. 물리/저장/경제 불변. 같은3개 실제물리 표본의 관전 배율 추정시간49~52%감소(독서/기기처리 시간 제외).
+- 기능067799ef00ca1e8dc73d0e248536b6055c3d7911/tree8632511d7eb2be7960094dc9db72461872dedf12, draft PR25 유지/main 병합 없음. 로컬 전체169 suites/1301checks 후 속도 기대값과 카드 의존성3 suites/28checks 재통과=172 suites/1329checks. 기본8가로 해상도/실제 후반기·1부·유럽4크기/실제 골의 자동 진행·수동 정지 유지 성공. 기존 선수·영입8크기, 가로읽기7크기, 12포메이션×7크기, PWA14/자산11/성능10 통과. 실제 유럽 경기 이동 버튼은 공통 하단으로 이동하며 기존 핸들러 유지.
+- [Android38482406855](https://github.com/jaeseok614/win-again-football/actions/runs/38482406855): API35 job115587864994/API34 job115587865390 각각11tests/실패0/오류0/건너뛰기0. APK/AAB/lint 성공. API35검증artifact11858582070(SHA2565099865f58337e1906ba935858d7f456ff01693a76abe311dff94fb4f82f887d), API34검증artifact11858557238(SHA25637de7f97727131dcfa4f5f4167d17a5b6954f1107c5e95ef3bc09e520f07d142) XML11/0/0/0 및 실제 큰 경기장/전체리그/유소년/골자동 캡처 확인. work/single-screen-api34-* 및 api35-*.
+- [원격 Source38482406794](https://github.com/jaeseok614/win-again-football/actions/runs/38482406794)/job115587864683도 completed/success. 전체172 suites/1329checks, PWA14, Android자산 재생성 및 커밋된 공개 파일의 일치까지 성공 로그 확인.
+- PWA4,763,167바이트/shell6c7e76e4bf82. Android4,762,560바이트/SHA256268cd660e02c0f1d42be0bcd73eb8baac785ae4f91ba7b72c279a699593f3658. APK artifact11857836290 ZIP SHA2564ec68fa667352c6a3139a56fe504ce96f98200b7bc895ea45e04a409f710b0b6 검증. APK 내부 HTML은 로컬 Android 파일과 바이트 동일.
+- APK5,595,685바이트/SHA256e2b3916b56fcfd584fa3d6022b11530f400894ccaf09c0f406990a097d2a9c39만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261014-single-screen.apk로 교체(2026-10-13 23:17:53UTC). 파일ID/이름/MIME/크기/부모폴더 재조회 성공. 로컬 work/win-again-20261014-single-screen.apk 및 work/single-screen-apk-verification.json.
+- 테스트 서명3dd497fc20d352f3e70304cafb87e140dd37176d80d9b9fc7ace32f21f96ed87→6c6f9ee65ea55a3344d39c3d3d199c858aea38ef8f7cf95c652e5f6498724ceb 변경. 저장 내보내기→기존 앱 제거→새 APK 설치→저장 불러오기 필요. 자동 삭제 없음. APK 파일만 Drive에 교체했고 저장/ZIP/AAB/키를 올리지 않았다.
+
+# 최신 완료 — 풋몹식 경기 통계와 가로 관리 화면
+
+- [설계/참조](docs/PHONE_WORKSPACES_2026-10-13.md): 표시 경기장 약1.6비율, 골 본문/버튼 겹침 제거, 점유율+실제12기록 비교, 양 팀22명 이름/능력 셀 정렬, 선수단18명/영입8명 직접 진입과 기본 교체 선택 초기화. 물리/저장/경제 규칙 변경 없음.
+- 기능6bc01f28b8a546aeca8bf1b97943bdeff0e4d83a / tree4e5f5253d3ebaf60212ab6b68ac2d80dc68fb889, PR25 merge bcd42287fd05d224f3dd4a4f2c18ac27b59d11c8. 로컬 전체169 suites/1309checks 성공 후 테스트 환경 의존성2곳을 보완, 해당2 suites/16checks 재통과로 전체171 suites/1325checks를 확인했습니다. 새 하단 메뉴/금액/불변성/실제12기록8크기, FM목록7크기, 선수보고서8크기, 가로읽기7크기, 전술7크기×12포메이션 통과. PWA14/Android자산11 성공.
+- [Android38382341234](https://github.com/jaeseok614/win-again-football/actions/runs/38382341234):API34 job115245590741, API35 job115245590313 각각10tests/skipped0/failed0, APK/AAB/lint 성공. API35검증artifact11803509162(SHA256dd06e03fbbe5168c08eb91d47f6c6ecd01d1c3a95f42f70e563e737845777ef8), API34검증artifact11804008281(SHA2565ac0d6a34ce202156ea4005b536865aa98d77ffa7d0fe426d34f2384d3232e2d)의 XML10/0/0/0와 실제 명단/교체/영입/통계 캡처 확인. work/phone-api34-*, work/phone-api35-*.
+- [원격 Source38382341184](https://github.com/jaeseok614/win-again-football/actions/runs/38382341184) job115245590168도 전체171 suites/1325checks, PWA14 및 공개 자산 재생성 일치까지 completed/success 확인했습니다.
+- PWA4,726,614바이트/shell94d3792307a7, Android4,726,007바이트/SHA256064570ba3be4f83be4eabfae964e78d7ebbcb38e8dd314e01fcdc2837967e730. API34 APK artifact11803384877 ZIP SHA2568db47e6edabeeebd30df3c3520e1f45242c03991dacb07a1d34ac3e1ff95487a 검증, APK 내부 게임이 로컬과 바이트 동일.
+- APK5,587,549바이트/SHA2560cfdc7de264b0314d8c793bf5af2ee5bb08797001233a4a75abfe6b4d8670b3d만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261013-match-statistics.apk로 교체(10:28UTC), 파일ID/이름/MIME/크기/부모폴더 재조회 성공. 로컬 work/win-again-20261013-match-statistics.apk 및 work/phone-stats-apk-verification.json.
+- 서명bfdcf6c3f81bbc7e48178ef72787f06715724718a7f4af9930b0843e379173f3→3dd497fc20d352f3e70304cafb87e140dd37176d80d9b9fc7ace32f21f96ed87 변경: 구단 내보내기→기존 앱 제거→새APK설치→불러오기. 자동 삭제 없음. draft PR25 유지, main 병합 없음.
+
+# 최신 개발 — 실제 경기 통계와 가로 관리 화면
+
+[설계와 참조](docs/PHONE_WORKSPACES_2026-10-13.md). 점유율+실제12기록, 표시 경기장 비율, 양 팀 선발 이름 정렬, 선수단/영입 직접 진입, 기본 교체 선택 초기화를 수정했습니다. 전체 소스/브라우저/Android 검증과 새 APK는 진행 중입니다. 아래 player-profile.apk는 이전 검증판입니다.
+
+# 최신 완료 — 선수 상세와 소량 보고서의 한 화면 통합
+
+- [가로 선수 보고서와 신체 정보 출처](docs/PLAYER_REPORT_WORKSPACE_2026-10-13.md): 선수 신상/주발/선호 위치를 고정하고 기본6능력·기술/판단/신체 전체 능력을 동시에 표시합니다. 기준 이적료/주급/나이/키/국적/성장 한계/종합/체력/컨디션 포함. 기존18명 키 참조 추가, 후보/유소년의 미확인 키는 명시합니다. 새로 열면 전체 능력부터 표시하며 원래 선수 이동/훈련/이적 핸들러 및 현재 수치를 유지합니다. 상대 상태/체력/강점/역할/우리 선수 비교도 첫 화면에 통합합니다.
+- 로컬 전체171 suites/1320checks 성공. 최종 UI 보정 뒤 선수 모델6/선수 UI10/상대 UI4/PWA14/Android자산11 및 브라우저8크기×18명 모든 능력/신상 표시와 실제 선택/다시 열기/부모 복귀 성공. 상대11명×5크기, 기존 FM목록7크기·가로 읽기7크기·전술7크기×12포메이션 회귀도 성공. 새 기록 카드 높이는 실제 API34의364px 화면에서 보정했습니다.
+- 최종 기능50e65ae144a74dc49ce030c9afaed5fa27c5e096 / tree14494209e6168cad8b8135c497c4c3af34ee3158. [Android38373043544](https://github.com/jaeseok614/win-again-football/actions/runs/38373043544):API34 job115214488393, API35 job115214488044 모두10tests/skipped0/failed0, APK/AAB/lint 성공. API34 검증 ZIP11799478840/SHA2561a4bd523b26966e9d665f0bd668f1bc7b072a82a10a8df8984019bb5c2f502fb의 XML도10/0/0/0 확인. 실제 캡처 work/final-native-player-report-api34.png. PR merge534e1547be2278b5cccedf676580ae8f5db16b99.
+- [최종 원격 Source38373043442](https://github.com/jaeseok614/win-again-football/actions/runs/38373043442) job115214487046도 전체171/1320·PWA14·공개 자산 재생성 일치까지 completed/success 확인했습니다. 직전 be7826a Source38371230002/115208444945도 전체171/1320 성공.
+- PWA4,695,734바이트/shell f9770bd5a48e. Android4,695,127바이트/SHA256ca9f1f9d19defd58a84d9cb215e04076e6f9a346c27ab4a7162a55f9b0d09297. API34 APK artifact11800276114 ZIP SHA256dc63ff71e1e02c9ad6f748e43eb4e5d3c5a875178f032adfc929fc8709ce651a 검증, 내부 게임과 로컬 자산 바이트 동일.
+- APK5,580,661바이트/SHA256b8eb846ea07323b0855f1f99ee00a64d7e89c4b78335043c9d64af3e65417984만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261013-player-profile.apk로 교체하고 파일ID/이름/MIME/크기/부모 폴더를 재조회했습니다(09:08 UTC). ZIP/AAB/개인 저장 업로드 없음. 서명71a89b0dadf3b5d29050d5d858a1873652b6755866eb990584efd1cebbf77639→bfdcf6c3f81bbc7e48178ef72787f06715724718a7f4af9930b0843e379173f3 변경: 구단 내보내기→기존 앱 제거→새 APK설치→불러오기. 자동 삭제하지 않습니다. work/win-again-20261013-player-profile.apk / work/player-profile-apk-verification.json.
+- 중간 be7826a의 Android38371229961은 API35 10/10, API34 8/10였습니다. 시즌 기록 높이와 native 클릭 전 DOM 재확인을 보정한 뒤 최종 두 API가 모두 통과했습니다. 최종 게임 엔진/저장 규칙 변경 없음. draft PR25 유지, main 병합 없음. 아래 완료/진행/실패 기록은 이전 개발 단계입니다.
+
+# 최신 개발 — 가로 선수 상세와 소량 정보 통합
+
+[선수 보고서 설계와 출처](docs/PLAYER_REPORT_WORKSPACE_2026-10-13.md). 선수 신상·양발·선호 위치·기술/판단/신체 전체 능력을 첫 화면에 모으고 상대 선수 상태/역할/6능력 비교도 통합했습니다. 저장/물리 변경 없음. 검증 및 새 APK 진행 중, 아래 Drive는 직전 검증판입니다.
+
+# 최종 보정 진행 — Android 글꼴의 안내 명단/영입 비교
+
+실제 API34 캡처에서 안내 하단 영역 때문에 명단 끝과 비교 수치가 내부 스크롤로 내려가는 것을 발견하여 안내18명/선수6능력/영입4비교의 행 높이를 보정했습니다. 브라우저7크기에서 실제 영역을 다시 검증했고 Android 검사에도 내부 명단 및 비교 마지막 행 영역 확인을 추가했습니다. 아래 c53 APK는 검증된 직전 버전이며, 이번 보정 APK로 다시 교체할 예정입니다.
+
+# 최신 완료 — 가로 관전·서사와 FM 방식 선수단/영입
+
+- [가로 읽기/관전](docs/LANDSCAPE_SCREENS_2026-10-13.md), [FM 공식 참고와 선수단/영입](docs/FM_WORKSPACE_2026-10-13.md):844×390 경기장140→243px, 그림/긴 대사/고정 하단 버튼, 수첩2장,18명 명단+선택 선수 미리보기, 후보8명+현재 방출 선수 비교, 능력 숫자와 막대4단계 색상. 좁은568~640px 명단/긴 관리 상세는 내부 스크롤 유지.
+- 로컬 전체170 suites/1314checks 통과. 이후 최종 색상/본문 관련 재검증도 성공: 선수단3/초상·용량10/PWA14/Android 자산11, 브라우저7크기 실제 명단·선택·상세·영입 모드·필터·저장 불변성과 숫자-색상 일치. 가로 읽기7크기 및 전술7크기×12포메이션의 카드 내부/겹침/상세/접근성 성공.
+- 최종 기능c53ba0b0f4751901825c4d860f60ef441b86fdfc / tree3f65a58f4375b2d5d2f5dfbfb90520d63d86473b. [Android38364667472](https://github.com/jaeseok614/win-again-football/actions/runs/38364667472):API34 job115187105364, API35 job115187105799 각각10tests, skipped0/failed0, APK/AAB/lint 성공. PR merge b178e098978d0a948224cc3bd8bef3c6dbc2a57c. 자동 조작은 새 본문·하단 닫기를 대상으로 하며 선택 미리보기→상세→뒤로가기까지 확인. [원격 Source38364667501](https://github.com/jaeseok614/win-again-football/actions/runs/38364667501) job115186813790는 아직 진행 중이며 로컬 전체 통과와 구분합니다.
+- PWA4,675,693바이트/shell f83d77f6cf84. Android4,675,086바이트/SHA256093f586b297e6f1a138e3bbdb58fe12bbcb2675fea888a25e4197e7c397bbf52. API34 artifact11796705376 ZIP SHA25695b1cc55350740976e22ade2c194122eb8ed2faee9a867397ab5f4eaf98714b1을 검증했고 내부 게임 자산은 로컬과 바이트 동일.
+- APK5,575,889바이트/SHA2567830f3b9793f6364038b579423ccb8d7d773a0d4eb5fc5a16db47db58193a304만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261013-fm-workspace.apk로 교체하고 이름/MIME/크기/부모 폴더를 재조회했습니다. 기존 공유/폴더/파일ID 유지, ZIP/AAB/개인 저장 업로드 없음.
+- 서명8132bb81a0da677ab6cd61e482c6433b606ac781d8d5c16a6b8e887915e3828b→71a89b0dadf3b5d29050d5d858a1873652b6755866eb990584efd1cebbf77639 변경. 구단 내보내기 백업→기존 앱 제거→새APK설치→불러오기 필요. 앱을 자동 삭제하지 않습니다. APK 로컬 work/win-again-20261013-fm-workspace.apk, 검증 work/fm-workspace-apk-verification.json.
+- draft PR25 유지, main 병합 없음. 아래 진행 중/실패 기록은 개발 중간 상태입니다.
+
+# 최신 개발 — FM 방식의 전체 선수단과 영입 비교
+
+- [설계/공식 참고](docs/FM_WORKSPACE_2026-10-13.md):18명 명단과 인물 미리보기, 후보8명과 실제 방출 선수 비교, 색상 수치, 고정 상세/영입 버튼, 목록·카드 전환. 저장/물리/RNG 변경 없음.
+- 브라우저7크기 실제 선택/상세/보기 전환/키워드 없는 검색 검증 성공. 전체 테스트와 기존 가로/전술 검사 및 새 APK 검증 진행 중. 최종 결과는 후속 최신 항목에 기록합니다.
+- 이전 변경93b57c8709b31c51a688144dc8913d9b3c385c7a의 Android38361455198은 API34/35 모두9/10검사 성공/1실패. 취임 두 번째 설명에 토투넘 명칭이 빠졌던 문구를 복구했습니다. APK/AAB/lint 빌드는 성공했으나 해당 APK를 Drive에 올리지 않았습니다. 기존 Drive는 검증된 tactics-polish.apk 유지.
+
+# 최신 개발 — 경기장 확대와 가로 서사·관리 화면
+
+- [변경/검증](docs/LANDSCAPE_SCREENS_2026-10-13.md): 경기장 높이844×390에서140→243px, 가이드6단계 그림/긴 본문/고정 하단 버튼, 구단주·코치·주장 서사 확장, 수첩2장, 전체 선수 직접 진입, 코치/영입/유소년 관리 창 정리.
+- 로컬 전체169 suites/1298checks 성공 뒤 취임 문구 누락을 고쳐 해당16checks 재검증: 합계170/1314통과. PWA14/Android자산11, 브라우저7크기의 본문/버튼/실제 조작과 기존7크기×12포메이션 검사 성공. 긴 관리 목록 내부 스크롤 유지.
+- 이전 Source38355030681은 이후 completed/success 확인. 아래 옛 기록의 진행 중 상태는 당시 기록입니다. 이번 변경 native APK와 원격 CI는 아직 확인 전이며 기존 Drive APK는 이전 tactics-polish 버전입니다.
+
+# 최신 개발 — 전술 카드 정렬과 한 화면 가독성
+
+- [변경과 참고 자료](docs/TACTICS_TYPOGRAPHY_2026-10-13.md): 능력치/포지션/이름을 카드 내부 정렬, 능력치 숫자·막대 색상과 범례, 한국어 단어 줄바꿈, 메뉴 두 줄 고정, 제목 대신 실제 메뉴에 접근성 포커스. 낮은 화면에서도 선수 상세를 압축 표시하고 골키퍼/수비 카드 겹침을 제거했습니다.
+- 로컬 전체170 suites/1314 checks 통과. 전술9/팝업8/코치4/가로 배치4/PWA14/Android 자산11 통과. Chrome7크기(568×320~1280×720)×12포메이션의 카드 내부·카드 간 겹침·전체 상세·단어 줄바꿈 검사, 실제 메뉴 이동/긴 이름/키보드 이동/포커스/색상 갱신 통과. 전술3탭/분석6페이지/안내 Next/홈 확인. 가장 작은568×320 세트피스의 긴 설명은 상세 영역 스크롤을 유지합니다.
+- 기능633429bacc9cd2e9b9c277d709eb4c2710f5af50 / tree b06280842189cb13c6b3e217a2f3107680b9a0fb. [Android38355030685](https://github.com/jaeseok614/win-again-football/actions/runs/38355030685) API34 job115155802734/API35 job115155802719 각각10/10·skipped0·failed0, APK/AAB/lint 성공. PR merge f4b1b0bcc6022f8d24d2f976d40c489c967a3929. [원격 Source38355030681](https://github.com/jaeseok614/win-again-football/actions/runs/38355030681) job115155802401은 문서 작성 시점06:17 UTC에 진행 중이며 로컬 전체 성공과 구분합니다.
+- PWA4,630,677바이트/shell ceeb8437e639. Android4,630,070바이트/SHA256786c0deea58a37a1a6a0b72da9eaa9dabaa8f3ebe126854633526dd9ab3545d3. API34 artifact11792302262 ZIP SHA25652d1ca5692512a53de63ac1ac7004bc8d778ec1084b786e1d06a5171e140b91b 검증. 내부 게임 자산은 로컬과 바이트 동일.
+- 검증 APK5,564,393바이트/SHA256e12f858cc36aa946908d97546cbbb00313296dcf159730f1b5469b2d1f74a7fe만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261013-tactics-polish.apk로 교체하고 이름/MIME/크기/부모 폴더 재조회. 서명d62e2be68219e354a2fc51b1238411e056d2a7ca3a43b5dba039c0c7e63a7403→8132bb81a0da677ab6cd61e482c6433b606ac781d8d5c16a6b8e887915e3828b 변경: 구단 내보내기→앱 삭제→설치→가져오기 필요. 최종 문서만 [skip ci], PR25 draft/main 미병합 유지.
+- 직전 기능 ef4b0ba의 원격 Source38352563326 성공 완료 확인. 저장/경기 규칙 변경 없음.
+
+# 최신 개발 — 가로 전용 전술 작업 공간
+
+- 사용자 요구를 AGENTS.md에 영구 기록: 앞으로 가로 전용. [설계와 검증 범위](docs/LANDSCAPE_WORKSPACE_2026-10-13.md).
+- 고정 경기 메뉴, 전술 배치판+선수 능력/배치 종합 동시 표시, 포지션 이동/교환 미리보기와 평균, 실제 역할 편집, 경기 중 코치 현재 명단, 원본 구단 엠블렘과 가로 홈 구장 그림. 안내 footer는 별도 행으로 확보하고 코치 계약 요약과 명단을 나란히 배치했습니다.
+- 로컬 전체170 suites/1314 checks 통과. 후속 표시 변경 후 전술9/안내10/PWA14/Android 자산11 검사 통과. Chrome7가로 크기×12포메이션, 실제 포인터/역할 선택, 코치11명/적용 버튼, 컵7대진/8실제 엠블렘, 홈 구장 그림/메뉴 경계, 회전 안내/정지 유지 확인.915×387 선수/전술/분석 보고서, 전술 안내 실제 Next와 코치 계약 얼굴 경계 확인.
+- 기능 ef4b0ba4e4001b95b431f44af3e13028789ea565 / 트리 eddf399caee2ce94bbf5389db5ac49be77ef5fb0. [Android38352563330](https://github.com/jaeseok614/win-again-football/actions/runs/38352563330) API34 job115148044080/API35 job115148044314 모두 성공, 각각10 tests·실패0·건너뜀0, APK/AAB/lint 성공. 첫38351772962의 코치 얼굴 경계/테스트용 로딩 화면 종료 누락2건을 수정한 재검증입니다. [최종 원격 Source38352563326](https://github.com/jaeseok614/win-again-football/actions/runs/38352563326) job115148043940은 기록 시점(2026-10-13 05:49 UTC)에 전체 검사 진행 중이며 성공을 아직 확인하지 않았습니다.
+- PWA4,619,889바이트/shell c492e6bc0f5f. Android4,619,282바이트/SHA25663013978c6ee7bfc16ea21198d1f3aea6b69be6974a0eab0a1421a12b5c461ae. 저장 키/시즌10/물리1~9/확정 기록 보존. 배치 종합은 코치 예상이며 경기 능력 보너스가 아닙니다.
+- API34 아티팩트11791347345 ZIP SHA256517267d9a060b8cddcba0dc326fb6d02f7280fb197047f94461d5124cb65fd50 검증. APK5,561,733바이트/SHA2564cf3d697f181eb0d7129436660f04812e93d5ca0fba99cda09d536f566ac2e16. 내부 자산은 로컬과 정확히 일치합니다.
+- APK만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 win-again-20261013-landscape.apk로 교체했습니다. 폴더·공유 설정 유지. 서명929afc14eb5a29538611da45360c233104c5a56b254329544573549a85b37c76→d62e2be68219e354a2fc51b1238411e056d2a7ca3a43b5dba039c0c7e63a7403 변경: 구단 내보내기→앱 삭제→새 APK 설치→가져오기. PR25 draft/main 미병합 유지.
+
+# 최신 개발 — 홈 가림 수정 · 전술과 대회 센터
+
+- [관리 센터 변경과 검증](docs/MANAGEMENT_CENTRES_2026-10-13.md): 하단7메뉴의 실제 높이를 레이아웃에 반영해 구단 소식 가림 방지. 전술 메뉴에서 기존 포메이션/경기 지시/선발 비교/세트피스 담당/상대 분석 사용. 대회 첫 화면에 현재 성적, 공식 수치 전체의 순위표 페이지, 실제 국내컵8강~결승 전체 대진과 유럽/일정/결산을 연결했습니다. 미정 대진은 승자로 강조하지 않습니다.
+- 최종 기능c2fda611847fda0bd6ea0d4c9fb6cb0cdd2b33bb/트리050f4882c2b6a73a8431f79c78ec629fd63f9dbe. [원격 Source38336460081](https://github.com/jaeseok614/win-again-football/actions/runs/38336460081) job115097532753: 전체169 suites/1310 checks, PWA14, Android 자산 생성, 공개 생성물 일치 모두 성공. 로컬 최초 전체의 옛6메뉴 기대값2 suite 실패는7메뉴로 수정해 해당20 checks와 신규3 checks 재검증 완료.
+- Chrome8크기 홈·전술·대회 경계/44px/편집기 왕복/실제 키커 변경/닫기 후 정지 유지·기존 경기8크기와 독립 연습 통과. 긴 기사+24px 안전 영역, 실제12라운드 및 컵 결과 이후 대진 확인. 저장 키/시즌10/물리1~9/확정 기록 보존. 페널티 전담 역할을 새로 추가한 것은 아닙니다.
+- [Android38336460151](https://github.com/jaeseok614/win-again-football/actions/runs/38336460151): API34 job115097624153/API35 job115097623940 각각10/10, skipped0/failed0, APK/AAB/lint 성공. PR merge6ea5c53ef247623eca2af5ade3e1aa7f01bff6b1. PWA4,590,622바이트/shell d0be793b834f. Android4,590,015바이트/SHA256ca18db24ab05536ad89e703d1d86455dba171074859df92238ecb7a60f0751d4.
+- API34 아티팩트11784532793 ZIP SHA2564ffdd5d5fb54be40321dd607b84b3d9f2cacace97a15ea79b22bb0867cd56001 확인. APK5,552,697바이트/SHA25680128de790383614dbf7287dfcc2a080c76484cebf6afc4c688a765c0d51c508. 내부 자산이 로컬과 바이트 일치. APK만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 교체하고 win-again-20261013-management-centres.apk/MIME/크기 재조회했습니다. 폴더·공유 설정 유지.
+- 시험판 서명은 직전9fc71cf2ea1cfd1c6f4667c37292d284aa6dd4f0eaea24a92fb38a47ad3a74fb→929afc14eb5a29538611da45360c233104c5a56b254329544573549a85b37c76. 구단 내보내기→앱 삭제→새 APK 설치→구단 가져오기 필요. 최종 후속은 검증 문서만 [skip ci], PR25 draft/main 미병합 유지.
+
+# 최신 개발 — 경기장 위 중계 · 조금 더 빠른 시계
+
+- 중계를 경기장 바로 위로 옮기고 세로/가로 두 줄14~15px, 시간44px 폭, 관중 보조 문구 숨김으로 한 화면 가독성을 개선했습니다. [세부 조건](docs/MATCH_VIEWING_PACE_2026-10-13.md).
+- 핵심 전개180×(이전144), 공격3×최대6 유지, 슈팅/선방2.25×최대4.5로 공격보다25%만 감속. 전체 관전 슈팅도 같은 비율. 물리9/공개1~8·저장·결과 보존. 동일 경기 명목140.345→124.327초.
+- 관전6/표시9그룹·8화면 중계가 경기장 위/시계와 본문 간격/14px 이상/모든 활성 이름/44px/넘침 없음 통과. 로컬 전체168 suites/1307 checks와 [원격38331831374](https://github.com/jaeseok614/win-again-football/actions/runs/38331831374) job115083070956 전체·PWA14·Android 자산·공개 생성물 일치 모두 성공했습니다.
+- 기능 커밋7bf3591f11a4702445ec509d9bba5697efddc8d7/트리2b859cee9f76a0697b9be0b39d437dac6f53b164. 실제 Chrome390×844 기본 핵심 관전은98분2:3/슈팅12:8을131.957초에 완료(직전149.481초). 하프타임/골 알림 자동 넘김·휴대폰 실측 아님. 전체 관전 직접 엔진 세계/RNG/로그/체력/지시 정확 일치·실제 리플레이·명시적 정산 통과.
+- [Android38331831214](https://github.com/jaeseok614/win-again-football/actions/runs/38331831214): API34 job115083070607/API35 job115083070402 각각10/10·skipped0/failed0·APK/AAB/lint 성공. PR merge3e1b98da3b36bc0b9844c3474b03395bba3610c6. PWA4,573,489바이트/shell4264a015f502. Android4,572,882바이트/SHA256d4b6be00ce26a785145e69810f9746f01f8da71642d5c600c12a5887c823bbbd.
+- 성공 API34 아티팩트11783117807 ZIP SHA256c38d55d87a871ce6dd3e42340fc58632043db708682c905f83fabb8dfee4318f 확인. APK5,546,897바이트/SHA256e531e01726ad59cf2d07aa9e2b0ab6aa08f6201bef20a0f765dcbecc34977fdb. 내부 assets/game/index.html과 로컬 바이트 동일·패키지/저장 키 유지.
+- APK만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 교체하고 win-again-20261013-top-commentary.apk/MIME application/vnd.android.package-archive/5,546,897바이트 재조회. 다른 파일·공유/폴더 설정은 변경하지 않았습니다.
+- 시험판 서명이4bbaef4880c37bae90554a10611b479e1b2d270768521ecd2d8decc70d16384d→9fc71cf2ea1cfd1c6f4667c37292d284aa6dd4f0eaea24a92fb38a47ad3a74fb로 바뀌어 구단 내보내기→앱 삭제→새 APK 설치→구단 가져오기 필요. 최종 후속은 검증 문서만 [skip ci]로 저장합니다. PR25 draft 유지/main 병합 없음.
+
+# 최신 개발 — 2026-10-13 선수 표시 속도와 경기 시계
+
+- [핵심 관전 개선](docs/MATCH_VIEWING_PACE_2026-10-13.md): 위치 요약/일반 전개144×, 공격3×/슈팅1.5×. 고배속 달리기를 제거하고 기본 공격·슈팅25% 감속. 같은 경기 명목193초→140초. 물리 규칙9와 기존 저장/점수/체력/판정은 그대로.
+- 표시9/관전6그룹, PWA14/Android 오프라인11,8뷰포트/전체 활성 이름/44px/전체 관전 직접 엔진 일치·정산·리플레이 통과. 실제 Chrome390×844 기본 핵심 관전은 추가시간 포함98분2:3/슈팅12:8을149.481초에 완료했습니다. 하프타임/골 알림 자동 넘김, 휴대폰 실측 아님. 명목 비교는193→140초이며 실제 이전 버전 벽시계 비교는 아닙니다.
+- 기능3589c710de76758fe5980507713b891aabe569fe/트리dbc1f33c9715dbc4faa4c915f8d8e9e82b3c7696. 로컬 전체와 [원격38329865898](https://github.com/jaeseok614/win-again-football/actions/runs/38329865898)은167 suites/1304 checks 통과·1 suite 실패. 실패는 test-match-sequence.cjs의 옛 ‘핵심 관전’ 기대값 한 곳이며 실제 새 ‘위치 요약’으로 바꾼 해당3그룹 재검사는 통과했습니다. 게임 소스·APK는 바뀌지 않았습니다. 후속8e95114의 원격38330968174/job115080358834도 성공한 것을 확인했습니다.
+- [Android38329865864](https://github.com/jaeseok614/win-again-football/actions/runs/38329865864) API34 job115077009728/API35 job115077009882 각각10/10, skipped0/failed0·APK/AAB/lint 성공. PR merge c506c2403d08006b578786a4a6378f9a98f957fa. Android 오프라인 SHA256d4f45257276d289f4cb4748cc2fa95fec7f2ac25de0c936b655c3ee7689069e8/4,572,788바이트. PWA4,573,395바이트/shell65648cd23e66.
+- 성공 API34 아티팩트11781583780 ZIP SHA25632cf0b793b0c5022f34497b96aa0c85b31dfc7aeeaec936406ded6ef1bb0210b 확인. APK5,546,905바이트/SHA256d4eb2dd1a6d5b508739cae6d15eed286020b080f02d318390e0fa577414cf71e. APK 안 assets/game/index.html은 최종 로컬과 바이트 일치·패키지/저장 키 유지.
+- APK만 기존 [Drive](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 교체하고 win-again-20261013-calm-pace.apk/MIME/5,546,905바이트 재조회했습니다. 다른 파일·공유/폴더 설정은 변경하지 않았습니다.
+- 시험판 인증서가01ccf24c824f66d100fbdccfad44d9c066ce693f15b97d4c07fcfe648e575844→4bbaef4880c37bae90554a10611b479e1b2d270768521ecd2d8decc70d16384d로 달라 구단 내보내기→앱 삭제→새 APK 설치→구단 가져오기 필요. 관전 변경은 현재 진행 구단에도 적용됩니다. PR25 draft 유지/main 병합 없음.
+
+# 최신 개발 — 2026-10-13 포메이션 이동 규칙9
+
+- 새 킥오프/연습만9. 실제 전술판 좌표의 팀 블록, 근처 구역 압박, 최대2명 중원 지원, 반대 윙 폭, 한 풀백 오버랩, 중복 없는 마크, 시간에 비례한 비소유 이동 목표 변화와 재개 초기화를 추가했습니다. 공개1~8의 실제 저장/정산·캠페인 보존. [설계와 남은 범위](docs/FORMATION_MOVEMENT_2026-10-13.md).
+- 포메이션10그룹/공개8 3씨드 부분·전체·정산 골든 통과.8화면22명/44px/한 화면/독립 연습, 전체 관전의 직접 엔진과 정확 일치·양 중간 정지·물리 리플레이·명시적 정산·구단 저장 재실행 통과. 최종 로그 work/v9-{shape,browser,layouts,reload}-verified.log.
+- 균형3씨드의10m 안 동료 평균0.888→0.693, 비소유/비압박/비수신 목표4m 초과 급변62,476/641,042→0/653,754. 재개/진영 전환 제외·표본 제한. source/benchmark-formation.cjs와 [24경기 새 전술 비교 및12경기 이전 대조/6경기 움직임 원본](docs/FORMATION_MOVEMENT_AUDIT_2026-10-13.json). 낮은 동등 전력 공격 생산성·약한 첫 상대 대승은 계속 점검해야 합니다.
+- PWA14/Android 오프라인11그룹 통과. PWA4,572,676바이트/shell415c14dec236, Android4,572,069바이트/SHA256acb3960b215918fe5259081bdbd93693d9ea4633b67db1a5ea9cec4bcfee31c6. 데스크톱 Chrome12초721프레임/중앙16.7/p9516.8/최대17.1ms/긴 작업0. 실제 휴대폰 FPS 보증 아님.
+- 최종 기능 커밋b5367ba72d1a288ea48f1f69a2ffe35d1dd3dd62/트리14edd021ac6d4f13834767b270e5fce6bfd1bac8. [원격 전체38327213665](https://github.com/jaeseok614/win-again-football/actions/runs/38327213665), job115068562635에서168 suites/1305 checks·PWA14·공개 생성물 일치 모두 성공. 오프라인 SHA256도 로컬과 일치합니다. 로컬 개발 중 전체 검사1개 초기 복원 실패는 최종 소스를 고정한 연속 경기19그룹 재실행과 별도1~9 초기 복원 검사에서 통과했고, 원격 전체 실행도 성공했습니다.
+- [Android38327213842](https://github.com/jaeseok614/win-again-football/actions/runs/38327213842): API34/35 각각10/10·APK/AAB/lint 성공. API34 job115068563224의 XML tests10/failures0/errors0/skipped0. API35 첫 job115068563497은 가상 기기 시스템 이미지 ZIP 다운로드가 실패해 검사가 시작되지 않았습니다. 같은 코드와 검사로 해당 작업만 다시 실행한 job115070741412는10개 전부 통과했습니다. 검사 조건을 완화하지 않았습니다. [API34 결과11782185412](https://github.com/jaeseok614/win-again-football/actions/runs/38327213842/artifacts/11782185412), [API35 성공 결과11781436802](https://github.com/jaeseok614/win-again-football/actions/runs/38327213842/artifacts/11781436802). PR 임시 merge f1c3789b9e5ce35394102eec0874e30ea8fe795a.
+- 전달 APK는 성공한 API34 [ZIP11781149102](https://github.com/jaeseok614/win-again-football/actions/runs/38327213842/artifacts/11781149102)에서만 추출했습니다. ZIP SHA256778384442134e48dafa0d853fbf85d2807c818697c6befdf7c4fa213a7533347 검증·assets/game/index.html 로컬과 바이트 일치·패키지/저장 키 일치. APK5,546,673바이트/SHA256fa60a0723edf01e8c50987c568a7d8fa49195a624e696ea5524714960c4d47db.
+- APK만 기존 [Drive 파일](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 교체하고 파일ID/공유 상태 유지. 파일명win-again-20261013-formation-engine9.apk/MIME application/vnd.android.package-archive/5,546,673바이트를 재조회했습니다. AAB/ZIP/검사용 저장은 업로드하지 않았습니다.
+- 규칙8 APK 인증서cf7f0457980c1bb893558f5025c9377b06e5dd1d7f93ac6e3263e4faea11ae0f와 새 시험판 인증서01ccf24c824f66d100fbdccfad44d9c066ce693f15b97d4c07fcfe648e575844는 다릅니다. 기존 시험판 사용자는 구단 내보내기→앱 삭제→새 APK 설치→구단 가져오기. 다음 새 킥오프부터9 적용. PR25 draft/main 자동 병합 없음. 이후 변경은 검증 결과 문서만 [skip ci]로 저장합니다.
+
+# 최신 개발 — 2026-10-13 양 팀 선발 · 구체 포지션 · 포메이션 유지와 브라우저 엔진 참고
+
+- 새 킥오프/독립 연습만continuous8. 같은 라인의 실제 기본 깊이, 가까운 중원 지원2명, 유지 역할, 안정적 담당자·진영 대칭·목표 완충과 자리 도착 감속을 추가했습니다. 공 받기/압박/키퍼/재개는 감속 대상에서 제외해 실제 접촉까지 진행합니다. 새 연습 씨드11/5는 정상 전개로75분 한 골 뒤짐/80분 한 골 리드입니다. 공개1~7/spatial1·유효 시즌10 저장·구단 신원과 explicit 시즌 전환 유지. [피드백 설계](docs/MOBILE_MATCH_FEEDBACK_2026-10-13.md).
+- 킥오프 전 양 팀11명/전체 이름·개별 종합/평균 종합과 체력이 동시에 표시됩니다. 기본22행은 읽기 전용이며 후보/개별 상세·코치·상대 보고서는44px 버튼으로 엽니다. 투톱 LS/RS와23개 필드 슬롯, GK 고정, 동료가 점유한 자리의 양 신원 좌표 원자적 교환을 추가했습니다. 실제 자연 포지션·능력·계약을 변경하지 않습니다.
+- 구단주 실제 두 답변은 유지하고 마지막 답변의 다음이 바로 조작 안내로 갑니다. 안내는 다음만 눌러 완료하고 선수단/전술/대화는 별도의 선택 버튼입니다. 자동 대화/중복 격려 효과는 없습니다.
+- 핵심 전개48×선택 속도/문전4×선택(최대12×)/슈팅·선방2×선택(최대4×). 물리100ms·표시50ms 상한/6ms 작업 예산 유지. 실제 씨드41의96분4:0/슈팅9:8 기록에서 명목 표시 핵심187.58125초/전체1191.1833초입니다. 연출·인간 정지·CPU 벽시계 시간은 제외하며 이전7의 다른 경기와 동일 경기 속도 비교가 아닙니다.
+- 사용자 공유 Kotaku 기사와 공개 Open Soccer의 renderer/AI 구분, HussBall의 물리/표시 분리와 Emscripten 공식 비동기 루프를 확인했습니다. 기사에서 재사용 가능한 축구 소스는 확인되지 않았고 연결 X는 읽기 오류였습니다. 외부 코드·게임 바이너리·자산을 복사하지 않았습니다. [확인한 1차 자료와 반영 범위](docs/BROWSER_ENGINE_REFERENCES_2026-10-13.md).
+- 화면용 팀 좌표를 한 번의 순회로 만들고 한 RAF 안의 N물리 틱에서 스냅샷 호출2N→N+1을 적용했습니다. 콜백 사이에는 재사용하지 않으며 감독 지시/새 배우 정보를 다시 읽습니다. 새 표시7그룹·포메이션9그룹/공개7의3씨드 부분·완료·정산 골든이 통과합니다. 결과를 바꾸는 추가 규칙은9 이후로 분리하세요.
+- 실제8화면320×568/360×640/390×844/412×915/568×320/844×390/768×1024/1280×900에서 양 팀22명/평균/44px/한 화면·안내 다음만 진행·포인터 자리 교환 통과. 실제 최초 취임 답변→다음→안내→다음만 완료/자동 대화0, 전체 물리 관전과 직접 엔진의 세계/RNG/로그/체력/지시 정확 일치·양 중간 정지·물리 리플레이·명시적 정산·구단 저장 재실행·독립 연습 통과. 최종 로그 work/v8-opt-{feedback,arrival,layouts,browser,reload,formation}.log.
+- 데스크톱 Chrome390×844 12초 측정721프레임/중앙16.7ms/p9516.8ms/최대17ms/긴 작업0/22명 이름/규칙8. work/v8-opt-performance.log. 이전 측정도 약60fps였으므로 FPS 상승을 주장하지 않습니다. 실제 여러 휴대폰의 장시간 성능 보증이 아닙니다.
+- 작은 전술 비교24개 새 경기(동등 능력12/실제 첫 상대12)와 공개7 동등12를 docs/MOBILE_MATCH_AUDIT_2026-10-13.json에 고정했습니다. 동등 능력의 낮은 공격 생산성과 실제 첫 상대에 대한 압박 강세가 남습니다. 각 전술3게임 표본이며 실축·FM 수준 밸런스 보증이 아닙니다.
+- 후속56경기: 같은 능력32(씨드41~48×4), 실제 첫 상대24(11/17/23/31/41/53×4), 하프타임 정상 초기화/상대 감독 적응/교체·대화0. [원본·조건](docs/MOBILE_MATCH_EXTENDED_AUDIT_2026-10-13.json). 동등 전력의 균형/압박/역습/로우 블록 평균 우리 득점0.125/0.625/0.875/0.375, 실점0.625/0.375/0.375/1.25, 양 팀 총 슈팅4.5/7.375/6.25/5.125입니다. 실제 첫 상대 평균 우리 득점3.5/6/3/3.333으로 능력차와 압박 강세를 구분합니다.8/6게임 표본으로 밸런스 완료를 주장하지 않으며 다음 규칙에서 공격 전진과 수비 복귀의 균형을 더 검증해야 합니다.
+- 검증 진행 기록: 8d59c2의 원격 전체167 suites/1293 checks, PWA14/Android 오프라인11 통과. 컵/유럽 새 경기 기대 규칙7→8의 오래된 검사를 바로잡았습니다. Android34/35는9/10이었고 마지막 실패는 옛9구역 CM 좌표 기대였습니다. 새 실제 터치 목적지(50,49)/정확 CM 기대를 맞췄으며 검사를 완화하지 않았습니다.
+- 최종 후보0815d1e3dac3f4794896ec90d7237017e8e8bcd1/트리6fde664b06522e8b0223a9deb3d62e5e7098130a. 원격 최종 전체167 suites/1295 checks 및 PWA14/Android 오프라인11 통과. PWA4,566,800바이트/shellebc3c80a9172, 오프라인4,566,193바이트/SHA256b0c7b669178867c065c1488c5bba981e346f25f567cb133595f71f80b874b6f9. 로컬PWA14/Android11 통과·기존4,570,000바이트 상한 유지.
+
+- 최종 원격 [전체 검증38323709255](https://github.com/jaeseok614/win-again-football/actions/runs/38323709255)/job115057441367 성공: 전체167 suites/1295 checks, PWA14, 소스에서 재생성한 공개 index.html/cache-assets.js 정확 일치. 오프라인 자산 SHA256b0c7b669178867c065c1488c5bba981e346f25f567cb133595f71f80b874b6f9. 최종 기능 커밋0815d1e의 자산은 검증 후 변경하지 않았습니다.
+- 원격 Android 최종 [실행38323709246](https://github.com/jaeseok614/win-again-football/actions/runs/38323709246): API34/35 각10/10 통과·APK/AAB/lint 성공. 검사 결과 조건은 정확 CM(50,49)/연속8/실제 접촉·리플레이·정지세계·재실행을 유지합니다. API35 XML tests10/failures0/errors0/skipped0. [API34 검증](https://github.com/jaeseok614/win-again-football/actions/runs/38323709246/artifacts/11780331171), [API35 검증](https://github.com/jaeseok614/win-again-football/actions/runs/38323709246/artifacts/11780341013).
+- 검증 API35 [APK/AAB/lint ZIP](https://github.com/jaeseok614/win-again-football/actions/runs/38323709246/artifacts/11779593513)의 SHA256d2c4443cbf69982cb85d987e664f91f61cb2016acaa3fc58a6562631c7eec955를 확인했습니다. APK만 추출해 assets/game/index.html과 로컬 오프라인 자산의 바이트 일치·패키지/저장 키를 검사했습니다. APK5,544,665바이트/SHA2568b0581d3017979b3d96c02d6156604f05adf43d63228799327aca76822376070. 워크플로 head0815d1e, 실제 PR 임시 merge8f32ae1c925f944c77dc641c2eda1f7714778972의 자산도 정확히 같습니다.
+- APK만 기존 [Google Drive 파일](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 교체해 파일ID·공유 상태를 유지했습니다. 파일명win-again-20261013-squad-engine8.apk/MIME application/vnd.android.package-archive/5,544,665바이트를 readback했습니다. AAB·ZIP·검사용 저장은 업로드하지 않았습니다.
+- 직전 시험판과 새 APK의 v2 인증서 SHA256은6437ceb59c6237e581f81a98e10b3289fdf4ef3784e141452a0cdbe5e8e3d320/cf7f0457980c1bb893558f5025c9377b06e5dd1d7f93ac6e3263e4faea11ae0f으로 다릅니다. 기존 시험판 사용자는 구단 내보내기→기존 시험판 삭제→새 APK 설치→구단 가져오기. [설치/서명 안내](docs/GOOGLE_PLAY_RELEASE.md). PR25 draft/main 자동 병합 없음.
+
+# 최신 개발 — 2026-10-13 연결선 없는 경기 · 핵심 관전
+
+- 피드백 반영:live/replay/practice 이름 연결선·상자0, 가까운 충돌 없는 이름 슬롯/22명 유지, live/replay 작은 팀색 원·등번호·단순 피치·최상단 공. 얼굴과 능력/체력 정보는 선수·교체 보고서에서 유지합니다. [설계·검증 범위](docs/MATCH_WATCH_EXPERIENCE_2026-10-13.md).
+- 기본 핵심/설정 전체 관전. 평범한 전개36×선택 속도, 실제 문전/크로스 최대2×, 슈팅/선방/리바운드/골 최대1×. 실제100ms 세계를 순서대로 진행하며 결과 예측/분 건너뛰기/기록 삭제 없음. continuous7/spatial1·원본 로그·통계·유효 저장 유지. 설정 변경/닫기/재실행이 정지 경기를 재개하지 않습니다.
+- 주요 중계2.4초/원본 로그의 추가분 캐시. 최근 목록에서는 평범한 패스/접촉 반복을 줄입니다. 전체 관전은 마지막 접촉 문장도 표시합니다.
+- 이름7/관전6/중계 전환3/연속 표시5그룹 통과. 실제8크기320×568~1280×900의 모든 이름/44px/한 화면/독립 연습/오류0. 설정3크기의 양 방식 전환/일시정지 세계 정확 일치/전체 설정 저장 뒤 페이지 재실행 통과.
+- 표시 scheduler99분5:2(슈팅15:3)의 세계·로그·체력·RNG·지시 정확 일치, 하프타임/후반 점검/물리 리플레이/명시적 정산 통과. 같은 경기1배속 명목 표시시간 핵심334.36초/전체1433.28초는 처리·중단·골 의식·사용자 판단 제외입니다. 경기 사건 빈도 자체는 바꾸지 않았습니다.
+- 실제12초 데스크톱 Chrome721프레임/중앙16.7ms/95백분위16.8ms/최대17.4ms/긴 작업0/22명. 최종 PWA4,560,980바이트/shell 7ca62b2e1e69, Android 오프라인4,560,373바이트/SHA256 7cd9b20035c6bcafa8da98253910435cf24575ffe662f1b19545e80ce055d3fa. PWA14/Android 오프라인11그룹 통과.
+- 최종 코드7b540d66a18ff5d5dae2c1defb2e134adec2d614/PR merge c5be45d8936de1e552bc43dd5fa515032bcf9da0. 로컬 전체166 suites/1281 checks(work/spectator-all-tests-verified.log), [원격 전체·PWA14·공개 생성물 일치](https://github.com/jaeseok614/win-again-football/actions/runs/38316312658) 모두 통과.
+- [Android 실제 앱 검사](https://github.com/jaeseok614/win-again-football/actions/runs/38316312720) API35와 API34의 실제10/10·APK/AAB/lint 모두 통과했습니다. API34는 같은 코드·검사를 유지한 재실행에서 성공했습니다(원본 작업115033949893/재실행115036821244). API34 첫 시도는9/10: 취임 안내 마지막에 시스템 overlays와 CONFIG_ASSETS_PATHS(80000000)가 Activity를 재생성했습니다. [첫 실패 진단](https://github.com/jaeseok614/win-again-football/actions/runs/38316312720/artifacts/11777086275). 앱 crash/경기 검사 실패로 단정하지 않으며 검사 조건을 완화하지 않고 재실행했습니다. 원격 자산 SHA256은 로컬과 정확히 같습니다. [성공한 API34 검증](https://github.com/jaeseok614/win-again-football/actions/runs/38316312720/artifacts/11776838087), [API35 검증](https://github.com/jaeseok614/win-again-football/actions/runs/38316312720/artifacts/11777601095).
+- 검증된 API35 [APK/AAB/lint ZIP](https://github.com/jaeseok614/win-again-football/actions/runs/38316312720/artifacts/11777345207): ZIP SHA2567c3f4ce1f438499859f3bc7bc1925d27a75c8845bec3777ceba674883113c924. 안의 APK를 단독 추출하고 assets/game/index.html이 로컬 Android 파일과 바이트 단위로 일치함을 검사했습니다. APK5,542,501바이트/SHA2561458c7002586d8cf3af5d32c45a9c6fa8e96bd2a9108398c6201eeffaf6847ff.
+- APK만 [새 Google Drive 파일](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view?usp=drivesdk)에 올렸고 MIME/파일명/5,542,501바이트를 readback했습니다. 이전 Drive 파일은 갱신/재조회404와 검색 결과0으로 접근되지 않았고 새 파일을 만들었습니다. 업로드 자료에 AAB/ZIP/검사용 저장은 없습니다.
+- 이전 APK와 새 APK의 v2 인증서 SHA256은8dc5f422b70bda6a84da33fe6c607857e447438356bfbd49f75775cca18a06a3/6437ceb59c6237e581f81a98e10b3289fdf4ef3784e141452a0cdbe5e8e3d320으로 다릅니다. 기존 시험판 사용자는 구단 내보내기→기존 시험판 삭제→새 APK 설치→구단 가져오기. [설치·출시·서명 안내](docs/GOOGLE_PLAY_RELEASE.md). PR25 draft/main 자동 병합 없음.
+
+# 최신 개발 — 2026-10-12 압박·수비 version7
+
+- 새 킥오프/연습만7. 첫 터치0.6초/측면/배급·거리/체력의 겹쳐 압박, 골문 커버/수비-중원 간격/복귀 속도, 실제 이동 비용과 접촉 거리 보정, 로우 블록 전방 출구/실제 확보 후 안전한 연결을 보완했습니다. 공개 spatial1/continuous1~6·현재 캠페인/시즌을 보존합니다. [설계·재현·남은 범위](docs/CONTINUOUS_PRESS_AND_DEFENCE_2026-10-12.md).
+- 실제 게임과 비교 도구의 하프타임 배치 조건을 일치시켰습니다. matched 기본은 정상 재배치이며 --half-reset false는 과거 비교 재현용입니다. 아래 역사적 version6의80경기 수치를 새 기본 조건에 그대로 비교하지 마세요.
+- 정상 하프타임의 동일 능력6/7 각각80경기+실제 첫 상대24경기씩 총208경기. 압박 승률80→55%, 득점2.70→1.35, 균형 실점1.75→1.00, 로우 블록 실점1.55→1.30. 로우 블록 공격0.35→0.10과 실제 첫5부 상대의 압박8.83→8.17은 남습니다. 전술별 승률 동일/실축 평균 보정으로 해석하지 마세요. [원본과12포메이션](docs/CONTINUOUS_PRESS_DEFENCE_AUDIT_2026-10-12.json).
+- 재개 목표를 피치에 단순 잘라 넣어 반경 안으로 돌아오는 측면 프리킥/스로인·몸 경합 지연을16개 가능한 경로/몸 여유0.6m로 수정했습니다. 실제12포메이션의 최고22,167틱/36.9분 지연이 최대282틱/28.2초로 감소합니다. 같은 능력80/실제24경기 최대 무이벤트220/237틱. 법정 거리·실제 이동 뒤 재개하고 득점/판정을 시간으로 강제하지 않습니다. 공개1~6은 유지합니다.
+- 새 수비12/기존 연속19그룹 통과. 공개6 씨드17/23/41의 전체/부분/정산 SHA256과 연습씨드1/2의75분1:2·80분2:1 보존, 공개3/4/5의9개 기존 저장도 전체·부분·정산 정확 일치. 새7 연습씨드4/5는 정상 전개75분1:2·80분2:1이며 점수 편집 없음. 컵·유럽 정산과 초기 UI 없는 복원 포함.
+- 실제8크기22명/44px/한 화면/독립 연습/오류0. 표시scheduler99분5:2(슈팅15:3)의 전체 엔진 세계·RNG·지시 정확 일치/두 작전 시간/물리 리플레이/명시적 정산, 페이지 재실행 전체 일치. 실제12초 Chrome721프레임 중앙16.7ms/95백분위16.8ms/최대17.1ms/긴 작업0/22이름/일시정지 버튼/오류0. 데스크톱 측정입니다.
+- 최종 경기 코드97d9abc4eaef18a61bd95076c0299b16ba78cb93의 [원격 전체165 suites/1274 checks·PWA14·공개 생성물 일치](https://github.com/jaeseok614/win-again-football/actions/runs/38228114973) 통과. merge cb888303a9905cb8777def5db37b9141e56ea138(code97d9 + main3af6f7c). 로컬 PWA14/Android 오프라인11그룹 통과. PWA4,556,470바이트/shell72c30069a5a1, Android4,555,863바이트/SHA256819853762ac2c2eecc7829520e2e74d92be86155d7395f1b11aa086c8947ae56. 기존4,570,000 shell/얼굴 atlas 상한 유지.
+- 네이티브 첫 리플레이 검사 fixture는 이전 시험의 customPositions/tacticalRoles를 제거하고, 실제 첫 하프 이벤트의 존재/유효/20프레임 초과/현재 상태 불변을 별개로 진단합니다. 정상 씨드41 실제 킥오프·일시정지·재실행을 사용하고 사건/점수는 강제하지 않습니다. 브라우저 같은 조작에서는3분 슈팅/87프레임/불변을 확인했습니다. 게임 코드·오프라인 자산은97d9abc와 같으며 native-only 커밋e5417285db57375158d6e0d7bcea35a957d0db3e입니다.
+- 코드e541728의 [Android14/15 실제 각각10/10·APK/AAB/lint](https://github.com/jaeseok614/win-again-football/actions/runs/38229504726) 모두 성공했습니다. PR merge401cdcde17d15ac43409d2c525256777d39c6daf(e541728 + main3af6f7c), 원격 오프라인SHA256819853762ac2c2eecc7829520e2e74d92be86155d7395f1b11aa086c8947ae56은 로컬과 동일합니다. 실제 이미지 디코딩·취임·수첩·답변/연속 세계·물리 리플레이의 앱 재실행·파일 내보내기/가져오기를 포함합니다.
+- [API35 APK/AAB/lint](https://github.com/jaeseok614/win-again-football/actions/runs/38229504726/artifacts/11737907137), [API34](https://github.com/jaeseok614/win-again-football/actions/runs/38229504726/artifacts/11737942183). ZIP의 app-debug.apk는 검토용이고 AAB는 미서명 Play 준비 파일입니다. 검증 로그/스크린샷 API35/34는11737809078/11738147732. 설치·삭제 전 구단 내보내기와 서명은 [출시 안내](docs/GOOGLE_PLAY_RELEASE.md)를 따릅니다. 최종 증거 문서만 [skip ci]로 기록하며 PR25 draft입니다.
+
+# 최신 개발 — 2026-10-12 공간 운반 version6 · 감독의 수첩
+
+- 새 킥오프/연습만 continuous6. 공간 운반/실제 문전 선택, moving-carrier의 가속 도착 예측, 두 번째 압박수의 패스 경로 커버, 문전 중원 커버,14~20틱 첫 결정과 공을 다루는 속도 비용을 연결했습니다. 공개 spatial1/continuous1~5와 현재 캠페인을 보존합니다. [설계·208경기 비교](docs/CONTINUOUS_DECISIONS_2026-10-12.md), [현재 완성 범위](docs/ENGINE_READINESS_2026-10-12.md). 같은 능력80경기의 패스는 약38~40% 줄지만 압박 승률75%와 로우 블록의 실점은 남았습니다. FM 수준의 완성으로 부르지 마세요.
+- 같은 한국인 감독의 원본 장면6개/인물4명과 첫 경기·두 경기 뒤 기억·첫 승패·반 시즌·실제 승격·환생의 재회·시즌 마지막의8개 수첩 장면을 추가했습니다. 각3×2 회신이 실제 점수/동일 인물/선택한 기억/첫 대답을 기억합니다. 홈에서 기존 전체 대화를 수첩으로 바로 열고, 준비 표시·닫기 취소·재시도·과거 답변 읽기를 제공합니다. 기존 대화 영수증을 사용하고 새 스키마/돈/영구 능력 보상/자동 답변/자동 시즌 전환을 추가하지 않습니다. [서사·화면 검증](docs/NOTEBOOK_STORY_2026-10-12.md), [그림 생성 출처](docs/CLUB_MEMORY_ART_2026-10-12.md).
+- 수첩은 열기당 지역 lookup/관계를 한 번 읽고 페이지·탭에서 재사용합니다. 6시즌을 실제로 진행한7시즌 저장(274경기/50답변/316장면)에서687.88→20.01ms, 최적화 전 모든 장면 객체/현재 저장 정확 일치. Chrome4×CPU 제한에서 준비 선표시·전체 열기555.7ms(읽기192.5ms),페이지/탭 재계산0/오류0. 데스크톱/CPU 제한 측정이며 실제 휴대폰 성능 보증은 아닙니다.
+- 최종 로컬164 suites/1262 checks(work/narrative-cache-final-tests.log), PWA14/Android 오프라인11그룹 모두 통과. 새 결정10/수첩13/수첩 준비5/페이지·공유 읽기5그룹. 실제 네 번 승격 뒤1부19/38경기와 과거46경기 편지,3기억×6회신·명시적 승격·현재 저장의 결과/재정/선수/RNG를 검사했습니다. 공개3/4/5 씨드17/23/41의 부분·완료·정산9개 보존, 공개5 전체 match SHA256 세 개 고정 회귀 유지. 새 연습 씨드1/2·실제 상대speed75의 정상 전개로75분1:2/80분2:1; 공개1~5 프리셋 유지.
+- 실제8화면320×568~1280×900에서 첫 출근/구단주/첫 수첩/수첩 목록80개,8장면×6회신의5,248장면,6시즌 저장의전체 수첩1,272페이지를 검사했습니다. 내부/외부 넘침0/44px/직접 답변/현재 저장 복원/JS 오류0. 필수 취임→실제 대답→홈 수첩→남긴 답→완료 대화9장→경기 준비까지 실제 터치로 검증했습니다. 긴 문장은 한 줄씩, 후속 장면 그림은 헤더에 유지하고 완료 경기력 안내도 내용 손실 없이 나눕니다.
+- 피치8화면22명 이름/공/44px/넘침0/독립 연습/오류0. 표시 scheduler97분3:0(슈팅13:9), 하프/후반 작전·물리 리플레이·명시적 정산/앱 재실행의전체 세계·로그·체력·RNG·지시 정확 일치. 표시 시계 가속 검사입니다. 실제12초 Chrome721프레임,중앙16.7ms/95백분위16.8ms/긴 작업0/22명 이름/일시정지 버튼/오류0. 데스크톱 측정입니다.
+- PWA4,553,604바이트/shell2731d7571e55. Android 오프라인4,552,997바이트/SHA2567336c50706fccbdc23c21af7ffd17eda3ac05bc7d99b10bf319626164ed6f07d. 새 원본WebP199,836바이트를 atlas두 장으로 공유하며 선수/코치 얼굴 상한 유지. 추가 그림의base64와 대화/규칙 코드에 한해 shell상한4,570,000. QA 저장/PNG/로그/Android generated assets는 ignored work에만 있습니다.
+- 코드 **fddea9bea91bdf3a9e88a249263258a672afea11**의 [원격 소스164/1262·PWA14·생성 공개 파일 일치](https://github.com/jaeseok614/win-again-football/actions/runs/38220773318), [Android14/15 실제 네이티브 각각10/10·APK/AAB/lint](https://github.com/jaeseok614/win-again-football/actions/runs/38220773323) 모두 성공했습니다. PR merge8c5e4801(code fddea9b + main3af6f7c)에서 검사했고 원격 오프라인SHA256은 로컬과 정확히 일치합니다. 실제 이미지 디코딩/취임/지난 답 읽기/수첩 답변두 개와재실행/연속 세계·리플레이 재실행/파일 내보내기·가져오기를 포함합니다. 홈 경로는 새 수첩으로 검사하며 숨긴 버튼의 잘못된 터치는 차단합니다.
+- [API35 테스트 APK/AAB/lint](https://github.com/jaeseok614/win-again-football/actions/runs/38220773323/artifacts/11733754365), [API34](https://github.com/jaeseok614/win-again-football/actions/runs/38220773323/artifacts/11734511694). ZIP 안 app-debug.apk는 검토용, AAB는 미서명 Play 준비 파일입니다. 검증 로그/스크린샷 API35/34는11734605476/11734363040. CI 디버그 서명이 달라질 수 있으므로 설치·삭제 전에 구단 내보내기는 [출시 안내](docs/GOOGLE_PLAY_RELEASE.md)를 따릅니다. 문서만의 최종 기록은[skip ci]로 중복 검사를 생략합니다. PR25 draft/main 자동 병합 없음.
+
+# 최신 개발 — 2026-10-12 패스 전개·세컨드볼 version5
+
+- 새 킥오프/연습만 continuous5. 공 감속·중력·착지 바운드와 선수 가속 도착 예측, 제한된 수신자 외삽, 실제 첫 터치 후0.6초 정리/정상 전진, 대각선 중원 지원/반환 침투, 더 빨리 닿는 동료의 세컨드볼 경합을 추가했습니다. 양 팀과 진영 교환에 대칭이며 측면 크로스 지시의 폭과 후방 커버를 유지합니다. 위험 경로 패스를 낮게 평가하고 상대는 실제 우리 압박·패스 성공률·자기 체력에 대응합니다. [설계·208경기 비교·범위](docs/CONTINUOUS_PASSING_FLOW_2026-10-12.md).
+- 공개 spatial1/continuous1~4와 현재 캠페인 보존. 공개4의3씨드 완료 match SHA256을 새13그룹 회귀에 고정했고 실제 공개3/4 각각3개 저장의 전체 상태/정산 일치, 공개4 부분 틱 저장도 확인했습니다. 별도 공개 spatial1 저장8개/continuous1·2 각3개 전체 상태와 정확한 정산도 일치합니다. 새 연습 씨드42/2는 정상 전개로75분0:1/80분1:0에 도달하며 이전 연습 씨드는 유지합니다.
+- 공개4와 새5 각각104경기 비교. 같은 능력20씨드×4전술80경기의 양 팀 패스 성공률은41~46%→59~63%. 새5 우리/상대 평균 득점은 균형0.60/0.95,압박1.35/0.45,역습0.45/0.85,로우 블록0.25/0.60. 패스 약1,909~1,999회/양 팀 슈팅4.10~7.40으로 패스 빈도가 높고 슈팅 분포는 더 조정할 범위입니다. 실제 첫5부 상대24경기는 전력 차이를 별도로 기록합니다. 재현 source/measure-continuous-balance.cjs --version=4/5 --extended.
+- 실제8화면320×568~1280×900 모든 이름/핵심 넘침0/44px/독립 연습/JS 오류0. 표시 scheduler97분2:0(슈팅8:3), 하프/후반 작전·물리 리플레이·명시적 정산/앱 재실행 전체 세계·로그·체력·RNG·지시 정확 일치. 표시 시계를 가속한 조작 검사이며97분 벽시계 관전으로 부르지 마세요. 데스크톱 Node6,000틱 측정4/5 각각평균0.0665/0.0654ms; 실제 휴대폰 프레임 성능 보증은 아닙니다. 공유32점 예측/5틱 계획 캐시, 준비 로딩과 PWA/얼굴 atlas 상한 유지.
+- PWA4,242,435바이트/shella5c4d1124f47, Android 오프라인4,241,828바이트/SHA256009907a7d4b756c8b4eb20afa9eed4556de7c08b7f4f15140903a19732f00c5b. 공개 PWA14/Android 오프라인11그룹 통과. 최종 로컬 전체160 suites/1228 checks 통과(work/v5-final-tests.log). 코드471162438f5b3e1f623e8720c6498ff8f7d8053d의 [Android14/15 실제 네이티브9/9·APK/AAB/lint](https://github.com/jaeseok614/win-again-football/actions/runs/38206887632)가 각각 성공했습니다. PR merge32ddac32(code4711624 + main3af6f7c)에서 검사했고 원격 자산SHA256은 위 로컬값과 정확히 일치합니다. 같은 코드의 [원격 전체160/1228·PWA14·생성 공개 파일 일치](https://github.com/jaeseok614/win-again-football/actions/runs/38206887809)도 성공했습니다. 최종 검증 문서는 코드 변경 없이 [skip ci]로 중복 실행을 생략합니다. PR25 draft/main 자동 병합 없음.
+- 실제12초 브라우저 관전721프레임, 중앙16.7ms/95백분위16.8ms/긴 작업0/22명 이름/일시 정지 버튼/JS 오류0. 데스크톱 Chrome 측정이며 실제 휴대폰 프레임 성능 보증이 아닙니다. 현재 공개5의 씨드17/23/41 부분·완료·정산 QA도 ignored work/continuous-v5-golden.json에 고정합니다. 이후 결과 변경은 규칙6 이후로 분리하세요.
+- 최신 휴대폰 시험 설치 ZIP: https://github.com/jaeseok614/win-again-football/actions/runs/38206887632/artifacts/11727557903 . 안의 app-debug.apk를 설치합니다. 동봉 AAB는 서명 전 Play 준비 파일입니다. API34 APK11727777131, 검증 로그 API34/35 각각11726904869/11727383549.
+
+# 최신 개발 — 2026-10-12 역습·충돌·판정 version4
+
+- 새 킥오프/연습만 continuous4. 실제 확보 뒤4초 역습과 골문 쪽 수비 전력질주, 모든 전술의 가까운 문전 침투, 키퍼 반응/실제 접촉을 개선했습니다. 움직이는 선수/공의 상대 경로 첫 접촉, 선수 몸 분리, 원형 골대/크로스바 반사와 공 전체가 먼저 나간 라인을 계산합니다. 돌파한 공은 키퍼 접촉이 골라인보다 먼저면 잡기/걷어내기로 이어집니다. [설계·208경기 비교·판정 범위](docs/CONTINUOUS_CONTACT_AND_BALANCE_2026-10-12.md).
+- 재개 후 다른 선수 전 연속 터치, 간접 프리킥/스로인 직접 골과 재개 직접 자책골, 선방/차단/골대 뒤 오프사이드, 키퍼 백패스/스로인 발 처리·손 소유 보호·8초 초과 코너킥을 연결합니다. 리바운드 골의 원래 득점자/도움/시도 통계를 보존합니다. 기존1/2/3의 규칙을 바꾸지 않습니다. 새 연습 씨드28/36은 정상 전개로75분1:2/80분3:2를 만듭니다.
+- 공개 spatial1 저장8개와continuous1/2/3 각3개의 전체 상태/정산 정확 일치. version3의3개 SHA256을 영구 회귀로 고정하고 새 물리/판정24그룹을 추가했습니다. 최종 로컬159 suites/1215 checks, 공개 PWA14와Android 오프라인11그룹 통과. 로그 work/v4-final-tests.log, v4-pwa-final.log, v4-android-final.log. 새12포메이션·컵/유럽·부분 틱 저장/변조·초기 UI 없는 복원 포함.
+- 공개3과 새4 각각104경기를 비교했습니다. 같은 능력20씨드×4전술에서 역습 우리 평균득점1.80→1.10, 승률60→40%; 새4 균형1.05/50%, 압박1.15/50%, 로우 블록0.30/15%. 현재 첫 상대6씨드×4에서는 역습 총득점9.50→4.33입니다. 실제 능력차/고정 표본이며 실축 평균 보증이나 강제 득점 상한은 아닙니다. 재현 source/measure-continuous-balance.cjs --version=3/4 --extended.
+- 실제8화면320×568~1280×900 모든 이름/한 화면 넘침0/44px/독립연습/JS 오류0. 실제 표시 scheduler97분6:0(슈팅17:4), 하프/후반 작전·물리 리플레이·명시적 정산/앱 완전 재실행의 전체 세계·로그·체력·RNG·지시 정확 일치. 표시 시계를 가속한 조작 검사이며97분 벽시계 관전으로 부르지 마세요. 원본 사진/기록은 ignored work에 있습니다.
+- PWA4,238,810바이트/shell642036419653, Android 오프라인4,238,203바이트/SHA256cc4087a220e261087aee9302124b5e7b2586831af0594e12482726e5876325b8. 접촉/판정 코드20KB 여유만 늘려 shell상한4,245,000; 얼굴atlas상한은 유지합니다. 코드 **c9cb31fb1a27ecc28042d9b60e2fecc2da4b5078**의 [원격 소스159/1215·PWA14·생성 공개 파일 일치](https://github.com/jaeseok614/win-again-football/actions/runs/38203975672)와 [Android14/15 각각 실제 네이티브9/9·APK/AAB/lint](https://github.com/jaeseok614/win-again-football/actions/runs/38203975678)가 모두 성공했습니다. PR merge060b2804(code c9cb31f + main3af6f7c)에서 검사했고 원격 자산SHA256은 위 로컬값과 정확히 일치합니다. 최종 검증 문서는 코드 변경 없이 [skip ci]로 중복 실행을 생략합니다. PR25 draft/main 자동 병합 없음.
+- 최신 휴대폰 시험 설치 ZIP: https://github.com/jaeseok614/win-again-football/actions/runs/38203975678/artifacts/11726731469 . 안의 app-debug.apk를 설치합니다. AAB는 서명 전 Play 준비 파일입니다. API34 APK 아티팩트11726337607, 검증 로그 API34/35 각각11727275102/11726442763.
+
+# 최신 개발 — 2026-10-12 전술 AI와 경기 균형 version3
+
+- 새 킥오프/연습만 continuous version3. 실제 도착 시간 기반 경합, 한 명 압박/두 명 전방 압박과 수비 커버, 안전한 패스/박스 주자 크로스, 탈취 뒤 역습 침투, 배치 역할과 진영 대칭, 짧은 전력질주 회복과 실제 이동 체력을 연결합니다. 골키퍼는 골문을 지키며 각도를 좁히고 공을 몰고 오는 공격수의 공도 실제 접촉 뒤 확보합니다. 태클 재시도와 몸 차단을 구분했습니다. 상대 보고서는 실제 현재 지시, 새 연속 코치 분석은 실제 체력을 사용합니다. [설계·고정 비교40경기·남은 범위](docs/CONTINUOUS_TACTICAL_AI_2026-10-12.md).
+- 공개 spatial v1 저장8개, continuous v1 저장3개, continuous v2 저장3개의 전체 상태/정산 정확 일치 확인. v1/v2 SHA256을 영구 회귀로 고정합니다. 현재 캠페인/진행 경기/확정 기록을 삭제하거나 시즌을 넘기지 않습니다. 새 연습 씨드4/7은 정상 전개로75분 한 골 열세/80분 한 골 우세를 만들며 이전 연습 씨드는 보존합니다.
+- 전술 회귀14그룹, 기존 연속19/표시5그룹 검사에 도착 시간/커버/대칭/역할/회복/키퍼/변조/구버전 보존을 추가합니다. 실제 브라우저98분3:2(슈팅25:12) 관전 scheduler가 직접 엔진의 전체 세계/로그/체력/RNG/지시/구간과 일치했고, 하프타임/작전 시간/실제 리플레이/명시적 정산을 통과했습니다. 8크기320×568~1280×900 모든 이름/한 화면/44px 버튼/독립 연습/JS 오류0, 앱 완전 재실행 후 paused/전체 상태 정확 일치도 확인했습니다.
+- 공개 PWA14그룹 통과, PWA4,223,400바이트/shell5c9dc69a5b9e, Android 오프라인4,222,793바이트/SHA2565c5ec8f03b8e00cdbc3f159e4eb55055efccf9a9e0be27b5aa2b1ffe57e58862. 최종 로컬 전체158 suites/1191 checks와 Android 오프라인11그룹 통과(work/ai-final-tests.log, ai-android-final.log). 코드 **a98a03c15a573b4d74ec64988488b3c5a7e375cc**의 [GitHub 소스158/1191·PWA14·생성 공개 파일 일치](https://github.com/jaeseok614/win-again-football/actions/runs/38197699617)와 [Android14/15 각각 실제 네이티브9/9·APK/AAB/lint](https://github.com/jaeseok614/win-again-football/actions/runs/38197699657)가 모두 성공했습니다. PR 테스트 merge93d417da(code a98a03c + main3af6f7c)에서 검사했고 원격 Android 자산 SHA256도 로컬과 정확히 일치합니다. 최종 문서 결과 기록은 코드 변경 없이 [skip ci]로 중복 실행을 생략합니다. PR25 draft/main 자동 병합 없음.
+- 새 휴대폰 시험 설치 ZIP: https://github.com/jaeseok614/win-again-football/actions/runs/38197699657/artifacts/11724356467 . 안의 app-debug.apk를 설치합니다. 동봉 AAB는 서명 전 Play 준비 파일입니다. API34 APK 아티팩트11724216237, 검증 로그 아티팩트 API34/35 각각11724830576/11724770718. 최신 검사 로그/화면과40경기 상세 집계는 ignored work에 보관합니다.
+
+# 후속 검증 — 2026-10-12 연속 경기 재실행 복원·규칙 version2
+
+- 실제 Android 14/15 첫9개 검사에서7/9 통과, 두 재실행 실패를 추적했습니다. Season.restore의 상대 선발 검증이 늦게 로드되는 TouchlinePlan UI에 의존하던 것이 원인이었습니다. 동일한 역할 가중 능력 계산을 코어로 옮겨 초기 복원을 독립시켰습니다. 실제 브라우저 새 브리핑→진행→저장→페이지 완전 재실행에서 전체 물리 상태와 지시/로그가 정확히 같고 paused=true, 복구 차단=false 확인. source의 초기 모듈 순서 VM 회귀도 추가합니다. 사용자 저장을 삭제하지 않았습니다.
+- 새 킥오프/연습은 continuous version2. 간접 프리킥 배달 오프사이드와 가까운 간접 프리킥 골키퍼 골라인 예외를 수정합니다. v1 세계/영수증/연습 기록도 그대로 재생하며 기존 3씨드 SHA256을 회귀로 고정했습니다. 이미 있던 긴 직접 프리킥 패스 판정도 보존합니다.
+- 최종 브라우저 전체96분2:0(슈팅11:7)/실제 경로 다시 보기/명시적 정산/직접 엔진 전체 일치 통과. 8크기320×568부터1280×900의 모든 이름/한 화면/44px 버튼/독립 연습/JS 오류0 통과. 새 재실행 정확 일치 회귀 로그는 ignored work/continuous-reload-proof.log.
+- 전체 최종 **157 suites /1177 checks 통과**(work/continuous-final-v2-fixed-tests.log). 연속 엔진19/표시 scheduler5그룹, 이전 공간 저장8개와 공개 continuous v1 저장3개 전체 상태/정확한 정산 보존 확인. 공개 PWA14/Android 오프라인11그룹 통과. PWA4,210,560바이트/shell32605281960c, Android 오프라인4,209,953바이트/SHA256bbba34285708769ec06b725ad7f47056ebdae42b1c1feeca8076cd31edbd7b4a. 코드 커밋 **39de3ad13c2ae12844a9b23514510dea99362488**에서 GitHub 소스157/1177/PWA14/생성 공개 파일 일치 성공(actions/runs/38194336158). Android14/15 각각 네이티브9/9와 APK/AAB/lint 성공(actions/runs/38194336101). 실제 브리핑/경기 저장/물리 리플레이/앱 재실행 실패를 해결했습니다. 마지막 문서 결과 기록 커밋은 코드 변경 없이 [skip ci]로 중복 실행을 생략합니다. PR25는 draft이고 main을 자동 병합하지 않습니다.
+- 설치 파일: https://github.com/jaeseok614/win-again-football/actions/runs/38194336101/artifacts/11722312738 . ZIP 안 app-debug.apk가 휴대폰 시험 설치용이고 aab는 unsigned Play 배포 준비 파일입니다. 빌드 기준은 PR 테스트 merge9b9cfd11(code head39de3ad + main3af6f7c)이며 Android 자산 SHA256은 위 값으로 로컬과 정확히 일치합니다. 검증 로그/QA 원본은 ignored work에 보관합니다.
+
+# 최신 개발 — 2026-10-12 전체 연속 축구 엔진
+
+- 새 확인 킥오프/새 연습에 continuousSetup.version1을 사용합니다. 100ms 전체 경기 세계에서 실제 양 팀22명·개별 상대 능력·가속/체력·공 소유/비행·패스 접촉/수신·침투/오프사이드·윙 전진/크로스/헤더·태클/반칙/카드·골키퍼 잡기/쳐내기·리바운드·골대/골라인·데드볼을 연결했습니다. 분 단위 기회 추첨은 새 경기의 결과 판정에 쓰지 않습니다. [설계·검증·현재 한계](docs/CONTINUOUS_FOOTBALL_ENGINE_2026-10-12.md).
+- 부분 틱 저장/지시 journal을 동일 시점에 재생해 전체 세계/로그/체력/RNG를 검증합니다. 현재 schema10/키/패키지 유지, 기존 진행/확정 v10 및 released spatial version1 보존. 이전8개 완료 저장과 정확한 정산 결과 일치. 새 완료 기록의 실제 출전 틱·구간·골/카드·양쪽 자책골·측정 통계 및 리그/컵/유럽 정산/부분 RNG 검증 통과.
+- 전체 **157 suites /1174 checks 통과**(work/continuous-final-tests.log). 연속 엔진16그룹/표시 scheduler5그룹, 최종 공개 PWA14/Android 오프라인 자산·브리지11그룹. 리플레이 캐시 후 해당 엔진 회귀를 별도로 재검사합니다. QA 저장/사진/로그는 ignored work에만 있습니다.
+- 실제 브라우저390×844에서 새 필수 브리핑→표시 scheduler 전체96분2:0(슈팅11:7)→하프타임/후반 지시→실제 경로 다시 보기/위치 이동→명시적 결과 확정→저장 복원 통과. 세계·좌표·로그·구간·체력·RNG·지시가 직접 엔진과 정확히 일치했습니다. 표시 시계를 가속한 조작 검사이며96분 실제 벽시계 관전으로 표시하지 마세요. work/continuous-browser-result.json, JS 오류0.
+- 320×568/360×640/390×844/412×915/568×320/844×390/768×1024/1280×900에서 모든 현재22명 이름/전경 공/핵심 화면 넘침0/주요 버튼44px 및 실제 연습 독립 진행/본 경기 정지/오류0 확인. 짧은 가로도 경기장/통계/중계를 나란히 두며, 회전/숨김의0높이 캔버스는 건너뛰고 복구합니다.
+- 실제 측정 점유율·패스/완료·슈팅/유효·세트피스·태클·반칙·선방을 표시합니다. 보기 속도와 RNG를 분리하고 슛≤1배/주요 크로스≤2배, 숨김/메뉴/팝업/안내 중 계산 정지를 유지합니다. 실제 좌표 사이 부드러운 보간, 과거 전술/퇴장 명단 다시 보기, 준비 로딩과4클립 복사 캐시를 추가했습니다. 새 연습은 정상 전개로75분0:1/80분3:2에 도착합니다.
+- 최종 PWA4,209,823바이트/shell1f993adbb192, Android 자산4,209,216바이트/SHA256b4580ceb7c0330028e6c130f8a56e11b1cba6f80fe4de8bb015dbbc0a32a81a0. shell 상한4,225,000 및 얼굴 atlas 상한 유지. 기존 untracked APK 보존. 원격 최신 앱 컴파일/네이티브9개 검사 결과는 PR25 해당 코드 커밋 체크에서 확인합니다. 로컬 자산 검사를 APK 성공으로 표시하지 마세요.
+- 새 Android9번째 회귀는 실제 브리핑 버튼으로 연속 킥오프/22명 이름·같은 공/실제 경로 리플레이/일시 정지/네이티브 재시작의 전체 물리 상태 보존을 검사합니다. 기존8개 검사/API34·35 유지. 개발 브랜치는 codex/football-realism-20261012이며 main을 자동 병합하지 않습니다.
+- 전체 연속 세계 전환은 구현했지만 역할별 휴리스틱과 간략한 충돌/공중 모델입니다. FM급 AI/3D 신체/VAR/모든 IFAB 예외와 실축 밸런스 보장은 아닙니다. 향후 튜닝은 공개된 continuous version1 영수증의 계산을 바꾸지 않는 별도 규칙 버전으로 합니다.
+
+# 최신 개발 — 2026-10-12 공간 전개 1단계·한국인 감독 첫 화면
+
+- 원격5e4ea2d: 전체155 suites /1152 checks, PWA14 및 생성 공개 파일 일치 통과. Android14/15 컴파일·lint/자산 성공, 각각 네이티브7/8 통과. 실패 하나는 첫 취임의 짧아진 대사에 이전 ‘감독직 계약서’ 문자열을 기대하던 검사였습니다. 현재 계약서/구단명 위치를 의미대로 검사하며 실제 감독 WebP 디코딩·두 취임 페이지 전체 본문/그림/버튼 화면 경계 검사를 더했습니다. 8개 시나리오를 유지하며 최신 PR25 네이티브 결과를 확인하세요.
+- CI 임시 debug 서명이 이전062f154와5e4ea2d APK에서 다름을 실제 인증서SHA256으로 확인했습니다. 기존 설치에 업데이트가 안 되면 먼저 게임 저장 내보내기 후 삭제/새 APK 설치/저장 가져오기를 해야 합니다. 사용자 저장을 자동 삭제하지 마세요. Play 배포용 정식 서명은 아직 별도 설정이 필요합니다.
+- RoboCup2D 원칙을 참고한 원본 고정100ms 공간 계산기를 첫 킥오프부터 적용합니다. 실제 패스 경로/수비 접촉/오프사이드/첫 터치 후 전진/위치·압박 기반 xG가 미래 결과에 영향을 줍니다. 화면과 다시 보기는 같은 계산을 캐시해 읽습니다. 분당8회 난수와 기존 진행/확정 v10 기록 보존. [설계·한계·공식 출처](docs/SPATIAL_ENGINE_AND_MANAGER_2026-10-12.md).
+- 한국인 감독과 작은5부 감독실 원본 그림을 타이틀/필수 취임에 연결했습니다. WebP121,220바이트 한 번만 포함. 짧은 가로 타이틀과 실제 두 번째 삶의 설명도 한 화면으로 확인했습니다. 실제 취임 면담 두 답변은 필수 유지.
+- 전체155 suites /1151 checks 통과(work/spatial-clean-tests.log), 추가12포메이션 회귀를 포함한 공간7그룹/PWA14/Android 자산11그룹 통과. 이전8개 완료 저장 보존. 8크기/64장면/576프레임의 모든 출전 이름·핵심 화면 넘침0·44px 버튼·JS 오류0. 실제 새 공간 모드98분1:1(슈팅5:8) 관전/하프타임/퇴장/명시적 정산/저장과 엔진 결과 일치를 확인했습니다. QA 사진·저장·로그는 ignored work.
+- PWA4,150,241바이트/shell00d3a37981aa, Android 자산4,149,634바이트/SHA25647ad7be3c3274a5bdcd9b6bdf6cf6b53e36c677637f2918b1123fa182e4fc5e4. shell 상한4,175,000만 조정하고 얼굴 atlas 상한 유지.
+- 아직 기회 발생은 분 단위, 오픈 플레이 안의 공간 판정만 고정 간격인 혼합 구조입니다. 상대 능력은 팀 전력 프로필, 세트피스는 기존 전용 규칙입니다. 전체 지속 소유권과 개별 상대·골키퍼 물리는 후속 범위입니다. released spatial version1 영수증 밑의 계산기를 임의로 바꾸지 마세요.
+- 로컬 Android 오프라인 자산 검사는 네이티브 APK/에뮬레이터 관전 검사와 구분합니다. 최신 네이티브 결과는 PR25 원격 체크에서 확인하세요.
+
+# 최신 개발 — 2026-10-12 홈 브랜치 회수·침투 패스·네이티브 검사 복구
+
+- 후속 원격619c223: 소스 CI 성공, API35 네이티브8/8 통과. API34는 이전 실패 두 곳을 통과하고 첫 취임 대화의 두 번째 답변 좌표가 사라짐/초기 로딩 검사 실패가 나왔습니다. JS 초기화뿐 아니라 네이티브 페이지100%와 로딩 종료를 기다리고, 대화 페이지·답변 영수증의 실제 단계 변화와 로딩 측정 완료를 기다리도록 보강했습니다. 화면 경계/흐름/8개 검사/API 두 버전은 유지합니다. 최신 결과는 PR25 체크를 확인하세요.
+- 실제 브라우저390×844 관전으로98분 1:1 경기/하프타임/퇴장(현재 출전21명 이름)/명시적 결과 확정/다음 일정 저장까지 통과했습니다. 직접 엔진 실행과 점수·슈팅4:9·xG·로그·RNG·선수 상태가 정확히 같았습니다. JS 오류0/화면 넘침0. work/realism-full-play-result.json과 사진은 ignored QA입니다.
+
+- 홈 최신 `a2a4c18`/PR25/`codex/football-realism-20261012`를 찾아 같은 브랜치에서 이어 개발했습니다. [변경·공식 엔진 참고·구조적 한계](docs/FOOTBALL_REALISM_AND_RECOVERY_2026-10-12.md). 기존 작업 61커밋을 보존합니다.
+- 양 팀 12포메이션에서 공/두 번째 수비수/중앙선을 기준으로 패스 순간의 선을 고정하고, 선 안에서 대기→패스 뒤 침투→첫 터치→골 방향 슈팅을 연결했습니다. 오프사이드 순간 이동/가짜 슈팅을 없애고 실제 위반 지점 간접 프리킥과 수비의 다음 패스로 이어집니다. 상대 중앙 패스의 출발자도 중앙 미드필더로 맞췄습니다.
+- 중거리 슈팅이 가까운 연계 슈팅과 같은 확률을 쓰던 문제를 수정했습니다. 미래 결과/xG에만 적용합니다. 이전 브랜치로 완료한 8개 v10 저장의 점수/xG/로그/결과 확정 후 구단 상태를 정확히 보존했습니다. schema/키/패키지 ID 유지.
+- 전체 **154 suites /1145 checks 통과**(work/realism-final-tests-2.log). PWA14/Android 오프라인 자산·브리지11그룹 통과. 신규 패스4/현실성4그룹, 유럽 결승과 승부차기 실제 정산 검사 유지. 전체 검사기는 첫 실패에 멈추지 않고 모든 실패 파일을 보고합니다.
+- 브라우저8크기/실제 양 팀 침투·오프사이드·중거리6사례/288프레임: 현재 모든 출전 선수 이름, 핵심 화면 넘침0, 44px 버튼, 저장 불변, JS 오류0. 안내 재진입·실제 삶 기록의 네이티브 검사 식도3크기에서 확인했습니다. 사진/저장/진단은 ignored work에만 있습니다. 실제 전체 경기 관전은 별도 확인하며 강제 상태 장면 검사와 구분합니다.
+- PWA3,964,815바이트/shell d6c77e7df18363d315c698cc68b3987c346c98c5f064a52311781494f118c08e. Android 자산3,964,208바이트/SHA2565ce19b3ec36418261066ab120410df03cbde718ba68702a784e32ed6158d3768. shell3,970,000/atlas 상한 유지. 기존 untracked APK 보존.
+- 기존 Android 호스트 RenderThread SIGSEGV를 확인해 공식 `-gpu swangle`을 명시했고 `36e75f8`을 GitHub에 반영했습니다. 재실행38180074861은 API34/35 모두8검사를 끝냈으며6통과/2검사 코드 오류였습니다. 요소 객체 대신 불리언 검사, 재렌더링 뒤 현재 DOM 재조회와 실제 목표/세 경기 결과 비교로 수정했습니다. 최신 엔진과 검사 코드의 원격 재검증은 PR25 체크에서 확인하세요. APK/AAB 컴파일 성공만으로 네이티브8개 통과를 주장하지 않습니다.
+- 지금 엔진은 분 단위 사건 샘플링→연출 구조입니다. 다음 작업은 공과22명의 공유 공간 상태에서 패스/차단/수신/수비를 결정하는 구조 개선입니다. RoboCup2D가 설계 참고에 가깝고 Google Research Football은 큰 C++3D 통합 작업입니다. 기존 확인 기록을 다시 시뮬레이션하지 마세요.
+
 # 추가 개발 — 2026-10-11 실제 장면으로 이어지는 코치 복기
 
 - 경기 기록의 ‘코치의 복기’는 실제 퇴장/반복 실점/막힌 크로스/무득점 슈팅/슈팅 전 차단/체력/다음 상대 준비 중 한 과제를 짚습니다. 실제 기록만 읽으며 전술·확정·RNG·저장을 바꾸지 않습니다. 관련 장면 버튼은 정확한 기존 로그 페이지로 이동합니다. 전반/미완료 연출/부분 통계에는 숨깁니다.
