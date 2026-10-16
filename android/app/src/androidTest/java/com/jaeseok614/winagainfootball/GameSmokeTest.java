@@ -984,7 +984,8 @@ public final class GameSmokeTest {
             awaitTrue(scenario,"document.querySelectorAll('[data-shot-mark]').length>=2&&state.paused");
             String before=evaluate(scenario,"JSON.stringify(season)");
             for (String team : new String[]{"ours","theirs","all"}) {
-                evaluate(scenario,"(()=>{const s=document.getElementById('shot-report-team');s.value='"+team+"';s.dispatchEvent(new Event('change'));return true;})()");
+                evaluate(scenario,"(()=>{const s=document.getElementById('shot-report-team');s.value='"+team+"';s.dispatchEvent(new Event('change',{bubbles:true}));return true;})()");
+                assertEquals("The native selection reaches the delegated report control", "true", evaluate(scenario,"shotReportFilter==='"+team+"'"));
                 assertEquals("Every marker is a completed visible physical shot", "true", evaluate(scenario,"document.querySelectorAll('[data-shot-mark]').length===ShotReport.read(visibleMatchForReports(),{team:'"+team+"'}).rows.length"));
                 assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
             }
