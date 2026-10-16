@@ -1,0 +1,489 @@
+{
+  "schema": 1,
+  "date": "2026-10-16",
+  "functionalCommit": "cc4376b70982baf73cbc9041a5dc9c49946902b0",
+  "verifiedCommit": "6104dd44acd2b867ff6430d990c2fb22436a1991",
+  "verifiedTree": "6879195dc4ff1f93f1c1b62a69cd651762e2569f",
+  "sourceSubtree": "19165ff989c1eb393d0314edd875a2fc97b8916e",
+  "branch": "codex/football-realism-20261012",
+  "pullRequest": 25,
+  "continuousVersion": 11,
+  "seasonSchema": 10,
+  "saveKey": "win-again-season-v17",
+  "preservedContinuousVersions": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "source": {
+    "local": {
+      "suites": 187,
+      "checks": 1450
+    },
+    "remote": {
+      "run": 38835809479,
+      "job": 116764557994,
+      "conclusion": "success",
+      "suites": 187,
+      "checks": 1450,
+      "pwaGroups": 14
+    },
+    "pwa": {
+      "bytes": 6295923,
+      "shell": "336cd7e737f5"
+    },
+    "androidGame": {
+      "bytes": 6295697,
+      "sha256": "0439b702186ec6689471338501ddd5c599a6962e4f5816b808942891f2a71ef0"
+    }
+  },
+  "android": {
+    "run": 38835809480,
+    "conclusion": "success",
+    "api34": {
+      "job": 116764585836,
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 476.307,
+      "verificationArtifact": 12018979121,
+      "zipSha256": "551fd9691399af7e18e9028b3d81d1094c9f0b1514f2fa68bab02350cd7c0d64"
+    },
+    "api35": {
+      "job": 116764586117,
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 503.805,
+      "verificationArtifact": 12019616804,
+      "zipSha256": "5ea8c9c091c3c477602e96060da5f82052f518cac6dc7b78286389cfd237f75b"
+    },
+    "newNativeScreenshotsInspected": [
+      "android-shot-report",
+      "android-horizontal-pitch",
+      "android-horizontal-replay",
+      "android-landscape-practice"
+    ]
+  },
+  "apk": {
+    "name": "win-again-20261016-horizontal-football.apk",
+    "artifact": 12018936575,
+    "artifactZipSha256": "20daaa56d01e25631e6f5b8b06334e3bf6a0d9cd8f7272864d924f11dab9e037",
+    "bytes": 6624089,
+    "sha256": "bab949da925bc38589d874d7144c70a6ec6612e1e2b9f9b111415a6f9c4e13df",
+    "certificateSha256": "8ec4e18c51a6ae6b3fabde438b6ae820fac1f809597471e1d47092e7ad32b0ac",
+    "previousCertificateSha256": "c000500b6411321741a4edc266392e8005ae933f88e9ed0640986e0190e55c36",
+    "sameCertificate": false,
+    "installation": "Export the existing save before uninstalling the old test APK, then install and import the save."
+  },
+  "drive": {
+    "id": "1nSujeFdST1on5jVkSCNrH2CleLCibWkc",
+    "parentId": "0ACEDMU5UjS2_Uk9PVA",
+    "modifiedAt": "2026-10-16T01:48:56.210Z",
+    "apkOnly": true,
+    "rawByteReadback": true,
+    "bytes": 6624089,
+    "sha256": "bab949da925bc38589d874d7144c70a6ec6612e1e2b9f9b111415a6f9c4e13df"
+  },
+  "browser": {
+    "shotReportViewports": 9,
+    "shotReportSmallest": [
+      568,
+      252
+    ],
+    "liveAndPracticeViewports": 8,
+    "denseViewports": 8,
+    "formations": 12,
+    "nodeChromeFullJsonExact": true,
+    "coldRestore": true,
+    "nativeEquivalentInPlayFilterAndReplay": true,
+    "displayClock": {
+      "viewport": [
+        844,
+        390
+      ],
+      "speed": "normal",
+      "watch": "key",
+      "seconds": 91.207,
+      "minute": 98,
+      "score": [
+        6,
+        0
+      ],
+      "shots": [
+        29,
+        13
+      ],
+      "automaticallySettled": false
+    }
+  },
+  "realCampaign": {
+    "seed": 41,
+    "rule": 11,
+    "games": 49,
+    "leagueGames": 46,
+    "recordCount": 49,
+    "rank": 1,
+    "won": 37,
+    "drawn": 7,
+    "lost": 2,
+    "gf": 228,
+    "ga": 40,
+    "points": 118,
+    "balance": 659400,
+    "restored": true,
+    "fileRoundtrip": true,
+    "explicitPromotionTo": 4
+  },
+  "paidTransfer": {
+    "identity": "t_m1",
+    "slot": "m6",
+    "netCost": 85000,
+    "balanceAfter": 75000,
+    "actualGames": 3,
+    "actualFreeKicks": true,
+    "actualRedCardFallback": true,
+    "controlledCornerBoundaryAndDelivery": true,
+    "naturalCornerObservedInTheseGames": false,
+    "restored": true
+  },
+  "knownLimits": [
+    "Low-block results and high duel frequency still need calibration.",
+    "Natural corners were absent in a separate 12-fixture transfer exploration; boundary/delivery fixtures do not establish real-match frequency.",
+    "Rules 1–10 retain their published arithmetic; strict cross-V8 replay limitations of those old rules are not retroactively changed.",
+    "This is a debug/test APK, not a Google Play production release."
+  ],
+  "multiSeason": {
+    "seed": 41,
+    "continuousVersion": 11,
+    "games": 284,
+    "seasons": [
+      {
+        "year": 1,
+        "division": 5,
+        "rank": 1,
+        "leagueGames": 46,
+        "games": 49,
+        "balance": 659400,
+        "movement": {
+          "from": 5,
+          "to": 4,
+          "kind": "promotion",
+          "rank": 1,
+          "label": "리그 투 승격"
+        }
+      },
+      {
+        "year": 2,
+        "division": 4,
+        "rank": 1,
+        "leagueGames": 46,
+        "games": 47,
+        "balance": 1281300,
+        "movement": {
+          "from": 4,
+          "to": 3,
+          "kind": "promotion",
+          "rank": 1,
+          "label": "리그 원 승격"
+        }
+      },
+      {
+        "year": 3,
+        "division": 3,
+        "rank": 1,
+        "leagueGames": 46,
+        "games": 47,
+        "balance": 2170700,
+        "movement": {
+          "from": 3,
+          "to": 2,
+          "kind": "promotion",
+          "rank": 1,
+          "label": "챔피언십 승격"
+        }
+      },
+      {
+        "year": 4,
+        "division": 2,
+        "rank": 24,
+        "leagueGames": 46,
+        "games": 47,
+        "balance": 3200850,
+        "movement": {
+          "from": 2,
+          "to": 3,
+          "kind": "relegation",
+          "rank": 24,
+          "label": "리그 원 강등"
+        }
+      },
+      {
+        "year": 5,
+        "division": 3,
+        "rank": 4,
+        "leagueGames": 46,
+        "games": 47,
+        "balance": 3925750,
+        "movement": {
+          "from": 3,
+          "to": 3,
+          "kind": "stay",
+          "rank": 4,
+          "label": "3부 잔류"
+        }
+      },
+      {
+        "year": 6,
+        "division": 3,
+        "rank": 2,
+        "leagueGames": 46,
+        "games": 47,
+        "balance": 4745650,
+        "movement": {
+          "from": 3,
+          "to": 2,
+          "kind": "promotion",
+          "rank": 2,
+          "label": "챔피언십 승격"
+        }
+      }
+    ],
+    "topDivisionReached": false,
+    "eachSeasonRestoreAndFileRoundtrip": true,
+    "management": "Recovery training and automatic available lineups only; no transfer/tactic/strongest-lineup optimisation."
+  },
+  "topTierDiagnostic": {
+    "fixture": "work/webtoon-release-20261015/top-tier-compatible.json",
+    "fixtureSha256": "4eb06646740f69c8c2ef82dbe4f9ec70b747b6226b2e680dd6e7581c6bb356a5",
+    "fixtureYear": 5,
+    "fixtureContinuous": false,
+    "year": 6,
+    "division": 1,
+    "version": 11,
+    "games": 39,
+    "leagueGames": 38,
+    "rank": {
+      "id": "brynwell",
+      "name": "토투넘 핫스퍼",
+      "en": "Brynwell Rovers",
+      "short": "토투넘",
+      "code": "TT",
+      "color": "#c8f36e",
+      "style": "빠른 유망주를 가진 작은 시민 구단",
+      "attack": 70,
+      "defense": 70,
+      "middle": 71,
+      "speed": 68,
+      "played": 38,
+      "won": 0,
+      "drawn": 3,
+      "lost": 35,
+      "gf": 42,
+      "ga": 195,
+      "points": 3,
+      "gd": -153,
+      "rank": 20
+    },
+    "balance": 5826250,
+    "history": [
+      {
+        "year": 1,
+        "division": 5,
+        "rules": "five-tier",
+        "nextDivision": 4,
+        "rank": 1,
+        "points": 101,
+        "champion": "brynwell",
+        "cupChampion": "redmere",
+        "clubIds": [
+          "brynwell",
+          "aldermere",
+          "norhaven",
+          "bellwick",
+          "redmere",
+          "montevaro",
+          "selcanto",
+          "falkenruh",
+          "eng5-afc-fylde",
+          "eng5-aldershot-town",
+          "eng5-altrincham",
+          "eng5-barrow",
+          "eng5-boston-united",
+          "eng5-eastleigh",
+          "eng5-fc-halifax-town",
+          "eng5-harrogate-town",
+          "eng5-hornchurch",
+          "eng5-kidderminster-harriers",
+          "eng5-solihull-moors",
+          "eng5-sutton-united",
+          "eng5-tamworth",
+          "eng5-wealdstone",
+          "eng5-woking",
+          "eng5-worthing"
+        ],
+        "europeChampion": null
+      },
+      {
+        "year": 2,
+        "division": 4,
+        "rules": "five-tier",
+        "nextDivision": 3,
+        "rank": 1,
+        "points": 102,
+        "champion": "brynwell",
+        "cupChampion": "castermere",
+        "clubIds": [
+          "eastwick",
+          "galdon",
+          "kingsmoor",
+          "wexford",
+          "castermere",
+          "alderwich",
+          "fenwick",
+          "dunmarsh",
+          "eng4-accrington-stanley",
+          "eng4-barnet",
+          "eng4-cheltenham-town",
+          "eng4-chesterfield",
+          "eng4-colchester-united",
+          "eng4-crawley-town",
+          "eng4-crewe-alexandra",
+          "eng4-exeter-city",
+          "brynwell",
+          "eng4-gillingham",
+          "eng4-grimsby-town",
+          "eng4-newport-county",
+          "eng4-northampton-town",
+          "eng4-rotherham-united",
+          "eng4-salford-city",
+          "eng4-tranmere-rovers"
+        ],
+        "europeChampion": null
+      },
+      {
+        "year": 3,
+        "division": 3,
+        "rules": "five-tier",
+        "nextDivision": 2,
+        "rank": 1,
+        "points": 90,
+        "champion": "brynwell",
+        "cupChampion": "brynwell",
+        "clubIds": [
+          "redcliff",
+          "westmere",
+          "ainsley",
+          "kingsford",
+          "moorhaven",
+          "elmswick",
+          "southport",
+          "newcombe",
+          "eng3-afc-wimbledon",
+          "eng3-bromley",
+          "eng3-burton-albion",
+          "eng3-cambridge-united",
+          "eng3-doncaster-rovers",
+          "eng3-huddersfield-town",
+          "brynwell",
+          "eng3-luton-town",
+          "eng3-mansfield-town",
+          "eng3-milton-keynes-dons",
+          "eng3-oxford-united",
+          "eng3-peterborough-united",
+          "eng3-plymouth-argyle",
+          "eng3-reading",
+          "eng3-sheffield-wednesday",
+          "eng3-stevenage"
+        ],
+        "europeChampion": null
+      },
+      {
+        "year": 4,
+        "division": 2,
+        "rules": "five-tier",
+        "nextDivision": 1,
+        "rank": 1,
+        "points": 87,
+        "champion": "brynwell",
+        "cupChampion": "stonemill",
+        "clubIds": [
+          "ashford",
+          "highgate",
+          "stonemill",
+          "northcastle",
+          "ravenhurst",
+          "fairbridge",
+          "wyndale",
+          "brookchester",
+          "brynwell",
+          "eng2-blackburn-rovers",
+          "eng2-bolton-wanderers",
+          "eng2-bristol-city",
+          "eng2-cardiff-city",
+          "eng2-charlton-athletic",
+          "eng2-derby-county",
+          "eng2-lincoln-city",
+          "eng2-millwall",
+          "eng2-portsmouth",
+          "eng2-preston-north-end",
+          "eng2-queens-park-rangers",
+          "eng2-stoke-city",
+          "eng2-swansea-city",
+          "eng2-watford",
+          "eng2-west-bromwich-albion"
+        ],
+        "europeChampion": null
+      },
+      {
+        "year": 5,
+        "division": 1,
+        "rules": "five-tier",
+        "nextDivision": 1,
+        "rank": 3,
+        "points": 62,
+        "champion": "brackenfort",
+        "cupChampion": "rosenholt",
+        "clubIds": [
+          "calderwick",
+          "valedoro",
+          "estenford",
+          "rosenholt",
+          "azurienne",
+          "brackenfort",
+          "monteluce",
+          "kingsbridge",
+          "eng1-afc-bournemouth",
+          "eng1-brentford",
+          "eng1-brighton-hove-albion",
+          "eng1-coventry-city",
+          "eng1-everton",
+          "eng1-fulham",
+          "eng1-hull-city",
+          "eng1-ipswich-town",
+          "eng1-leeds-united",
+          "eng1-nottingham-forest",
+          "brynwell",
+          "eng1-tottenham-hotspur"
+        ],
+        "europeChampion": null
+      }
+    ],
+    "originalUnchanged": true,
+    "restore": true,
+    "fileRoundtrip": true,
+    "browserColdImport": true,
+    "clubGrowthViewports": 6,
+    "clubGrowthImagesInspected": true,
+    "interpretation": "Separate continuation from the existing valid legacy test archive; not a promotion reached by the new six-season career. Unoptimised carried lineup included a goalkeeper with keeping74 against keeping90 in the first opponent."
+  }
+}
