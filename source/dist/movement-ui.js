@@ -48,7 +48,7 @@ function syncMovementScore(){
  for(const [index,id] of ['home-score','away-score'].entries()){const node=$(id),text=String(Math.max(0,state.score[index]-(pending&&movementEvent.team===index?1:0)));if(node&&node.textContent!==text)node.textContent=text;}
 }
 function drawMotionActors(ctx,w,h){
- const motion=motionFrame();if(!motion)return;
+ const raw=motionFrame();if(!raw)return;const motion=MatchPitch.frame(raw);
  const host=$('players'); // Observation omits tactical guide rings.
  const wallLabelY=p=>{const index=motion.wallIds?.indexOf(p.id)??-1;return index<0?null:(h*p.y/100<80?24+index*14:-24-index*14);};
  const compact=h<280&&w<600,pitch=$('pitch');if(pitch){pitch.dataset.compact=String(compact);pitch.dataset.simple='true';}

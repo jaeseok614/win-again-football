@@ -13,9 +13,9 @@
   const layout=F.formationPositions[formation],pts=[[50,94,'GK'],...Object.entries(layout).flatMap(([pos,points])=>points.map(([x,y])=>[x,y,pos]))];
   return pts.map(([x,y,pos],i)=>({identity:'rival_'+i,name:s.opponentName+' '+(i+1)+'번',no:i+1,pos,x,y,attack:Math.round(s.opponent.attack),defense:Math.round(s.opponent.defense),passing:Math.round(s.opponent.middle),speed:Math.round(s.opponent.speed),endurance:50,keeping:Math.round(s.opponent.defense),energy:s.opponent.energy}));
  }
- function enable(F,s,{opponentFormation='442',opponentPlayers=null,opponentTactic='balanced',positions=[],ruleVersion=10}={},legacyRestore){
+ function enable(F,s,{opponentFormation='442',opponentPlayers=null,opponentTactic='balanced',positions=[],ruleVersion=11}={},legacyRestore){
   if(s.phase!=='prep'||s.minute!==0||s.continuousSetup)throw Error('연속 경기 규칙은 새 킥오프 전에 준비합니다.');
-  if(![1,2,3,4,5,6,7,8,9,10].includes(ruleVersion)||!F.formations[opponentFormation]||!['balanced','press','counter','lowBlock'].includes(opponentTactic))fail();
+  if(![1,2,3,4,5,6,7,8,9,10,11].includes(ruleVersion)||!F.formations[opponentFormation]||!['balanced','press','counter','lowBlock'].includes(opponentTactic))fail();
   const placements={};for(const row of positions){if(!s.players[row.id]||!Number.isFinite(row.x)||!Number.isFinite(row.y))fail();placements[row.id]=F.boundedPlacement(row.x,row.y,s.players[row.id].pos);}
   const rows=(opponentPlayers||opponents(F,s,opponentFormation)).map(p=>Object.fromEntries(['identity','name','no','pos','x','y','attack','defense','passing','speed','endurance','keeping','energy'].map(k=>[k,p[k]])));
   validateOpponents(F,rows,opponentFormation);
@@ -47,7 +47,7 @@
  function log(s,e){
   const p=s.continuous.players.find(p=>p.id===e.id),q=s.continuous.players.find(p=>p.id===e.to),keeper=s.continuous.players.find(p=>p.id===e.keeper),name=p?.name||'',minute=Math.ceil(e.tick/600),type=e.kind==='attempt'?'attempt':e.kind;
   const labels={pass:name+(e.action==='cross'?'의 크로스!':' → '+(q?.name||'동료')+' 패스'),receive:name+'의 퍼스트 터치',recovery:name+'이(가) 공을 확보합니다.',tackle:name+'의 태클! 공이 흘렀습니다.',foul:name+'의 반칙.',card:name+(e.card==='red'?' 퇴장!':' 경고.'),restart:({corner:'코너킥',freeKick:'프리킥',penalty:'페널티킥',goalKick:'골킥',throwIn:'스로인',indirect:'간접 프리킥'}[e.restart]||'경기 재개')+' 준비',offside:name+' 오프사이드! 상대 간접 프리킥.',attempt:name+(e.heading?'의 헤더!':'의 슈팅!'),shot:e.outcome==='invalid'?'판정으로 득점이 인정되지 않습니다.':e.outcome==='save'?(keeper?.name||'골키퍼')+'가 '+name+'의 슈팅을 잡아냅니다.':e.outcome==='parry'?(keeper?.name||'골키퍼')+'가 쳐냅니다! 세컨드볼 경합.':e.outcome==='blocked'?'수비에 맞고 흘렀습니다.':e.outcome==='woodwork'?'골대에 맞았습니다! 세컨드볼.':name+'의 슈팅이 골문을 벗어납니다.',goal:'골! '+name+(e.ownGoal?'의 자책골':'이(가) 골망을 흔듭니다.')+' ('+s.score.join(' : ')+')',header:name+'의 헤더 경합',block:name+'이(가) 슈팅을 차단합니다.',parry:'골키퍼가 쳐낸 공! 리바운드 경합.',woodwork:'골대! 리바운드 경합.', 'keeper-clear':name+'이(가) 돌파한 공을 걷어냅니다! 세컨드볼.',infringement:({"double-touch":name+' 재개 후 연속 터치! 상대 간접 프리킥.',"keeper-eight-seconds":name+' 공 확보 8초 초과! 상대 코너킥.',"restart-own-goal":'재개 킥의 직접 자책골은 인정되지 않습니다. 상대 코너킥.',"restart-direct-goal":'다른 선수의 터치 없이 들어갔습니다. 득점 불인정 · 골킥.'}[e.reason]||'재개 규칙 위반.')};
-  const result={minute,tick:e.tick,type,team:e.team,text:labels[e.kind]||'공을 향해 경합합니다.',...Object.fromEntries(['outcome','action','xg','shotTick','heading','keeper','ownGoal','card','reason','to','from','victim','restart','setPiece'].filter(k=>e[k]!==null&&e[k]!==undefined).map(k=>[k,e[k]])),actorId:e.id,actorIdentity:p?.identity||null,sourceId:e.source||e.id};
+  const result={minute,tick:e.tick,type,team:e.team,text:labels[e.kind]||'공을 향해 경합합니다.',...Object.fromEntries(['outcome','action','xg','shotTick','heading','keeper','ownGoal','card','reason','to','from','victim','restart','setPiece','shotPosition'].filter(k=>e[k]!==null&&e[k]!==undefined).map(k=>[k,e[k]])),actorId:e.id,actorIdentity:p?.identity||null,sourceId:e.source||e.id};
   if(e.kind==='goal'&&e.team===0&&!e.ownGoal&&p){const assist=s.continuous.players.find(p=>p.id===e.source&&p.team===0);Object.assign(result,{scorerId:p.id,scorerIdentity:p.identity,assistId:assist?.id===p.id?null:assist?.id||null,assistIdentity:assist?.id===p.id?null:assist?.identity||null});}
   if(e.kind==='card'){result.id=e.id;s.discipline.events.push({minute,tick:e.tick,team:e.team,id:e.id,card:e.card,reason:e.reason});}
   s.logs.push(result);return result;
@@ -68,7 +68,7 @@
   }return events;
  }
  function replay(F,setup,commands,tick,legacyRestore,{fromTick=null,onFrame=null}={}){
-  if(!setup||![1,2,3,4,5,6,7,8,9,10].includes(setup.version)||!Number.isInteger(tick)||tick<0||tick>61800||!Array.isArray(commands)||commands.length>400)fail();
+  if(!setup||![1,2,3,4,5,6,7,8,9,10,11].includes(setup.version)||!Number.isInteger(tick)||tick<0||tick>61800||!Array.isArray(commands)||commands.length>400)fail();
   const baseline=legacyRestore(setup.baseline);if(baseline.phase!=='prep'||baseline.minute!==0||baseline.continuousSetup)fail();
   const s=copy(baseline);s.paused=false;enable(F,s,{...setup,ruleVersion:setup.version,positions:Object.entries(setup.placements).map(([id,[x,y]])=>({id,x,y}))},legacyRestore);if(!same(s.continuousSetup,setup))fail();
   let previous=-1;for(const command of commands){if(!command||!Number.isInteger(command.tick)||command.tick<previous||command.tick>tick||!['begin','swap','setTactic','setAttackFocus','teamTalk'].includes(command.op)||!Array.isArray(command.args)||command.args.length>(command.op==='swap'?2:command.op==='begin'?0:1))fail();

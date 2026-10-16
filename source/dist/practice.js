@@ -10,8 +10,8 @@
  function scenarioFor(id){return scenarios.find(scenario=>scenario.id===id)||null;}
  function startingMatch(scenario,continuous=0){
   const key=scenario.id+(continuous?':continuous:'+continuous:'');if(starts.has(key))return copy(starts.get(key));
-  const match=F.create(continuous?((continuous>=10?{comeback:4,protect:8}:continuous>=9?{comeback:7,protect:3}:continuous>=8?{comeback:11,protect:5}:continuous>=7?{comeback:4,protect:5}:continuous>=6?{comeback:1,protect:2}:continuous>=5?{comeback:42,protect:2}:continuous>=4?{comeback:28,protect:36}:continuous>=3?{comeback:4,protect:7}:{comeback:9,protect:1})[scenario.id]):seeds[scenario.id],{players:Object.fromEntries(F.startingRoster.map(p=>[p.id,p])),homeName:'토투넘',opponentName:'팔켄루 04',...(continuous>=6?{opponent:{attack:79,defense:75,middle:80,speed:75,energy:94}}:{})});
-  if(continuous>=10&&scenario.id==='protect')F.setTactic(match,'press');
+  const match=F.create(continuous?((continuous>=11?{comeback:6,protect:1}:continuous>=10?{comeback:4,protect:8}:continuous>=9?{comeback:7,protect:3}:continuous>=8?{comeback:11,protect:5}:continuous>=7?{comeback:4,protect:5}:continuous>=6?{comeback:1,protect:2}:continuous>=5?{comeback:42,protect:2}:continuous>=4?{comeback:28,protect:36}:continuous>=3?{comeback:4,protect:7}:{comeback:9,protect:1})[scenario.id]):seeds[scenario.id],{players:Object.fromEntries(F.startingRoster.map(p=>[p.id,p])),homeName:'토투넘',opponentName:continuous>=11?'연습팀':'팔켄루 04',...(continuous>=6?{opponent:{attack:79,defense:75,middle:80,speed:75,energy:94}}:{})});
+  if(continuous===10&&scenario.id==='protect')F.setTactic(match,'press');
   if(continuous)F.enableContinuous(match,{ruleVersion:continuous});
   while(match.minute<scenario.startMinute){if(!F.running(match))F.begin(match);F.tick(match);}
   match.paused=true;starts.set(key,copy(match));return match;
@@ -22,12 +22,12 @@
   const match=startingMatch(scenario);return {id,match,...metadata(match)};
  }
  function invalid(reason){return {valid:false,reason};}
- function createContinuous(id,{ruleVersion=10}={}){if(![1,2,3,4,5,6,7,8,9,10].includes(ruleVersion))throw Error('연습 경기 규칙을 확인하세요.');const scenario=scenarioFor(id);if(!scenario)throw Error('연습 경기를 선택하세요.');const match=startingMatch(scenario,ruleVersion);return {id,continuousVersion:ruleVersion,match,...metadata(match)};}
+ function createContinuous(id,{ruleVersion=11}={}){if(![1,2,3,4,5,6,7,8,9,10,11].includes(ruleVersion))throw Error('연습 경기 규칙을 확인하세요.');const scenario=scenarioFor(id);if(!scenario)throw Error('연습 경기를 선택하세요.');const match=startingMatch(scenario,ruleVersion);return {id,continuousVersion:ruleVersion,match,...metadata(match)};}
  function read(session,{trusted=false}={}){
   const scenario=scenarioFor(session?.id);if(!scenario)return invalid('연습 경기를 선택하세요.');
   if(!session.match)return invalid('연습 경기 정보를 읽을 수 없어요.');
-  let match;try{match=trusted&&[1,2,3,4,5,6,7,8,9,10].includes(session.continuousVersion)?copy(session.match):F.restore(session.match);}catch{return invalid('연습 경기 정보를 읽을 수 없어요.');}
-  const start=startingMatch(scenario,[1,2,3,4,5,6,7,8,9,10].includes(session.continuousVersion)?session.continuousVersion:0),expected=metadata(start);
+  let match;try{match=trusted&&[1,2,3,4,5,6,7,8,9,10,11].includes(session.continuousVersion)?copy(session.match):F.restore(session.match);}catch{return invalid('연습 경기 정보를 읽을 수 없어요.');}
+  const start=startingMatch(scenario,[1,2,3,4,5,6,7,8,9,10,11].includes(session.continuousVersion)?session.continuousVersion:0),expected=metadata(start);
   if(match.seed!==start.seed||match.minute<scenario.startMinute||!['third','full'].includes(match.phase)||match.formation!==start.formation||match.homeName!==start.homeName||match.opponentName!==start.opponentName||!equal(match.opponent,start.opponent))return invalid('선택한 연습 경기와 일치하지 않아요.');
   for(const key of Object.keys(expected))if(!equal(session[key],expected[key]))return invalid('연습 시작 정보와 일치하지 않아요.');
   if(!equal(match.logs.slice(0,start.logs.length),start.logs)||!equal(match.segments.slice(0,2),start.segments.slice(0,2)))return invalid('연습 이전 경기 기록과 일치하지 않아요.');

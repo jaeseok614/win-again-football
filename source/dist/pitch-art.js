@@ -3,7 +3,7 @@
  // Stadium art is cached separately from the 22 moving players. It never reads
  // or consumes the campaign RNG; promotion changes only the ground's appearance.
  function createRenderer(makeCanvas){
-  let surface=null,key='';
+  let surface=null,key='',matchSurface=null,matchKey='';
   function draw(ctx,w,h,dpr,division=5,simple=false){
    if(!(w>0&&h>0&&dpr>0))return;
    division=Number.isInteger(division)&&division>=1&&division<=5?division:5;
@@ -30,7 +30,18 @@
    }
    ctx.drawImage(surface,0,0,w,h);
   }
-  return {draw};
+  function drawMatch(ctx,w,h,dpr,division=5,simple=true){
+   if(!(w>0&&h>0&&dpr>0))return;division=Number.isInteger(division)&&division>=1&&division<=5?division:5;
+   const next=[Math.round(w*dpr),Math.round(h*dpr),dpr,division,simple].join(':');if(!matchSurface)matchSurface=makeCanvas();
+   if(matchKey!==next){matchSurface.width=Math.round(w*dpr);matchSurface.height=Math.round(h*dpr);const p=matchSurface.getContext('2d');p.setTransform(dpr,0,0,dpr,0,0);const X=x=>w*(.06+x/105*.88),Y=y=>h*(.06+y/68*.88),sx=w*.88/105,sy=h*.88/68;
+    for(let i=0;i<10;i++){p.fillStyle=i%2?'#1c4c3c':'#194a39';p.fillRect(i*w/10,0,w/10,h);}p.strokeStyle=simple?'#aecdbc48':'#c9dbbe90';p.lineWidth=simple?1:1.4;
+    p.strokeRect(X(0),Y(0),105*sx,68*sy);p.beginPath();p.moveTo(X(52.5),Y(0));p.lineTo(X(52.5),Y(68));p.stroke();p.beginPath();p.ellipse(X(52.5),Y(34),9.15*sx,9.15*sy,0,0,Math.PI*2);p.stroke();
+    for(const end of [0,105]){const sign=end===0?1:-1;p.strokeRect(X(end===0?0:105-16.5),Y(13.84),16.5*sx,40.32*sy);p.strokeRect(X(end===0?0:105-5.5),Y(24.84),5.5*sx,18.32*sy);p.beginPath();p.arc(X(end+sign*11),Y(34),Math.max(1,.12*Math.min(sx,sy)),0,Math.PI*2);p.stroke();
+     p.strokeStyle='#d5e1dd50';const gx=X(end===0?-2:105),gy=Y(30.34);p.strokeRect(gx,gy,2*sx,7.32*sy);for(let j=1;j<5;j++){p.beginPath();p.moveTo(gx,gy+j*7.32*sy/5);p.lineTo(gx+2*sx,gy+j*7.32*sy/5);p.stroke();}p.strokeStyle=simple?'#aecdbc48':'#c9dbbe90';}
+    matchKey=next;
+   }ctx.drawImage(matchSurface,0,0,w,h);
+  }
+  return {draw,drawMatch};
  }
  function createMeasurer(Observer,onResize=()=>{}){
   const sizes=new WeakMap(),observer=Observer?new Observer(entries=>{for(const entry of entries){const value=sizes.get(entry.target);if(value){value.width=entry.contentRect.width;value.height=entry.contentRect.height;}}onResize();}):null;

@@ -4,7 +4,7 @@
  function read(match,event=null){
   if(!pending(match,event))return match;
   const team=event.team,m={...match,logs:match.logs.filter(e=>e!==event),score:[...match.score],shots:[...match.shots],chances:[...match.chances],presentationPending:true};
-  m.chances[team]=Math.max(0,m.chances[team]-1);if(event.type!=='chance')m.shots[team]=Math.max(0,m.shots[team]-1);if(event.type==='goal')m.score[team]=Math.max(0,m.score[team]-1);
+  const physicalCounted=!!match.continuousSetup&&(event.ownGoal===true||Number.isInteger(event.shotTick)&&match.logs.some(e=>e.type==='attempt'&&e.team===team&&e.tick===event.shotTick));if(!physicalCounted){m.chances[team]=Math.max(0,m.chances[team]-1);if(event.type!=='chance')m.shots[team]=Math.max(0,m.shots[team]-1);}if(event.type==='goal')m.score[team]=Math.max(0,m.score[team]-1);
   return m;
  }
  const api={read,pending};root.MatchVisibility=api;if(typeof module!=='undefined')module.exports=api;

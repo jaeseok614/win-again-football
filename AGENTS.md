@@ -1,3 +1,7 @@
+# 최신 경기 규칙 — 2026-10-16
+
+새 킥오프/새 연습의 연속 규칙은 **11**이다. 공개된1–10의 부분 저장·물리·RNG·명령·연습·정산은 그대로 보존한다. 다음 물리 변경은12가 필요하다. 시즌/경기 스키마10과 저장키 win-again-season-v17은 변경하지 않는다. [규칙11 설계와 검증](docs/FOOTBALL_TRANSITIONS_2026-10-16.md)을 먼저 확인한다. 슈팅 지도·필터·선택 장면 리플레이는 읽기 전용이며 확정하지 않은 경기/득점을 미리 공개하지 않는다.
+
 # Football manager development
 
 Read DEVELOPMENT.md and the newest entry in HANDOFF.md before editing.

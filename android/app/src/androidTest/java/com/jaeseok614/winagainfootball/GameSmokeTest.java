@@ -765,7 +765,7 @@ public final class GameSmokeTest {
             evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeGoalScene();matchCeremonyHold=false;ceremonyPending=null;managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;customPositions={};tacticalRoles={};setView('match');return true;})()");
             tapWebElement(scenario, "#primary");
             tapWebElement(scenario, "#ceremony-ready");
-            awaitTrue(scenario, "state.continuousSetup?.version===10 && state.continuous.tick>20");
+            awaitTrue(scenario, "state.continuousSetup?.version===11 && state.continuous.tick>20");
             assertEquals("The native live field uses the actual ball and all 22 names", "true", evaluate(scenario,
                 "(()=>{state.paused=true;drawField();return document.getElementById('match-names')._labels.length===22 && Math.hypot(lastMotionFrame.ball.x-F.continuousFrame(state).ball.x,lastMotionFrame.ball.y-F.continuousFrame(state).ball.y)<0.01 && document.documentElement.scrollHeight<=innerHeight+1;})()"));
             String replayProof = evaluate(scenario,
@@ -972,6 +972,73 @@ public final class GameSmokeTest {
             awaitTrue(scenario, "document.querySelectorAll('.player-recent-report tbody tr').length===5");
             assertEquals("The new candidate portraits keep identity-specific cells", "true", evaluate(scenario, "MarketRoster.players.every((p,i)=>Portraits.index(p)===156+i&&Portraits.html(p).includes('data-portrait-atlas=\"4\"'))"));
             screenshot(scenario, "android-player-recent.png");
+        }
+    }
+
+    @Test public void completedPhysicalShotsFitLandscapeWithoutAdvancingTheMatch() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeGoalScene();matchCeremonyHold=false;ceremonyPending=null;managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{suspensions:true});state=season.match;customPositions={};tacticalRoles={};setView('club');const r=Opposition.preview(season);F.enableStoppage(state);F.enableContinuous(state,{ruleVersion:11,opponentFormation:r.teams[1].formation,opponentPlayers:r.teams[1].players});F.begin(state);window.shotQaReady=false;window.shotQaError=null;const pump=()=>{try{if(!F.running(state)&&state.phase!=='full')F.begin(state);F.advanceContinuous(state,600);if(ShotReport.read(state).rows.length>=2||state.phase==='full'){state.paused=true;setView('match');openMatchPopup('stats');matchReportTab='슈팅 위치';renderCompactMatchReport();window.shotQaReady=true;}else setTimeout(pump,0);}catch(e){window.shotQaError=String(e);}};setTimeout(pump,0);return true;})()");
+            awaitTrue(scenario, "window.shotQaReady||!!window.shotQaError");
+            assertEquals("Real physical shot generation failed", "null", evaluate(scenario,"window.shotQaError"));
+            awaitTrue(scenario,"document.querySelectorAll('[data-shot-mark]').length>=2&&state.paused");
+            String before=evaluate(scenario,"JSON.stringify(season)");
+            for (String team : new String[]{"ours","theirs","all"}) {
+                evaluate(scenario,"(()=>{const s=document.getElementById('shot-report-team');s.value='"+team+"';s.dispatchEvent(new Event('change'));return true;})()");
+                assertEquals("Every marker is a completed physical shot", "true", evaluate(scenario,"document.querySelectorAll('[data-shot-mark]').length===ShotReport.read(state,{team:'"+team+"'}).rows.length"));
+                assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
+            }
+            assertEquals("Actual shot names, outcomes, text and 44px controls fit the native viewport", "true", evaluate(scenario,
+                "(()=>{const d=ShotReport.read(state),person=document.querySelector('.shot-person');if(!d.selected||!person.textContent.includes(d.selected.name)||!person.textContent.includes(d.selected.label))return false;return [...document.querySelectorAll('.shot-workspace,.shot-body,.shot-diagram,.shot-detail,.shot-person,.shot-person b,.shot-person span,.shot-measures,.shot-note,.shot-filter-row select,#match-report-confirm')].filter(e=>e.checkVisibility()&&e.clientHeight).every(e=>{const r=e.getBoundingClientRect();if(r.left<-.5||r.top<-.5||r.right>innerWidth+.5||r.bottom>innerHeight+.5||e.scrollWidth>e.clientWidth+2||e.scrollHeight>e.clientHeight+2||(['SELECT','BUTTON'].includes(e.tagName)&&r.height<43.9))return false;return true;});})()"));
+            screenshot(scenario,"android-shot-report.png");
+            tapWebElement(scenario,"#match-replay-open");
+            awaitTrue(scenario,"matchReplayClip?.physical&&matchReplayClip.scene.id===MatchReplay.sceneForShot(season,ShotReport.read(state,{team:shotReportFilter,selected:shotReportSelection}).selected).id");
+            assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
+            assertEquals("The real replay keeps both complete teams named", "true",evaluate(scenario,"matchReplayNames.length===22"));
+            screenshot(scenario,"android-horizontal-replay.png");
+            tapWebElement(scenario,"#match-replay-close");
+            awaitTrue(scenario,"document.getElementById('match-popup').open&&document.getElementById('shot-report-select').value===shotReportSelection");
+            assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
+            tapWebElement(scenario,".match-popup-header [data-match-popup-close]");
+            assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
+            assertEquals("Reading and closing the report keeps the real match paused", "true",evaluate(scenario,"state.paused&&!document.getElementById('match-popup').open"));
+            evaluate(scenario,"drawField();true");
+            assertEquals("The live ball and all22 names share the same horizontal projection", "true",evaluate(scenario,"(()=>{const c=document.getElementById('match-names'),raw=F.continuousFrame(state),v=MatchPitch.frame(raw),r=document.getElementById('field').getBoundingClientRect(),xy=document.getElementById('match-ball').style.transform.match(/translate\\(([-.0-9]+)px,\\s*([-.0-9]+)px\\)/);return c._labels.length===22&&v.own.every(p=>p.x>=6&&p.x<=94&&p.y>=6&&p.y<=94)&&xy&&Math.abs(+xy[1]-(r.width*v.ball.x/100-6))<1;})()"));
+            screenshot(scenario,"android-horizontal-pitch.png");
+            scenario.onActivity(activity -> assertTrue("Shot report caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
+    @Test public void rule11PartialSaveMatchesTheCanonicalSourceFingerprint() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            String snapshot=evaluate(scenario,"(()=>{const s=S.create(17,{startingClub:true,suspensions:true}),r=Opposition.preview(s);F.enableStoppage(s.match);F.enableContinuous(s.match,{ruleVersion:11,opponentFormation:r.teams[1].formation,opponentPlayers:r.teams[1].players});F.begin(s.match);F.advanceContinuous(s.match,723);s.match.paused=true;return JSON.stringify(s);})()");
+            byte[] digest=java.security.MessageDigest.getInstance("SHA-256").digest(snapshot.getBytes(StandardCharsets.UTF_8));
+            StringBuilder actual=new StringBuilder();for(byte value:digest){actual.append(Character.forDigit((value>>>4)&15,16));actual.append(Character.forDigit(value&15,16));}
+            assertEquals("Node source and the actual Android WebView must serialize the identical paused rule11 world", "6099b8a618922a6c6d8606237fe45051ba8564fd587ecbe04cca76d9aa512748", actual.toString());
+        }
+    }
+
+    @Test public void landscapePracticeKeepsCanonicalStartAndUsesExistingSubstitutionControls() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario,"(()=>{managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;setView('club');openPractice('comeback');return true;})()");
+            awaitTrue(scenario,"!!document.getElementById('practice-workspace-pane')&&practiceSession?.continuousVersion===11");
+            String campaign=evaluate(scenario,"JSON.stringify(season)");
+            String initial=evaluate(scenario,"JSON.stringify(Practice.createContinuous('comeback',{ruleVersion:11}))");
+            byte[] digest=java.security.MessageDigest.getInstance("SHA-256").digest(initial.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hash=new StringBuilder();for(byte value:digest){hash.append(Character.forDigit((value>>>4)&15,16));hash.append(Character.forDigit(value&15,16));}
+            assertEquals("The entire75-minute natural practice must match the source runtime", "db8d55e5c0e4b89e018f9413edfd322d45c4f15bd87ec2bc6b4cbdc2c9142c2b",hash.toString());
+            evaluate(scenario,"(()=>{const p=document.getElementById('practice-workspace-pane');p.value='subs';p.dispatchEvent(new Event('change'));return true;})()");
+            assertEquals("Practice controls fit one actual landscape viewport", "true",evaluate(scenario,"[...document.querySelectorAll('#practice-dialog button,#practice-dialog select')].filter(e=>e.checkVisibility()).every(e=>{const r=e.getBoundingClientRect();return r.height>=43.9&&r.top>=0&&r.bottom<=innerHeight+1;})"));
+            int subs=Integer.parseInt(evaluate(scenario,"practiceSession.match.subs"));
+            tapWebElement(scenario,"#practice-dialog [data-practice=sub]");
+            assertEquals(Integer.toString(subs+1),evaluate(scenario,"practiceSession.match.subs"));
+            assertEquals(campaign,evaluate(scenario,"JSON.stringify(season)"));
+            screenshot(scenario,"android-landscape-practice.png");
+            tapWebElement(scenario,"#practice-dialog .practice-close");
+            assertEquals(campaign,evaluate(scenario,"JSON.stringify(season)"));
+            scenario.onActivity(activity -> assertTrue("Practice workspace caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
         }
     }
 
