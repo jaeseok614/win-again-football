@@ -985,7 +985,7 @@ public final class GameSmokeTest {
             String before=evaluate(scenario,"JSON.stringify(season)");
             for (String team : new String[]{"ours","theirs","all"}) {
                 evaluate(scenario,"(()=>{const s=document.getElementById('shot-report-team');s.value='"+team+"';s.dispatchEvent(new Event('change'));return true;})()");
-                assertEquals("Every marker is a completed physical shot", "true", evaluate(scenario,"document.querySelectorAll('[data-shot-mark]').length===ShotReport.read(state,{team:'"+team+"'}).rows.length"));
+                assertEquals("Every marker is a completed visible physical shot", "true", evaluate(scenario,"document.querySelectorAll('[data-shot-mark]').length===ShotReport.read(visibleMatchForReports(),{team:'"+team+"'}).rows.length"));
                 assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
             }
             assertEquals("Actual shot names, outcomes, text and 44px controls fit the native viewport", "true", evaluate(scenario,
@@ -1012,7 +1012,8 @@ public final class GameSmokeTest {
     @Test public void rule11PartialSaveMatchesTheCanonicalSourceFingerprint() throws Exception {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
-            String snapshot=evaluate(scenario,"(()=>{const s=S.create(17,{startingClub:true,suspensions:true}),r=Opposition.preview(s);F.enableStoppage(s.match);F.enableContinuous(s.match,{ruleVersion:11,opponentFormation:r.teams[1].formation,opponentPlayers:r.teams[1].players});F.begin(s.match);F.advanceContinuous(s.match,723);s.match.paused=true;return JSON.stringify(s);})()");
+            String encodedSnapshot=evaluate(scenario,"(()=>{const s=S.create(17,{startingClub:true,suspensions:true}),r=Opposition.preview(s);F.enableStoppage(s.match);F.enableContinuous(s.match,{ruleVersion:11,opponentFormation:r.teams[1].formation,opponentPlayers:r.teams[1].players});F.begin(s.match);F.advanceContinuous(s.match,723);s.match.paused=true;return JSON.stringify(s);})()");
+            String snapshot=(String)new JSONTokener(encodedSnapshot).nextValue();
             byte[] digest=java.security.MessageDigest.getInstance("SHA-256").digest(snapshot.getBytes(StandardCharsets.UTF_8));
             StringBuilder actual=new StringBuilder();for(byte value:digest){actual.append(Character.forDigit((value>>>4)&15,16));actual.append(Character.forDigit(value&15,16));}
             assertEquals("Node source and the actual Android WebView must serialize the identical paused rule11 world", "6099b8a618922a6c6d8606237fe45051ba8564fd587ecbe04cca76d9aa512748", actual.toString());
@@ -1025,7 +1026,8 @@ public final class GameSmokeTest {
             evaluate(scenario,"(()=>{managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;setView('club');openPractice('comeback');return true;})()");
             awaitTrue(scenario,"!!document.getElementById('practice-workspace-pane')&&practiceSession?.continuousVersion===11");
             String campaign=evaluate(scenario,"JSON.stringify(season)");
-            String initial=evaluate(scenario,"JSON.stringify(Practice.createContinuous('comeback',{ruleVersion:11}))");
+            String encodedInitial=evaluate(scenario,"JSON.stringify(Practice.createContinuous('comeback',{ruleVersion:11}))");
+            String initial=(String)new JSONTokener(encodedInitial).nextValue();
             byte[] digest=java.security.MessageDigest.getInstance("SHA-256").digest(initial.getBytes(StandardCharsets.UTF_8));
             StringBuilder hash=new StringBuilder();for(byte value:digest){hash.append(Character.forDigit((value>>>4)&15,16));hash.append(Character.forDigit(value&15,16));}
             assertEquals("The entire75-minute natural practice must match the source runtime", "db8d55e5c0e4b89e018f9413edfd322d45c4f15bd87ec2bc6b4cbdc2c9142c2b",hash.toString());
