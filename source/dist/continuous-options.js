@@ -23,5 +23,19 @@
    if(score>value+1e-10){value=score;best=point;}
   }return best;
  }
- const api={laneRisk,support};root.ContinuousOptions=api;if(typeof module!=='undefined')module.exports=api;
+ function triangle(w,p,carrier,anchor,index,legal,risk){
+  const dir=(p.team===0?-1:1)*(w.half===1?1:-1),progress=y=>dir<0?105-y:y,from=v=>dir<0?105-v:v,at=progress(carrier.y),ad=progress(anchor.y),side=anchor.x<carrier.x?-1:anchor.x>carrier.x?1:dir;
+  let best={x:p.x,y:p.y},value=-Infinity;
+  for(const dx of [side*8,side*12,-side*8])for(const dy of (index===0?[5,0,-4]:[-6,-10,0])){
+   const q={x:clamp(carrier.x+dx,Math.max(3,anchor.x-12),Math.min(65,anchor.x+12)),y:from(clamp(Math.min(legal,at+dy),Math.max(2,ad-16),Math.min(103,ad+16)))};
+   let free=10,friendly=8;for(const d of w.players){if(!d.active||d.id===p.id||d.id===carrier.id)continue;const n=Math.hypot(d.x-q.x,d.y-q.y);if(d.team===p.team)friendly=Math.min(friendly,n);else free=Math.min(free,n);}
+   const score=free*.22-Math.max(0,5-friendly)*.5-risk(w,carrier,q)*2.4-Math.hypot(q.x-p.x,q.y-p.y)*.06-Math.abs(progress(q.y)-at-(index===0?5:-6))*.025;
+   if(score>value+1e-10){value=score;best=q;}
+  }return best;
+ }
+ function runPocket(w,p,carrier,anchor,base,legal,risk){
+  const dir=(p.team===0?-1:1)*(w.half===1?1:-1),progress=y=>dir<0?105-y:y,from=v=>dir<0?105-v:v,depth=progress(base.y);let best=base,value=-Infinity;
+  for(const dx of [0,-6*dir,6*dir])for(const dy of [0,-4,3]){const q={x:clamp(base.x+dx,Math.max(4,anchor.x-7),Math.min(64,anchor.x+7)),y:from(clamp(Math.min(legal,depth+dy),2,103))};let free=10,friendly=8;for(const d of w.players){if(!d.active||d.id===p.id||d.id===carrier.id)continue;const n=Math.hypot(d.x+d.vx*.35-q.x,d.y+d.vy*.35-q.y);if(d.team===p.team)friendly=Math.min(friendly,n);else free=Math.min(free,n);}const score=free*.22-risk(w,carrier,q)*1.8-Math.max(0,5-friendly)*.4-Math.hypot(q.x-p.x,q.y-p.y)*.035-Math.abs(dx)*.065-Math.abs(dy)*.035;if(score>value+1e-10){value=score;best=q;}}return best;
+ }
+ const api={laneRisk,support,triangle,runPocket};root.ContinuousOptions=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

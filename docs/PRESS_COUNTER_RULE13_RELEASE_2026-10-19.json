@@ -1,0 +1,187 @@
+{
+  "status": "validation-in-progress",
+  "version": 13,
+  "publishedRulesPreserved": "1–12",
+  "schema": 10,
+  "saveKey": "win-again-season-v17",
+  "applicationId": "com.jaeseok614.winagainfootball",
+  "canonical": {
+    "version": 13,
+    "seed": 17,
+    "partial": "b9ffdef062d1d13640f1ba562f11985ec08a13844de0a91d9655439fd672d22a",
+    "match": "645886cb2702348768a395dc6faaf09099d584c1a1ad3b1bf3b3200e4d742662",
+    "fullSeason": "b51f129b4a06461b0cf1ea8c9523289184e649a86ca85487ba2790e9ee68945d",
+    "score": [
+      6,
+      1
+    ],
+    "shots": [
+      40,
+      10
+    ],
+    "stats": {
+      "possession": [
+        26665,
+        25470
+      ],
+      "passes": [
+        720,
+        675
+      ],
+      "completed": [
+        490,
+        486
+      ],
+      "shots": [
+        40,
+        10
+      ],
+      "onTarget": [
+        30,
+        9
+      ],
+      "xg": [
+        3.120268,
+        0.93031
+      ],
+      "corners": [
+        8,
+        2
+      ],
+      "freeKicks": [
+        9,
+        8
+      ],
+      "offsides": [
+        0,
+        0
+      ],
+      "tackles": [
+        182,
+        107
+      ],
+      "fouls": [
+        8,
+        9
+      ],
+      "saves": [
+        8,
+        24
+      ]
+    },
+    "settled": "9302c539cb31e07d4fc8e14ea18628e573d77de6f889f2598f08592fee631061"
+  },
+  "counter": {
+    "version": 13,
+    "seed": 17,
+    "partial": "93c2412e866ab0709dd0e6f4851ea5e726fe7f771b1c3aada09f65e16aa2bfc8",
+    "commands": [
+      {
+        "tick": 0,
+        "op": "begin",
+        "args": []
+      },
+      {
+        "tick": 723,
+        "op": "setTactic",
+        "args": [
+          "counter"
+        ]
+      },
+      {
+        "tick": 723,
+        "op": "setAttackFocus",
+        "args": [
+          "combination"
+        ]
+      },
+      {
+        "tick": 733,
+        "op": "swap",
+        "args": [
+          "m4",
+          "m5"
+        ]
+      }
+    ],
+    "match": "d51be0fa258d61add5569c0e444f04cf434a263225720484d87bfd7e92ebd56e",
+    "fullSeason": "0642b12bce3a65d72ae8dd5726e186794e929cb367950a0a62f49855e924a557",
+    "score": [
+      10,
+      0
+    ],
+    "shots": [
+      46,
+      11
+    ],
+    "stats": {
+      "possession": [
+        27138,
+        25208
+      ],
+      "passes": [
+        748,
+        629
+      ],
+      "completed": [
+        531,
+        435
+      ],
+      "shots": [
+        46,
+        11
+      ],
+      "onTarget": [
+        34,
+        6
+      ],
+      "xg": [
+        3.566775,
+        0.755294
+      ],
+      "corners": [
+        6,
+        1
+      ],
+      "freeKicks": [
+        7,
+        4
+      ],
+      "offsides": [
+        0,
+        0
+      ],
+      "tackles": [
+        177,
+        97
+      ],
+      "fouls": [
+        4,
+        7
+      ],
+      "saves": [
+        6,
+        24
+      ]
+    },
+    "settled": "9bd9b91efd86c290f2d0648c5bf5fcae1e1cf5ece3dd0f260f87925cb989911f"
+  },
+  "practice": {
+    "comeback": {
+      "sha256": "9a1980b1a23bfb806f0f98039cbefac6f17c46440289977f692fb70bbf5c7d37",
+      "score": [
+        1,
+        2
+      ],
+      "seed": 1
+    },
+    "protect": {
+      "sha256": "61683754d3107ac0738d08a93745ac51bbedd1d48e2a0c5f4ab3d2bb67e0e82b",
+      "score": [
+        1,
+        0
+      ],
+      "seed": 6
+    }
+  }
+}

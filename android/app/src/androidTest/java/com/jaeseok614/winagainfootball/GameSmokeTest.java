@@ -1025,13 +1025,13 @@ public final class GameSmokeTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
             evaluate(scenario,"(()=>{managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;setView('club');openPractice('comeback');return true;})()");
-            awaitTrue(scenario,"!!document.getElementById('practice-workspace-pane')&&practiceSession?.continuousVersion===12");
+            awaitTrue(scenario,"!!document.getElementById('practice-workspace-pane')&&practiceSession?.continuousVersion===13");
             String campaign=evaluate(scenario,"JSON.stringify(season)");
-            String encodedInitial=evaluate(scenario,"JSON.stringify(Practice.createContinuous('comeback',{ruleVersion:12}))");
+            String encodedInitial=evaluate(scenario,"JSON.stringify(Practice.createContinuous('comeback',{ruleVersion:13}))");
             String initial=(String)new JSONTokener(encodedInitial).nextValue();
             byte[] digest=java.security.MessageDigest.getInstance("SHA-256").digest(initial.getBytes(StandardCharsets.UTF_8));
             StringBuilder hash=new StringBuilder();for(byte value:digest){hash.append(Character.forDigit((value>>>4)&15,16));hash.append(Character.forDigit(value&15,16));}
-            assertEquals("The entire75-minute natural practice must match the source runtime", "5040bd16b191c6b71450de4fc0d7dc2ee967fbe1a59d7783589b0495c4256d3e",hash.toString());
+            assertEquals("The entire75-minute natural practice must match the source runtime", "9a1980b1a23bfb806f0f98039cbefac6f17c46440289977f692fb70bbf5c7d37",hash.toString());
             evaluate(scenario,"(()=>{const p=document.getElementById('practice-workspace-pane');p.value='subs';p.dispatchEvent(new Event('change'));return true;})()");
             assertEquals("Practice controls fit one actual landscape viewport", "true",evaluate(scenario,"[...document.querySelectorAll('#practice-dialog button,#practice-dialog select')].filter(e=>e.checkVisibility()).every(e=>{const r=e.getBoundingClientRect();return r.height>=43.9&&r.top>=0&&r.bottom<=innerHeight+1;})"));
             int subs=Integer.parseInt(evaluate(scenario,"practiceSession.match.subs"));
@@ -1086,7 +1086,7 @@ public final class GameSmokeTest {
     @Test public void naturalCornerReceiptOpensOriginalCoachDialogueAndTheRealSetPieceEditor() throws Exception {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
-            evaluate(scenario,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeOperationsPage();managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;launchBusy=false;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(17,{startingClub:true,suspensions:true});state=season.match;customPositions={};tacticalRoles={};setView('club');const r=Opposition.preview(season);F.enableStoppage(state);F.enableContinuous(state,{opponentFormation:r.teams[1].formation,opponentPlayers:r.teams[1].players});F.begin(state);window.cornerStoryReady=false;window.cornerStoryError=null;const pump=()=>{try{if(!F.running(state)&&state.phase!=='full')F.begin(state);F.advanceContinuous(state,600);if(state.phase==='full'){window.cornerFullSnapshot=JSON.stringify(state);season=S.settle(season);state=season.match;setView('club');window.cornerStoryReady=true;}else setTimeout(pump,0);}catch(e){window.cornerStoryError=String(e);}};setTimeout(pump,0);return true;})()");
+            evaluate(scenario,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeOperationsPage();managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;launchBusy=false;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(17,{startingClub:true,suspensions:true});state=season.match;customPositions={};tacticalRoles={};setView('club');const r=Opposition.preview(season);F.enableStoppage(state);F.enableContinuous(state,{ruleVersion:12,opponentFormation:r.teams[1].formation,opponentPlayers:r.teams[1].players});F.begin(state);window.cornerStoryReady=false;window.cornerStoryError=null;const pump=()=>{try{if(!F.running(state)&&state.phase!=='full')F.begin(state);F.advanceContinuous(state,600);if(state.phase==='full'){window.cornerFullSnapshot=JSON.stringify(state);season=S.settle(season);state=season.match;setView('club');window.cornerStoryReady=true;}else setTimeout(pump,0);}catch(e){window.cornerStoryError=String(e);}};setTimeout(pump,0);return true;})()");
             awaitTrue(scenario,"cornerStoryReady||state.continuous.tick>=18000||!!cornerStoryError");
             awaitTrue(scenario,"cornerStoryReady||state.continuous.tick>=36000||!!cornerStoryError");
             awaitTrue(scenario,"cornerStoryReady||!!cornerStoryError");
@@ -1210,5 +1210,56 @@ public final class GameSmokeTest {
             assertEquals(before, evaluate(scenario, "JSON.stringify(currentCampaignPayload())"));
             scenario.onActivity(activity -> assertTrue("Native import caused console errors: " + activity.consoleErrorsForTest(), activity.consoleErrorsForTest().isEmpty()));
         } finally { Intents.release(); }
+    }
+
+    @Test public void rule13PartialSaveMatchesTheCanonicalSourceFingerprint() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            String encoded=evaluate(scenario,"(()=>{const s=S.create(17,{startingClub:true,suspensions:true}),r=Opposition.preview(s);F.enableStoppage(s.match);F.enableContinuous(s.match,{ruleVersion:13,opponentFormation:r.teams[1].formation,opponentPlayers:r.teams[1].players});F.begin(s.match);F.advanceContinuous(s.match,723);s.match.paused=true;return JSON.stringify(s);})()");
+            String raw=(String)new JSONTokener(encoded).nextValue();
+            byte[] digest=java.security.MessageDigest.getInstance("SHA-256").digest(raw.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hash=new StringBuilder();for(byte value:digest){hash.append(Character.forDigit((value>>>4)&15,16));hash.append(Character.forDigit(value&15,16));}
+            assertEquals("Rule13 support, movement and contact state must agree with Node", "b9ffdef062d1d13640f1ba562f11985ec08a13844de0a91d9655439fd672d22a",hash.toString());
+        }
+    }
+
+    @Test public void rule13CounterCommandsAndWholePhysicalMatchMatchTheSource() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario,"(()=>{const s=window.rule13Audit=S.create(17,{startingClub:true,suspensions:true}),r=Opposition.preview(s);F.enableStoppage(s.match);F.enableContinuous(s.match,{ruleVersion:13,opponentFormation:r.teams[1].formation,opponentPlayers:r.teams[1].players});F.begin(s.match);F.advanceContinuous(s.match,723);F.setTactic(s.match,'counter');F.setAttackFocus(s.match,'combination');F.advanceContinuous(s.match,10);F.swap(s.match,'m4','m5');F.advanceContinuous(s.match,137);s.match.paused=true;window.rule13CounterReady=false;window.rule13CounterError=null;window.rule13CrossApplied=false;s.match.paused=false;const pump=()=>{try{if(s.match.phase==='half'&&!window.rule13CrossApplied){F.setAttackFocus(s.match,'cross');window.rule13CrossApplied=true;}if(!F.running(s.match)&&s.match.phase!=='full')F.begin(s.match);F.advanceContinuous(s.match,600);if(s.match.phase==='full'){window.rule13CounterSnapshot=JSON.stringify(s.match);window.rule13CounterReady=true;}else setTimeout(pump,0);}catch(e){window.rule13CounterError=String(e);}};setTimeout(pump,0);return true;})()");
+            awaitTrue(scenario,"rule13CounterReady||rule13Audit.match.continuous.tick>=18000||!!rule13CounterError");
+            awaitTrue(scenario,"rule13CounterReady||rule13Audit.match.continuous.tick>=36000||!!rule13CounterError");
+            awaitTrue(scenario,"rule13CounterReady||!!rule13CounterError");
+            assertEquals("null",evaluate(scenario,"rule13CounterError"));
+            String raw=(String)new JSONTokener(evaluate(scenario,"rule13CounterSnapshot")).nextValue();
+            byte[] digest=java.security.MessageDigest.getInstance("SHA-256").digest(raw.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hash=new StringBuilder();for(byte value:digest){hash.append(Character.forDigit((value>>>4)&15,16));hash.append(Character.forDigit(value&15,16));}
+            assertEquals("The entire commanded13 counter game must agree with Node", "d51be0fa258d61add5569c0e444f04cf434a263225720484d87bfd7e92ebd56e",hash.toString());
+            assertEquals("true",evaluate(scenario,"rule13Audit.match.continuousSetup.version===13&&rule13Audit.match.lineup.includes('m5')&&!rule13Audit.match.lineup.includes('m4')&&rule13CrossApplied"));
+            scenario.onActivity(activity -> assertTrue("Rule13 counter replay caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
+    @Test public void regainedBallPreviewIsReadOnlyAndFitsTheLandscapeWorkspace() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeOperationsPage();managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;launchBusy=false;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;customPositions={};tacticalRoles={};setView('match');openMatchPopup('analysis');return true;})()");
+            String before=evaluate(scenario,"JSON.stringify(season)");
+            tapWebElement(scenario,"[data-tactics-preview=counter]");
+            if("true".equals(evaluate(scenario,"document.querySelector('[data-shape-filter=zone]').checkVisibility()"))){
+                evaluate(scenario,"(()=>{const e=document.querySelector('[data-shape-filter=zone]');e.value='transition';e.dispatchEvent(new Event('change',{bubbles:true}));return true;})()");
+            }else tapWebElement(scenario,"[data-tactics-zone=transition]");
+            awaitTrue(scenario,"teamShapeFrame?.zone==='transition'&&document.querySelector('.shape-names')._labels?.length===22");
+            assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
+            assertEquals("true",evaluate(scenario,"document.querySelector('.shape-names')._labels.every((p,i,a)=>a.slice(i+1).every(q=>Math.min(p.x+p.width,q.x+q.width)-Math.max(p.x,q.x)<=.1||Math.min(p.y+p.height,q.y+q.height)-Math.max(p.y,q.y)<=.1))&&teamShapeFrame.version===13&&teamShapeFrame.tactic==='counter'&&teamShapeFrame.observation.includes('탈취 직후')"));
+            assertEquals("Landscape controls and statistics must stay within the current viewport", "true",evaluate(scenario,"[...document.querySelectorAll('.team-shape-board button,.team-shape-board select,.shape-report table,.shape-field figure')].filter(e=>e.checkVisibility()).every(e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.top>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1&&e.scrollWidth<=e.clientWidth+2&&e.scrollHeight<=e.clientHeight+2&&(!['BUTTON','SELECT'].includes(e.tagName)||r.height>=43.9);})"));
+            screenshot(scenario,"android-regained-ball-preview.png");
+            tapWebElement(scenario,"[data-tactics-apply=counter]");
+            assertEquals("counter",evaluate(scenario,"state.tactic"));
+            assertEquals("prep",evaluate(scenario,"state.phase"));
+            tapWebElement(scenario,".match-popup-header [data-match-popup-close]");
+            assertEquals("false",evaluate(scenario,"F.running(state)"));
+            scenario.onActivity(activity -> assertTrue("Regain preview caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+        }
     }
 }

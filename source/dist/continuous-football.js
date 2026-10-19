@@ -1,6 +1,6 @@
 (function(root){
  'use strict';
- // Versioned rules 1–12: original continuous 100 ms simulation in metres (68 x 105).
+ // Versioned rules 1–13: original continuous 100 ms simulation in metres (68 x 105).
  // Outcomes are contacts and boundary crossings, never minute-based chances.
  const B=root.ContinuousRebounds||(typeof require==='function'?require('./continuous-rebounds.js'):null);
  const T=root.ContinuousTactics||(typeof require==='function'?require('./continuous-tactics.js'):null),P=root.ContinuousContact||(typeof require==='function'?require('./continuous-contact.js'):null),D=root.ContinuousDefending||(typeof require==='function'?require('./continuous-defending.js'):null),Q=root.ContinuousNumbers||(typeof require==='function'?require('./continuous-numbers.js'):null);
@@ -19,7 +19,7 @@
  function cue(w,kind,p,extra={}){w.cue={kind,tick:w.tick,team:p?.team??extra.team,id:p?.id??null,...extra};}
  function create(config){
   const players=config.players.map(p=>({...copy(p),x:p.homeX,y:p.homeY,vx:0,vy:0,energy:p.initialEnergy,active:true,playedTicks:0,distance:0,cooldown:0,decisionAt:0,focus:1}));
-  const w={version:[1,2,3,4,5,6,7,8,9,10,11].includes(config.version)?config.version:12,tick:0,rng:(config.seed^0x434f4e54)>>>0,half:1,firstKickTeam:0,players,ball:{x:W/2,y:H/2,z:0,vx:0,vy:0,vz:0,owner:null,lastTouch:null,flight:null},restart:null,pendingShot:null,lastPass:null,score:[0,0],stats:{possession:[0,0],passes:[0,0],completed:[0,0],shots:[0,0],onTarget:[0,0],xg:[0,0],corners:[0,0],freeKicks:[0,0],offsides:[0,0],tackles:[0,0],fouls:[0,0],saves:[0,0]},cue:{kind:'kickoff',tick:0,team:0,id:null},bookings:[],dismissed:[],celebrateUntil:0};
+  const w={version:[1,2,3,4,5,6,7,8,9,10,11,12,13].includes(config.version)?config.version:13,tick:0,rng:(config.seed^0x434f4e54)>>>0,half:1,firstKickTeam:0,players,ball:{x:W/2,y:H/2,z:0,vx:0,vy:0,vz:0,owner:null,lastTouch:null,flight:null},restart:null,pendingShot:null,lastPass:null,score:[0,0],stats:{possession:[0,0],passes:[0,0],completed:[0,0],shots:[0,0],onTarget:[0,0],xg:[0,0],corners:[0,0],freeKicks:[0,0],offsides:[0,0],tackles:[0,0],fouls:[0,0],saves:[0,0]},cue:{kind:'kickoff',tick:0,team:0,id:null},bookings:[],dismissed:[],celebrateUntil:0};
   if(w.version>=3)for(const p of w.players){p.burst=100;p.tackleAt=0;}
   if(w.version>=4)for(const p of w.players){p.prevX=p.x;p.prevY=p.y;}
   if(w.version>=5)for(const p of w.players)p.receptionAt=-10000;
@@ -117,7 +117,7 @@
   if(w.version>=4){p.prevX=p.x;p.prevY=p.y;}
   let tx=target.x,ty=target.y;for(const q of neighbours){if(!q.active||q.id===p.id)continue;const d=Math.hypot(p.x-q.x,p.y-q.y);if(d<1.1){const dx=d>.01?(p.x-q.x)/d:(p.id<q.id?-1:1),dy=d>.01?(p.y-q.y)/d:0;tx+=dx*(1.1-d)*.6;ty+=dy*(1.1-d)*.6;}}
   const diving=w.version>=10&&p.pos==='GK'&&w.ball.flight?.kind==='shot'&&w.ball.flight.team!==p.team&&w.tick-w.ball.flight.released>=keeperReaction(w,p);
-  const dx=tx-p.x,dy=ty-p.y,n=Math.hypot(dx,dy)||1,limit=w.version>=3?T.speed(p)*(sprint?1:w.version>=7&&COVER.has(role)&&n>3?.60:.40)*(w.version>=6&&w.ball.owner===p.id&&p.pos!=='GK'?.76+p.attack*.001:1):(4.7+p.speed*.036)*(.65+p.energy*.0035)*p.focus*(sprint?1:.74),want=w.version>=11&&role==='intercept'&&w.ball.flight?.kind==='cross'?Math.min(limit,Math.sqrt(2*(2.4+p.speed*.027)*Math.max(0,n-.15))):w.version>=8&&!w.restart&&!sprint&&ARRIVE.has(role)?(n<.65?0:Math.min(limit,Math.sqrt(2*(2.4+p.speed*.027)*Math.max(0,n-.45)))):Math.min(limit,n/DT),turn=w.version>=3&&p.vx*dx+p.vy*dy<0?.68:1,a=(2.4+p.speed*.027)*DT*turn*(diving?1.8:1);
+  const dx=tx-p.x,dy=ty-p.y,n=Math.hypot(dx,dy)||1,limit=w.version>=3?T.speed(p)*(sprint?1:w.version>=13&&role==='support'&&n>3?.65:w.version>=7&&COVER.has(role)&&n>3?.60:.40)*(w.version>=6&&w.ball.owner===p.id&&p.pos!=='GK'?.76+p.attack*.001:1):(4.7+p.speed*.036)*(.65+p.energy*.0035)*p.focus*(sprint?1:.74),want=w.version>=11&&role==='intercept'&&w.ball.flight?.kind==='cross'?Math.min(limit,Math.sqrt(2*(2.4+p.speed*.027)*Math.max(0,n-.15))):w.version>=8&&!w.restart&&(!sprint||w.version>=13&&['run','return-run'].includes(role))&&ARRIVE.has(role)?(n<.65?0:Math.min(limit,Math.sqrt(2*(2.4+p.speed*.027)*Math.max(0,n-.45)))):Math.min(limit,n/DT),turn=w.version>=3&&p.vx*dx+p.vy*dy<0?.68:1,a=(2.4+p.speed*.027)*DT*turn*(diving?1.8:1);
   p.vx+=clamp(dx/n*want-p.vx,-a,a);p.vy+=clamp(dy/n*want-p.vy,-a,a);const x=clamp(p.x+p.vx*DT,.15,W-.15),y=clamp(p.y+p.vy*DT,.15,H-.15),d=Math.hypot(x-p.x,y-p.y);p.x=x;p.y=y;p.distance+=d;p.playedTicks++;let exertion=sprint?.004:.0018;
   if(w.version>=3){const recovery=!sprint||d<.1;p.burst=clamp(p.burst+(recovery?(2.2+p.endurance*.022):-(9.5-p.endurance*.035))*DT,0,100);if(w.version>=7)exertion=d/DT>T.speed(p)*.72?.0075:.0022;p.energy=clamp(p.energy-(d*exertion+.00012)*(1.2-p.endurance*.004),0,100);}else p.energy=clamp(p.energy-(d*(sprint?.0016:.001)+.0001)*(1.2-p.endurance*.004),0,100);if(p.cooldown)p.cooldown--;return exertion;
  }
@@ -270,5 +270,5 @@
  }
  function interpolate(a,b,alpha){if(!a||!b||b.tick!==a.tick+1)return b;const n=clamp(alpha,0,1),blend=(p,q)=>({...q,x:p.x+(q.x-p.x)*n,y:p.y+(q.y-p.y)*n}),people=(before,after)=>after.map(p=>{const old=before.find(q=>q.id===p.id);return old?blend(old,p):{...p};});return {...b,own:people(a.own,b.own),opponent:people(a.opponent,b.opponent),ball:blend(a.ball,b.ball),ballHeight:a.ballHeight+(b.ballHeight-a.ballHeight)*n};}
  function plan(w){const shadow=copy(w);shadow.tactics||=['balanced','balanced'];shadow.focuses||=['balanced','balanced'];shadow.setPieces||=[{},{}];return targets(shadow).map(({p,target,sprint,role})=>({id:p.id,x:target.x,y:target.y,sprint,role:role||(p.pos==='GK'?'keeper':shadow.restart?'restart':'hold-shape')}));}
- const api={version:12,plan,aimSpread,DT,W,H,POST,create,step,kickoff,frame,interpolate,direction,progress,offside,sweep,copy,clearanceTarget};root.ContinuousFootball=api;if(typeof module!=='undefined')module.exports=api;
+ const api={version:13,plan,aimSpread,DT,W,H,POST,create,step,kickoff,frame,interpolate,direction,progress,offside,sweep,copy,clearanceTarget};root.ContinuousFootball=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

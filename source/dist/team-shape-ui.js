@@ -14,8 +14,12 @@ function queueTeamShapeFit(){requestAnimationFrame(fitTeamShape);}
 function fitTeamShape(){
  const svg=document.querySelector('#tactics-board .shape-field svg'),frame=teamShapeFrame;if(!svg||!svg.checkVisibility()||!frame)return;
  const rect=svg.getBoundingClientRect(),scale=Math.min(rect.width/380,rect.height/230);if(scale<=0)return;
- const adapt=rows=>rows.map(p=>({...p,x:(10+(100-p.y)*3.6)/380*100,y:(10+p.x*2.1)/230*100})),value={own:adapt(frame.own),opponent:adapt(frame.opponent)},labels=Movement.nameLabels(value,380*scale,230*scale,name=>{const canvas=teamShapeMeasureCanvas||(teamShapeMeasureCanvas=document.createElement('canvas')),ctx=canvas.getContext('2d');ctx.font='7.5px system-ui';return ctx.measureText(name).width;}),host=svg.querySelector('.shape-names');
- host.innerHTML=labels.map(p=>'<text data-shape-name="'+escapeText(p.id)+'" x="'+((p.x+p.width/2)/scale).toFixed(2)+'" y="'+((p.y+7)/scale).toFixed(2)+'" text-anchor="middle" dominant-baseline="middle" font-size="'+(7.5/scale).toFixed(2)+'" fill="'+(p.team?'#ffe2b5':'#edf6f0')+'" stroke="#173a30" stroke-width="'+(2/scale).toFixed(2)+'" paint-order="stroke">'+escapeText(p.name)+'</text>').join('');
+ const adapt=rows=>rows.map(p=>({...p,x:(10+(100-p.y)*3.6)/380*100,y:(10+p.x*2.1)/230*100})),value={own:adapt(frame.own),opponent:adapt(frame.opponent)},canvas=teamShapeMeasureCanvas||(teamShapeMeasureCanvas=document.createElement('canvas')),ctx=canvas.getContext('2d'),host=svg.querySelector('.shape-names');
+ let font=7.5,labels=[];const overlaps=rows=>rows.some((p,i)=>rows.slice(i+1).some(q=>Math.min(p.x+p.width,q.x+q.width)-Math.max(p.x,q.x)>.1&&Math.min(p.y+p.height,q.y+q.height)-Math.max(p.y,q.y)>.1));
+ for(let attempt=0;attempt<4;attempt++){font=7.5-attempt*.5;ctx.font=font+'px system-ui';labels=Movement.nameLabels(value,380*scale,230*scale,name=>ctx.measureText(name).width,[],{height:Math.ceil(font+3),padding:4,grid:true,numbers:380*scale>=220});if(!overlaps(labels))break;}
+ host.innerHTML=labels.map(p=>'<text data-shape-name="'+escapeText(p.id)+'" x="'+((p.x+p.width/2)/scale).toFixed(2)+'" y="'+((p.y+p.height/2)/scale).toFixed(2)+'" text-anchor="middle" dominant-baseline="middle" font-size="'+(font/scale).toFixed(2)+'" font-family="system-ui" fill="'+(p.team?'#ffe2b5':'#edf6f0')+'" stroke="#173a30" stroke-width="'+(2/scale).toFixed(2)+'" paint-order="stroke">'+escapeText(p.name)+'</text>').join('');
+ host.dataset.labelFont=font;
+
  host._labels=labels;
 }
 window.addEventListener('resize',()=>{if(matchPopupActive==='analysis')queueTeamShapeFit();});

@@ -3,7 +3,19 @@
  // Original rule11 geometry: eligibility never lets an ineligible trailer hide a real challenge.
  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),W=68,H=105,POST=(W-7.32)/2;
  const direction=(w,t)=>(t===0?-1:1)*(w.half===1?1:-1);
- function tackler(w,owner,ball){let best=null,range=Infinity;for(const p of w.players){if(!p.active||p.team===owner.team||p.pos==='GK'||w.tick<p.tackleAt)continue;const d=Math.hypot(p.x-ball.x,p.y-ball.y),ahead=(p.y-owner.y)*direction(w,owner.team)>=-.3;if(d>=1.45||!ahead&&!(d<.85&&p.defense>=owner.attack+15))continue;if(d<range){range=d;best=p;}}return best;}
+ // Rule13 distinguishes a planted challenge from an overextended running tackle.
+ // These are simulation distances; tactic names never alter the tackle probability.
+ function tackler(w,owner,ball){
+  let best=null,range=Infinity;
+  for(const p of w.players){
+   if(!p.active||p.team===owner.team||p.pos==='GK'||w.tick<p.tackleAt||w.version>=13&&p.cooldown)continue;
+   const d=Math.hypot(p.x-ball.x,p.y-ball.y),ahead=(p.y-owner.y)*direction(w,owner.team)>=-.3;
+   const reach=w.version>=13?1.45-clamp((Math.hypot(p.vx,p.vy)-2)*.12,0,.4):1.45;
+   if(d>=reach||!ahead&&!(d<.85&&p.defense>=owner.attack+15))continue;
+   if(d<range){range=d;best=p;}
+  }return best;
+ }
+
  function keeperTarget(w,p,reaction){
   const b=w.ball,goal=direction(w,p.team)<0?H:0,sign=goal===0?1:-1,range=Math.abs(b.y-goal),carrier=w.players.find(q=>q.active&&q.id===b.owner),threat=carrier&&carrier.team!==p.team&&range<30,shot=b.flight?.kind==='shot'&&b.flight.team!==p.team;
   let depth=threat?clamp(range*.18,1.1,4.2):2.7,x=34,y=goal+sign*depth;

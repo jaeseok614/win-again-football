@@ -2,7 +2,7 @@
  'use strict';
  const football=()=>root.Football||(typeof require==='function'?require('./engine.js'):null),own='brynwell',opponent=g=>g.home===own?g.away:g.home;
  const points=rows=>rows.reduce((n,g)=>n+(g.score[0]>g.score[1]?3:g.score[0]===g.score[1]?1:0),0);
- const complete=g=>g.statisticsOriginMinute===0&&(!g.unassignedGoals||Number.isInteger(g.continuousVersion)&&g.continuousVersion>=1&&g.continuousVersion<=12&&Array.isArray(g.ownGoals)&&g.ownGoals.length===g.unassignedGoals&&g.unassignedGoals<=g.score[0]);
+ const complete=g=>g.statisticsOriginMinute===0&&(!g.unassignedGoals||Number.isInteger(g.continuousVersion)&&g.continuousVersion>=1&&g.continuousVersion<=13&&Array.isArray(g.ownGoals)&&g.ownGoals.length===g.unassignedGoals&&g.unassignedGoals<=g.score[0]);
  function timeline(s){return [...(s.statistics?.archive||[]).flatMap(a=>a.records),...(s.statistics?.records||[])];}
  function read(s,q){
   if(!q)return null;const F=football(),all=timeline(s),index=all.findIndex(g=>g.id===q.id),before=q.phase==='before',record=!before&&index>=0&&complete(all[index])&&JSON.stringify(all[index].score)===JSON.stringify(q.score)?all[index]:null,source=(index>=0?all.slice(0,index+(before?0:1)):before?all.filter(g=>g.year<=q.year):[]),prefix=source.filter(complete),current=prefix.filter(g=>g.year===q.year),leagueWindow=source.filter(g=>g.year===q.year&&g.competition==='league').slice(-3),recent=leagueWindow.filter(complete),h2h=(before?prefix:prefix.filter(g=>g.id!==q.id)).filter(g=>opponent(g)===opponent(q)).at(-1);

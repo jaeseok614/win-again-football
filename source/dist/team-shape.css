@@ -15,7 +15,7 @@
 #match-popup .shape-orders .shape-apply{background:#c9f48f;color:#172b24;margin-top:auto;font-weight:700}
 #match-popup .shape-apply-note{font-size:9px;line-height:11px;color:#b1c6cd}
 #match-popup .shape-field{display:grid;grid-template-rows:44px minmax(0,1fr) 12px;gap:4px}
-#match-popup .shape-scenario-buttons{display:grid;grid-template-columns:1.25fr 1.25fr 1fr 1fr 1fr;gap:3px;min-width:0}
+#match-popup .shape-scenario-buttons{display:grid;grid-template-columns:1.1fr 1.1fr repeat(4,minmax(0,1fr));gap:3px;min-width:0}
 #match-popup .shape-scenario button{font-size:10px;line-height:12px}
 #match-popup .shape-field figure{display:grid;grid-template-rows:minmax(0,1fr) 12px;gap:2px}
 #match-popup .shape-field svg{display:block;width:100%;height:100%;min-height:0;max-height:none;object-fit:contain;background:#163a30;border-radius:5px}
@@ -50,6 +50,6 @@
 }
 
 #match-popup .shape-scenario-filters{display:none}#match-popup .shape-scenario-filters select{height:44px;min-height:44px;min-width:0;width:100%;padding:3px;font-size:10px;background:#1a2d37;color:#dce7e7;border:1px solid #415963;border-radius:5px}
-@media(max-width:700px){#match-popup .shape-scenario-buttons{display:none}#match-popup .shape-scenario-filters{display:grid;grid-template-columns:1.35fr 1fr;gap:3px}}
+@media(max-width:850px){#match-popup .shape-scenario-buttons{display:none}#match-popup .shape-scenario-filters{display:grid;grid-template-columns:1.35fr 1fr;gap:3px}}
 
 #match-popup .shape-report table tr>:first-child{width:48%}

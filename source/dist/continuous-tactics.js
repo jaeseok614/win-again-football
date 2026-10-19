@@ -147,12 +147,12 @@
    ranked.sort((a,b)=>Math.round((cost(a)-cost(b))*1e8)||a.p.id.localeCompare(b.p.id));
    let chasers=[];
    if(!carrier){const receiver=ranked.find(r=>r.p.id===w.ball.flight?.receiver);chasers=[own&&receiver&&receiver.eta<=ranked[0].eta+.4?receiver:ranked[0]];}
-   else if(!own){const radius=tactic==='press'?24:tactic==='lowBlock'?(w.version>=11?16:14):(w.version>=11?22:18),first=ranked.find(r=>distance(r.p,carrier)<radius&&Math.abs(anchors.get(r.p.id).x-carrier.x)<22);if(first)chasers=[first];
+   else if(!own){const triggered=w.tick-(carrier.receptionAt??-10000)<6||Math.abs(carrier.x-34)>22||carrier.pos==='GK',radius=tactic==='press'?(w.version>=13&&!triggered?18:24):tactic==='lowBlock'?(w.version>=11?16:14):(w.version>=11?22:18),first=ranked.find(r=>distance(r.p,carrier)<radius&&Math.abs(anchors.get(r.p.id).x-carrier.x)<22);if(first)chasers=[first];
     const second=ranked.find(r=>r!==first&&distance(r.p,carrier)<10&&Math.abs(anchors.get(r.p.id).x-carrier.x)<16&&r.p.energy>45&&r.p.burst>25);
-    if(first&&second&&tactic==='press'&&distance(first.p,carrier)<10&&(w.tick-(carrier.receptionAt??-10000)<6||Math.abs(carrier.x-34)>22))chasers.push(second);
+    if(first&&second&&tactic==='press'&&(w.version<13||Math.abs(first.eta-second.eta)<=.7)&&distance(first.p,carrier)<10&&(w.tick-(carrier.receptionAt??-10000)<6||Math.abs(carrier.x-34)>22))chasers.push(second);
    }
    const shield=!own&&carrier&&at<55?ranked.find(r=>role(r.p)==='MID'&&!chasers.includes(r)&&Math.abs(anchors.get(r.p.id).x-carrier.x)<14):null;
-   const supports=own&&carrier?field.filter(p=>p.id!==carrier.id&&role(p)==='MID'&&distance(anchors.get(p.id),carrier)<26).sort((a,b)=>{const score=p=>distance(anchors.get(p.id),carrier)-(previous.get(p.id)?.role==='support'?3:0);return Math.round((score(a)-score(b))*1e8)||a.id.localeCompare(b.id);}).slice(0,2):[];
+   const supports=own&&carrier?field.filter(p=>p.id!==carrier.id&&(role(p)==='MID'||w.version>=13&&at<45&&role(p)==='DEF')&&(w.version>=13?distance(p,carrier):distance(anchors.get(p.id),carrier))<26).sort((a,b)=>{const score=p=>(w.version>=13?distance(p,carrier)+(role(p)==='DEF'?5:0):distance(anchors.get(p.id),carrier))-(previous.get(p.id)?.role==='support'?3:0);return Math.round((score(a)-score(b))*1e8)||a.id.localeCompare(b.id);}).slice(0,2):[];
    const legal=Math.max(52.5,at,opponents.map(p=>progress(w,t,p.y)).sort((a,b)=>b-a)[1]??105)-1.3,transition=w.tick-(w.transitionTick??-10000)<(w.version>=11?90:40);
    const outlet=w.version>=11&&!own&&['counter','lowBlock'].includes(tactic)?field.filter(p=>role(p)==='FW'&&!chasers.some(r=>r.p.id===p.id)).sort((a,b)=>progress(w,t,b.y)-progress(w,t,a.y)||a.id.localeCompare(b.id))[0]:null;
    const overlap=own&&carrier&&at>65&&Math.abs(carrier.x-34)>20&&!['counter','lowBlock'].includes(tactic)?field.filter(p=>role(p)==='DEF'&&Math.abs(hx(p)-34)>19&&Math.sign(hx(p)-34)===Math.sign(carrier.x-34)).sort((a,b)=>distance(a,carrier)-distance(b,carrier)||a.id.localeCompare(b.id))[0]:null;
@@ -161,8 +161,8 @@
     if(chase){x=chase.point.x;d=progress(w,t,chase.point.y)-.4;sprint=true;job=carrier?'press':'intercept';if(chasers[1]===chase&&carrier){const q=A.screen(w,p,carrier,opponents);x=q.x;d=progress(w,t,q.y);job='press-screen';}}
     else if(p.id===carrier?.id){const q=A.carrying(w,p,opponents);x=q.x;d=progress(w,t,q.y);sprint=q.sprint;job='carry';if(w.tick-(p.receptionAt??-10000)<6){x=p.x;d=progress(w,t,p.y);sprint=false;job='first-touch';}}
     else if(own){
-     if(pos==='FW'){d=Math.max(d,Math.min(at+(w.version>=11&&tactic==='counter'&&transition?22:12),96));if(wide){x=anchor.x;d=Math.min(d,at+9);}else if(at>74&&Math.abs(w.ball.x-34)>20){x=clamp(anchor.x,23,45);}job='run';sprint=transition&&tactic==='counter'&&distance(p,w.ball)<30;}
-     const si=supports.indexOf(p);if(si>=0){const forward=si===0&&hd(p)>low+span*.35;d=clamp(at+(forward?8:-9),d-8,d+10);x=clamp(carrier.x+(anchor.x<carrier.x?-10:10),anchor.x-5,anchor.x+5);job='support';if(w.version>=10){const pocket=N.support(w,p,carrier,anchor,{x,y:from(w,t,d)},legal,laneRisk);x=pocket.x;d=progress(w,t,pocket.y);}}
+     if(pos==='FW'){d=Math.max(d,Math.min(at+(w.version>=11&&tactic==='counter'&&transition?22:12),96));if(wide){x=anchor.x;d=Math.min(d,at+9);}else if(at>74&&Math.abs(w.ball.x-34)>20){x=clamp(anchor.x,23,45);}if(w.version>=13&&carrier&&tactic==='counter'&&transition){const pocket=N.runPocket(w,p,carrier,anchor,{x,y:from(w,t,d)},legal,laneRisk);x=pocket.x;d=progress(w,t,pocket.y);}job='run';sprint=transition&&tactic==='counter'&&distance(p,w.ball)<30;}
+     const si=supports.indexOf(p);if(si>=0){const forward=si===0&&hd(p)>low+span*.35;d=clamp(at+(forward?8:-9),d-8,d+10);x=clamp(carrier.x+(anchor.x<carrier.x?-10:10),anchor.x-5,anchor.x+5);job='support';if(w.version>=10){const pocket=w.version>=13?N.triangle(w,p,carrier,anchor,si,legal,laneRisk):N.support(w,p,carrier,anchor,{x,y:from(w,t,d)},legal,laneRisk);x=pocket.x;d=progress(w,t,pocket.y);}}
      if(p===overlap){d=Math.min(80,at+4);x=hx(p)<34?5:63;job='overlap';}
      if(pos!=='DEF')d=Math.min(d,legal);
     }else{
@@ -172,7 +172,8 @@
      sprint=progress(w,t,p.y)-d>6&&at<40;
      if(w.version>=11){if(p===outlet){d=Math.max(d,tactic==='counter'?46:38);job='outlet';}else if(['DEF','MID'].includes(pos)&&at<55&&progress(w,t,p.y)>at-3&&progress(w,t,p.y)-d>2){sprint=true;job='recover';}}
     }
-    if(!chase&&p.id!==carrier?.id){const prior=previous.get(p.id);if(prior&&old.half===w.half){const y=from(w,t,d),dx=x-prior.x,dy=y-prior.y,n=Math.hypot(dx,dy),limit=(own?3:at<30?6:4)*elapsed;if(n>limit){x=prior.x+dx*limit/n;d=progress(w,t,prior.y+dy*limit/n);}}}
+    if(!chase&&p.id!==carrier?.id){const prior=previous.get(p.id);if(prior&&old.half===w.half){const y=from(w,t,d),dx=x-prior.x,dy=y-prior.y,n=Math.hypot(dx,dy),limit=(own?(w.version>=13&&job==='support'?5:3):at<30?6:4)*elapsed;if(n>limit){x=prior.x+dx*limit/n;d=progress(w,t,prior.y+dy*limit/n);}}}
+    if(w.version>=13&&own&&tactic==='counter'&&job==='run'){d=Math.min(d,legal);if(sprint&&Math.hypot(x-p.x,from(w,t,d)-p.y)<=3)sprint=false;}
     rows.push({id:p.id,x:clamp(x,1,67),y:from(w,t,clamp(d,1,104)),sprint,role:job});
    }
   }
@@ -192,5 +193,6 @@
    if(wide&&d<30&&q.pos!=='GK'&&progress(w,p.team,q.y)>H-25&&Math.abs(q.x-W/2)<15){const cross={kind:'cross',receiver:q,value:.10+q.attack*.001-risk*.02+(focus==='cross'?.075:0)-(focus==='dribble'?.12:0)};if(cross.value>best.value)best=cross;}
   }return best;
  }
- const api={forecast,intercept,coach,prepare,choose,laneRisk,speed,delivery};root.ContinuousTactics=api;if(typeof module!=='undefined')module.exports=api;
+ const descriptions=Object.freeze({"balanced":"가까운 동료가 패스 각도를 만들고 나머지는 대형을 유지합니다.","press":"공 가까운 선수가 압박하고 동료는 패스 길을 막습니다. 수비 뒤 공간과 체력을 함께 확인하세요.","counter":"공을 되찾으면 가까운 지원과 전방 침투를 연결합니다. 도착한 공격수는 달리기를 멈추고 패스를 기다립니다.","lowBlock":"골문 쪽으로 간격을 좁혀 수비합니다. 공을 되찾은 뒤 연결할 패스 출구도 필요합니다."});
+ const api={descriptions,forecast,intercept,coach,prepare,choose,laneRisk,speed,delivery};root.ContinuousTactics=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

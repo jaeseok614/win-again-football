@@ -449,15 +449,17 @@
   ctx.restore();
  }
  // Every on-field player stays named. Resolve crowded labels independently of
- // simulation state, with leader lines back to the actual player positions.
- function nameLabels(value,w,h,measure,previous=[]){
-  const people=[...value.own.map(p=>({...p,team:0})),...value.opponent.map(p=>({...p,team:1}))],placed=[],height=14,overlap=(a,b)=>Math.max(0,Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+height,b.y+b.height)-Math.max(a.y,b.y));
+ // simulation state; identity and team stay attached without connector lines.
+ function nameLabels(value,w,h,measure,previous=[],{height=14,padding=8,grid=false,numbers=false}={}){
+  const people=[...value.own.map(p=>({...p,team:0})),...value.opponent.map(p=>({...p,team:1}))],placed=[],overlap=(a,b)=>Math.max(0,Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+height,b.y+b.height)-Math.max(a.y,b.y));
+  const labelFor=p=>{const short=shortName(p.name),base=people.some(q=>q.id!==p.id&&shortName(q.name)===short)?p.name:short;return numbers?p.no+'·'+base:base;},snap=y=>grid?clamp(2+Math.round((y-2)/(height+1))*(height+1),2,2+Math.floor((h-height-4)/(height+1))*(height+1)):clamp(y,2,h-height-2);
+  if(grid)people.sort((a,b)=>measure(labelFor(b))-measure(labelFor(a))||a.team-b.team||a.id.localeCompare(b.id));
   const bodies=people.map(p=>({x:w*p.x/100-8,y:h*p.y/100-8,width:16,height:16}));
-  for(const p of people){const short=shortName(p.name),name=people.some(q=>q.id!==p.id&&shortName(q.name)===short)?p.name:short,width=Math.min(w-4,measure(name)+8),px=w*p.x/100,py=h*p.y/100,old=previous.find(q=>q.id===p.id&&q.name===name&&q.width===width),anchor=old?{x:clamp(old.x+(px-old.px),2,w-width-2),y:clamp(old.y+(py-old.py),2,h-height-2),width,height}:null;let best=null,score=Infinity;
-   for(const dy of [-20,10,-35,25,-50,40,-65,55])for(const dx of [0,-width/2-5,width/2+5,-width-8,width+8]){const box={x:clamp(px-width/2+dx,2,w-width-2),y:clamp(py+dy,2,h-height-2),width,height};const cost=placed.reduce((s,q)=>s+overlap(box,q)*100,0)+bodies.reduce((s,q)=>s+overlap(box,q)*3,0)+Math.abs(dy+20)*.4+Math.abs(dx)+(anchor?Math.hypot(box.x-anchor.x,box.y-anchor.y)*2:0);if(cost<score){score=cost;best=box;}if(cost===0)break;}
+  for(const p of people){const name=labelFor(p),width=Math.min(w-4,measure(name)+padding),px=w*p.x/100,py=h*p.y/100,old=previous.find(q=>q.id===p.id&&q.name===name&&q.width===width),anchor=old?{x:clamp(old.x+(px-old.px),2,w-width-2),y:clamp(old.y+(py-old.py),2,h-height-2),width,height}:null;let best=null,score=Infinity;
+   for(const dy of [-20,10,-35,25,-50,40,-65,55])for(const dx of [0,-width/2-5,width/2+5,-width-8,width+8]){const box={x:clamp(px-width/2+dx,2,w-width-2),y:snap(py+dy),width,height};const cost=placed.reduce((s,q)=>s+overlap(box,q)*100,0)+bodies.reduce((s,q)=>s+overlap(box,q)*3,0)+Math.abs(dy+20)*.4+Math.abs(dx)+(anchor?Math.hypot(box.x-anchor.x,box.y-anchor.y)*2:0);if(cost<score){score=cost;best=box;}if(cost===0)break;}
    // Keep the previous relative slot until a real obstruction warrants moving it.
    if(anchor&&!placed.some(q=>overlap(anchor,q)>0)){const cost=bodies.reduce((s,q)=>s+overlap(anchor,q)*3,0)+Math.abs(anchor.y-py+20)*.4+Math.abs(anchor.x+width/2-px);if(cost<=score+18)best=anchor;}
-   if(placed.some(q=>overlap(best,q)>0)){let free=null,distance=Infinity;for(let y=2;y<=h-height-2;y+=height+1)for(let x=2;x<=w-width-2;x+=8){const box={x,y,width,height};if(placed.some(q=>overlap(box,q)>0))continue;const cost=Math.hypot(x+width/2-px,y+7-py)+bodies.reduce((s,q)=>s+overlap(box,q)*3,0);if(cost<distance){distance=cost;free=box;}}if(free)best=free;}
+   if(placed.some(q=>overlap(best,q)>0)){let free=null,distance=Infinity;for(let y=2;y<=h-height-2;y+=height+1)for(const x of (grid?[2,w-width-2,...placed.flatMap(q=>[q.x+q.width+1,q.x-width-1])].filter(x=>x>=2&&x<=w-width-2):Array.from({length:Math.max(0,Math.floor((w-width-4)/8)+1)},(_,i)=>2+i*8))){const box={x,y,width,height};if(placed.some(q=>overlap(box,q)>0))continue;const cost=Math.hypot(x+width/2-px,y+height/2-py)+bodies.reduce((s,q)=>s+overlap(box,q)*3,0);if(cost<distance){distance=cost;free=box;}}if(free)best=free;}
    placed.push({...best,id:p.id,name,fullName:p.name,team:p.team,px,py,active:p.id===value.carrierId});
   }return placed;
  }
