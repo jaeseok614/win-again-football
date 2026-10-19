@@ -1,0 +1,347 @@
+{
+  "date": "2026-10-19",
+  "rule": 12,
+  "selection": "published11 standing defence plus physical block/parry rebounds; experimental tackle delays excluded",
+  "conditions": {
+    "seeds": [
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88
+    ],
+    "attributes": 60,
+    "initialEnergy": 95,
+    "minutes": 96,
+    "halftimeReset": true,
+    "opponentCoach": "fixed diagnostic only; live app retains adaptive coaching",
+    "pairing": "press versus each other tactic, both team directions; excludes same-tactic games",
+    "warning": "Non-press rows only face press here; this is not an overall ranking or a phone performance test."
+  },
+  "baseline11": {
+    "matches": 48,
+    "pressWins": 14,
+    "draws": 22,
+    "pressGoalDifference": 0.3541666666666667,
+    "tackles": 434.6666666666667,
+    "corners": 0.08333333333333333,
+    "shots": 13.145833333333334,
+    "goals": 1.5208333333333333
+  },
+  "selected12": {
+    "matches": 48,
+    "pressWins": 23,
+    "draws": 13,
+    "pressGoalDifference": 0.375,
+    "tackles": 430.4583333333333,
+    "corners": 2.4166666666666665,
+    "shots": 13.8125,
+    "goals": 1.625
+  },
+  "rejected": [
+    {
+      "name": "long-read",
+      "reason": "pressure goal difference worsened despite fewer tackles",
+      "totalMatches": 128,
+      "matchedPressPairs": {
+        "matches": 48,
+        "pressWins": 38,
+        "draws": 3,
+        "pressGoalDifference": 1.625,
+        "tackles": 135.875,
+        "corners": 4.020833333333333,
+        "shots": 22.354166666666668,
+        "goals": 3.2916666666666665
+      },
+      "summary": [
+        {
+          "version": 12,
+          "tactics": [
+            {
+              "tactic": "balanced",
+              "appearances": 64,
+              "wins": 30,
+              "draws": 12,
+              "goals": 1.671875,
+              "conceded": 1.53125,
+              "shots": 10.140625,
+              "passes": 741.40625,
+              "boxEntries": 6.234375,
+              "transitionGains": 14.03125,
+              "energy": 54.873439834895855
+            },
+            {
+              "tactic": "press",
+              "appearances": 64,
+              "wins": 43,
+              "draws": 9,
+              "goals": 2.203125,
+              "conceded": 0.984375,
+              "shots": 13.546875,
+              "passes": 753.65625,
+              "boxEntries": 7.828125,
+              "transitionGains": 12.078125,
+              "energy": 53.6607625625
+            },
+            {
+              "tactic": "counter",
+              "appearances": 64,
+              "wins": 17,
+              "draws": 10,
+              "goals": 1.3125,
+              "conceded": 1.9375,
+              "shots": 9.0625,
+              "passes": 685,
+              "boxEntries": 5.328125,
+              "transitionGains": 22.1875,
+              "energy": 50.585900453645834
+            },
+            {
+              "tactic": "lowBlock",
+              "appearances": 64,
+              "wins": 17,
+              "draws": 11,
+              "goals": 1.25,
+              "conceded": 1.984375,
+              "shots": 9.71875,
+              "passes": 748.03125,
+              "boxEntries": 5.15625,
+              "transitionGains": 15.28125,
+              "energy": 53.370825557465274
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "goal-threat-read",
+      "reason": "pressure advantage remained large",
+      "totalMatches": 48,
+      "matchedPressPairs": {
+        "matches": 48,
+        "pressWins": 30,
+        "draws": 9,
+        "pressGoalDifference": 1.0208333333333333,
+        "tackles": 157.5,
+        "corners": 2.9583333333333335,
+        "shots": 17.3125,
+        "goals": 2.3958333333333335
+      },
+      "summary": [
+        {
+          "version": 12,
+          "tactics": [
+            {
+              "tactic": "balanced",
+              "appearances": 16,
+              "wins": 5,
+              "draws": 3,
+              "goals": 0.8125,
+              "conceded": 1.1875,
+              "shots": 8.0625,
+              "passes": 737.4375,
+              "boxEntries": 3.625,
+              "transitionGains": 12.0625,
+              "energy": 54.25797876736111
+            },
+            {
+              "tactic": "press",
+              "appearances": 48,
+              "wins": 30,
+              "draws": 9,
+              "goals": 1.7083333333333333,
+              "conceded": 0.6875,
+              "shots": 11.166666666666666,
+              "passes": 759.4375,
+              "boxEntries": 6.333333333333333,
+              "transitionGains": 12.291666666666666,
+              "energy": 53.84959858472222
+            },
+            {
+              "tactic": "counter",
+              "appearances": 16,
+              "wins": 2,
+              "draws": 4,
+              "goals": 0.625,
+              "conceded": 2,
+              "shots": 5.625,
+              "passes": 669.4375,
+              "boxEntries": 4,
+              "transitionGains": 21.25,
+              "energy": 50.100204877083335
+            },
+            {
+              "tactic": "lowBlock",
+              "appearances": 16,
+              "wins": 2,
+              "draws": 2,
+              "goals": 0.625,
+              "conceded": 1.9375,
+              "shots": 4.75,
+              "passes": 750.3125,
+              "boxEntries": 3.5,
+              "transitionGains": 13.625,
+              "energy": 52.719442768750014
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "box-exception",
+      "reason": "low block lost all16 press meetings",
+      "totalMatches": 48,
+      "matchedPressPairs": {
+        "matches": 48,
+        "pressWins": 27,
+        "draws": 12,
+        "pressGoalDifference": 0.875,
+        "tackles": 288.6041666666667,
+        "corners": 2.8125,
+        "shots": 15.416666666666666,
+        "goals": 2.25
+      },
+      "summary": [
+        {
+          "version": 12,
+          "tactics": [
+            {
+              "tactic": "balanced",
+              "appearances": 16,
+              "wins": 3,
+              "draws": 4,
+              "goals": 0.6875,
+              "conceded": 1.0625,
+              "shots": 5.375,
+              "passes": 713.9375,
+              "boxEntries": 3.125,
+              "transitionGains": 9.8125,
+              "energy": 54.13408968541667
+            },
+            {
+              "tactic": "press",
+              "appearances": 48,
+              "wins": 27,
+              "draws": 12,
+              "goals": 1.5625,
+              "conceded": 0.6875,
+              "shots": 10.666666666666666,
+              "passes": 736.9166666666666,
+              "boxEntries": 6.354166666666667,
+              "transitionGains": 10.25,
+              "energy": 54.153558826909745
+            },
+            {
+              "tactic": "counter",
+              "appearances": 16,
+              "wins": 6,
+              "draws": 4,
+              "goals": 1.125,
+              "conceded": 1.125,
+              "shots": 4.9375,
+              "passes": 650.875,
+              "boxEntries": 3.4375,
+              "transitionGains": 16.25,
+              "energy": 50.25608481475695
+            },
+            {
+              "tactic": "lowBlock",
+              "appearances": 16,
+              "wins": 0,
+              "draws": 4,
+              "goals": 0.25,
+              "conceded": 2.5,
+              "shots": 3.9375,
+              "passes": 718.9375,
+              "boxEntries": 2.375,
+              "transitionGains": 12.125,
+              "energy": 52.79666364513888
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "acceleration-work",
+      "reason": "end energy fell to13–17; one seed only",
+      "totalMatches": 16,
+      "matchedPressPairs": {
+        "matches": 6,
+        "pressWins": 3,
+        "draws": 2,
+        "pressGoalDifference": 0.3333333333333333,
+        "tackles": 153.83333333333334,
+        "corners": 1.8333333333333333,
+        "shots": 13.666666666666666,
+        "goals": 1.3333333333333333
+      },
+      "summary": [
+        {
+          "version": 12,
+          "tactics": [
+            {
+              "tactic": "balanced",
+              "appearances": 8,
+              "wins": 2,
+              "draws": 3,
+              "goals": 0.5,
+              "conceded": 0.75,
+              "shots": 6.75,
+              "passes": 778.125,
+              "boxEntries": 3.875,
+              "transitionGains": 11,
+              "energy": 17.3823016125
+            },
+            {
+              "tactic": "press",
+              "appearances": 8,
+              "wins": 4,
+              "draws": 2,
+              "goals": 0.75,
+              "conceded": 0.5,
+              "shots": 8.75,
+              "passes": 802.5,
+              "boxEntries": 4.125,
+              "transitionGains": 8.25,
+              "energy": 16.449288012500002
+            },
+            {
+              "tactic": "counter",
+              "appearances": 8,
+              "wins": 1,
+              "draws": 4,
+              "goals": 0.875,
+              "conceded": 1.125,
+              "shots": 5.25,
+              "passes": 713.125,
+              "boxEntries": 3.25,
+              "transitionGains": 19.375,
+              "energy": 13.1759255625
+            },
+            {
+              "tactic": "lowBlock",
+              "appearances": 8,
+              "wins": 4,
+              "draws": 1,
+              "goals": 1,
+              "conceded": 0.75,
+              "shots": 6.625,
+              "passes": 802,
+              "boxEntries": 3.375,
+              "transitionGains": 11.25,
+              "energy": 17.391115499999998
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "high-wide-press",
+      "scope": "three complete seeds81–83 /18 matches; stopped early",
+      "reason": "15 press wins and3 draws; not adopted"
+    }
+  ]
+}

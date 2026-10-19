@@ -127,3 +127,6 @@
 }
 
 @media(orientation:landscape){body.management-view #club-pane .mobile-command-actions button{word-break:keep-all;overflow-wrap:break-word}}
+
+/* Keep Hangul glyphs inside each prose line even on short landscape screens. */
+@media(orientation:landscape){#club-story-dialog .story-block p{line-height:1.4}}

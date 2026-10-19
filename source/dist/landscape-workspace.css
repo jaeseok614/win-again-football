@@ -1034,3 +1034,27 @@
 }
 
 @media(orientation:landscape){body.match-popup-ready.match-view .app>main{width:100%;align-self:stretch}}
+
+/* Actual skill and placement comparison, including short landscape phones. */
+
+.coach-lineup-comparison{grid-template-columns:repeat(2,minmax(0,1fr))}.coach-lineup-fit b{font-size:13px}.coach-lineup-fit small{white-space:nowrap;font-size:8px!important}
+@media(orientation:landscape) and (max-height:420px){#match-popup .coach-lineup-comparison{grid-template-columns:repeat(2,minmax(0,1fr));gap:2px}#match-popup .coach-lineup-comparison small{font-size:8px;line-height:11px;word-break:keep-all}#match-popup .coach-lineup-comparison b{font-size:12px}#match-popup .coach-lineup-fit b{font-size:11px}#match-popup .coach-lineup-fit small{font-size:7px!important}}
+
+#match-popup .coach-lineup-controls .coach-lineup-comparison small{font-size:clamp(7px,1vw,10px);line-height:12px}#match-popup .coach-lineup-controls .coach-lineup-comparison b{font-size:clamp(10px,1.4vw,14px);white-space:nowrap}
+
+@media(orientation:landscape){#match-popup .coach-lineup-energy{width:100%}#match-popup .coach-lineup-fit{line-height:12px}#match-popup .coach-lineup-fit small{display:block;line-height:9px}#match-popup .coach-lineup-energy{height:26px}}
+@media(orientation:landscape) and (max-height:420px){#match-popup .coach-lineup{grid-template-columns:190px minmax(0,1fr);gap:5px}#match-popup .coach-lineup-controls{gap:2px;overflow:visible}#match-popup .coach-lineup-controls .coach-lineup-filters{grid-template-columns:1fr 1fr;gap:3px}#match-popup .coach-lineup-filters label{font-size:8px;line-height:10px;min-width:0}#match-popup .coach-lineup-filters select{font-size:8px;padding:1px;min-width:0}#match-popup .coach-lineup-controls .coach-lineup-comparison{padding:1px 2px;gap:2px}#match-popup .coach-lineup-controls .coach-lineup-comparison small{font-size:7px;line-height:9px}#match-popup .coach-lineup-controls .coach-lineup-comparison b{font-size:10px;line-height:11px}#match-popup .coach-lineup-controls .coach-lineup-review{font-size:7px;line-height:9px;margin:0;padding:1px 3px}#match-popup .coach-lineup-actions{padding:0;gap:3px}#match-popup .coach-lineup-actions button{font-size:8px;line-height:11px;padding:2px;word-break:keep-all}#match-popup .coach-lineup-controls>.coach-lineup-note[role=status]:not(:empty){font-size:7px;line-height:9px;margin:0}#match-popup .coach-lineup-eleven{grid-template-columns:repeat(3,minmax(0,1fr));gap:2px 4px}#match-popup .coach-lineup-eleven li{grid-template-columns:14px minmax(0,1fr) 22px 3px;gap:1px}#match-popup .coach-lineup-eleven .player-portrait{display:none}#match-popup .coach-lineup-position{font-size:7px}#match-popup .coach-lineup-player{font-size:8px;white-space:normal;min-height:36px;line-height:10px}#match-popup .coach-lineup-player small{font-size:6px;line-height:7px}#match-popup .coach-lineup-fit b{font-size:10px}#match-popup .coach-lineup-fit small{font-size:6px!important;line-height:8px}}
+
+@media(orientation:landscape) and (min-height:301px){#match-popup .coach-lineup-eleven .player-portrait{display:block}}
+
+@media(orientation:landscape) and (min-height:301px) and (max-width:700px){#match-popup .coach-lineup-eleven li{grid-template-columns:20px 18px minmax(0,1fr) 28px 4px}#match-popup .coach-lineup-player{white-space:normal;font-size:9px;line-height:11px}}
+
+@media(orientation:landscape) and (min-height:301px) and (max-height:350px){#match-popup .coach-lineup-eleven{grid-template-columns:repeat(2,minmax(0,1fr))}#match-popup .coach-lineup-eleven .player-portrait{display:none}#match-popup .coach-lineup-eleven li{grid-template-columns:14px minmax(0,1fr) 28px 4px}}
+
+@media(orientation:landscape) and (min-height:351px) and (max-height:420px){#match-popup .coach-lineup-eleven{grid-template-columns:repeat(2,minmax(0,1fr))}#match-popup .coach-lineup-eleven .player-portrait{display:block}#match-popup .coach-lineup-eleven li{grid-template-columns:20px 18px minmax(0,1fr) 28px 4px;gap:2px}#match-popup .coach-lineup-player{font-size:10px;line-height:12px}#match-popup .coach-lineup-fit small{font-size:7px!important}}
+
+@media(orientation:landscape) and (min-height:421px){#match-popup .coach-lineup-eleven li{grid-template-columns:22px 20px minmax(0,1fr) 34px 5px}}
+
+@media(orientation:landscape){#match-popup .coach-lineup-controls .coach-lineup-actions{margin-top:auto}}
+
+@media(orientation:landscape){#match-popup .coach-lineup-filters select{background:#213746;color:#e8f2fa;border:1px solid #526b7c;border-radius:5px}#match-popup .coach-lineup-comparison{background:#172a30;border:1px solid #3a525d}}

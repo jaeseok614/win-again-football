@@ -765,7 +765,7 @@ public final class GameSmokeTest {
             evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeGoalScene();matchCeremonyHold=false;ceremonyPending=null;managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;customPositions={};tacticalRoles={};setView('match');return true;})()");
             tapWebElement(scenario, "#primary");
             tapWebElement(scenario, "#ceremony-ready");
-            awaitTrue(scenario, "state.continuousSetup?.version===11 && state.continuous.tick>20");
+            awaitTrue(scenario, "state.continuousSetup?.version===12 && state.continuous.tick>20");
             assertEquals("The native live field uses the actual ball and all 22 names", "true", evaluate(scenario,
                 "(()=>{state.paused=true;drawField();return document.getElementById('match-names')._labels.length===22 && Math.hypot(lastMotionFrame.ball.x-F.continuousFrame(state).ball.x,lastMotionFrame.ball.y-F.continuousFrame(state).ball.y)<0.01 && document.documentElement.scrollHeight<=innerHeight+1;})()"));
             String replayProof = evaluate(scenario,
@@ -1025,13 +1025,13 @@ public final class GameSmokeTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
             evaluate(scenario,"(()=>{managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;setView('club');openPractice('comeback');return true;})()");
-            awaitTrue(scenario,"!!document.getElementById('practice-workspace-pane')&&practiceSession?.continuousVersion===11");
+            awaitTrue(scenario,"!!document.getElementById('practice-workspace-pane')&&practiceSession?.continuousVersion===12");
             String campaign=evaluate(scenario,"JSON.stringify(season)");
-            String encodedInitial=evaluate(scenario,"JSON.stringify(Practice.createContinuous('comeback',{ruleVersion:11}))");
+            String encodedInitial=evaluate(scenario,"JSON.stringify(Practice.createContinuous('comeback',{ruleVersion:12}))");
             String initial=(String)new JSONTokener(encodedInitial).nextValue();
             byte[] digest=java.security.MessageDigest.getInstance("SHA-256").digest(initial.getBytes(StandardCharsets.UTF_8));
             StringBuilder hash=new StringBuilder();for(byte value:digest){hash.append(Character.forDigit((value>>>4)&15,16));hash.append(Character.forDigit(value&15,16));}
-            assertEquals("The entire75-minute natural practice must match the source runtime", "db8d55e5c0e4b89e018f9413edfd322d45c4f15bd87ec2bc6b4cbdc2c9142c2b",hash.toString());
+            assertEquals("The entire75-minute natural practice must match the source runtime", "5040bd16b191c6b71450de4fc0d7dc2ee967fbe1a59d7783589b0495c4256d3e",hash.toString());
             evaluate(scenario,"(()=>{const p=document.getElementById('practice-workspace-pane');p.value='subs';p.dispatchEvent(new Event('change'));return true;})()");
             assertEquals("Practice controls fit one actual landscape viewport", "true",evaluate(scenario,"[...document.querySelectorAll('#practice-dialog button,#practice-dialog select')].filter(e=>e.checkVisibility()).every(e=>{const r=e.getBoundingClientRect();return r.height>=43.9&&r.top>=0&&r.bottom<=innerHeight+1;})"));
             int subs=Integer.parseInt(evaluate(scenario,"practiceSession.match.subs"));
@@ -1042,6 +1042,79 @@ public final class GameSmokeTest {
             tapWebElement(scenario,"#practice-dialog .practice-close");
             assertEquals(campaign,evaluate(scenario,"JSON.stringify(season)"));
             scenario.onActivity(activity -> assertTrue("Practice workspace caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
+
+    @Test public void rule12PartialSaveMatchesTheCanonicalSourceFingerprint() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            String encoded=evaluate(scenario,"(()=>{const s=S.create(17,{startingClub:true,suspensions:true}),r=Opposition.preview(s);F.enableStoppage(s.match);F.enableContinuous(s.match,{ruleVersion:12,opponentFormation:r.teams[1].formation,opponentPlayers:r.teams[1].players});F.begin(s.match);F.advanceContinuous(s.match,723);s.match.paused=true;return JSON.stringify(s);})()");
+            String raw=(String)new JSONTokener(encoded).nextValue();
+            byte[] digest=java.security.MessageDigest.getInstance("SHA-256").digest(raw.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hash=new StringBuilder();for(byte value:digest){hash.append(Character.forDigit((value>>>4)&15,16));hash.append(Character.forDigit(value&15,16));}
+            assertEquals("Rule12 physical state, contact RNG and journal must agree with Node", "2389cb3ff18f3647de83bd811ff3a24912c0b878060244f9a234fac2a8513d76",hash.toString());
+        }
+    }
+
+    @Test public void strongerAvailableBenchPlayerNeedsExplicitApplicationAndReturnsToTactics() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeOperationsPage();managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;launchBusy=false;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{suspensions:true});state=season.match;F.swap(state,'g1','g2');customPositions={};tacticalRoles={};setView('club');openManagementPanel('club-overview');return true;})()");
+            String before=evaluate(scenario,"JSON.stringify(season)");
+            assertEquals("true",evaluate(scenario,"LineupReadiness.read(season).recommendations.some(r=>r.incoming.id==='g1'&&r.difference===8)"));
+            screenshot(scenario,"android-lineup-readiness.png");
+            tapWebElement(scenario,"[data-preparation-coach]");
+            awaitTrue(scenario,"matchPopupActive==='lineup'&&document.querySelectorAll('[data-coach-ability]').length===11");
+            assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
+            assertEquals("Actual skills, placement values and44px comparison actions fit landscape", "true",evaluate(scenario,"[...document.querySelectorAll('.coach-lineup-controls,.coach-lineup-eleven li,.coach-lineup-fit,.coach-lineup-actions button')].filter(e=>e.checkVisibility()).every(e=>{const r=e.getBoundingClientRect();return e.scrollWidth<=e.clientWidth+2&&e.scrollHeight<=e.clientHeight+2&&r.left>=0&&r.right<=innerWidth+1&&r.top>=0&&r.bottom<=innerHeight+1&&(e.tagName!=='BUTTON'||r.height>=43.9);})"));
+            tapWebElement(scenario,"#coach-lineup-preview");
+            assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
+            screenshot(scenario,"android-coach-skill-comparison.png");
+            tapWebElement(scenario,"#coach-lineup-apply");
+            assertEquals("true",evaluate(scenario,"state.lineup.includes('g1')&&!state.lineup.includes('g2')"));
+            String applied=evaluate(scenario,"JSON.stringify(season)");
+            assertEquals("true",evaluate(scenario,"JSON.stringify(S.restore(JSON.parse(JSON.stringify(season))))===JSON.stringify(season)"));
+            tapWebElement(scenario,".match-popup-header [data-match-popup-close]");
+            awaitTrue(scenario,"view==='tactics'&&!document.getElementById('match-popup').open");
+            assertEquals(applied,evaluate(scenario,"JSON.stringify(season)"));
+            assertEquals("false",evaluate(scenario,"F.running(state)"));
+            scenario.onActivity(activity -> assertTrue("Lineup comparison caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+
+    @Test public void naturalCornerReceiptOpensOriginalCoachDialogueAndTheRealSetPieceEditor() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeOperationsPage();managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;launchBusy=false;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(17,{startingClub:true,suspensions:true});state=season.match;customPositions={};tacticalRoles={};setView('club');const r=Opposition.preview(season);F.enableStoppage(state);F.enableContinuous(state,{opponentFormation:r.teams[1].formation,opponentPlayers:r.teams[1].players});F.begin(state);window.cornerStoryReady=false;window.cornerStoryError=null;const pump=()=>{try{if(!F.running(state)&&state.phase!=='full')F.begin(state);F.advanceContinuous(state,600);if(state.phase==='full'){window.cornerFullSnapshot=JSON.stringify(state);season=S.settle(season);state=season.match;setView('club');window.cornerStoryReady=true;}else setTimeout(pump,0);}catch(e){window.cornerStoryError=String(e);}};setTimeout(pump,0);return true;})()");
+            awaitTrue(scenario,"cornerStoryReady||state.continuous.tick>=18000||!!cornerStoryError");
+            awaitTrue(scenario,"cornerStoryReady||state.continuous.tick>=36000||!!cornerStoryError");
+            awaitTrue(scenario,"cornerStoryReady||!!cornerStoryError");
+            assertEquals("null",evaluate(scenario,"cornerStoryError"));
+            String fullEncoded=evaluate(scenario,"cornerFullSnapshot"),fullRaw=(String)new JSONTokener(fullEncoded).nextValue();
+            byte[] fullDigest=java.security.MessageDigest.getInstance("SHA-256").digest(fullRaw.getBytes(StandardCharsets.UTF_8));
+            StringBuilder fullHash=new StringBuilder();for(byte value:fullDigest){fullHash.append(Character.forDigit((value>>>4)&15,16));fullHash.append(Character.forDigit(value&15,16));}
+            assertEquals("The complete rule12 game must be identical in Node and the actual WebView", "6a98f77a32bc7da100183d166f8b0d1f113bda3a350a895a0f43ee2688618a52", fullHash.toString());
+            assertEquals("true",evaluate(scenario,"season.statistics.records[0].continuousVersion===12&&season.statistics.records[0].physicalStats.corners[0]>0"));
+            String before=evaluate(scenario,"JSON.stringify(season)");
+            evaluate(scenario,"openClubStory('1:deadball-second-v1');true");
+            for(int page=0;page<12&&!"true".equals(evaluate(scenario,"document.querySelector('.story-choices').checkVisibility()"));page++)tapWebElement(scenario,"[data-story-page=next]");
+            assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
+            assertEquals("true",evaluate(scenario,"[...document.querySelectorAll('.story-choices button')].length===3&&document.querySelector('.story-reading').scrollHeight<=document.querySelector('.story-reading').clientHeight+2"));
+            screenshot(scenario,"android-corner-coach-question.png");
+            tapWebElement(scenario,"[data-story-choice=practical]");
+            for(int page=0;page<12&&!"true".equals(evaluate(scenario,"document.querySelector('.story-choices').checkVisibility()"));page++)tapWebElement(scenario,"[data-story-page=next]");
+            tapWebElement(scenario,"[data-story-choice=honest]");
+            assertEquals("2",evaluate(scenario,"ClubStory.scene(season,'1:deadball-second-v1').step"));
+            assertEquals("true",evaluate(scenario,"document.querySelector('.story-reading').textContent.includes('코너')&&document.querySelector('[data-story-action=setpieces]').checkVisibility()"));
+            screenshot(scenario,"android-corner-coach-reply.png");
+            assertEquals("true",evaluate(scenario,"JSON.stringify(S.restore(JSON.parse(JSON.stringify(season))))===JSON.stringify(season)"));
+            String answered=evaluate(scenario,"JSON.stringify(season)");
+            tapWebElement(scenario,"[data-story-action=setpieces]");
+            awaitTrue(scenario,"matchPopupActive==='setpieces'&&!storyDialog.open");
+            assertEquals(answered,evaluate(scenario,"JSON.stringify(season)"));
+            assertEquals("false",evaluate(scenario,"F.running(state)"));
+            scenario.onActivity(activity -> assertTrue("Corner dialogue caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
         }
     }
 

@@ -34,6 +34,14 @@
  }
  function pages(d,{limit=700}={}){
   const block=(speaker,text)=>({speaker,text}),page=blocks=>({speaker:blocks[0].speaker,text:blocks.map(b=>b.text).join('\n\n'),blocks});
+  if(d.readingVersion===2){
+   const budget=Math.max(100,Math.floor(limit*.43));
+   function groups(blocks,kind){const out=[];let current=[],used=0;const flush=()=>{if(current.length)out.push({...page(current),kind:current.some(b=>b.finalReply)?'complete-reply':kind});current=[];used=0;};for(const b of blocks)for(const text of split(b.text,Math.max(70,budget-30))){const cost=text.length+b.speaker.length+20;if(current.length&&used+cost>budget)flush();current.push({...b,text});used+=cost;}flush();return out;}
+   if(d.step===0)return groups([block('장면',d.scene),block('속마음',d.thought),block(d.questionSpeaker||d.name,d.question)],'question');
+   if(d.step===1)return groups([block(d.name,d.reaction),block('속마음',d.thought),block(d.name,d.question)],'follow-up');
+   const first=d.answered[0],original=d.options?.[['listen','bold','practical'].indexOf(first?.choice)];
+   return [...groups([block('장면',d.scene),block('속마음',d.thought)],'complete-scene'),...groups([block('감독',original),block(d.name,d.reaction),block(d.name,d.question)],'complete-first-answer'),...groups([block('감독',d.finalLabel),{...block(d.name,d.reply),finalReply:true}],'complete-last-answer'),...groups([block('속마음',d.thought),...(d.impact?[block('경기력 반영',d.impact)]:[])],'complete-outcome')];
+  }
   if(d.step===0){const scene=split(d.scene,Math.max(180,limit-d.thought.length-d.question.length-30));return scene.map((text,i)=>page([block('장면',text),...(i===scene.length-1?[block('속마음',d.thought),block(d.questionSpeaker||d.name,d.question)]:[])]));}
   if(d.step===1)return [page([block(d.name,d.reaction),block('속마음',d.thought),block(d.name,d.question)])];
   const first=d.answered[0],original=d.options?.[['listen','bold','practical'].indexOf(first?.choice)];

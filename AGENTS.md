@@ -1,6 +1,6 @@
-# 최신 경기 규칙 — 2026-10-16
+# 최신 경기 규칙 — 2026-10-19
 
-새 킥오프/새 연습의 연속 규칙은 **11**이다. 공개된1–10의 부분 저장·물리·RNG·명령·연습·정산은 그대로 보존한다. 다음 물리 변경은12가 필요하다. 시즌/경기 스키마10과 저장키 win-again-season-v17은 변경하지 않는다. [규칙11 설계와 검증](docs/FOOTBALL_TRANSITIONS_2026-10-16.md)을 먼저 확인한다. 슈팅 지도·필터·선택 장면 리플레이는 읽기 전용이며 확정하지 않은 경기/득점을 미리 공개하지 않는다.
+새 킥오프/새 연습의 연속 규칙은 **12**다. 공개된1–11의 부분 저장·물리·RNG·명령·연습·정산은 그대로 보존한다. 다음 물리 변경은13이 필요하다. 시즌/경기 스키마10과 저장키 win-again-season-v17은 변경하지 않는다. [규칙12 접촉·선발 비교·새 코치 대화](docs/FOOTBALL_DUELS_2026-10-19.md)를 먼저 확인한다. 실제 진행 경기는 저장된 규칙으로 계속하고 현재 시즌을 이동하지 않는다.
 
 # Football manager development
 
@@ -375,3 +375,7 @@ Read docs/TOUCHLINE_STORIES_2026-10-15.md. Four original three-episode arcs use 
 
 ## Additive player threads and inline story selection (2026-10-15)
 Read docs/PLAYER_THREADS_2026-10-15.md. Keep thread-link-v1 and thread-red-v1 keys, recorded actors, trigger rules, original prose and both receipt meanings stable; incompatible changes need new keys. Preserve the four published serial arcs. Three or more available arcs use the cached inline list plus selected report. Return restores the exact selection as well as tab/page/year. Player-thread finales use their own four-panel atlas, never the goalkeeper resolution picture. Test actual glyph bounds, all six titles, all replies, whole replays and native return/save.
+
+## Actual readiness and additive corner scene (2026-10-19)
+
+LineupReadiness is readonly preparation advice, never automatic replacement. Retain explicit preview/apply, actual primary ability versus placement estimate, body-status priority and the tactical return without resuming. Keep all11 numeric/colour skills and essential44px actions in the landscape viewport. Preserve deadball-second-v1, its first full rule12+ league-corner trigger, original prose and both receipt meanings. readingVersion2 retains every word, shows the last reply immediately and routes explicit actions to existing set-piece controls. Reuse shared art; never invent corners/goals or change a taker from reading.
