@@ -24,7 +24,7 @@ function renderClubStory(){
 }
 function openClubStory(event,opener=document.activeElement,required=false,notebookContext=null){
  if(typeof practiceSession!=='undefined'&&practiceSession){notify('전술 연습을 마친 뒤 구단 대화를 확인하세요.');return;}
- const opening=ClubStory.scene(season,event);if(!opening)return;pauseForPlanning();save();clubStoryEvent=event;clubStoryOpener=opener;clubStoryRequired=required;clubStoryNotebookReturn=notebookContext;clubStoryPage=0;clubStoryPageStamp=opening.step===2?opening.id+':2':null;renderClubStoryDialog();$('club-story-dialog').showModal();fitStoryReading();
+ const opening=ClubStory.scene(season,event);if(!opening)return;pauseForPlanning();save();clubStoryEvent=event;clubStoryOpener=opener;clubStoryRequired=required;clubStoryNotebookReturn=notebookContext;clubStoryPage=0;clubStoryPageStamp=opening.step===2?opening.id+':2':null;renderClubStoryDialog();const dialog=$('club-story-dialog');if(!dialog.open)dialog.showModal();fitStoryReading();
 }
 function storyIllustration(d){if(d.art)return d.art;if(d.key.startsWith('memory-'))return d.key==='memory-warning'?'office':'rebirth';if(d.key==='tier')return /강등|다시 도전/.test(d.title)?'rain':'growth';return {arrival:'office',captain:'locker',rookie:'locker',fans:'rain',community:'arrival','three-losses':'rain','bounce-back':'locker'}[d.key]||null;}
 function storyArtwork(d){return d.artThread?ClubArt.thread(d.artThread,d.serial?.episode===3):d.drama&&ClubArt.drama?ClubArt.drama(d.drama,d.serial?.episode===3):ClubArt.memory(storyIllustration(d)||'locker');}

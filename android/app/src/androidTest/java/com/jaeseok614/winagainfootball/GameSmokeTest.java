@@ -1097,7 +1097,7 @@ public final class GameSmokeTest {
             assertEquals("The complete rule12 game must be identical in Node and the actual WebView", "6a98f77a32bc7da100183d166f8b0d1f113bda3a350a895a0f43ee2688618a52", fullHash.toString());
             assertEquals("true",evaluate(scenario,"season.statistics.records[0].continuousVersion===12&&season.statistics.records[0].physicalStats.corners[0]>0"));
             String before=evaluate(scenario,"JSON.stringify(season)");
-            evaluate(scenario,"openClubStory('1:deadball-second-v1');true");
+            evaluate(scenario,"openClubStory('1:deadball-second-v1');openClubStory('1:deadball-second-v1');true");
             for(int page=0;page<12&&!"true".equals(evaluate(scenario,"document.querySelector('.story-choices').checkVisibility()"));page++)tapWebElement(scenario,"[data-story-page=next]");
             assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
             assertEquals("true",evaluate(scenario,"[...document.querySelectorAll('.story-choices button')].length===3&&document.querySelector('.story-reading').scrollHeight<=document.querySelector('.story-reading').clientHeight+2"));
