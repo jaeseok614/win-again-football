@@ -765,7 +765,7 @@ public final class GameSmokeTest {
             evaluate(scenario, "(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeGoalScene();matchCeremonyHold=false;ceremonyPending=null;managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;customPositions={};tacticalRoles={};setView('match');return true;})()");
             tapWebElement(scenario, "#primary");
             tapWebElement(scenario, "#ceremony-ready");
-            awaitTrue(scenario, "state.continuousSetup?.version===12 && state.continuous.tick>20");
+            awaitTrue(scenario, "state.continuousSetup?.version===13 && state.continuous.tick>20");
             assertEquals("The native live field uses the actual ball and all 22 names", "true", evaluate(scenario,
                 "(()=>{state.paused=true;drawField();return document.getElementById('match-names')._labels.length===22 && Math.hypot(lastMotionFrame.ball.x-F.continuousFrame(state).ball.x,lastMotionFrame.ball.y-F.continuousFrame(state).ball.y)<0.01 && document.documentElement.scrollHeight<=innerHeight+1;})()"));
             String replayProof = evaluate(scenario,
@@ -1255,8 +1255,8 @@ public final class GameSmokeTest {
             assertEquals("Landscape controls and statistics must stay within the current viewport", "true",evaluate(scenario,"[...document.querySelectorAll('.team-shape-board button,.team-shape-board select,.shape-report table,.shape-field figure')].filter(e=>e.checkVisibility()).every(e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.top>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1&&e.scrollWidth<=e.clientWidth+2&&e.scrollHeight<=e.clientHeight+2&&(!['BUTTON','SELECT'].includes(e.tagName)||r.height>=43.9);})"));
             screenshot(scenario,"android-regained-ball-preview.png");
             tapWebElement(scenario,"[data-tactics-apply=counter]");
-            assertEquals("counter",evaluate(scenario,"state.tactic"));
-            assertEquals("prep",evaluate(scenario,"state.phase"));
+            assertEquals("true",evaluate(scenario,"state.tactic==='counter'"));
+            assertEquals("true",evaluate(scenario,"state.phase==='prep'"));
             tapWebElement(scenario,".match-popup-header [data-match-popup-close]");
             assertEquals("false",evaluate(scenario,"F.running(state)"));
             scenario.onActivity(activity -> assertTrue("Regain preview caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
