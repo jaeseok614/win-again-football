@@ -2,6 +2,8 @@
 
 약체 구단을 키워 승격과 우승에 도전하는 축구 감독 게임 시제품입니다.
 
+2026-10-19: 공의 반사·쳐내기와 코너, 선발 비교와 실제 경기 기록의 코치 대화를 보완했습니다. 가로 화면·기존 저장을 유지하고 소스1,469개 검사와 Android14/15 각각24개 실행 검사를 통과했습니다. [설계와 검증](docs/FOOTBALL_DUELS_2026-10-19.md) · [설치 APK](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view). 테스트 서명 변경으로 기존 앱의 저장을 먼저 내보내고 재설치 후 불러오세요.
+
 게임 주소: https://jaeseok614.github.io/win-again-football/
 
 갤럭시 Chrome에서 주소를 열고 메뉴의 설치 기능으로 홈 화면에 추가하세요.

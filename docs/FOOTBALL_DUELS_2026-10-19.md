@@ -33,8 +33,27 @@ readingVersion2는 문장·문단 단위의 제한된 읽기 묶음을 쓰고 �
 - [FIFA 기능적 속도·가감속 부하](https://www.fifatrainingcentre.com/en/practice/speed-technical-coordination/speed-technical-coordination-part-1--introduction.php): 별도 가감속 부담 실험의 근거다. 후보 계수를 실제 생리 수치라고 표시하지 않는다.
 - [FM24 Mobile 공식 화면 개편](https://www.footballmanager.com/features/football-manager-2024-mobile-new-features-revealed), [FM26 Mobile 공식 기능](https://www.footballmanager.com/fm26/features/mobile): 선발 비교와 역할 확인의 짧은 동선을 참고했다. 이미지·대사·게임 코드는 가져오지 않았다.
 
-## 검증 상태
+## 검증 결과
 
-고정 전력 행렬, 실제 상대의 적응 AI, Node↔Chrome/Android 재현, 전체 소스 검사와 APK 검증 결과는 완료 후 아래에 기록한다. 진행 중인 검사를 성공으로 적지 않는다.
+기능61acb0f6, 최종 대화창 수정/검증50fcaecc764fdf519db09bcb52c22ea20c32bec9. [기계 판독 가능한 배포 증빙](FOOTBALL_RULE12_RELEASE_2026-10-19.json)에 지문·자산·원본 검사·설치 정보가 있다.
 
-선정한 동일48대결에서는 압박 득실 차 +0.3542→+0.3750, 코너0.0833→2.4167, 태클434.6667→430.4583이다. 태클 감소를 이번 제품의 성과로 주장하지 않는다. 자세한 조건/제외 후보는 별도 JSON에 기록했다. 모든 기존 검사·판정·대기 제한을 유지한다.
+- [원격 Source39189617264](https://github.com/jaeseok614/win-again-football/actions/runs/39189617264): 192 suites/1,469checks, PWA14, 오프라인 Android 자산 및 공개 생성물 일치. 로컬 전체 검사도192/1469를 통과했고 최종 대화창 가드 뒤 대상 검사와 실제9크기 반복 열기를 다시 확인했다.
+- [Android39189617263](https://github.com/jaeseok614/win-again-football/actions/runs/39189617263): API34/35 각각24tests, 실패·오류·건너뛰기0, APK/AAB/lint 성공. XML476.909초/529.150초와 양쪽 새 선발/질문/답변8캡처를 원본 ZIP 해시와 함께 확인했다. 최초 API34의 이미 열린 대화창 showModal 중복 오류를 실제 로그로 찾아 dialog.open을 확인하도록 수정했다. 연속 열기 회귀 검사를 추가하고 오류 판정·대기 제한은 유지했다.
+- Node↔Chrome 공개11/새12 부분·완료 캠페인·두 자연 연습 전체 JSON과 cold restore, 실제 WebView의 부분/완료 경기 지문을 대조했다. 파일 선택/미리보기/불러오기·내보내기 내용·cold reload 뒤 기존11 경기를 직접 확정하고 같은 시즌 다음 경기에서12로 시작했다. headless Chrome의 파일 저장 완료는 취소돼 확인하지 못했으며 Android 저장 선택기 왕복은 별도 네이티브 검사로 확인했다.
+- 새 코너 대화9가로 크기, 선발 비교8크기, 기존 취임/코치/선수 대화8크기와 라이브/연습8크기를 검사했다. 568×252~1280×720의 글자 내부 경계·사진·주요44px 버튼, 실제 답변·선발 적용·교체/전술·결과·같은 연습 재도전과 저장 불변을 확인했다.
+- 기본 환생 모드의 실제 첫12 경기→코너 면담→두 명시적 답변→파일 복원도 확인했다. 답변은 시즌·자금·선발·난수 진행을 바꾸지 않는다.
+- 씨드41 실제48경기(46리그+2컵)를 적응 전술 AI와 진행해 정산·순위·재정·기록·10경기별 복원·파일 왕복을 확인했다. 현재 시즌을 유지하고 별도 복사본에서 명시적 다음 시즌 이동으로4부에 진입했다. 회복 훈련과 비교된 선발을14번 직접 적용한 한 사례는40승2무4패·264득점47실점·122점·£593,900이다. 높은 득점은 장기 난이도 검토 대상으로 남기며 물리 변경 단독 효과나 일반 승률로 해석하지 않는다.
+- 같은 씨드41의 실제 Chrome 핵심 관전은 0.5배속141.433초/보통91.836초/4배속64.137초에 끝났다. 모두2:1·슈팅31:4·57,600틱과 자동 득점 장면3회, 실제 하프타임/종료·복원이 같았다. 고정 득점 연출과 장면별 속도 상한이 있어 전체 길이는 배속의 역수와 같지 않다. 데스크톱 결과이며 휴대폰 FPS 근거로 사용하지 않는다.
+- 최종 APK6,627,433바이트/SHA256 f0ff6e472dc17f5325547bee2b29d3fef7c8af1364424a9ed1bab48d55a0c67e. 내부HTML6,310,568바이트/SHA256 492cf39585368e2a0b740658e5e047d9f6080a0e66b7d6d46f6f72ff1afc4522가 로컬 최종 자산과 같다. PWA6,310,794바이트/shell7812b34319ac. 기존 Drive ID/폴더의 APK만 교체하고 원격 원본 전체 바이트를 다시 대조했다.
+
+같은 전력48대결에서는 압박 득실 차+0.3542→+0.3750, 코너0.0833→2.4167, 태클434.6667→430.4583이다. 태클 감소나 전술 균형 개선을 이번 제품의 성과로 주장하지 않는다. [조건·제외 후보·추가 전술 비교](FOOTBALL_RULE12_BENCHMARK_2026-10-19.json)를 함께 읽는다. 고정 전술 진단과 실제 적응 AI는 구분하며 높은 경합 빈도·압박/낮은 수비 성과·장기 득점 난이도를 추가 검토한다. 외부 게임의 코드·그림·대사를 복사하지 않았다.
+
+추가 고정 전체 대진256경기와 실제 적응 AI128경기도 기록했다. 적응 AI의 시작/기본 압박 라벨 득실 차는+0.2813→+0.6875였고 역습은−0.0938→−0.5000이었다. 이 라벨은 경기 중 변경될 수 있으며 전술 우열의 일반 순위가 아니다. [후속 접촉 연구](CONTACT_RECOVERY_RESEARCH_2026-10-19.md)의 회복·빠른 판단·접촉 거리 후보는 배포하지 않았다. 다음 물리 변경은13의 별도 저장/런타임/전체 경기 검증을 거친다.
+
+## 설치와 저장
+
+[같은 Drive APK 링크](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view)를 사용한다. 이번 테스트 서명은 이전 판과 다르다. 기존 앱에서 저장 내보내기 → 기존 앱 제거 → 새APK 설치 → 저장 불러오기. 저장키·시즌/경기 schema·앱 ID는 유지하며 진행 중인 경기는 저장된1–11 규칙으로 끝내고 새 킥오프부터12를 사용한다.
+
+## 재현
+
+저장소 루트에서 node source/run-tests.cjs, node source/build-pwa.cjs, node source/test-pwa.cjs index.html, node source/build-android.cjs를 실행한다. Playwright/Chrome을 준비한 환경에서는 source/browser/runtime-replay.cjs, lineup-readiness.cjs, deadball-story.cjs, compact-dialogue.cjs, horizontal-pitch.cjs를 실행한다. PLAYWRIGHT_MODULE과 CHROME_PATH는 로컬 설치 경로로 설정한다. 사용자 저장을 검사 입력으로 사용하지 않는다.
