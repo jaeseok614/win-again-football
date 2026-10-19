@@ -31,8 +31,35 @@
 
 외부 게임의 코드·그림·대사를 복사하지 않았다. 골·코너·승률을 정해 놓고 주입하지 않는다. 전술 대결은 동급 전력의 고정 진단과 T.coach의 적응 진단을 구분한다. 후자는 시작 전술 라벨이며 경기 중 바뀔 수 있고 캠페인의 하프타임/65분 상대 계획까지 재현하는 실전 전체 경기와도 구분한다.
 
+## 성장한 선수단의 가로 훈련 화면
+
+실제 두 시즌을 마친 선수단의 다음 준비 화면에서 성장 한계 설명이 작은 행을 넘는 문제를 수정했다. 이름·포지션·능력 전후·체력 전후와 한계 상태를 유지하면서 한계/최대 표시를 간결하게 하고, 전체 상태는 title에도 제공한다. 성장 한계와 최대 체력을 구분한다. 실제4부 종료 저장과3부 준비 복사본으로8가로 크기·10개 업무 화면의 내부 글자·카드·가림·읽기 전용 상태를 확인했다. 원본 시즌은 넘기거나 훈련하지 않는다. 이 경로는 source/browser/later-campaign-operations.cjs에 남겼다.
+
+## 동급 전력 비교
+
+총896경기를 기록했다. 능력60·초기 체력95·96분, 같은 대형의 양쪽 배정을 모두 사용했다. 4-4-2 기본 씨드81–88은 규칙별128경기다. 별도 씨드701–704의 고정 전술과 적응 AI는 각각 규칙별64경기이고, 작은4-3-3 검사는 씨드901–902·고정/적응 각각 규칙별32경기다. 추가 능력45/80의4-4-2 검사는 각각 두 씨드·규칙별32경기·고정/적응 코칭으로 나눴다(총256경기). 정해진 씨드의 회귀 진단이며 모집단 승률이나 실제 축구 통계 검증으로 해석하지 않는다.
+
+|4-4-2 기본 대진 · 전술별64출전|공개12 경기당 득실 차|새13 경기당 득실 차|
+|---|---:|---:|
+|균형|+0.0313|−0.2813|
+|압박|+0.2813|+0.3750|
+|역습|−0.2344|+0.3750|
+|낮은 수비|−0.0781|−0.4688|
+
+기본 씨드의 압박 대 역습16경기는 압박 측 평균 득실 차+0.4375→−0.0625였다. 그러나 별도 씨드의 같은 고정 맞대결8경기는+0.5→−1.125로 역습 쪽 편향이 컸다. 전술 전체 평균에서도 별도 고정 역습은−0.0313→+1.0938, 적응 AI의 역습 시작 라벨은−0.2188→+1.0625였다. 따라서 ‘압박 우세를 모두 해결했다’거나 ‘네 전술이 균형을 이뤘다’고 표시하지 않는다. 낮은 수비는4-4-2에서 약해졌지만, 작은4-3-3 검사에서는 새13 득실 차+0.4375(고정)/+0.1250(적응)였다. 대형·씨드 의존성과 역습 강도는 남은 조정 항목이다.
+
+작은 전력 민감도 검사에서 압박 대 역습은 각4경기다. 압박 측 득실 차는 능력45의 고정+0.5→−0.25·적응+0.5→0, 능력80의 고정+2.5→−0.5·적응+1.75→+0.25였다. 적은 씨드이므로 전력별 균형이 입증됐다고 해석하지 않는다. 능력80의 전술 전체 평균에서는 압박이 여전히 유리하고 낮은 수비가 악화됐다(고정 득실 차+0.625→−1.25, 적응 시작 라벨+0.4375→−1.875). 직접 맞대결의 개선과 수비 전체의 균형을 구분한다.
+
+기본 대진 전술별 평균 태클은 약211–213→184–189회로 줄었지만 여전히 높은 시뮬레이션 접촉 횟수다. 실제 프로 경기의 성공 태클 분포를 재현했다고 주장하지 않는다. 전체 원시 경기·대진·조건·제외한 후보는 비교 증빙에 보존했다.
+
 ## 검증과 남은 조정
 
 최종 수치는 [전술 비교 증빙](PRESS_COUNTER_RULE13_BENCHMARK_2026-10-19.json)과 [설치 검증 증빙](PRESS_COUNTER_RULE13_RELEASE_2026-10-19.json)에 기록한다. 아직 네 전술의 우열이 사라졌다고 주장하지 않는다. 고정 전술에서 남는 압박 우세, 낮은 수비의 커버와 강한 초기 선수단의 장기 득점은 계속 볼 부분이다.
 
-재현: node source/run-tests.cjs, node source/build-pwa.cjs, node source/test-pwa.cjs index.html, node source/build-android.cjs. 전술 비교는 node source/benchmark-tactics.cjs --versions 12,13 --seeds 701,702,703,704 --coach fixed 또는 --coach adaptive. Playwright/Chrome 환경에서 source/browser/runtime-replay.cjs, regain-preview.cjs, horizontal-pitch.cjs를 실행한다. 사용자 저장을 테스트 입력으로 쓰지 않는다.
+재현: node source/run-tests.cjs, node source/build-pwa.cjs, node source/test-pwa.cjs index.html, node source/build-android.cjs. 전술 비교는 node source/benchmark-tactics.cjs --versions 12,13 --seeds 701,702,703,704 --coach fixed 또는 --coach adaptive. Playwright/Chrome 환경에서 source/browser/runtime-replay.cjs, regain-preview.cjs, horizontal-pitch.cjs를 실행한다. 추가 전력45/80 진단은 DIAGNOSTIC_ABILITY 환경 변수를 설정하고 docs/research/benchmark-ability.cjs에 같은 전술 인수를 전달한다. 실제 완료 구단의 가로 업무 회귀 검사는 node source/browser/later-campaign-operations.cjs <고립된_완료_캠페인_JSON>으로 실행한다. 원본 바이트를 읽기만 하고 다음 시즌은 별도 복사본에서만 연다. 사용자 저장을 테스트 입력으로 쓰지 않는다.
+
+## 최종 설치 검증
+
+검증 커밋 ab7822cf613ce70348fa0e3bd2ef0c4f4216be3d의 [Source](https://github.com/jaeseok614/win-again-football/actions/runs/39206623657)196 suites/1,492checks·PWA14·공개 생성물 일치와 [Android14/15](https://github.com/jaeseok614/win-again-football/actions/runs/39206623648) 각각28tests(실패·오류·건너뛰기0)를 확인했다. 로컬 전체 검사도196/1492다. 실제 XML·새 전술/훈련/대화/유소년 캡처, APK 내부 HTML과 원본 ZIP, 같은Drive ID의 원격 재다운로드 전체 바이트를 대조했다.
+
+최종 APK 6628729바이트/SHA256 7c9211675a9bdeaef3b35d8818d0bfc4f42e9032bf5efa46abc0037eb23f21b6. 게임 HTML 6315848바이트/SHA256 026a7d2a484a9704abc299d05b349e0853c768e4778e3103816e7d75c8c6694a. [최신 테스트 APK](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view). 서명 변경 때문에 저장 내보내기→기존 앱 제거→설치→불러오기가 필요하다. 진행 중인 공개1–12 경기와 현재 시즌을 유지한다. main에는 병합하지 않았고 PR25는 초안이다.

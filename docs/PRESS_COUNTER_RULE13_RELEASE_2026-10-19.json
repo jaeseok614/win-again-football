@@ -1,5 +1,5 @@
 {
-  "status": "validation-in-progress",
+  "status": "verified-test-apk-replaced",
   "version": 13,
   "publishedRulesPreserved": "1–12",
   "schema": 10,
@@ -183,5 +183,1540 @@
       ],
       "seed": 6
     }
+  },
+  "functionalCommit": "505f829e4b10c4ee6cfe680b2c9978389a82cf50",
+  "nativeTestCorrectionCommit": "a026a7e6ae18a30ed7b51e43d6bbb2ad556bcb7f",
+  "physicalSource": {
+    "candidate": "coordinated press + paced contact + real support triangles + bounded diagonal counter runs and arrival",
+    "frozenUtc": "2026-10-19T04:39:00Z",
+    "files": [
+      {
+        "path": "source/dist/continuous-football.js",
+        "sha256": "277ae3973d37592f4f3decec1ee9e6b2e2d48214bf8117c76d190706e4e31d9a"
+      },
+      {
+        "path": "source/dist/continuous-tactics.js",
+        "sha256": "1f476cae6214e7ac59ccd7c0c8d203cdc6a9abff37a6814c66f9e3d259dab613"
+      },
+      {
+        "path": "source/dist/continuous-options.js",
+        "sha256": "c37816cae9729a8bf008a1b93b7b8bba79c3987b843cedf11182a4a85d46ea9e"
+      },
+      {
+        "path": "source/dist/continuous-defending.js",
+        "sha256": "66dfa6e9f5514806f2f80bed1257fe6aec3dac04b4e805a873c17d479a26c170"
+      }
+    ]
+  },
+  "sourceTree": "c459c64d50ce5cce6cd2e2e1d671d0a817c26e66",
+  "localVerification": {
+    "suites": 196,
+    "checks": 1492,
+    "pwaChecks": 14,
+    "nativeAssetChecks": 12,
+    "sourceLogSha256": "92e53b7ab0ee7b1715b974760b93c5db8afc8851f7fc7baf90c277aedb7eb58a",
+    "validCappedFixtureTargetGroups": 15
+  },
+  "browser": {
+    "viewports": [
+      [
+        568,
+        252
+      ],
+      [
+        568,
+        320
+      ],
+      [
+        640,
+        360
+      ],
+      [
+        740,
+        360
+      ],
+      [
+        844,
+        364
+      ],
+      [
+        844,
+        390
+      ],
+      [
+        915,
+        412
+      ],
+      [
+        1280,
+        720
+      ]
+    ],
+    "regainPreview": {
+      "tactics": 4,
+      "owners": 2,
+      "activePlayers": 22,
+      "bounds": true,
+      "nameGlyphNonOverlap": true,
+      "essentialControlHeightPx": 44,
+      "previewReadOnly": true,
+      "explicitApplyOnly": true
+    },
+    "runtime": {
+      "versions": [
+        11,
+        12,
+        13
+      ],
+      "partialAndFullExact": true,
+      "practiceStartsExact": true,
+      "commanded13CounterSubstitutionHalfFocusExact": true,
+      "coldRestoreExact": true
+    },
+    "importUpgrade": {
+      "source": "isolated seed17 rule12 campaign, not a user save",
+      "oldTicks": 723,
+      "oldRule": 12,
+      "newRule": 13,
+      "previewReadOnly": true,
+      "serializedExportExact": true,
+      "headlessBrowserDownloadVerified": false,
+      "coldReloadExact": true,
+      "confirmedOldRecordVersion": 12,
+      "year": 1,
+      "round": 1,
+      "automaticSeasonAdvance": false,
+      "errors": []
+    },
+    "timedWatch": {
+      "environment": "desktop Chrome headless 844x364; not phone FPS",
+      "seed": 41,
+      "strongStarterSquad": true,
+      "speeds": [
+        {
+          "speed": "slow",
+          "watch": "key",
+          "elapsedMs": 178688,
+          "score": [
+            10,
+            0
+          ],
+          "shots": [
+            46,
+            9
+          ],
+          "tick": 60000,
+          "automaticGoalScenes": 10,
+          "exactRestore": true
+        },
+        {
+          "speed": "normal",
+          "watch": "key",
+          "elapsedMs": 127756,
+          "score": [
+            10,
+            0
+          ],
+          "shots": [
+            46,
+            9
+          ],
+          "tick": 60000,
+          "automaticGoalScenes": 10,
+          "exactRestore": true
+        },
+        {
+          "speed": "rapid",
+          "watch": "key",
+          "elapsedMs": 100073,
+          "score": [
+            10,
+            0
+          ],
+          "shots": [
+            46,
+            9
+          ],
+          "tick": 60000,
+          "automaticGoalScenes": 10,
+          "exactRestore": true
+        }
+      ],
+      "normalAndRapidWholeMatchExact": true,
+      "wholeMatchSha256": "ca95f6fc70a3b994213680d529464da47b0bf71b9d43aae29ffd21a422434ba7",
+      "slowWholeMatchSnapshotCompared": false,
+      "viewingSpeedAndPhysicsSeparate": true,
+      "wallClockInterpretation": "fixed goal scene holds and per-event speed caps mean total duration is not inverse to selected speed; test sampling and screenshot overhead included"
+    },
+    "validCappedCareerColdReload": true,
+    "validCappedCareerThenSerialAnswersAndTwoGameFollowup": true,
+    "academyAndLeague": {
+      "initialViewports": 8,
+      "laterReportsAndQualifiedEuropeViewports": 4,
+      "threeCandidatesEach": true,
+      "actualComparisonsPerCandidate": 5,
+      "actualCostsAndBalance": true,
+      "automaticGoalHoldPreservesPause": true,
+      "script": "source/browser/single-screen-workspaces.cjs"
+    },
+    "additionalLogSha256": {
+      "validCapSerial": "39c9e9f7a0c38c99ac2eb690845f84447ce32f81416d22cb3ee1a24c325cd6b6",
+      "academyAndLeague": "f2772f11a70a20a9e8fc84a0271c8367c5a3950202b716ad7865f76bea775688"
+    }
+  },
+  "campaigns": {
+    "yearOne": [
+      {
+        "seed": 41,
+        "version": 13,
+        "tactic": "balanced",
+        "games": 49,
+        "explicitLineups": 22,
+        "answeredCorner": true,
+        "strategy": "recovery training; explicit strength-XI application only when readiness report recommends; one explicit new coach conversation",
+        "rows": [
+          {
+            "competition": "league",
+            "round": 1,
+            "score": [
+              10,
+              0
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 2,
+            "score": [
+              6,
+              1
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 3,
+            "score": [
+              7,
+              2
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 4,
+            "score": [
+              3,
+              0
+            ],
+            "ticks": 57600
+          },
+          {
+            "competition": "league",
+            "round": 5,
+            "score": [
+              5,
+              1
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 6,
+            "score": [
+              6,
+              1
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 7,
+            "score": [
+              3,
+              1
+            ],
+            "ticks": 57600
+          },
+          {
+            "competition": "league",
+            "round": 8,
+            "score": [
+              8,
+              2
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 9,
+            "score": [
+              1,
+              1
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 10,
+            "score": [
+              6,
+              2
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 11,
+            "score": [
+              6,
+              0
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 12,
+            "score": [
+              9,
+              1
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "cup",
+            "round": 12,
+            "score": [
+              5,
+              3
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 13,
+            "score": [
+              5,
+              0
+            ],
+            "ticks": 57600
+          },
+          {
+            "competition": "league",
+            "round": 14,
+            "score": [
+              6,
+              0
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 15,
+            "score": [
+              5,
+              1
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 16,
+            "score": [
+              6,
+              0
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 17,
+            "score": [
+              4,
+              0
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 18,
+            "score": [
+              6,
+              1
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 19,
+            "score": [
+              4,
+              2
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 20,
+            "score": [
+              6,
+              3
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 21,
+            "score": [
+              4,
+              2
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 22,
+            "score": [
+              7,
+              1
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 23,
+            "score": [
+              5,
+              1
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "cup",
+            "round": 23,
+            "score": [
+              5,
+              0
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 24,
+            "score": [
+              10,
+              1
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 25,
+            "score": [
+              13,
+              0
+            ],
+            "ticks": 60600
+          },
+          {
+            "competition": "league",
+            "round": 26,
+            "score": [
+              1,
+              2
+            ],
+            "ticks": 57600
+          },
+          {
+            "competition": "league",
+            "round": 27,
+            "score": [
+              8,
+              1
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 28,
+            "score": [
+              7,
+              1
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 29,
+            "score": [
+              9,
+              0
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 30,
+            "score": [
+              7,
+              2
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 31,
+            "score": [
+              16,
+              1
+            ],
+            "ticks": 61800
+          },
+          {
+            "competition": "league",
+            "round": 32,
+            "score": [
+              8,
+              1
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 33,
+            "score": [
+              7,
+              0
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 34,
+            "score": [
+              9,
+              0
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 35,
+            "score": [
+              7,
+              0
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "cup",
+            "round": 35,
+            "score": [
+              4,
+              0
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 36,
+            "score": [
+              7,
+              0
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 37,
+            "score": [
+              5,
+              0
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 38,
+            "score": [
+              12,
+              0
+            ],
+            "ticks": 60600
+          },
+          {
+            "competition": "league",
+            "round": 39,
+            "score": [
+              7,
+              0
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 40,
+            "score": [
+              15,
+              1
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 41,
+            "score": [
+              5,
+              1
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 42,
+            "score": [
+              5,
+              4
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 43,
+            "score": [
+              11,
+              0
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 44,
+            "score": [
+              4,
+              3
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 45,
+            "score": [
+              5,
+              3
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 46,
+            "score": [
+              4,
+              0
+            ],
+            "ticks": 58200
+          }
+        ],
+        "ending": {
+          "year": 1,
+          "round": 46,
+          "rank": {
+            "id": "brynwell",
+            "name": "토투넘 핫스퍼",
+            "en": "Brynwell Rovers",
+            "short": "토투넘",
+            "code": "TT",
+            "color": "#c8f36e",
+            "style": "빠른 유망주를 가진 작은 시민 구단",
+            "attack": 70,
+            "defense": 70,
+            "middle": 71,
+            "speed": 68,
+            "played": 46,
+            "won": 44,
+            "drawn": 1,
+            "lost": 1,
+            "gf": 310,
+            "ga": 44,
+            "points": 133,
+            "gd": 266,
+            "rank": 1
+          },
+          "balance": 670900,
+          "records": 49,
+          "cupChampion": "brynwell"
+        },
+        "explicitNext": {
+          "year": 2,
+          "division": 4
+        }
+      },
+      {
+        "seed": 41,
+        "version": 13,
+        "tactic": "counter",
+        "games": 49,
+        "explicitLineups": 25,
+        "answeredCorner": true,
+        "strategy": "recovery training; explicit strength-XI application only when readiness report recommends; one explicit new coach conversation",
+        "rows": [
+          {
+            "competition": "league",
+            "round": 1,
+            "score": [
+              7,
+              1
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 2,
+            "score": [
+              3,
+              0
+            ],
+            "ticks": 57000
+          },
+          {
+            "competition": "league",
+            "round": 3,
+            "score": [
+              1,
+              0
+            ],
+            "ticks": 57600
+          },
+          {
+            "competition": "league",
+            "round": 4,
+            "score": [
+              8,
+              1
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 5,
+            "score": [
+              12,
+              1
+            ],
+            "ticks": 61200
+          },
+          {
+            "competition": "league",
+            "round": 6,
+            "score": [
+              3,
+              2
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 7,
+            "score": [
+              7,
+              1
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 8,
+            "score": [
+              9,
+              0
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 9,
+            "score": [
+              10,
+              0
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 10,
+            "score": [
+              8,
+              1
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 11,
+            "score": [
+              10,
+              0
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 12,
+            "score": [
+              6,
+              0
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "cup",
+            "round": 12,
+            "score": [
+              5,
+              1
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 13,
+            "score": [
+              7,
+              0
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 14,
+            "score": [
+              6,
+              1
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 15,
+            "score": [
+              11,
+              0
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 16,
+            "score": [
+              6,
+              1
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 17,
+            "score": [
+              12,
+              1
+            ],
+            "ticks": 60600
+          },
+          {
+            "competition": "league",
+            "round": 18,
+            "score": [
+              8,
+              0
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 19,
+            "score": [
+              6,
+              1
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 20,
+            "score": [
+              4,
+              5
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 21,
+            "score": [
+              2,
+              3
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 22,
+            "score": [
+              4,
+              1
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 23,
+            "score": [
+              3,
+              1
+            ],
+            "ticks": 57000
+          },
+          {
+            "competition": "cup",
+            "round": 23,
+            "score": [
+              3,
+              2
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 24,
+            "score": [
+              6,
+              1
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 25,
+            "score": [
+              3,
+              0
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 26,
+            "score": [
+              6,
+              3
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 27,
+            "score": [
+              10,
+              1
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 28,
+            "score": [
+              3,
+              1
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 29,
+            "score": [
+              8,
+              1
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 30,
+            "score": [
+              11,
+              0
+            ],
+            "ticks": 60000
+          },
+          {
+            "competition": "league",
+            "round": 31,
+            "score": [
+              10,
+              0
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 32,
+            "score": [
+              7,
+              1
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 33,
+            "score": [
+              6,
+              2
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 34,
+            "score": [
+              6,
+              0
+            ],
+            "ticks": 57600
+          },
+          {
+            "competition": "league",
+            "round": 35,
+            "score": [
+              8,
+              0
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "cup",
+            "round": 35,
+            "score": [
+              10,
+              4
+            ],
+            "ticks": 61200
+          },
+          {
+            "competition": "league",
+            "round": 36,
+            "score": [
+              6,
+              1
+            ],
+            "ticks": 60600
+          },
+          {
+            "competition": "league",
+            "round": 37,
+            "score": [
+              6,
+              0
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 38,
+            "score": [
+              3,
+              0
+            ],
+            "ticks": 57600
+          },
+          {
+            "competition": "league",
+            "round": 39,
+            "score": [
+              10,
+              1
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 40,
+            "score": [
+              7,
+              0
+            ],
+            "ticks": 59400
+          },
+          {
+            "competition": "league",
+            "round": 41,
+            "score": [
+              5,
+              0
+            ],
+            "ticks": 57600
+          },
+          {
+            "competition": "league",
+            "round": 42,
+            "score": [
+              14,
+              3
+            ],
+            "ticks": 61200
+          },
+          {
+            "competition": "league",
+            "round": 43,
+            "score": [
+              3,
+              1
+            ],
+            "ticks": 57600
+          },
+          {
+            "competition": "league",
+            "round": 44,
+            "score": [
+              3,
+              4
+            ],
+            "ticks": 58800
+          },
+          {
+            "competition": "league",
+            "round": 45,
+            "score": [
+              3,
+              2
+            ],
+            "ticks": 58200
+          },
+          {
+            "competition": "league",
+            "round": 46,
+            "score": [
+              7,
+              1
+            ],
+            "ticks": 58800
+          }
+        ],
+        "ending": {
+          "year": 1,
+          "round": 46,
+          "rank": {
+            "id": "brynwell",
+            "name": "토투넘 핫스퍼",
+            "en": "Brynwell Rovers",
+            "short": "토투넘",
+            "code": "TT",
+            "color": "#c8f36e",
+            "style": "빠른 유망주를 가진 작은 시민 구단",
+            "attack": 70,
+            "defense": 70,
+            "middle": 71,
+            "speed": 68,
+            "played": 46,
+            "won": 43,
+            "drawn": 0,
+            "lost": 3,
+            "gf": 304,
+            "ga": 44,
+            "points": 129,
+            "gd": 260,
+            "rank": 1
+          },
+          "balance": 667400,
+          "records": 49,
+          "cupChampion": "brynwell"
+        },
+        "explicitNext": {
+          "year": 2,
+          "division": 4
+        }
+      }
+    ],
+    "defaultRebirth": {
+      "defaultRebirth": true,
+      "seed": 17,
+      "year": 1,
+      "round": 1,
+      "status": "active",
+      "version": 13,
+      "score": [
+        6,
+        1
+      ],
+      "corners": [
+        8,
+        2
+      ],
+      "originalCornerStoryAvailable": true,
+      "twoExplicitReplies": true,
+      "moneyLineupRngAndSeasonUnchangedByReplies": true,
+      "exactRestoreAndFileRoundTrip": true
+    },
+    "limitations": [
+      "Strong initial roster versus fifth-tier opposition gives very high scoring; not equal-strength balance or normal win-rate proof.",
+      "Two campaign branches have endogenous lineup, injuries, opposition and story; their totals are not isolated tactic effect estimates.",
+      "A separate valid top-tier fixture with limited squad investment ends 2W0D36L,46GF225GA and relegation. Top-tier roster depth/difficulty is not claimed balanced; the fixture and policy differ from the five-year balanced campaign."
+    ],
+    "promoted": {
+      "source": "isolated seed41 next-balanced campaign; not a user save",
+      "strategy": "balanced; recovery training; explicit readiness-recommended strength lineups; real O.plan adaptive opponents; explicit nextSeason between seasons only",
+      "seasons": [
+        {
+          "year": 2,
+          "division": 4,
+          "games": 48,
+          "lineups": 22,
+          "rounds": 46,
+          "rank": 1,
+          "won": 40,
+          "drawn": 4,
+          "lost": 2,
+          "gf": 247,
+          "ga": 82,
+          "balance": 1335800,
+          "records": 48,
+          "statsVersion": 13,
+          "currentSeasonUnchanged": true,
+          "exactSaveAndFileRoundTrip": true,
+          "movement": {
+            "from": 4,
+            "to": 3,
+            "kind": "promotion",
+            "rank": 1,
+            "label": "리그 원 승격"
+          }
+        },
+        {
+          "year": 3,
+          "division": 3,
+          "games": 47,
+          "lineups": 14,
+          "rounds": 46,
+          "rank": 3,
+          "won": 22,
+          "drawn": 9,
+          "lost": 15,
+          "gf": 157,
+          "ga": 115,
+          "balance": 2076200,
+          "records": 47,
+          "statsVersion": 13,
+          "currentSeasonUnchanged": true,
+          "exactSaveAndFileRoundTrip": true,
+          "movement": {
+            "from": 3,
+            "to": 3,
+            "kind": "stay",
+            "rank": 3,
+            "label": "3부 잔류"
+          }
+        },
+        {
+          "year": 4,
+          "division": 3,
+          "games": 47,
+          "lineups": 13,
+          "rounds": 46,
+          "rank": 3,
+          "won": 24,
+          "drawn": 7,
+          "lost": 15,
+          "gf": 156,
+          "ga": 127,
+          "balance": 2833600,
+          "records": 47,
+          "statsVersion": 13,
+          "currentSeasonUnchanged": true,
+          "exactSaveAndFileRoundTrip": true,
+          "movement": {
+            "from": 3,
+            "to": 3,
+            "kind": "stay",
+            "rank": 3,
+            "label": "3부 잔류"
+          }
+        },
+        {
+          "year": 5,
+          "division": 3,
+          "games": 49,
+          "lineups": 18,
+          "rounds": 46,
+          "rank": 1,
+          "won": 30,
+          "drawn": 8,
+          "lost": 8,
+          "gf": 170,
+          "ga": 103,
+          "balance": 3798500,
+          "records": 49,
+          "statsVersion": 13,
+          "currentSeasonUnchanged": true,
+          "exactSaveAndFileRoundTrip": true,
+          "movement": {
+            "from": 3,
+            "to": 2,
+            "kind": "promotion",
+            "rank": 1,
+            "label": "챔피언십 승격"
+          }
+        }
+      ]
+    },
+    "topDivision": {
+      "fixture": "work/webtoon-release-20261015/top-tier-compatible.json",
+      "fixtureSha256": "4eb06646740f69c8c2ef82dbe4f9ec70b747b6226b2e680dd6e7581c6bb356a5",
+      "fixtureYear": 5,
+      "fixtureContinuous": false,
+      "strategy": "balanced; recovery training; explicit readiness-recommended strength lineups; actual O.plan opponents",
+      "year": 6,
+      "division": 1,
+      "version": 13,
+      "games": 39,
+      "leagueGames": 38,
+      "rank": {
+        "id": "brynwell",
+        "name": "토투넘 핫스퍼",
+        "en": "Brynwell Rovers",
+        "short": "토투넘",
+        "code": "TT",
+        "color": "#c8f36e",
+        "style": "빠른 유망주를 가진 작은 시민 구단",
+        "attack": 70,
+        "defense": 70,
+        "middle": 71,
+        "speed": 68,
+        "played": 38,
+        "won": 2,
+        "drawn": 0,
+        "lost": 36,
+        "gf": 46,
+        "ga": 225,
+        "points": 6,
+        "gd": -179,
+        "rank": 20
+      },
+      "balance": 5815500,
+      "originalUnchanged": true,
+      "restore": true,
+      "fileRoundtrip": true
+    },
+    "totalPhysicalGames": 328
+  },
+  "coreCommit": "03ee4289c28389c278aee367bf3cf36a253d461d",
+  "trainingForecast": {
+    "actualCompletedFixture": {
+      "seed": 41,
+      "year": 2,
+      "division": 4,
+      "records": 48,
+      "archivedYearOneRecords": 49
+    },
+    "followingPrepDivision": 3,
+    "shortLimitLabel": "한계",
+    "maxEnergyLabel": "최대",
+    "exactNumbersPreserved": true,
+    "tooltipStatusPreserved": true,
+    "viewOnly": true,
+    "viewports": [
+      [
+        568,
+        320
+      ],
+      [
+        640,
+        360
+      ],
+      [
+        740,
+        360
+      ],
+      [
+        844,
+        364
+      ],
+      [
+        844,
+        390
+      ],
+      [
+        915,
+        412
+      ],
+      [
+        1024,
+        768
+      ],
+      [
+        1280,
+        720
+      ]
+    ],
+    "readOnlyPagesPerViewport": 10,
+    "closedSeasonViewports": 3,
+    "closedSeasonPagesPerViewport": 10,
+    "regressionScript": "source/browser/later-campaign-operations.cjs",
+    "logSha256": "5d3b1425b3066a1971eb6b08338f25cfd1083b15f6a4c6666e7932a694b60c0f"
+  },
+  "initialNativeDiagnosis": {
+    "runId": 39202643691,
+    "api35Artifact": {
+      "id": 12164259330,
+      "sha256": "4097b2901bc84fd61adb4e51e66633d09d0c7e971ea6df03583b586bba6ef511"
+    },
+    "xml": {
+      "tests": 27,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    },
+    "causes": [
+      "Fresh real UI kickoff assertion still expected default12 instead of13.",
+      "WebView evaluation returns JSON-quoted strings; literal comparison expected an unquoted counter."
+    ],
+    "fix": "a026a7e6ae18a30ed7b51e43d6bbb2ad556bcb7f",
+    "limitsAndErrorCollectionPreserved": true
+  },
+  "validationCommit": "ab7822cf613ce70348fa0e3bd2ef0c4f4216be3d",
+  "productionTree": "869d98a9b1c7b25f2cb581bcc91d21d8d50fa43f",
+  "nativeFixtureDiagnosis": {
+    "runId": 39204888056,
+    "perApi": {
+      "tests": 28,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    },
+    "artifacts": [
+      {
+        "id": 12165433753,
+        "api": 34,
+        "sha256": "14ad380d4eceb2d80e0630838f180b28fa420edb72bf0be08f5c3f155c50d391"
+      },
+      {
+        "id": 12165378710,
+        "api": 35,
+        "sha256": "2aab198bc9ee8485081892025e5810ce6e57f35b326d63d67bbf2e314e88bc56"
+      }
+    ],
+    "cause": "The new artificial capped-squad test edited player attributes outside valid career progression. Restoration correctly rejected it and protected the previous raw save; later serial reload and academy layout inherited the recovery notice.",
+    "confirmed": "Standalone S.restore rejects the old fixture; a full actual technique-trained season creates18 capped players, full energy and an exactly restorable following campaign. Existing story-serial browser reload passes.",
+    "fixCommit": "ab7822cf613ce70348fa0e3bd2ef0c4f4216be3d",
+    "fix": "Both source/native capped fixtures use actual league/cup matches, technique training, settlement and explicit nextSeason. All18 caps and all numeric/geometry assertions remain, with exact S.restore before native saving.",
+    "gameLogicOrValidationWeakened": false
+  },
+  "ci": {
+    "android": {
+      "runId": 39206623648,
+      "url": "https://github.com/jaeseok614/win-again-football/actions/runs/39206623648",
+      "headSha": "ab7822cf613ce70348fa0e3bd2ef0c4f4216be3d",
+      "mergeCheckoutSha": "d8e0256eec8590944a95952390d44ecbf17898be",
+      "conclusion": "success",
+      "apis": [
+        {
+          "api": 34,
+          "jobId": 117910762217,
+          "artifactId": 12165964208,
+          "artifactSha256": "19f6fb4ede37281b16c4bb0b08bce8636223dc2bcfba4a57db32b9b41c2c1f96",
+          "tests": 28,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 619.403,
+          "conclusion": "success"
+        },
+        {
+          "api": 35,
+          "jobId": 117910762487,
+          "artifactId": 12166495917,
+          "artifactSha256": "b73ec10b63cbbb07c446da341f2af89e28a84df351c0e2eefad30fb555c08572",
+          "tests": 28,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 431.247,
+          "conclusion": "success"
+        }
+      ],
+      "visualInspection": {
+        "apis": [
+          34,
+          35
+        ],
+        "screens": [
+          "android-capped-training-forecast",
+          "android-regained-ball-preview",
+          "android-serial-followup",
+          "android-whole-academy"
+        ],
+        "actualScreenshotsReviewed": 8
+      }
+    },
+    "source": {
+      "runId": 39206623657,
+      "jobId": 117910762317,
+      "url": "https://github.com/jaeseok614/win-again-football/actions/runs/39206623657",
+      "headSha": "ab7822cf613ce70348fa0e3bd2ef0c4f4216be3d",
+      "conclusion": "success",
+      "suites": 196,
+      "checks": 1492,
+      "pwaGroups": 14,
+      "offlineBuild": true,
+      "committedAssetsMatch": true,
+      "logSha256": "1eab6de34693a047ab9d9dc81c247df7b6c3c30d0bd133717830ce4f3bb045dc"
+    }
+  },
+  "apk": {
+    "fileName": "win-again-20261019-pressure-counter.apk",
+    "bytes": 6628729,
+    "sha256": "7c9211675a9bdeaef3b35d8818d0bfc4f42e9032bf5efa46abc0037eb23f21b6",
+    "game": {
+      "schema": 1,
+      "applicationId": "com.jaeseok614.winagainfootball",
+      "versionName": "1.0.0",
+      "versionCode": 1,
+      "saveKey": "win-again-season-v17",
+      "bytes": 6315848,
+      "sha256": "026a7d2a484a9704abc299d05b349e0853c768e4778e3103816e7d75c8c6694a"
+    },
+    "previousSigner": [
+      "abd1be7871fcdd629ac8566559dec15ce1b61c902e92e1199fd156da8b9b351f"
+    ],
+    "newSigner": [
+      "5f134ae533a6f577c44faffb0fedbd5a9e0df6226a1b459353c150818c6b0453"
+    ],
+    "sameSigner": false,
+    "artifactId": 12165399964,
+    "artifactSha256": "ff7240d4965c8a74833e5c5d19b62cbae5a7c2006e46fefa07ab5c944c322b86",
+    "offlineHtmlExactToLocal": true
+  },
+  "drive": {
+    "fileId": "1nSujeFdST1on5jVkSCNrH2CleLCibWkc",
+    "bytes": 6628729,
+    "sha256": "7c9211675a9bdeaef3b35d8818d0bfc4f42e9032bf5efa46abc0037eb23f21b6",
+    "rawReadbackEqual": true,
+    "title": "win-again-20261019-pressure-counter.apk",
+    "modifiedUtc": "2026-10-19T06:11:56.601Z",
+    "url": "https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view",
+    "parentIdsUnchanged": true,
+    "onlyApkUpdated": true
+  },
+  "mainHead": "3af6f7cb8bdbabc8146df4c221e4cda6c951f26c",
+  "mainMerged": false,
+  "pr": {
+    "number": 25,
+    "url": "https://github.com/jaeseok614/win-again-football/pull/25",
+    "draft": true
+  },
+  "verifiedUtc": "2026-10-19T06:13:39.061Z",
+  "publicPwa": {
+    "bytes": 6316074,
+    "sha256": "d3d3ef6e9261ebadd035d9a76b875e5daf918dd85437071c92bf5222366791a0",
+    "shell": "1ab805a4e1a6"
   }
 }
