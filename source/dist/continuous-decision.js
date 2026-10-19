@@ -9,7 +9,7 @@
    for(const q of opponents){if(q.pos==='GK')continue;const qx=q.x+q.vx*.35,qy=q.y+q.vy*.35,f=clamp(((qx-p.x)*dx+(qy-p.y)*dy)/length,.25,1),d=Math.hypot(qx-(p.x+dx*f),qy-(p.y+dy*f));space=Math.min(space,d);}
    routes.push({x,y,space,value:Math.min(6,space)*.12-Math.abs(offset)*.01});
   }
-  const route=routes.reduce((a,b)=>b.value>a.value?b:a);return {...route,near,sprint:route.space>3&&near>3&&p.energy>40&&(p.speed>62||w.tactics[p.team]==='counter'&&w.tick-(w.transitionTick??-10000)<(w.version>=11?90:40))};
+  const route=routes.reduce((a,b)=>b.value>a.value?b:a);return {...route,near,sprint:route.space>3&&near>3&&p.energy>40&&(w.version>=14?(p.burst??100)>20:(p.speed>62||w.tactics[p.team]==='counter'&&w.tick-(w.transitionTick??-10000)<(w.version>=11?90:40)))};
  }
  function meetCarrier(w,p,carrier,limit){
   let point={x:carrier.x,y:carrier.y},eta=distance(p,point)/Math.max(1,limit);

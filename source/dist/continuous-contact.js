@@ -32,16 +32,19 @@
  }
  function reflect(ball,n){const dot=ball.vx*n.x+ball.vy*n.y+ball.vz*n.z;ball.vx-=1.72*dot*n.x;ball.vy-=1.72*dot*n.y;ball.vz-=1.72*dot*n.z;}
  function goal(crossing){return crossing.axis==='y'&&crossing.x>LEFT+R&&crossing.x<W-LEFT-R&&crossing.z+2*R<2.44;}
- function bodies(players){
+ function bounds(rows,i,p){const n=i*4;rows[n]=Math.min(p.prevX,p.x);rows[n+1]=Math.max(p.prevX,p.x);rows[n+2]=Math.min(p.prevY,p.y);rows[n+3]=Math.max(p.prevY,p.y);}
+ function bodies(players,fast=false){
   const active=players.filter(p=>p.active),r=2*BODY;
   // Two bounded passes resolve chains; initial overlap is separated before paths.
+  const boxes=fast?new Float64Array(active.length*4):null;if(fast)for(let i=0;i<active.length;i++)bounds(boxes,i,active[i]);
   for(let round=0;round<2;round++)for(let i=0;i<active.length;i++)for(let j=i+1;j<active.length;j++){
-   const p=active[i],q=active[j];if(Math.max(p.prevX,p.x)+r<Math.min(q.prevX,q.x)||Math.max(q.prevX,q.x)+r<Math.min(p.prevX,p.x)||Math.max(p.prevY,p.y)+r<Math.min(q.prevY,q.y)||Math.max(q.prevY,q.y)+r<Math.min(p.prevY,p.y))continue;const a={x:p.prevX,y:p.prevY},b={x:q.prevX,y:q.prevY},t=entry(a,p,b,q,r);if(t===null)continue;
+   const p=active[i],q=active[j];if(fast){const a=i*4,b=j*4;if(boxes[a+1]+r<boxes[b]||boxes[b+1]+r<boxes[a]||boxes[a+3]+r<boxes[b+2]||boxes[b+3]+r<boxes[a+2])continue;}else if(Math.max(p.prevX,p.x)+r<Math.min(q.prevX,q.x)||Math.max(q.prevX,q.x)+r<Math.min(p.prevX,p.x)||Math.max(p.prevY,p.y)+r<Math.min(q.prevY,q.y)||Math.max(q.prevY,q.y)+r<Math.min(p.prevY,p.y))continue;const a={x:p.prevX,y:p.prevY},b={x:q.prevX,y:q.prevY},t=entry(a,p,b,q,r);if(t===null)continue;
    let nx=a.x+(p.x-a.x)*t-b.x-(q.x-b.x)*t,ny=a.y+(p.y-a.y)*t-b.y-(q.y-b.y)*t,n=Math.hypot(nx,ny);if(n<1e-8){nx=p.id<q.id?-1:1;ny=0;n=1;}nx/=n;ny/=n;
    const closing=(p.x-a.x-q.x+b.x)*nx+(p.y-a.y-q.y+b.y)*ny;
    if(closing<0){const correction=-closing*(1-t)/2;p.x+=nx*correction;p.y+=ny*correction;q.x-=nx*correction;q.y-=ny*correction;const v=(p.vx-q.vx)*nx+(p.vy-q.vy)*ny;if(v<0){p.vx-=v*nx/2;p.vy-=v*ny/2;q.vx+=v*nx/2;q.vy+=v*ny/2;}}
    const separation=Math.hypot(p.x-q.x,p.y-q.y);if(separation<r){const push=(r-separation+1e-6)/2;p.x+=nx*push;p.y+=ny*push;q.x-=nx*push;q.y-=ny*push;}
    for(const k of [p,q]){k.x=clamp(k.x,.15,W-.15);k.y=clamp(k.y,.15,H-.15);}
+   if(fast){bounds(boxes,i,p);bounds(boxes,j,q);}
   }
  }
  const api={R,BODY,entry,boundary,frame,reflect,goal,bodies};root.ContinuousContact=api;if(typeof module!=='undefined')module.exports=api;

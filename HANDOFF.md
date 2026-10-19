@@ -1,3 +1,7 @@
+# 진행 — 2026-10-20 규칙14와 출시 품질 검사
+
+[설계/공식 참고](docs/FOOTBALL_RULE14_2026-10-20.md). 공통 질주와 실제 속도별 태클 소모를 고정하고 전체 검증 중이다.1–13/현 시즌/저장키 유지. 원격/APK 교체 완료를 아직 주장하지 않는다. 로컬14 Node↔Chrome 부분/전체/두 자연 연습과 명령13/14·cold restore,8가로 분석/라이브/연습 통과. 실제31개 Android 검사와 전체 소스,704경기 최종 진단, 실제 시즌을 확인 중이다. 상세 작업/지문은 work/release-balance-20261020/progress.json이며 개인 구단이 아닌 고립 QA다.
+
 # 최신 완료 — 2026-10-19 압박·역습 규칙13 · 가로 탈취 분석과 성장 구단 표시
 
 [설계와 공식 참고](docs/PRESS_COUNTER_RULE13_2026-10-19.md), [896경기 원시 비교](docs/PRESS_COUNTER_RULE13_BENCHMARK_2026-10-19.json), [최종 검사·설치 증빙](docs/PRESS_COUNTER_RULE13_RELEASE_2026-10-19.json).

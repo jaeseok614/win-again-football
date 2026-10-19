@@ -1,6 +1,7 @@
 # Google Play 출시 준비
 
-작성 기준: 2026-10-02. 현재 소유자는 Google Play 개발자 계정이 없습니다.
+작성 기준: 2026-10-20. 소유자는 개발자 등록 결제와 콘솔 설정을 마쳤다고 알렸습니다.
+현재 콘솔의 신원 확인·테스트·프로덕션 접근 상태는 이 문서에서 확인한 사실이 아닙니다.
 이 저장소는 실제 Android 앱을 빌드할 수 있도록 준비한 상태이며, Play에
 게시하거나 심사에 제출한 상태는 아닙니다.
 
@@ -8,7 +9,7 @@
 
 | 항목 | 설정 |
 | --- | --- |
-| 앱 이름 | 눈 떠보니 5부 리그 감독이었다! 이번 생엔 우승한다 |
+| 앱 이름 | 눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기 |
 | 출시 패키지 | `com.jaeseok614.winagainfootball` |
 | 버전 | `1.0.0`, versionCode `1` |
 | 최소 Android | Android 7.0 / API 24 |
@@ -57,7 +58,7 @@ Windows에서는 마지막 줄에 `gradlew.bat assembleDebug bundleRelease lintD
 `.github/workflows/android.yml`은 PR 변경, main push 또는 수동 실행으로 APK,
 미서명 AAB, Android lint 결과를 빌드하고 GitHub Actions artifact로 보관합니다.
 공개 배포 또는 Play 업로드는 자동으로 실행하지 않습니다. 에뮬레이터 검증은
-API 35에서 오프라인 실행, 저장·구단 복원, 일시 정지, 뒤로 가기, 앱 다시 시작,
+API 34와 35에서 오프라인 실행, 저장·구단 복원, 일시 정지, 뒤로 가기, 앱 다시 시작,
 네이티브 문서 저장과 실제 파일 입력 불러오기를 검사합니다. CI가 성공하기
 전에는 Android 컴파일이나 기기 테스트를 통과했다고 보고하지 마세요.
 
@@ -65,11 +66,11 @@ API 35에서 오프라인 실행, 저장·구단 복원, 일시 정지, 뒤로 �
 쓰는 동안에는 진행 중 안내를 표시하며 중복 요청을 막습니다. 계측할 수 없는
 작업에 임의의 퍼센트를 표시하지 않습니다.
 
-## 개발자 계정 만들기
+## 개발자 계정과 테스트 상태 확인
 
-소유자가 [Google Play Console](https://play.google.com/console/signup)에 가입하고
-계약 동의·결제·신원 확인을 직접 진행합니다. 현재 등록비는 한 번만 내는 미화
-25달러입니다. 새 개인 계정은 실제 Android 기기 인증도 필요합니다.
+소유자가 이미 등록과 결제를 진행했습니다. [Google Play Console](https://play.google.com/console/)에서
+남은 계정 확인·연락처·실제 Android 기기 인증 상태를 확인합니다. 등록 결제 완료와
+프로덕션 출시 승인은 별개이며 이 문서는 콘솔 상태를 자동 조회하지 않습니다.
 [Google의 등록 안내](https://support.google.com/googleplay/android-developer/answer/6112435?hl=ko)
 
 개인 명의로 출시하면 새 개인 계정의 비공개 테스트 요건을 적용받습니다.
@@ -122,9 +123,9 @@ Bundle / APK → Android App Bundle**에서 업로드 키를 만들고 서명한
 
 ## 스토어 문구 초안
 
-**제목:** 눈 떠보니 5부 리그 감독이었다! 이번 생엔 우승한다
+**제목:** 눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기
 
-공백·문장부호를 포함해 29자입니다. 애니메이션·라이트노벨처럼 상황과 목표를
+공백·문장부호를 포함해 26자입니다. 하부 리그 감독의 상황과 목표를
 표현하면서 Google Play의 제목 30자 제한 안에 맞췄습니다.
 [공식 메타데이터 정책](https://support.google.com/googleplay/android-developer/answer/9898842?hl=ko)
 

@@ -16,6 +16,8 @@
   }return best;
  }
 
+ // Rule14 accounts for actual lunge effort; planted defence has a smaller cost.
+ function challenge(p,limit){const effort=clamp(Math.hypot(p.vx,p.vy)/Math.max(1,limit),0,1);p.burst=clamp(p.burst-3-effort*10,0,100);p.energy=clamp(p.energy-(.02+.1*effort*effort)*(1.2-p.endurance*.004),0,100);}
  function keeperTarget(w,p,reaction){
   const b=w.ball,goal=direction(w,p.team)<0?H:0,sign=goal===0?1:-1,range=Math.abs(b.y-goal),carrier=w.players.find(q=>q.active&&q.id===b.owner),threat=carrier&&carrier.team!==p.team&&range<30,shot=b.flight?.kind==='shot'&&b.flight.team!==p.team;
   let depth=threat?clamp(range*.18,1.1,4.2):2.7,x=34,y=goal+sign*depth;
@@ -26,5 +28,5 @@
   return {target:{x:clamp(x,POST-.4,W-POST+.4),y:clamp(y,.2,H-.2)},sprint:!!(shot||threat)};
  }
  function setPieceSkill(p,kind){return Math.round(kind==='corner'?p.passing*.72+p.attack*.18+p.speed*.1:kind==='penalty'?p.attack*.85+p.passing*.15:p.attack*.48+p.passing*.47+p.speed*.05);}
- const api={tackler,keeperTarget,setPieceSkill};root.ContinuousDefending=api;if(typeof module!=='undefined')module.exports=api;
+ const api={tackler,challenge,keeperTarget,setPieceSkill};root.ContinuousDefending=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

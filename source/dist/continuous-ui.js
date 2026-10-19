@@ -20,12 +20,19 @@ function continuousDisplayTick(now){
  if(!active||continuousMatch!==match){continuousOverview=null;continuousStamp=now;continuousBudget=0;continuousMatch=match;continuousVisualBefore=null;continuousVisualCurrent=null;continuousVisualContact=false;if(!active)return;}
  const delta=Math.min(50,Math.max(0,now-continuousStamp));continuousStamp=now;
  continuousBudget=Math.min(4800,continuousBudget+delta*continuousDisplayRate(match));
- const oldMinute=match.minute,oldPhase=match.phase,events=[],started=performance.now();let snapshot=null;
+ const oldMinute=match.minute,oldPhase=match.phase,events=[],started=performance.now();let snapshot=null,advanced=false;
  while(continuousBudget>=100&&F.running(match)&&performance.now()-started<6){
-  const rate=continuousDisplayRate(match);continuousVisualBefore=snapshot||F.continuousFrame(match);const rows=F.advanceContinuous(match,1);continuousVisualCurrent=snapshot=F.continuousFrame(match);continuousVisualContact=rows.some(e=>['goal','shot','card'].includes(e.type));events.push(...rows);continuousBudget-=100;
-  if(rate!==continuousDisplayRate(match)){continuousOverview=null;continuousBudget=0;break;}
+  const rate=continuousDisplayRate(match),overview=MatchFlow.watchMode(playbackPrefs)==='key'&&rate>=30;
+  if(!overview)continuousVisualBefore=snapshot||F.continuousFrame(match);
+  const rows=F.advanceContinuous(match,1);advanced=true;const nextRate=continuousDisplayRate(match);continuousVisualContact=rows.some(e=>['goal','shot','card'].includes(e.type));
+  // A held overview never displays intermediate actor snapshots. Materialize
+  // only its final/boundary frame; full viewing keeps adjacent physical ticks.
+  if(!overview||nextRate<30||continuousVisualContact){continuousVisualCurrent=snapshot=F.continuousFrame(match);if(overview)continuousVisualBefore=snapshot;}
+  events.push(...rows);continuousBudget-=100;
+  if(rate!==nextRate){continuousOverview=null;continuousBudget=0;break;}
   if(rows.some(e=>['goal','shot','card','break'].includes(e.type))){continuousOverview=null;continuousBudget=0;break;}
  }
+ if(advanced&&continuousVisualCurrent?.tick!==match.continuous.tick)continuousVisualBefore=continuousVisualCurrent=F.continuousFrame(match);
  if(!events.length&&oldMinute===match.minute)return;
  const important=events.some(e=>['attempt','goal','shot','card','break'].includes(e.type));
  if(practice){presentPracticeEvents(events);if(important||now-continuousRenderAt>500){renderPractice();continuousRenderAt=now;}return;}

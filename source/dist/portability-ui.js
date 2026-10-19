@@ -6,7 +6,7 @@ function requestCampaignExport(){
  portabilityExportBusy=true;const token=++portabilityExportToken;portabilityError='';portabilityStatus='구단 저장 파일을 준비하고 있어요…';
  portabilityExportControls=[...dialog.querySelectorAll('[data-portable]')].filter(button=>button.dataset.portable!=='close').map(button=>({button,disabled:button.disabled}));const input=$('campaign-import-file');if(input)portabilityExportControls.push({button:input,disabled:input.disabled});for(const item of portabilityExportControls)item.button.disabled=true;
  const progress=$('campaign-file-progress');if(progress)progress.hidden=false;dialog.setAttribute('aria-busy','true');updateImportPreview();
- const run=()=>{if(token!==portabilityExportToken||!dialog.open)return;try{if(exportCampaign()===null)portabilityStatus='';}finally{finishQueuedCampaignExport();}};
+ const run=async()=>{if(token!==portabilityExportToken||!dialog.open)return;try{const result=await exportCampaign();if(token===portabilityExportToken&&result===null&&portabilityError)portabilityStatus='';}catch(error){if(token===portabilityExportToken){portabilityStatus='';portabilityError='저장 파일을 만들지 못했어요. '+error.message;updateImportPreview();}}finally{if(token===portabilityExportToken)finishQueuedCampaignExport();}};
  if(typeof requestAnimationFrame==='function')requestAnimationFrame(()=>setTimeout(run,0));else setTimeout(run,0);
  return true;
 }

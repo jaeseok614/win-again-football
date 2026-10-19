@@ -7,7 +7,11 @@
   const drag=shot||length>32?.035:.32,flight=length/(shot?20+p.attack*.1:12+p.passing*.06),launch=drag*length/(1-Math.exp(-drag*flight));let risk=0;
   for(const d of w.players){if(!d.active||d.team===p.team||shot&&d.pos==='GK')continue;
    const f=clamp(((d.x-p.x)*dx+(d.y-p.y)*dy)/(length*length),0,1);if(f<.06||f>.97)continue;
-   const x=p.x+dx*f,y=p.y+dy*f,n=Math.hypot(x-d.x,y-d.y),time=-Math.log(Math.max(.001,1-drag*length*f/launch))/drag,limit=speed(d),a=2.4+d.speed*.027,initial=clamp(((x-d.x)*d.vx+(y-d.y)*d.vy)/(n||1),-limit,limit),ramp=Math.min(time,Math.max(0,(limit-initial)/a)),reach=Math.max(0,initial*ramp+a*ramp*ramp/2+limit*(time-ramp));
+   const x=p.x+dx*f,y=p.y+dy*f,n=Math.hypot(x-d.x,y-d.y),limit=speed(d);
+   // Even an already sprinting defender cannot cover more than top speed
+   // times the entire flight. Skip only guaranteed zero-risk contributions.
+   if(w.version>=14&&n>limit*flight+2)continue;
+   const time=-Math.log(Math.max(.001,1-drag*length*f/launch))/drag,a=2.4+d.speed*.027,initial=clamp(((x-d.x)*d.vx+(y-d.y)*d.vy)/(n||1),-limit,limit),ramp=Math.min(time,Math.max(0,(limit-initial)/a)),reach=Math.max(0,initial*ramp+a*ramp*ramp/2+limit*(time-ramp));
    // A defender must physically arrive; standing near an infinite-speed ray is insufficient.
    risk+=clamp((reach+(shot?.8:.65)-n)/1.3+.5,0,1);
   }return risk;
