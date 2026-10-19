@@ -1262,4 +1262,19 @@ public final class GameSmokeTest {
             scenario.onActivity(activity -> assertTrue("Regain preview caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
         }
     }
+
+    @Test public void cappedSquadForecastKeepsAllEighteenRowsAndTheCampaign() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeOperationsPage();managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;launchBusy=false;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41,{startingClub:true,suspensions:true});state=season.match;for(const p of Object.values(season.squad)){const k=S.primaryKey(p);p[k]=p.potential;state.players[p.id][k]=p.potential;}setView('club');openManagementPanel('training-card');return true;})()");
+            String before=evaluate(scenario,"JSON.stringify(season)");
+            assertEquals("true",evaluate(scenario,"(()=>{const rows=[...document.querySelectorAll('.team-training-preview li')];return rows.length===18&&rows.every(e=>e.querySelector('small').title==='성장 한계 도달'&&e.textContent.includes('한계'));})()"));
+            assertEquals("Capped forecast names and numbers must remain inside their rows", "true",evaluate(scenario,"[...document.querySelectorAll('.team-training-preview,.team-training-preview ul,.team-training-preview li,.team-training-preview small,.team-training-preview strong,.team-energy')].filter(e=>e.checkVisibility()).every(e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.top>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1&&e.scrollWidth<=e.clientWidth+2&&e.scrollHeight<=e.clientHeight+2;})"));
+            screenshot(scenario,"android-capped-training-forecast.png");
+            tapWebElement(scenario,"[data-team-focus=recovery]");
+            assertEquals("true",evaluate(scenario,"[...document.querySelectorAll('.team-training-preview li small')].length===18&&[...document.querySelectorAll('.team-training-preview li small')].every(e=>e.title==='최대 체력 도달'&&e.textContent.includes('최대'))"));
+            assertEquals(before,evaluate(scenario,"JSON.stringify(season)"));
+            scenario.onActivity(activity -> assertTrue("Capped training forecast caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
 }
