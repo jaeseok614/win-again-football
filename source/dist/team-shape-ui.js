@@ -22,5 +22,5 @@ function fitTeamShape(){
 
  host._labels=labels;
 }
-window.addEventListener('resize',()=>{if(matchPopupActive==='analysis')queueTeamShapeFit();});
+window.addEventListener('resize',()=>{if(typeof matchPopupActive!=='undefined'&&matchPopupActive==='analysis')queueTeamShapeFit();});
 document.getElementById('tactics-board').addEventListener('change',event=>{const select=event.target.closest('[data-shape-filter]');if(!select)return;const kind=select.dataset.shapeFilter;previewTacticsDiagram(kind==='owner'?select.value:tacticsDiagramOwner,kind==='zone'?select.value:tacticsDiagramZone,kind);document.querySelector('[data-shape-filter="'+kind+'"]')?.focus({preventScroll:true});});
