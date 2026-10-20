@@ -1382,6 +1382,9 @@ public final class GameSmokeTest {
             evaluate(scenario,"window.saveWorkspaceOriginal=JSON.stringify(currentCampaignPayload());openPortability();previewCampaignText(CampaignFile.stringify(currentCampaignPayload()));true");
             assertEquals("true",evaluate(scenario,"(()=>{const d=document.getElementById('portability-dialog'),body=d.querySelector('.portable-body'),actions=[...d.querySelectorAll('.portable-actions>*')];return d.open&&d.querySelectorAll('.portable-summary').length===2&&body.scrollHeight<=body.clientHeight+1&&body.scrollWidth<=body.clientWidth+1&&actions.length===4&&actions.every(e=>{const r=e.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight&&r.left>=0&&r.right<=innerWidth;})&&JSON.stringify(currentCampaignPayload())===saveWorkspaceOriginal;})()"));
             screenshot(scenario,"android-save-comparison.png");
+            evaluate(scenario,"window.saveWorkspaceWrite=Storage.prototype.setItem;Storage.prototype.setItem=()=>{throw new DOMException('Storage full','QuotaExceededError')};applyCampaignImport();Storage.prototype.setItem=saveWorkspaceWrite;true");
+            assertEquals("true",evaluate(scenario,"(()=>{const e=document.getElementById('campaign-import-error'),r=e.getBoundingClientRect(),body=document.querySelector('.portable-body');return e.textContent.includes('저장 공간이 부족')&&r.top>=0&&r.bottom<=innerHeight&&body.scrollHeight<=body.clientHeight+1&&JSON.stringify(currentCampaignPayload())===saveWorkspaceOriginal;})()"));
+            screenshot(scenario,"android-save-storage-error.png");
             evaluate(scenario,"document.querySelector('[data-android-privacy]').click();true");
             assertEquals("true",evaluate(scenario,"document.getElementById('android-privacy-dialog').open&&JSON.stringify(currentCampaignPayload())===saveWorkspaceOriginal"));
             evaluate(scenario,"document.getElementById('android-privacy-dialog').close();closePortability();true");

@@ -12,3 +12,5 @@
 .portable-head>#campaign-file-progress{position:absolute;bottom:0;left:0;width:100%;height:3px;margin:0}.portable-head #campaign-file-status{font-size:10px;line-height:1.25;margin:0;color:#b2c9b8}.portable-head #campaign-file-status:empty{display:none}.portable-head:has(#campaign-file-status:not(:empty)) .eyebrow{display:none}
 
 @media(orientation:landscape){.portable-summary dl{grid-template-columns:repeat(3,minmax(0,1fr))}.portable-summary .portable-money{grid-column:1/-1}}
+
+.portable-head #campaign-import-error{font-size:10px;line-height:1.25;margin:0;word-break:keep-all}.portable-head:has(#campaign-import-error:not([hidden])) #campaign-file-status,.portable-head:has(#campaign-import-error:not([hidden])) .eyebrow{display:none}
