@@ -19,6 +19,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: node source/run-tests.cjs
+      - run: python3 -m unittest source.release.test_verify_play_bundle source.release.test_verify_store_assets
+      - run: python3 source/release/verify_store_assets.py
       - run: node source/build-pwa.cjs
       - run: node source/test-pwa.cjs index.html
         env:

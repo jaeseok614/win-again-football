@@ -70,13 +70,13 @@
   dialog.setAttribute('aria-labelledby', 'android-privacy-title');
   dialog.style.cssText = 'width:min(560px,calc(100% - 24px));max-height:80dvh;overflow:auto;padding:20px';
   dialog.innerHTML = '<h2 id="android-privacy-title">개인정보처리 안내</h2>' +
-   '<p>시행일 2026-10-02 · ' + appTitle + '</p>' +
+   '<p>시행일 2026-10-02 · 개발자 이번생 게임즈 · ' + appTitle + '</p>' +
    '<p>가입과 로그인이 없는 오프라인 게임입니다. 광고, 결제, 분석·추적 SDK가 없으며 개발자 서버로 개인정보나 게임 기록을 보내지 않습니다.</p>' +
    '<h3>기기 안의 구단</h3><p>구단, 선수, 경기, 전술, 대화·기사와 설정은 이 앱의 내부 저장 공간에 보관합니다. 개발자가 원격으로 읽지 않으며 자동 클라우드 동기화는 제공하지 않습니다.</p>' +
    '<h3>직접 선택한 파일</h3><p>내보내기는 문서 선택기에서 고른 위치에 JSON 파일을 씁니다. 불러오기는 선택한 파일 하나를 읽고, 확인 후 교체를 누르면 반영합니다. 다른 문서, 사진, 주소록, 위치, 마이크, 카메라에 접근하지 않습니다.</p>' +
    '<p>클라우드 문서 제공자를 선택하면 선택한 파일은 해당 제공자의 정책에 따라 저장되거나 전송될 수 있습니다. 개발자 서버로 전송하지 않습니다. 내보내기 임시 파일은 완료·취소 또는 다음 시작 때 삭제합니다.</p>' +
    '<h3>삭제와 문의</h3><p>Android 설정에서 앱 데이터를 삭제하거나 앱을 제거하면 내부 구단이 삭제됩니다. 별도로 내보낸 파일은 선택한 위치에서 직접 삭제해야 합니다. 외부 링크는 브라우저에서 열며 해당 사이트의 정책을 따릅니다.</p>' +
-   '<p><a href="https://github.com/jaeseok614/win-again-football/issues">개발 프로젝트에 문의하기</a> · 공개 문의에 개인 구단 파일이나 개인정보를 첨부하지 마세요.</p>' +
+   '<p>지원 문의: jaeseok614@gmail.com · <a href="https://github.com/jaeseok614/win-again-football/issues">개발 프로젝트에 문의하기</a> · 공개 문의에 개인 구단 파일이나 개인정보를 첨부하지 마세요.</p>' +
    '<button type="button" class="secondary" style="min-height:44px">닫기</button>';
   dialog.querySelector('button').onclick = () => dialog.close();
   dialog.addEventListener('close', () => dialog.remove());
@@ -111,6 +111,13 @@
    installation.innerHTML = '<h3>앱 정보</h3><p class="portable-hint">' + appTitle + ' ' + api.version + ' · 인터넷 없이 플레이 · 광고와 결제 없음</p>' +
     '<button type="button" class="secondary" data-android-privacy>개인정보처리 안내</button>';
    installation.querySelector('[data-android-privacy]').onclick = showPrivacy;
+   const policy = document.querySelector('.portable-policy');
+   if (policy) {
+    const button = installation.querySelector('[data-android-privacy]');
+    button.className = 'portable-policy secondary';
+    button.innerHTML = '개인정보<br>처리 안내';
+    policy.replaceWith(button);
+   }
   }
   const dialog = document.getElementById('portability-dialog');
   if (dialog) {

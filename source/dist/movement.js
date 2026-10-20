@@ -451,8 +451,8 @@
  // Every on-field player stays named. Resolve crowded labels independently of
  // simulation state; identity and team stay attached without connector lines.
  function nameLabels(value,w,h,measure,previous=[],{height=14,padding=8,grid=false,numbers=false}={}){
-  const people=[...value.own.map(p=>({...p,team:0})),...value.opponent.map(p=>({...p,team:1}))],placed=[],overlap=(a,b)=>Math.max(0,Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+height,b.y+b.height)-Math.max(a.y,b.y));
-  const labelFor=p=>{const short=shortName(p.name),base=people.some(q=>q.id!==p.id&&shortName(q.name)===short)?p.name:short;return numbers?p.no+'·'+base:base;},snap=y=>grid?clamp(2+Math.round((y-2)/(height+1))*(height+1),2,2+Math.floor((h-height-4)/(height+1))*(height+1)):clamp(y,2,h-height-2);
+  const people=[...value.own.map(p=>({...p,team:0})),...value.opponent.map(p=>({...p,team:1}))],placed=[],overlap=(a,b)=>a.x+a.width<=b.x||b.x+b.width<=a.x||a.y+height<=b.y||b.y+b.height<=a.y?0:(Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x))*(Math.min(a.y+height,b.y+b.height)-Math.max(a.y,b.y));
+  const compactNames=new Map(),groups=new Map();for(const p of people){const short=shortName(p.name);compactNames.set(p,short);if(!groups.has(short))groups.set(short,[]);groups.get(short).push(p);}for(const p of people){const short=compactNames.get(p),base=groups.get(short).some(q=>q.id!==p.id)?p.name:short;compactNames.set(p,numbers?p.no+'·'+base:base);}const labelFor=p=>compactNames.get(p),snap=y=>grid?clamp(2+Math.round((y-2)/(height+1))*(height+1),2,2+Math.floor((h-height-4)/(height+1))*(height+1)):clamp(y,2,h-height-2);
   if(grid)people.sort((a,b)=>measure(labelFor(b))-measure(labelFor(a))||a.team-b.team||a.id.localeCompare(b.id));
   const bodies=people.map(p=>({x:w*p.x/100-8,y:h*p.y/100-8,width:16,height:16}));
   for(const p of people){const name=labelFor(p),width=Math.min(w-4,measure(name)+padding),px=w*p.x/100,py=h*p.y/100,old=previous.find(q=>q.id===p.id&&q.name===name&&q.width===width),anchor=old?{x:clamp(old.x+(px-old.px),2,w-width-2),y:clamp(old.y+(py-old.py),2,h-height-2),width,height}:null;let best=null,score=Infinity;
@@ -463,9 +463,11 @@
    placed.push({...best,id:p.id,name,fullName:p.name,team:p.team,px,py,active:p.id===value.carrierId});
   }return placed;
  }
+ let nameWidths=new WeakMap();
+ if(typeof document!=='undefined')document.fonts?.addEventListener('loadingdone',()=>{nameWidths=new WeakMap();});
  function paintNames(ctx,value,w,h,previous=[]){
   ctx.save();ctx.font='bold '+(w<360?9:10)+'px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
-  const labels=nameLabels(value,w,h,name=>ctx.measureText?.(name)?.width||name.length*10,previous);
+  const key=[ctx.font,ctx.letterSpacing,ctx.fontKerning,ctx.fontStretch,ctx.fontVariantCaps,ctx.direction,ctx.wordSpacing,ctx.textRendering,ctx.lang,ctx.canvas?.lang,ctx.canvas?.dir].join('|');let cache=nameWidths.get(ctx);if(!cache||cache.key!==key){cache={key,rows:new Map()};nameWidths.set(ctx,cache);}const labels=nameLabels(value,w,h,name=>{if(!cache.rows.has(name)){if(cache.rows.size>=256)cache.rows.clear();cache.rows.set(name,ctx.measureText?.(name)?.width||name.length*10);}return cache.rows.get(name);},previous);
   // All identities stay readable; the owner's latest feedback removes leader lines.
   for(const p of labels){ctx.lineWidth=3;ctx.strokeStyle='#103023';ctx.lineJoin='round';ctx.strokeText(p.name,p.x+p.width/2,p.y+7);ctx.fillStyle=p.active?'#fff5b5':p.team?'#ffe2b5':'#edf6f0';ctx.fillText(p.name,p.x+p.width/2,p.y+7);}
   ctx.restore();return labels;

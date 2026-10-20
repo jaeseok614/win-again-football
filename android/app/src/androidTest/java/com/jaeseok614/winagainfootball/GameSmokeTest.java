@@ -1375,4 +1375,58 @@ public final class GameSmokeTest {
             scenario.onActivity(activity -> assertTrue("Capped training forecast caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
         }
     }
+
+    @Test public void landscapeSaveComparisonKeepsActionsVisibleAndNeverAppliesOnViewing() throws Exception {
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            awaitReady(scenario);
+            evaluate(scenario,"window.saveWorkspaceOriginal=JSON.stringify(currentCampaignPayload());openPortability();previewCampaignText(CampaignFile.stringify(currentCampaignPayload()));true");
+            assertEquals("true",evaluate(scenario,"(()=>{const d=document.getElementById('portability-dialog'),body=d.querySelector('.portable-body'),actions=[...d.querySelectorAll('.portable-actions>*')];return d.open&&d.querySelectorAll('.portable-summary').length===2&&body.scrollHeight<=body.clientHeight+1&&body.scrollWidth<=body.clientWidth+1&&actions.length===4&&actions.every(e=>{const r=e.getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight&&r.left>=0&&r.right<=innerWidth;})&&JSON.stringify(currentCampaignPayload())===saveWorkspaceOriginal;})()"));
+            screenshot(scenario,"android-save-comparison.png");
+            evaluate(scenario,"document.querySelector('[data-android-privacy]').click();true");
+            assertEquals("true",evaluate(scenario,"document.getElementById('android-privacy-dialog').open&&JSON.stringify(currentCampaignPayload())===saveWorkspaceOriginal"));
+            evaluate(scenario,"document.getElementById('android-privacy-dialog').close();closePortability();true");
+            assertEquals("true",evaluate(scenario,"!document.getElementById('portability-dialog').open&&pendingImport===null&&JSON.stringify(currentCampaignPayload())===saveWorkspaceOriginal"));
+            scenario.onActivity(activity -> assertTrue("Save workspace caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+        }
+    }
+    @Test public void storeScreenshotsUseActualNativeLandscapeFrames() throws Exception {
+        assertTrue("Store capture changes only a disposable emulator", "ranchu".equals(Build.HARDWARE) || "goldfish".equals(Build.HARDWARE));
+        String density=shellForDisplayTest("wm density"),size=shellForDisplayTest("wm size");
+        String accelerometer=shellForDisplayTest("settings get system accelerometer_rotation"),rotation=shellForDisplayTest("settings get system user_rotation");
+        java.util.regex.Matcher d=java.util.regex.Pattern.compile("Override density: (\\d+)").matcher(density),s=java.util.regex.Pattern.compile("Override size: (\\d+x\\d+)").matcher(size);
+        String restoreDensity=d.find()?"wm density "+d.group(1):"wm density reset",restoreSize=s.find()?"wm size "+s.group(1):"wm size reset";
+        try {
+            shellForDisplayTest("wm size 1080x1920");shellForDisplayTest("wm density 420");
+            shellForDisplayTest("settings put system accelerometer_rotation 0");shellForDisplayTest("settings put system user_rotation 0");
+            try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)){
+                awaitReady(scenario);String savedClub=evaluate(scenario,"localStorage.getItem(storageKey)");
+                try {
+                awaitTrue(scenario,"innerWidth>innerHeight&&innerWidth>=600");
+                awaitAppWindowFocus(scenario);
+                Bitmap physical=InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
+                assertNotNull(physical);try{assertEquals(1920,physical.getWidth());assertEquals(1080,physical.getHeight());}finally{physical.recycle();}
+                evaluate(scenario,"document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;launchBusy=false;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(941,{startingClub:true,suspensions:true,rebirth:true});state=season.match;selected=null;customPositions={};tacticalRoles={};setView('club');window.storeCaptureOriginal=JSON.stringify(season);true");
+                screenshot(scenario,"android-store-home-1920x1080.png");
+                tapWebElement(scenario,".view-nav [data-view=squad]");
+                awaitTrue(scenario,"document.querySelectorAll('#squad-overview-dialog [data-squad-detail]').length===18");
+                screenshot(scenario,"android-store-squad-1920x1080.png");
+                tapWebElement(scenario,".view-nav [data-view=tactics]");
+                awaitTrue(scenario,"document.querySelectorAll('[data-workspace-formation]').length===12&&document.querySelectorAll('#tactics-pane [data-tactical-player]').length===11");
+                screenshot(scenario,"android-store-tactics-1920x1080.png");
+                assertEquals("Store reading routes never spend or alter the club",evaluate(scenario,"storeCaptureOriginal"),evaluate(scenario,"JSON.stringify(season)"));
+                tapWebElement(scenario,".view-nav [data-view=match]");tapWebElement(scenario,"#primary");
+                awaitTrue(scenario,"document.getElementById('match-ceremony').open&&document.getElementById('match-ceremony').dataset.kind==='kickoff'");
+                tapWebElement(scenario,"#ceremony-ready");awaitTrue(scenario,"state.continuous?.tick>300");
+                tapWebElement(scenario,"#primary");awaitTrue(scenario,"state.paused&&document.getElementById('match-names')._labels?.length===22");
+                assertEquals("true",evaluate(scenario,"document.getElementById('field').getBoundingClientRect().width>document.getElementById('match-live-stats').getBoundingClientRect().width&&document.documentElement.scrollHeight<=innerHeight+1"));
+                screenshot(scenario,"android-store-match-1920x1080.png");
+                scenario.onActivity(activity->assertTrue("Store capture caused JavaScript errors: "+activity.consoleErrorsForTest(),activity.consoleErrorsForTest().isEmpty()));
+                } finally {evaluate(scenario,"(()=>{const prior="+savedClub+";if(prior===null)localStorage.removeItem(storageKey);else localStorage.setItem(storageKey,prior);return true;})()");}
+            }
+        } finally {
+            restoreDisplaySetting("accelerometer_rotation",accelerometer);restoreDisplaySetting("user_rotation",rotation);
+            shellForDisplayTest(restoreDensity);shellForDisplayTest(restoreSize);
+        }
+    }
+
 }

@@ -25,13 +25,14 @@ for(const [width,height] of [[568,280],[568,320],[640,360],[740,360],[844,390],[
  assert.deepEqual(await p.evaluate(()=>[notebookDialog.scrollHeight-notebookDialog.clientHeight,...[...notebookDialog.querySelectorAll('.notebook-card')].map(e=>e.scrollHeight-e.clientHeight)]),[0,0,0]);
  await p.evaluate(()=>notebookDialog.close());console.log('PASS landscape reading and match '+width+'x'+height);
 }
-await p.setViewportSize({width:844,height:390});await p.evaluate(()=>setView('squad'));await p.locator('[data-management-open=squad-overview]').click();assert.ok(await p.locator('#squad-overview-dialog').evaluate(e=>e.open));await p.evaluate(()=>$('squad-overview-dialog').close());
-for(const id of ['staff-panel','transfer-search-panel','club-life-panel','individual-training','academy-overview']){
- await p.evaluate(id=>openManagementPanel(id),id);
- assert.deepEqual(await p.evaluate(()=>{const d=$('management-dialog'),c=$('management-content'),close=$('management-close').getBoundingClientRect();return [d.scrollWidth-d.clientWidth,d.scrollHeight-d.clientHeight,c.scrollWidth-c.clientWidth,close.bottom<=innerHeight];}),[0,0,0,true],id);
- if(id==='transfer-search-panel'){await p.locator('#transfer-position').selectOption('FW');assert.ok(await p.locator('.market-card').count()>0);assert.ok((await p.locator('.market-card .position').allTextContents()).every(s=>s==='FW'));}
- await p.locator('#management-close').click();
-}
+await p.setViewportSize({width:844,height:390});
+const nav=async id=>{await p.locator('.view-nav [data-view="'+id+'"]').click();assert.equal(await p.locator(':modal').count(),0,'main entry remains a page');};
+const managementFit=async id=>{assert.ok(await p.locator('#management-dialog').evaluate(e=>e.checkVisibility()),id+' visible');assert.deepEqual(await p.evaluate(()=>{const d=$('management-dialog'),c=$('management-content'),close=$('management-close').getBoundingClientRect();return [d.scrollWidth-d.clientWidth,d.scrollHeight-d.clientHeight,c.scrollWidth-c.clientWidth,close.bottom<=innerHeight];}),[0,0,0,true],id);};
+await nav('squad');assert.ok(await p.locator('#squad-overview-dialog').evaluate(e=>e.open&&e.dataset.inlineWorkspace==='squad'));assert.equal(await p.locator('[data-squad-detail]').count(),18);
+for(const id of ['staff-panel','individual-training']){await nav('club');await p.locator('#management-hub-club [data-management-open="training-card"]').click();await p.locator('[data-operations-section="'+id+'"]').click();await managementFit(id);assert.equal(await p.evaluate(()=>operationsSection),id);await p.locator('[data-operations-view="club"]').click();}
+await nav('market');await managementFit('transfer-search-panel');await p.locator('[data-workspace-filter="FW"]').click();assert.ok(await p.locator('.market-card').count()>0);assert.ok((await p.locator('.market-card .position').allTextContents()).every(s=>s==='FW'));
+await nav('club');await p.evaluate(()=>openManagementPanel('club-life-panel'));await managementFit('club-life-panel');await p.locator('#management-close').click();
+await nav('academy');assert.ok(await p.locator('#academy-pane').evaluate(e=>e.checkVisibility()&&e.scrollWidth<=e.clientWidth+1&&e.scrollHeight<=e.clientHeight+1));await nav('club');
 await p.evaluate(()=>openClubStory('1:arrival'));while(await p.locator('.story-choices').evaluate(e=>e.hidden))await p.locator('[data-story-page=next]').click();await p.locator('[data-story-choice]').first().click();assert.equal(await p.evaluate(()=>ClubStory.scene(season,'1:arrival').step),1);while(await p.locator('.story-choices').evaluate(e=>e.hidden))await p.locator('[data-story-page=next]').click();await p.locator('[data-story-choice]').first().click();assert.equal(await p.evaluate(()=>ClubStory.scene(season,'1:arrival').step),2);
 assert.deepEqual(errors,[]);console.log('PASS management routing, filter-only search and explicit story choices');
 }finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1});
