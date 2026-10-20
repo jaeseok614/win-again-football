@@ -1213,6 +1213,51 @@ public final class GameSmokeTest {
         } finally { Intents.release(); }
     }
 
+    private String shellForDisplayTest(String command) throws Exception {
+        try (InputStream input = new android.os.ParcelFileDescriptor.AutoCloseInputStream(
+                InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(command));
+             ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[4096]; int count;
+            while ((count = input.read(buffer)) != -1) output.write(buffer, 0, count);
+            return new String(output.toByteArray(), StandardCharsets.UTF_8).trim();
+        }
+    }
+    private void restoreDisplaySetting(String name, String value) throws Exception {
+        shellForDisplayTest(value.matches("[0-3]") ? "settings put system " + name + " " + value : "settings delete system " + name);
+    }
+    @Test public void gameCategoryKeepsLandscapeOnDisposableLargeScreenEmulator() throws Exception {
+        assertTrue("Display mutation is restricted to a disposable emulator", "ranchu".equals(Build.HARDWARE) || "goldfish".equals(Build.HARDWARE));
+        String density = shellForDisplayTest("wm density");
+        String accelerometer = shellForDisplayTest("settings get system accelerometer_rotation");
+        String rotation = shellForDisplayTest("settings get system user_rotation");
+        java.util.regex.Matcher override = java.util.regex.Pattern.compile("Override density: (\\d+)").matcher(density);
+        String restoreDensity = override.find() ? "wm density " + override.group(1) : "wm density reset";
+        try {
+            // Keep the same pixel count, but cross sw600dp and request portrait from the system.
+            shellForDisplayTest("wm density 160");
+            shellForDisplayTest("settings put system accelerometer_rotation 0");
+            shellForDisplayTest("settings put system user_rotation 0");
+            try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+                awaitReady(scenario);
+                scenario.onActivity(activity -> {
+                    assertEquals(android.content.pm.ApplicationInfo.CATEGORY_GAME, activity.getApplicationInfo().category);
+                    assertTrue("The actual activity must cross the large-screen threshold", activity.getResources().getConfiguration().smallestScreenWidthDp >= 600);
+                    assertEquals(Configuration.ORIENTATION_LANDSCAPE, activity.getResources().getConfiguration().orientation);
+                    assertEquals(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE, activity.getRequestedOrientation());
+                });
+                awaitTrue(scenario,"innerWidth>innerHeight&&innerWidth>=600&&document.documentElement.scrollWidth<=innerWidth+1");
+                String before = evaluate(scenario,"JSON.stringify(season)");
+                screenshot(scenario,"android-game-tablet-landscape.png");
+                assertEquals("Checking tablet orientation must not alter the campaign", before, evaluate(scenario,"JSON.stringify(season)"));
+                scenario.onActivity(activity -> assertTrue("Tablet launch caused console errors: " + activity.consoleErrorsForTest(), activity.consoleErrorsForTest().isEmpty()));
+            }
+        } finally {
+            restoreDisplaySetting("accelerometer_rotation", accelerometer);
+            restoreDisplaySetting("user_rotation", rotation);
+            shellForDisplayTest(restoreDensity);
+        }
+    }
+
     @Test public void pendingExportKeepsControlsLockedUntilItsOwnCompletion() throws Exception {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);

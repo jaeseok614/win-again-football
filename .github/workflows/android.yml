@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api-level: [34, 35]
+        api-level: [34, 35, 36]
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:

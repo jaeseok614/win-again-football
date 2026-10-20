@@ -26,14 +26,17 @@
 
 전체 소스는 모든 검사를 별도 프로세스 두 개에 분산한다. 실패한 검사도 진단을 출력하고 나머지를 끝내며 실패 상태로 종료하는지 별도 대조한다. --jobs 1로 순차 실행도 가능하다. Source20분·Android 계측20분/전체45분 제한을 유지하며 검사나 판정을 생략하지 않는다.
 
-전체 소스, 공개1–13 회귀,14의 부분/전체/명령/정산/자연 연습, Node↔Chrome과 실제 Android31검사를 사용한다.14의 실제 연습은75분1:2(씨드5),80분2:1(씨드7)이며 점수를 주입하지 않았다.
+전체 소스, 공개1–13 회귀,14의 부분/전체/명령/정산/자연 연습, Node↔Chrome과 실제 Android32검사를 사용한다.14의 실제 연습은75분1:2(씨드5),80분2:1(씨드7)이며 점수를 주입하지 않았다.
 
 동급 전술 비교는 양쪽 배정·실제 하프타임 재개·96분을 사용한다. 고정 전술 진단과 상대 T.coach가 켜진 적응 진단을 나눈다. 적응 결과의 전술명은 시작 라벨이며 캠페인의 하프타임/65분 상대 계획까지 모두 재현하는 진단은 아니다. 최종 물리를 고른 뒤 독립 씨드3001–3004와 시작 체력55의3101/3102도 추가했다. 기존 기본·능력45/80·4-3-3과 함께 전부 기록한다. 모집단 승률 또는 네 전술의 완전한 균형으로 해석하지 않는다.
 
 선정용 작은 비교에서는 높은 능력치의 압박 우세와 일부 역습 편향이 줄었지만, 능력60의 일부4-4-2 낮은 수비가 약했다. 실제 프로 경기보다 많은 태클 접촉 수, 강한5부 초기 선수단과 상위 리그 난이도도 계속 볼 부분이다. 새 결과가 나오면 최종 비교·설치 증빙에 원시 결과와 한계를 함께 기록한다.
 
+Android 앱은 게임 분류를 명시해 target36의 큰 화면에서도 가로 방향 제한이 게임으로 처리되게 한다. API34·35·36에서 동일한32개 검사를 실행한다. 새 태블릿 검사는 폐기 가능한 에뮬레이터에서 픽셀 수를 유지한 채 sw600dp를 넘기고 시스템을 세로 방향으로 설정한 뒤, 실제 Activity와 WebView가 가로인지 확인한다. 기존 밀도·회전 설정은 finally에서 복구한다.
+
 ## 공식 참고
 
+- [Android16의 큰 화면 방향 제한 및 게임 예외](https://developer.android.com/about/versions/16/behavior-changes-16#adaptive-layouts): 게임 분류와 실제 큰 화면 검사의 근거다.
 - [FM의 소유/비소유 역할](https://www.footballmanager.com/fm26/features/possession-out-possession-fm26s-new-tactical-evolution), [전환 시 공격 출구](https://www.footballmanager.com/the-dugout/mastering-your-rest-attack-fm26): 소유 여부에 맞는 역할, 전환과 남겨 둔 선수의 관계를 참고했다.
 - [FIFA 낮은 수비의 집단 회복](https://www.fifatrainingcentre.com/en/practice/elite-sessions/out-of-possession/collective-ball-recovery-in-a-low-block.php): 압박·커버·접근 감속의 원칙을 참고했다.
 - [FIFA 역압박 준비](https://www.fifatrainingcentre.com/en/practice/elite-sessions/transition-to-defending/preparing-and-executing-counter-pressing.php): 볼을 잃은 뒤 압박과 후방 공간을 함께 살피는 원칙을 참고했다.
@@ -50,4 +53,4 @@ Playwright/Chrome 환경의 source/browser/runtime-replay.cjs, regain-preview.cj
 
 ## 현재 상태
 
-검증 진행 중이다. 기존 Drive 설치판은 공개13이며 새14 APK로 교체하지 않았다. 원격 Source·Android API34/35, 실제 파일 복원·스크린샷·APK 내부 HTML·Drive 전체 재다운로드까지 확인한 뒤 최종 결과를 HANDOFF와 별도 증빙에 기록한다. main 미병합, PR25 초안을 유지한다.
+검증 진행 중이다. 기존 Drive 설치판은 공개13이며 새14 APK로 교체하지 않았다. 원격 Source·Android API34/35/36, 실제 파일 복원·스크린샷·APK 내부 HTML·Drive 전체 재다운로드까지 확인한 뒤 최종 결과를 HANDOFF와 별도 증빙에 기록한다. main 미병합, PR25 초안을 유지한다.
