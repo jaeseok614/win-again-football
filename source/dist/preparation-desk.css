@@ -43,7 +43,7 @@ body.operations-page #club-overview .preparation-stadium figcaption{display:flex
 body.operations-page #training-card .training-actions{grid-template-columns:minmax(0,1fr) 96px!important}
 body.operations-page #training-card .training-actions #training-focus{display:none!important}
 .preparation-training-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;min-width:0}
-body.operations-page #training-card .preparation-training-choices button{display:grid!important;grid-template-rows:12px 10px 10px!important;gap:0;align-content:center;height:44px!important;min-height:44px!important;min-width:0;padding:2px!important;text-align:left}
+body.operations-page #training-card .preparation-training-choices button{display:grid!important;grid-template-rows:12px 10px 14px!important;gap:0;align-content:center;height:44px!important;min-height:44px!important;min-width:0;padding:2px!important;text-align:left}
 .preparation-training-choices button[aria-pressed=true]{border-color:#d4f29c!important;background:#425d2c!important}
 .preparation-training-choices b{font-size:9px!important;line-height:12px!important}
 .preparation-training-choices span,.preparation-training-choices small{font-size:6px!important;line-height:10px!important;white-space:normal;word-break:keep-all}

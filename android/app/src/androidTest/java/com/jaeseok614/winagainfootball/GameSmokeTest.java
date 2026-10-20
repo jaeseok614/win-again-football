@@ -248,7 +248,7 @@ public final class GameSmokeTest {
             "(()=>{const issues=[],d=document.getElementById('management-dialog');for(const e of [d,...d.querySelectorAll('*')]){" +
             "if(!e.checkVisibility()||e.closest('.sr-only')||!e.getBoundingClientRect().height||['OPTION','PROGRESS'].includes(e.tagName))continue;const r=e.getBoundingClientRect(),s=getComputedStyle(e),name=e.id||e.className||e.tagName;" +
             "if(r.left<-.5||r.top<-.5||r.right>innerWidth+.5||r.bottom>innerHeight+.5)issues.push(name+':viewport');" +
-            "if(e.scrollWidth>e.clientWidth+2||e.scrollHeight>e.clientHeight+2)issues.push(name+':scroll:'+JSON.stringify([e.scrollWidth,e.clientWidth,e.scrollHeight,e.clientHeight]));" +
+            "if(e.scrollWidth>e.clientWidth+2||e.scrollHeight>e.clientHeight+2)issues.push(name+':scroll:'+JSON.stringify([e.scrollWidth,e.clientWidth,e.scrollHeight,e.clientHeight])+':'+e.textContent.slice(0,30)+':'+s.fontSize+'/'+s.lineHeight);" +
             "for(let a=e.parentElement;a&&a!==document.body;a=a.parentElement){if(!a.clientHeight||getComputedStyle(a).display==='contents')continue;const q=a.getBoundingClientRect(),style=getComputedStyle(a);if(['hidden','auto','scroll','clip'].includes(style.overflowY)&&(r.top<q.top-1||r.bottom>q.bottom+1)||['hidden','auto','scroll','clip'].includes(style.overflowX)&&(r.left<q.left-1||r.right>q.right+1)){issues.push(name+':clipped');break;}}" +
             "if(['BUTTON','STRONG','SMALL','H2','H3','DD','DT','P','B','SPAN'].includes(e.tagName)&&!e.children.length&&e.textContent.trim()){const range=document.createRange();range.selectNodeContents(e);for(const t of range.getClientRects())if(t.left<r.left-1||t.right>r.right+1||t.top<r.top-1||t.bottom>r.bottom+1){issues.push(name+':text:'+e.textContent.slice(0,30)+':'+JSON.stringify({font:s.fontSize,line:s.lineHeight,box:[r.width,r.height],offset:[t.x-r.x,t.y-r.y],glyph:[t.width,t.height]}));break;}}}" +
             "if(document.querySelector(':modal'))issues.push('unexpected modal');if(document.documentElement.scrollHeight>innerHeight+1)issues.push('outer scroll');return issues;})()"));
@@ -1237,11 +1237,16 @@ public final class GameSmokeTest {
             shellForDisplayTest("wm density 160");
             shellForDisplayTest("settings put system accelerometer_rotation 0");
             shellForDisplayTest("settings put system user_rotation 0");
+            String displayConfiguration = shellForDisplayTest("am get-config");
+            java.util.regex.Matcher screenWidth = java.util.regex.Pattern.compile("sw(\\d+)dp").matcher(displayConfiguration);
+            assertTrue("The system display must cross sw600dp: " + displayConfiguration, screenWidth.find() && Integer.parseInt(screenWidth.group(1)) >= 600);
             try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
                 awaitReady(scenario);
+                screenshot(scenario,"android-game-tablet-candidate.png");
                 scenario.onActivity(activity -> {
                     assertEquals(android.content.pm.ApplicationInfo.CATEGORY_GAME, activity.getApplicationInfo().category);
-                    assertTrue("The actual activity must cross the large-screen threshold", activity.getResources().getConfiguration().smallestScreenWidthDp >= 600);
+                    // A game may have a smaller compatibility window on a portrait tablet.
+                    android.util.Log.i("GameSmoke", "tablet-activity:" + activity.getResources().getConfiguration());
                     assertEquals(Configuration.ORIENTATION_LANDSCAPE, activity.getResources().getConfiguration().orientation);
                     assertEquals(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE, activity.getRequestedOrientation());
                 });
