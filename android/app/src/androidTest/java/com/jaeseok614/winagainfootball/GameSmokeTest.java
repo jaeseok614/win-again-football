@@ -1418,6 +1418,8 @@ public final class GameSmokeTest {
                 screenshot(scenario,"android-store-tactics-1920x1080.png");
                 assertEquals("Store reading routes never spend or alter the club",evaluate(scenario,"storeCaptureOriginal"),evaluate(scenario,"JSON.stringify(season)"));
                 tapWebElement(scenario,".view-nav [data-view=match]");tapWebElement(scenario,"#primary");
+                awaitTrue(scenario,"document.getElementById('match-ceremony').open&&document.getElementById('match-ceremony').dataset.kind==='preview'&&state.phase==='prep'");
+                tapWebElement(scenario,"#ceremony-ready");
                 awaitTrue(scenario,"document.getElementById('match-ceremony').open&&document.getElementById('match-ceremony').dataset.kind==='kickoff'");
                 tapWebElement(scenario,"#ceremony-ready");awaitTrue(scenario,"state.continuous?.tick>300");
                 tapWebElement(scenario,"#primary");awaitTrue(scenario,"state.paused&&document.getElementById('match-names')._labels?.length===22");
