@@ -421,7 +421,7 @@ body.operations-page #squad-health .depth-card>div{min-height:0;line-height:13px
 body.operations-page #squad-health .depth-card>div :is(small,i){font-size:6px!important;line-height:9px!important}
 body.operations-page #squad-health .depth-card strong{font-size:9px!important;line-height:13px!important}
 
-body.operations-page #squad-health{grid-template-rows:minmax(0,1fr) 44px!important}
+body.operations-page #squad-health{grid-template-rows:minmax(0,1fr) auto!important}
 body.operations-page #squad-health .squad-depth{grid-template-rows:20px minmax(0,1fr) 18px!important}
 
 body.operations-page #squad-health .squad-depth>.health-footnote{margin:0}
@@ -518,7 +518,7 @@ body.operations-page #individual-training .training-session-panel{grid-template-
  body.operations-page #individual-training .training-form-report>p{font-size:5px!important;line-height:7px!important;margin:0}
 }
 
-body.operations-page #squad-health .medical-report-lines{margin:0;padding:0;display:grid;gap:1px}
+body.operations-page #squad-health .medical-report-lines{margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px 4px}
 body.operations-page #squad-health .medical-report-lines p{margin:0;padding:0;font-size:6px!important;line-height:8px!important}
 body.operations-page #squad-health .medical-report-lines :is(span,b){font-size:6px!important;line-height:8px!important}
 
@@ -530,7 +530,7 @@ body.operations-page #squad-health .medical-report p{font-size:6px!important;lin
 body.operations-page #management-dialog #management-content small{line-height:1.7!important}
 
 body.operations-page #squad-health .medical-report .panel-heading{flex-direction:row!important}
-body.operations-page #squad-health .medical-report-lines p>span{display:inline-block!important;padding:0 2px;margin:0 2px 0 0;border-radius:2px}
+body.operations-page #squad-health .medical-report-lines p>span{display:inline-block!important;padding:0 2px;margin:0 2px 0 0;border:0;border-radius:2px}
 body.operations-page #individual-training .training-session-panel{grid-template-rows:32px 28px minmax(0,1fr) 38px 44px 18px!important}
 @media(max-height:350px){body.operations-page #individual-training .training-session-panel{grid-template-rows:32px 28px minmax(0,1fr) 24px 44px 14px!important}}
 
@@ -551,3 +551,5 @@ body.operations-page #training-card .training-art .club-growth-picture{flex:1;mi
 body.operations-page #training-card .training-art .club-growth figcaption{flex:0 0 auto;padding:2px;gap:0;line-height:9px}
 body.operations-page #training-card .training-art .club-growth figcaption strong{font-size:8px;line-height:10px}
 body.operations-page #training-card .training-art .club-growth figcaption span{display:none}
+
+body.operations-page #squad-health .medical-report-lines .recovered,body.operations-page #squad-health .medical-report-lines .recovered>span{color:#b4e986}
