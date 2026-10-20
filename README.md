@@ -1,4 +1,6 @@
-2026-10-19 최신: 연속13의 협력 압박·역습 지원/감속, 가로 탈취 전술 분석과 성장 구단의 훈련 표를 보완했습니다. 원격 소스1,492검사·Android14/15 각28검사와896경기 전술 비교·실제328경기 및 저장 복원을 확인하고 기존Drive APK만 교체해 원본을 재대조했습니다. 공개1–12와 현재 시즌 유지. 일부 전술/대형의 편향은 추가 조정 대상입니다. [설계와 공식 참고](docs/PRESS_COUNTER_RULE13_2026-10-19.md) · [최신 APK](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view). 테스트 서명 변경으로 저장 내보내기→재설치→불러오기가 필요합니다.
+2026-10-20 최신 설치판: 압박·역습의 이동과 체력 부담, 경기 반응성, 가로 훈련/시즌 성적/해임·다음 삶 화면과 저장 내보내기를 보완했습니다. Source1,524검사·Android14/15/16 각각32검사, 같은 조건512쌍 전술 비교와 장기 시즌·실제 네 배속 조작을 확인했습니다. 공개1–14와 현재 시즌을 유지합니다. [설계와 남은 한계](docs/FOOTBALL_RULE14_2026-10-20.md) · [검증 증빙](docs/FOOTBALL_RULE14_RELEASE_2026-10-20.json) · [최신 APK](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view).
+
+기존 앱에서 저장 내보내기→앱 제거→새 APK 설치→저장 불러오기를 진행하세요. 테스트 서명이 변경되었습니다. 일부4-4-2 압박 우세와 저성능 기기의 끊김은 계속 다듬을 부분입니다.
 
 # 눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기
 
@@ -6,7 +8,9 @@
 
 2026-10-19: 공의 반사·쳐내기와 코너, 선발 비교와 실제 경기 기록의 코치 대화를 보완했습니다. 가로 화면·기존 저장을 유지하고 소스1,469개 검사와 Android14/15 각각24개 실행 검사를 통과했습니다. [설계와 검증](docs/FOOTBALL_DUELS_2026-10-19.md) · [설치 APK](https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view). 테스트 서명 변경으로 기존 앱의 저장을 먼저 내보내고 재설치 후 불러오세요.
 
-게임 주소: https://jaeseok614.github.io/win-again-football/
+웹 주소: https://jaeseok614.github.io/win-again-football/
+
+이 웹 주소는 이전 main 배포판입니다(2026-10-20 확인). 위의 최신 APK와 버전이 다릅니다. main은 검토 전까지 병합하지 않습니다.
 
 갤럭시 Chrome에서 주소를 열고 메뉴의 설치 기능으로 홈 화면에 추가하세요.
 저장·설치에서 구단 저장 파일을 받아 다른 기기에 불러올 수 있습니다.
@@ -39,7 +43,7 @@
 
 Google Play 출시용 Android 프로젝트는 `android/`에 있습니다. 인터넷 없이 게임을
 실행하며 기존 웹 구단 저장을 파일로 가져올 수 있습니다. 아직 스토어에 등록되지 않았습니다.
-개발자 계정 생성·앱 서명·테스트·스토어 등록 절차는 [출시 안내](docs/GOOGLE_PLAY_RELEASE.md)를 확인하세요.
+개발자 계정 상태 확인·앱 서명·테스트·스토어 등록 절차는 [출시 안내](docs/GOOGLE_PLAY_RELEASE.md)를 확인하세요.
 
 휴대폰 메뉴·포지션 역할 추천 · 코치 계약과 구단 저장 보호
 
@@ -53,4 +57,4 @@ Google Play 출시용 Android 프로젝트는 `android/`에 있습니다. 인터
 
 ## 개발 이어가기
 
-[개발 안내](DEVELOPMENT.md)와 [개발 원칙](AGENTS.md)을 읽어 주세요. 다른 컴퓨터에서는 GitHub의 최신 `main`을 받아 이어가세요. 최신 모듈 소스·이미지·테스트는 source 폴더에 보관합니다. `node source/run-tests.cjs`로 전체 검증, `node source/build-pwa.cjs`로 공개 PWA를 빌드합니다. 원래 v22 ZIP은 과거 스냅샷이며 현재 코드나 폐기한 선수단을 복원하는 데 사용하지 않습니다. 개인 구단 저장 파일은 포함하지 않습니다.
+[개발 안내](DEVELOPMENT.md)와 [개발 원칙](AGENTS.md)을 읽어 주세요. 다른 컴퓨터에서는 GitHub의 `codex/football-realism-20261012` 브랜치를 받아 이어가세요. main은 아직 이전 배포판입니다. 최신 모듈 소스·이미지·테스트는 source 폴더에 보관합니다. `node source/run-tests.cjs`로 전체 검증, `node source/build-pwa.cjs`로 공개 PWA를 빌드합니다. 원래 v22 ZIP은 과거 스냅샷이며 현재 코드나 폐기한 선수단을 복원하는 데 사용하지 않습니다. 개인 구단 저장 파일은 포함하지 않습니다.

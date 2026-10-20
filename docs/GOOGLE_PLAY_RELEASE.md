@@ -58,8 +58,8 @@ Windows에서는 마지막 줄에 `gradlew.bat assembleDebug bundleRelease lintD
 `.github/workflows/android.yml`은 PR 변경, main push 또는 수동 실행으로 APK,
 미서명 AAB, Android lint 결과를 빌드하고 GitHub Actions artifact로 보관합니다.
 공개 배포 또는 Play 업로드는 자동으로 실행하지 않습니다. 에뮬레이터 검증은
-API 34와 35에서 오프라인 실행, 저장·구단 복원, 일시 정지, 뒤로 가기, 앱 다시 시작,
-네이티브 문서 저장과 실제 파일 입력 불러오기를 검사합니다. CI가 성공하기
+API 34·35·36에서 오프라인 실행, 저장·구단 복원, 일시 정지, 뒤로 가기, 앱 다시 시작,
+네이티브 문서 저장과 실제 파일 입력 불러오기를 검사합니다. 2026-10-20에는 세 API에서 각각32개 검사(실패/오류/건너뛰기0)를 통과했습니다. [증빙](FOOTBALL_RULE14_RELEASE_2026-10-20.json)을 확인하세요. CI가 성공하기
 전에는 Android 컴파일이나 기기 테스트를 통과했다고 보고하지 마세요.
 
 앱은 파일 검증과 첫 화면 로딩 동안 진행 표시를 보여 줍니다. 내보내기 파일을
