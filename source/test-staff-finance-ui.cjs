@@ -8,8 +8,8 @@ function play(season){finish(season.match);return S.settle(season);}
 function league(season){while(season.competition==='cup')season=play(season);return season;}
 function hired(seed=3701,role='FW',tier=1){const season=S.create(seed),person=Staff.candidates(season).find(candidate=>candidate.role===role&&candidate.tier===tier);Staff.hire(season,person.id);return {season,person};}
 function financeUi(season){
- const nodes=new Map(),node=id=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',querySelectorAll:()=>[]});return nodes.get(id);};
- const context=vm.createContext({F,S,E,Staff,P,H,MatchReview:R,Portraits,season,state:season.match,$:node,leagueTargetLabel:()=> '상위 2위',setView(){throw Error('Finance render must not navigate.');}});
+ const nodes=new Map(),node=id=>{if(!nodes.has(id))nodes.set(id,{dataset:{},innerHTML:'',querySelectorAll:()=>[],querySelector:()=>null});return nodes.get(id);};
+ const context=vm.createContext({F,S,E,Staff,P,H,MatchReview:R,Portraits,PlayerTraits:require('./dist/player-traits.js'),playerUiText:v=>String(v),transferShortlistMarkup:()=>'',season,state:season.match,$:node,leagueTargetLabel:()=> '상위 2위',setView(){throw Error('Finance render must not navigate.');}});
  for(const name of ['market-ui','academy-ui','match-review-ui'])vm.runInContext(fs.readFileSync(path.join(__dirname,'dist',name+'.js'),'utf8'),context);
  return {context,node,read:expression=>vm.runInContext(expression,context)};
 }

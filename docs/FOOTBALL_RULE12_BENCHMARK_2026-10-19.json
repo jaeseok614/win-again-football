@@ -1,0 +1,5399 @@
+{
+  "date": "2026-10-19",
+  "rule": 12,
+  "selection": "published11 standing defence plus physical block/parry rebounds; experimental tackle delays excluded",
+  "conditions": {
+    "seeds": [
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88
+    ],
+    "attributes": 60,
+    "initialEnergy": 95,
+    "minutes": 96,
+    "halftimeReset": true,
+    "opponentCoach": "fixed diagnostic only; live app retains adaptive coaching",
+    "pairing": "press versus each other tactic, both team directions; excludes same-tactic games",
+    "warning": "Non-press rows only face press here; this is not an overall ranking or a phone performance test.",
+    "halftimeMeaning": "kickoff and position reset only; energy is not restored"
+  },
+  "baseline11": {
+    "matches": 48,
+    "pressWins": 14,
+    "draws": 22,
+    "pressGoalDifference": 0.3541666666666667,
+    "tackles": 434.6666666666667,
+    "corners": 0.08333333333333333,
+    "shots": 13.145833333333334,
+    "goals": 1.5208333333333333
+  },
+  "selected12": {
+    "matches": 48,
+    "pressWins": 23,
+    "draws": 13,
+    "pressGoalDifference": 0.375,
+    "tackles": 430.4583333333333,
+    "corners": 2.4166666666666665,
+    "shots": 13.8125,
+    "goals": 1.625
+  },
+  "rejected": [
+    {
+      "name": "long-read",
+      "reason": "pressure goal difference worsened despite fewer tackles",
+      "totalMatches": 128,
+      "matchedPressPairs": {
+        "matches": 48,
+        "pressWins": 38,
+        "draws": 3,
+        "pressGoalDifference": 1.625,
+        "tackles": 135.875,
+        "corners": 4.020833333333333,
+        "shots": 22.354166666666668,
+        "goals": 3.2916666666666665
+      },
+      "summary": [
+        {
+          "version": 12,
+          "tactics": [
+            {
+              "tactic": "balanced",
+              "appearances": 64,
+              "wins": 30,
+              "draws": 12,
+              "goals": 1.671875,
+              "conceded": 1.53125,
+              "shots": 10.140625,
+              "passes": 741.40625,
+              "boxEntries": 6.234375,
+              "transitionGains": 14.03125,
+              "energy": 54.873439834895855
+            },
+            {
+              "tactic": "press",
+              "appearances": 64,
+              "wins": 43,
+              "draws": 9,
+              "goals": 2.203125,
+              "conceded": 0.984375,
+              "shots": 13.546875,
+              "passes": 753.65625,
+              "boxEntries": 7.828125,
+              "transitionGains": 12.078125,
+              "energy": 53.6607625625
+            },
+            {
+              "tactic": "counter",
+              "appearances": 64,
+              "wins": 17,
+              "draws": 10,
+              "goals": 1.3125,
+              "conceded": 1.9375,
+              "shots": 9.0625,
+              "passes": 685,
+              "boxEntries": 5.328125,
+              "transitionGains": 22.1875,
+              "energy": 50.585900453645834
+            },
+            {
+              "tactic": "lowBlock",
+              "appearances": 64,
+              "wins": 17,
+              "draws": 11,
+              "goals": 1.25,
+              "conceded": 1.984375,
+              "shots": 9.71875,
+              "passes": 748.03125,
+              "boxEntries": 5.15625,
+              "transitionGains": 15.28125,
+              "energy": 53.370825557465274
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "goal-threat-read",
+      "reason": "pressure advantage remained large",
+      "totalMatches": 48,
+      "matchedPressPairs": {
+        "matches": 48,
+        "pressWins": 30,
+        "draws": 9,
+        "pressGoalDifference": 1.0208333333333333,
+        "tackles": 157.5,
+        "corners": 2.9583333333333335,
+        "shots": 17.3125,
+        "goals": 2.3958333333333335
+      },
+      "summary": [
+        {
+          "version": 12,
+          "tactics": [
+            {
+              "tactic": "balanced",
+              "appearances": 16,
+              "wins": 5,
+              "draws": 3,
+              "goals": 0.8125,
+              "conceded": 1.1875,
+              "shots": 8.0625,
+              "passes": 737.4375,
+              "boxEntries": 3.625,
+              "transitionGains": 12.0625,
+              "energy": 54.25797876736111
+            },
+            {
+              "tactic": "press",
+              "appearances": 48,
+              "wins": 30,
+              "draws": 9,
+              "goals": 1.7083333333333333,
+              "conceded": 0.6875,
+              "shots": 11.166666666666666,
+              "passes": 759.4375,
+              "boxEntries": 6.333333333333333,
+              "transitionGains": 12.291666666666666,
+              "energy": 53.84959858472222
+            },
+            {
+              "tactic": "counter",
+              "appearances": 16,
+              "wins": 2,
+              "draws": 4,
+              "goals": 0.625,
+              "conceded": 2,
+              "shots": 5.625,
+              "passes": 669.4375,
+              "boxEntries": 4,
+              "transitionGains": 21.25,
+              "energy": 50.100204877083335
+            },
+            {
+              "tactic": "lowBlock",
+              "appearances": 16,
+              "wins": 2,
+              "draws": 2,
+              "goals": 0.625,
+              "conceded": 1.9375,
+              "shots": 4.75,
+              "passes": 750.3125,
+              "boxEntries": 3.5,
+              "transitionGains": 13.625,
+              "energy": 52.719442768750014
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "box-exception",
+      "reason": "low block lost all16 press meetings",
+      "totalMatches": 48,
+      "matchedPressPairs": {
+        "matches": 48,
+        "pressWins": 27,
+        "draws": 12,
+        "pressGoalDifference": 0.875,
+        "tackles": 288.6041666666667,
+        "corners": 2.8125,
+        "shots": 15.416666666666666,
+        "goals": 2.25
+      },
+      "summary": [
+        {
+          "version": 12,
+          "tactics": [
+            {
+              "tactic": "balanced",
+              "appearances": 16,
+              "wins": 3,
+              "draws": 4,
+              "goals": 0.6875,
+              "conceded": 1.0625,
+              "shots": 5.375,
+              "passes": 713.9375,
+              "boxEntries": 3.125,
+              "transitionGains": 9.8125,
+              "energy": 54.13408968541667
+            },
+            {
+              "tactic": "press",
+              "appearances": 48,
+              "wins": 27,
+              "draws": 12,
+              "goals": 1.5625,
+              "conceded": 0.6875,
+              "shots": 10.666666666666666,
+              "passes": 736.9166666666666,
+              "boxEntries": 6.354166666666667,
+              "transitionGains": 10.25,
+              "energy": 54.153558826909745
+            },
+            {
+              "tactic": "counter",
+              "appearances": 16,
+              "wins": 6,
+              "draws": 4,
+              "goals": 1.125,
+              "conceded": 1.125,
+              "shots": 4.9375,
+              "passes": 650.875,
+              "boxEntries": 3.4375,
+              "transitionGains": 16.25,
+              "energy": 50.25608481475695
+            },
+            {
+              "tactic": "lowBlock",
+              "appearances": 16,
+              "wins": 0,
+              "draws": 4,
+              "goals": 0.25,
+              "conceded": 2.5,
+              "shots": 3.9375,
+              "passes": 718.9375,
+              "boxEntries": 2.375,
+              "transitionGains": 12.125,
+              "energy": 52.79666364513888
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "acceleration-work",
+      "reason": "end energy fell to13–17; one seed only",
+      "totalMatches": 16,
+      "matchedPressPairs": {
+        "matches": 6,
+        "pressWins": 3,
+        "draws": 2,
+        "pressGoalDifference": 0.3333333333333333,
+        "tackles": 153.83333333333334,
+        "corners": 1.8333333333333333,
+        "shots": 13.666666666666666,
+        "goals": 1.3333333333333333
+      },
+      "summary": [
+        {
+          "version": 12,
+          "tactics": [
+            {
+              "tactic": "balanced",
+              "appearances": 8,
+              "wins": 2,
+              "draws": 3,
+              "goals": 0.5,
+              "conceded": 0.75,
+              "shots": 6.75,
+              "passes": 778.125,
+              "boxEntries": 3.875,
+              "transitionGains": 11,
+              "energy": 17.3823016125
+            },
+            {
+              "tactic": "press",
+              "appearances": 8,
+              "wins": 4,
+              "draws": 2,
+              "goals": 0.75,
+              "conceded": 0.5,
+              "shots": 8.75,
+              "passes": 802.5,
+              "boxEntries": 4.125,
+              "transitionGains": 8.25,
+              "energy": 16.449288012500002
+            },
+            {
+              "tactic": "counter",
+              "appearances": 8,
+              "wins": 1,
+              "draws": 4,
+              "goals": 0.875,
+              "conceded": 1.125,
+              "shots": 5.25,
+              "passes": 713.125,
+              "boxEntries": 3.25,
+              "transitionGains": 19.375,
+              "energy": 13.1759255625
+            },
+            {
+              "tactic": "lowBlock",
+              "appearances": 8,
+              "wins": 4,
+              "draws": 1,
+              "goals": 1,
+              "conceded": 0.75,
+              "shots": 6.625,
+              "passes": 802,
+              "boxEntries": 3.375,
+              "transitionGains": 11.25,
+              "energy": 17.391115499999998
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "high-wide-press",
+      "scope": "three complete seeds81–83 /18 matches; stopped early",
+      "reason": "15 press wins and3 draws; not adopted"
+    }
+  ],
+  "additionalAllTacticMatrix": {
+    "verifiedCommit": "50fcaecc764fdf519db09bcb52c22ea20c32bec9",
+    "seeds": [
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88
+    ],
+    "versions": [
+      11,
+      12
+    ],
+    "matches": 256,
+    "conditions": {
+      "ability": 60,
+      "initialEnergy": 95,
+      "minutes": 96,
+      "halftimeReset": true,
+      "coach": "fixed diagnostic; app retains adaptive opponent AI",
+      "pairing": "all 16 ordered base tactic pairs per seed, including same tactics",
+      "halftimeMeaning": "kickoff and position reset only; energy is not restored"
+    },
+    "summary": [
+      {
+        "version": 11,
+        "matches": 128,
+        "tactics": [
+          {
+            "tactic": "balanced",
+            "appearances": 64,
+            "wins": 23,
+            "draws": 27,
+            "goals": 0.90625,
+            "conceded": 0.703125,
+            "shots": 6.640625,
+            "passes": 703.203125,
+            "boxEntries": 3.8125,
+            "transitionGains": 10.6875,
+            "energy": 54.806591153993054
+          },
+          {
+            "tactic": "press",
+            "appearances": 64,
+            "wins": 21,
+            "draws": 24,
+            "goals": 0.890625,
+            "conceded": 0.625,
+            "shots": 8.046875,
+            "passes": 718.921875,
+            "boxEntries": 4.65625,
+            "transitionGains": 9.4375,
+            "energy": 53.88406726840279
+          },
+          {
+            "tactic": "counter",
+            "appearances": 64,
+            "wins": 18,
+            "draws": 27,
+            "goals": 0.734375,
+            "conceded": 0.8125,
+            "shots": 5.703125,
+            "passes": 653.625,
+            "boxEntries": 3.734375,
+            "transitionGains": 18.1875,
+            "energy": 50.28827368645833
+          },
+          {
+            "tactic": "lowBlock",
+            "appearances": 64,
+            "wins": 14,
+            "draws": 26,
+            "goals": 0.578125,
+            "conceded": 0.96875,
+            "shots": 5.09375,
+            "passes": 722.25,
+            "boxEntries": 3.09375,
+            "transitionGains": 11.28125,
+            "energy": 53.49503397118056
+          }
+        ]
+      },
+      {
+        "version": 12,
+        "matches": 128,
+        "tactics": [
+          {
+            "tactic": "balanced",
+            "appearances": 64,
+            "wins": 22,
+            "draws": 19,
+            "goals": 0.828125,
+            "conceded": 0.796875,
+            "shots": 6.5,
+            "passes": 701.109375,
+            "boxEntries": 3.40625,
+            "transitionGains": 9.96875,
+            "energy": 54.84951247777778
+          },
+          {
+            "tactic": "press",
+            "appearances": 64,
+            "wins": 28,
+            "draws": 19,
+            "goals": 1.015625,
+            "conceded": 0.734375,
+            "shots": 8.65625,
+            "passes": 711.546875,
+            "boxEntries": 4.875,
+            "transitionGains": 8.40625,
+            "energy": 53.587041532682285
+          },
+          {
+            "tactic": "counter",
+            "appearances": 64,
+            "wins": 19,
+            "draws": 19,
+            "goals": 0.65625,
+            "conceded": 0.890625,
+            "shots": 5.421875,
+            "passes": 651.25,
+            "boxEntries": 3.453125,
+            "transitionGains": 17.046875,
+            "energy": 50.42619549687499
+          },
+          {
+            "tactic": "lowBlock",
+            "appearances": 64,
+            "wins": 18,
+            "draws": 25,
+            "goals": 0.796875,
+            "conceded": 0.875,
+            "shots": 6.578125,
+            "passes": 714,
+            "boxEntries": 3.265625,
+            "transitionGains": 11.46875,
+            "energy": 53.57921552013889
+          }
+        ]
+      }
+    ],
+    "scorePairs": [
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          4,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          4,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          2,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          3,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          0,
+          3
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          2,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          2,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          0,
+          3
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          5,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          3,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          2,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          1,
+          3
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          3,
+          4
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 85,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          0,
+          3
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          0,
+          4
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 86,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          0,
+          3
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          1,
+          3
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 87,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 88,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          3
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          3
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 85,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          4,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          2,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          3,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 86,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          1,
+          3
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 87,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          3,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 88,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      }
+    ],
+    "rawResultsSha256": "781cd405f52351bc30f59147bb8c298cc5c13e10a8b2c77c1d09ff33bdbd09a3"
+  },
+  "additionalAdaptiveMatrix": {
+    "verifiedCommit": "50fcaecc764fdf519db09bcb52c22ea20c32bec9",
+    "matches": 128,
+    "seeds": [
+      81,
+      82,
+      83,
+      84
+    ],
+    "versions": [
+      11,
+      12
+    ],
+    "conditions": {
+      "ability": 60,
+      "initialEnergy": 95,
+      "minutes": 96,
+      "halftimeReset": true,
+      "coach": "team1 uses unchanged live T.coach; team0 remains the chosen base tactic; both team directions tested",
+      "labels": "Rows label initial/base tactics; the opponent may change its tactic during play. This is a runtime diagnostic, not a fixed-tactic ranking.",
+      "halftimeMeaning": "kickoff and position reset only; energy is not restored"
+    },
+    "summary": [
+      {
+        "version": 11,
+        "matches": 64,
+        "tactics": [
+          {
+            "tactic": "balanced",
+            "appearances": 32,
+            "wins": 12,
+            "draws": 9,
+            "goals": 0.78125,
+            "conceded": 0.65625,
+            "shots": 6.4375,
+            "passes": 700.21875,
+            "boxEntries": 3.375,
+            "transitionGains": 10.03125,
+            "energy": 54.403143028124994
+          },
+          {
+            "tactic": "press",
+            "appearances": 32,
+            "wins": 12,
+            "draws": 11,
+            "goals": 1.0625,
+            "conceded": 0.78125,
+            "shots": 8.5625,
+            "passes": 713.59375,
+            "boxEntries": 4.75,
+            "transitionGains": 9.4375,
+            "energy": 53.96264078177083
+          },
+          {
+            "tactic": "counter",
+            "appearances": 32,
+            "wins": 9,
+            "draws": 14,
+            "goals": 0.65625,
+            "conceded": 0.75,
+            "shots": 5.40625,
+            "passes": 660.09375,
+            "boxEntries": 3.1875,
+            "transitionGains": 17.6875,
+            "energy": 50.52081901414931
+          },
+          {
+            "tactic": "lowBlock",
+            "appearances": 32,
+            "wins": 9,
+            "draws": 10,
+            "goals": 0.65625,
+            "conceded": 0.96875,
+            "shots": 4.5,
+            "passes": 729.21875,
+            "boxEntries": 3.125,
+            "transitionGains": 12.125,
+            "energy": 53.611516943402776
+          }
+        ]
+      },
+      {
+        "version": 12,
+        "matches": 64,
+        "tactics": [
+          {
+            "tactic": "balanced",
+            "appearances": 32,
+            "wins": 10,
+            "draws": 10,
+            "goals": 0.8125,
+            "conceded": 0.8125,
+            "shots": 5.9375,
+            "passes": 698.75,
+            "boxEntries": 3.34375,
+            "transitionGains": 10.25,
+            "energy": 54.26717602534721
+          },
+          {
+            "tactic": "press",
+            "appearances": 32,
+            "wins": 13,
+            "draws": 12,
+            "goals": 1.3125,
+            "conceded": 0.625,
+            "shots": 8.875,
+            "passes": 717.9375,
+            "boxEntries": 5.65625,
+            "transitionGains": 8.6875,
+            "energy": 53.98080858333333
+          },
+          {
+            "tactic": "counter",
+            "appearances": 32,
+            "wins": 8,
+            "draws": 10,
+            "goals": 0.46875,
+            "conceded": 0.96875,
+            "shots": 5.25,
+            "passes": 649.75,
+            "boxEntries": 2.90625,
+            "transitionGains": 16.71875,
+            "energy": 50.53450917222222
+          },
+          {
+            "tactic": "lowBlock",
+            "appearances": 32,
+            "wins": 10,
+            "draws": 14,
+            "goals": 0.875,
+            "conceded": 1.0625,
+            "shots": 7,
+            "passes": 716.78125,
+            "boxEntries": 3.28125,
+            "transitionGains": 11.59375,
+            "energy": 53.69687141953125
+          }
+        ]
+      }
+    ],
+    "scorePairs": [
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          4,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          2,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          6,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 81,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          0,
+          4
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          0,
+          3
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 82,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          2,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          2,
+          3
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          1,
+          3
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          4,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          0,
+          3
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 11,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          0,
+          3
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 83,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "balanced"
+        ],
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "press"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "balanced",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "balanced"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "press"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "counter"
+        ],
+        "score": [
+          4,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "press",
+          "lowBlock"
+        ],
+        "score": [
+          3,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "balanced"
+        ],
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "press"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "counter"
+        ],
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "counter",
+          "lowBlock"
+        ],
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "balanced"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "press"
+        ],
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "counter"
+        ],
+        "score": [
+          0,
+          0
+        ]
+      },
+      {
+        "version": 12,
+        "seed": 84,
+        "tactics": [
+          "lowBlock",
+          "lowBlock"
+        ],
+        "score": [
+          1,
+          1
+        ]
+      }
+    ],
+    "rawResultsSha256": "2583422b58b6e7530a3f10499a0889df0ab47e9d78370e9d935af4b69be8ab75"
+  },
+  "unreleasedContactResearch": {
+    "installedVersion": 12,
+    "prototypeLabel": 13,
+    "prototypeReleased": false,
+    "baseCommit": "50fcaecc764fdf519db09bcb52c22ea20c32bec9",
+    "baselineCloneExactReferenceGames": 6,
+    "cohort24": {
+      "seeds": [
+        81,
+        82,
+        83,
+        84
+      ],
+      "pairing": "press versus each other tactic in both team directions",
+      "baseline": {
+        "matches": 24,
+        "pressWins": 13,
+        "draws": 6,
+        "pressGoalDifference": 0.75,
+        "tackles": 433,
+        "shots": 14.208333333333334,
+        "corners": 2.5833333333333335,
+        "goals": 2.0833333333333335
+      },
+      "recoveryOnly": {
+        "matches": 24,
+        "pressWins": 10,
+        "draws": 7,
+        "pressGoalDifference": 0.25,
+        "tackles": 424.0416666666667,
+        "shots": 11.541666666666666,
+        "corners": 1.4583333333333333,
+        "goals": 1.9166666666666667
+      },
+      "quickRead": {
+        "matches": 24,
+        "pressWins": 10,
+        "draws": 12,
+        "pressGoalDifference": 0.4166666666666667,
+        "tackles": 395.4583333333333,
+        "shots": 5.333333333333333,
+        "corners": 1.25,
+        "goals": 0.75
+      },
+      "shortReach": {
+        "matches": 24,
+        "pressWins": 13,
+        "draws": 7,
+        "pressGoalDifference": 0.7916666666666666,
+        "tackles": 363.7083333333333,
+        "shots": 16.458333333333332,
+        "corners": 3.125,
+        "goals": 2.125
+      }
+    },
+    "cohort48": {
+      "baseline12": {
+        "matches": 48,
+        "pressWins": 23,
+        "draws": 13,
+        "pressGoalDifference": 0.375,
+        "tackles": 430.4583333333333,
+        "shots": 13.8125,
+        "corners": 2.4166666666666665,
+        "goals": 1.625
+      },
+      "recoveryOnlyPrototype13": {
+        "matches": 48,
+        "pressWins": 22,
+        "draws": 16,
+        "pressGoalDifference": 0.3333333333333333,
+        "tackles": 424.1458333333333,
+        "shots": 12,
+        "corners": 1.8541666666666667,
+        "goals": 1.7083333333333333
+      },
+      "scope": "48 fixed press pairs,8 seeds,both team directions; not an installed rule13"
+    },
+    "adaptive32": {
+      "seeds": [
+        81,
+        82
+      ],
+      "summary": [
+        {
+          "version": 13,
+          "tactics": [
+            {
+              "tactic": "balanced",
+              "appearances": 16,
+              "wins": 1,
+              "draws": 10,
+              "goals": 0.625,
+              "conceded": 0.9375,
+              "shots": 6.9375,
+              "passes": 708.75,
+              "boxEntries": 4.75,
+              "transitionGains": 10,
+              "energy": 54.750696927604174
+            },
+            {
+              "tactic": "press",
+              "appearances": 16,
+              "wins": 8,
+              "draws": 5,
+              "goals": 1.4375,
+              "conceded": 0.875,
+              "shots": 8.3125,
+              "passes": 715.8125,
+              "boxEntries": 4.875,
+              "transitionGains": 9.6875,
+              "energy": 53.749702435416665
+            },
+            {
+              "tactic": "counter",
+              "appearances": 16,
+              "wins": 3,
+              "draws": 9,
+              "goals": 0.6875,
+              "conceded": 0.9375,
+              "shots": 4.875,
+              "passes": 642.8125,
+              "boxEntries": 3.3125,
+              "transitionGains": 15.5,
+              "energy": 50.544849206944434
+            },
+            {
+              "tactic": "lowBlock",
+              "appearances": 16,
+              "wins": 7,
+              "draws": 2,
+              "goals": 0.875,
+              "conceded": 0.875,
+              "shots": 5.75,
+              "passes": 713.25,
+              "boxEntries": 3.375,
+              "transitionGains": 11.125,
+              "energy": 53.402957485416664
+            }
+          ]
+        }
+      ],
+      "baselineReference": "additionalAdaptiveMatrix was expanded to four seeds; compare the first two seeds only for this prototype"
+    },
+    "changes": {
+      "recoveryOnly": "A player with a nonzero contact cooldown cannot initiate a new standing tackle; rule13 clone only.",
+      "quickRead": "Also use4+floor((100-passing)*.04) ticks for first decision and8 ticks for carry re-evaluation under4m pressure; rule13 clone only.",
+      "shortReach": "Recovery guard plus1.05m standing-tackle ball distance instead of1.45m; rule13 clone only."
+    },
+    "decision": "All remain outside the installed source. Recovery-only contact reduction is small; quick-read suppresses attacks; short reach does not establish improved pressure balance. A release13 requires full independent rules, replay/save/practice/runtime/native verification."
+  }
+}

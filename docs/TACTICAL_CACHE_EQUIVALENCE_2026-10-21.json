@@ -1,0 +1,141 @@
+{
+  "checkedUTC": "2026-10-20T22:45:42.327Z",
+  "method": {
+    "scope": "Read-only derived cache and memoized sort cost; no physical/tactical target changes",
+    "baselineTacticsSha256": "84b0c707648fde3094be71e661e244dc75f1cb8aae008a058d06d78a0de593f6",
+    "candidateTacticsSha256": "9dcbfb1891b1427fe95f5d87f71793aa241327a6111f59b11936ab9a855c1e78",
+    "input": "Actual F.create(4397+version), explicit published rule, alternating442/433 against opposite shape, press/counter then balanced/lowBlock, combination/cross, real half reset",
+    "comparison": "Separate old/new planners and football module instances; every event and every100th whole-world snapshot hashed; final entire JSON bytes equal. Rules1–13 each6000ticks, rule14 full57600ticks.",
+    "limits": "One diagnostic scenario per published rule, supplemented by all frozen receipt tests; not a phone FPS measurement."
+  },
+  "oldTacticsSha256": "84b0c707648fde3094be71e661e244dc75f1cb8aae008a058d06d78a0de593f6",
+  "newTacticsSha256": "9dcbfb1891b1427fe95f5d87f71793aa241327a6111f59b11936ab9a855c1e78",
+  "rows": [
+    {
+      "version": 1,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "c76360ae3bf513fc8586aa48a6bb79cae844bc689bb4502ea3b43f7b5c2c55f2",
+      "wholeWorldSha256": "970d279586e674df8f8f965bff76e59fb9d89e092b0eb12ce65c9a49166a8652",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 2,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "d12eaaccc8c0b913b7c0e1d5a924d00eba055ff879364a9b6b5fd65a3569923f",
+      "wholeWorldSha256": "a5801c4f35e0ff1f7d3726df009eca77a94fe1d7a14313432faa4f7e75431ab8",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 3,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "fafee1d378736672b32b82e912cd0bcb4186cc4433ab71372f1381aa9346da42",
+      "wholeWorldSha256": "c2b2dc1b1ae53ae9fc207e89274cd3dcb94efaa587f83a20a179e2cfa46e931b",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 4,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "b365f06e669bc0040eb89a48c89c258ea90f0a147e880a80ae730d362a763d6f",
+      "wholeWorldSha256": "cd985a24cb31041807d2f05cac03b98a0eb81292bac8d97d6f37d024bc9b71f8",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 5,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "f3d238db3498e3d3657375d1358a270283ff2eef3da5203ae4a14a9525daa6aa",
+      "wholeWorldSha256": "583b3a88cb11f3e447be6ebcd0401e58d5d449e94db828f1bc7b133d7f92edb4",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 6,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "309d5c32c3b97181c87d12b07ad23880b8b2e68e95b44475aec0b81fdac3cb3f",
+      "wholeWorldSha256": "7a92ef5b6063a94a4e37553dc0e799211332ae874f1f03736b2f25ac83c708f2",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 7,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "c3e5508030bce45c9c0444c4b9526ef7df2d9ed1632fcbfba9a0e0323e5f2a84",
+      "wholeWorldSha256": "67c2717f125083c512b6eb3605569d9259e75c161a42c9c7b4165053c66c42e2",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 8,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "bf7c0323e2f3c73a025e81507f3e44f4f14c1b45dbdc3575a9b2c157db285aac",
+      "wholeWorldSha256": "518fa19aca9185ee474be86736be3454ee8c070eccc73c125e266d251863ce33",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 9,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "9001cbf8a6f557231c12d33bca99013e8e7a58f8c2a46845a5b9da30c4ec6bce",
+      "wholeWorldSha256": "7c4fe2c8c36ce2c6c774888e52df0ecf7deaca335eb79a161d537644f2d58bc5",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 10,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "eab4d6b3c02efb6fbf09c365b5bea2f437b138eb615d43102abb1beefbb3a598",
+      "wholeWorldSha256": "0636aa24c270c7aee5d6629408fb3625957d58641bd77ba33553a9cfd01ab469",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 11,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "4d89ae99d056d36f9705e1e55283d6c5c6d336cb5431f50d06d210d21dce6f7c",
+      "wholeWorldSha256": "6841c0e9b567d18cb3635e53491e9f75966d378f2c506074b7014d0593dde14f",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 12,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "0c58410ba9367a1e0b6f121b4b99a08b8d30121f11c6f9a9fc9f8978ee3331fa",
+      "wholeWorldSha256": "2f4fc6c751c07a7845882cfbf22c50dfa13f6951a6073262601e8b5d7cf48b39",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 13,
+      "ticks": 6000,
+      "eventsAndSnapshotsSha256": "50a3dd9d5f379b5c146337e8ea55297e1aff4aabb8456beacb097249093bef42",
+      "wholeWorldSha256": "a1fe82661c8d04d6f0c61dc2d702fd076e32c0072827a14af5cabc84469bc4ca",
+      "wholeWorldEqual": true
+    },
+    {
+      "version": 14,
+      "ticks": 57600,
+      "eventsAndSnapshotsSha256": "97baee2c33fc0867795dada5470be137e11e497a8795ec763e917e5bea5d3cbd",
+      "wholeWorldSha256": "7d98d9a9b8819a03fd7cb4f816c755dbd6ef6d6cdbdc193b59a5d2643d9c506b",
+      "wholeWorldEqual": true
+    }
+  ],
+  "shipped": false,
+  "reason": "Exact135600-tick comparison passed for every released rule, but the isolated six-match performance trial was slower. The production tactical module was restored to the previous source; no physical rule15 was published.",
+  "performanceLog": [
+    {
+      "mode": "baseline",
+      "milliseconds": [
+        2627.5047,
+        2226.7111999999997,
+        2057.1940999999997,
+        2166.1530999999995,
+        2035.1008000000002,
+        2370.1672
+      ],
+      "hash": "f8f4b6d5cd9aa1b75a34f3bfb30b22d03969ed34b321118e3c8ae534805acfac"
+    },
+    {
+      "mode": "candidate",
+      "milliseconds": [
+        2567.1151,
+        2213.4574000000002,
+        2486.6971999999996,
+        3331.7906000000003,
+        4199.3271,
+        3091.048100000002
+      ],
+      "hash": "f8f4b6d5cd9aa1b75a34f3bfb30b22d03969ed34b321118e3c8ae534805acfac"
+    }
+  ]
+}

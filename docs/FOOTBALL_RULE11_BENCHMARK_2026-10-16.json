@@ -1,0 +1,147 @@
+{
+  "date": "2026-10-16",
+  "conditions": {
+    "seeds": [
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88
+    ],
+    "ability": 60,
+    "initialEnergy": 95,
+    "minutes": 96,
+    "halftimeReset": true,
+    "opponentCoach": "fixed diagnostic only",
+    "transitionMetric": "25m advance within 9s of a controlled open-play regain, once per possession; restarts excluded"
+  },
+  "versions": [
+    {
+      "version": 10,
+      "tactics": [
+        {
+          "tactic": "balanced",
+          "appearances": 64,
+          "wins": 21,
+          "draws": 16,
+          "goals": 0.890625,
+          "conceded": 0.96875,
+          "shots": 5.421875,
+          "passes": 701.21875,
+          "boxEntries": 3.265625,
+          "transitionGains": 10.59375,
+          "energy": 58.13580447081877
+        },
+        {
+          "tactic": "press",
+          "appearances": 64,
+          "wins": 31,
+          "draws": 20,
+          "goals": 1.21875,
+          "conceded": 0.625,
+          "shots": 8.5625,
+          "passes": 719.625,
+          "boxEntries": 4.71875,
+          "transitionGains": 10.015625,
+          "energy": 57.971825947274795
+        },
+        {
+          "tactic": "counter",
+          "appearances": 64,
+          "wins": 16,
+          "draws": 16,
+          "goals": 0.703125,
+          "conceded": 1.21875,
+          "shots": 4.453125,
+          "passes": 653.421875,
+          "boxEntries": 2.5,
+          "transitionGains": 11.015625,
+          "energy": 54.842545408436365
+        },
+        {
+          "tactic": "lowBlock",
+          "appearances": 64,
+          "wins": 24,
+          "draws": 20,
+          "goals": 0.71875,
+          "conceded": 0.71875,
+          "shots": 5.21875,
+          "passes": 715.375,
+          "boxEntries": 2.90625,
+          "transitionGains": 9.171875,
+          "energy": 57.15985348656157
+        }
+      ]
+    },
+    {
+      "version": 11,
+      "tactics": [
+        {
+          "tactic": "balanced",
+          "appearances": 64,
+          "wins": 23,
+          "draws": 27,
+          "goals": 0.90625,
+          "conceded": 0.703125,
+          "shots": 6.640625,
+          "passes": 703.203125,
+          "boxEntries": 3.8125,
+          "transitionGains": 10.6875,
+          "energy": 54.806591153993054
+        },
+        {
+          "tactic": "press",
+          "appearances": 64,
+          "wins": 21,
+          "draws": 24,
+          "goals": 0.890625,
+          "conceded": 0.625,
+          "shots": 8.046875,
+          "passes": 718.921875,
+          "boxEntries": 4.65625,
+          "transitionGains": 9.4375,
+          "energy": 53.88406726840279
+        },
+        {
+          "tactic": "counter",
+          "appearances": 64,
+          "wins": 18,
+          "draws": 27,
+          "goals": 0.734375,
+          "conceded": 0.8125,
+          "shots": 5.703125,
+          "passes": 653.625,
+          "boxEntries": 3.734375,
+          "transitionGains": 18.1875,
+          "energy": 50.28827368645833
+        },
+        {
+          "tactic": "lowBlock",
+          "appearances": 64,
+          "wins": 14,
+          "draws": 26,
+          "goals": 0.578125,
+          "conceded": 0.96875,
+          "shots": 5.09375,
+          "passes": 722.25,
+          "boxEntries": 3.09375,
+          "transitionGains": 11.28125,
+          "energy": 53.49503397118056
+        }
+      ]
+    }
+  ],
+  "duels": [
+    {
+      "version": 10,
+      "mean": 468.515625
+    },
+    {
+      "version": 11,
+      "mean": 429.171875
+    }
+  ]
+}

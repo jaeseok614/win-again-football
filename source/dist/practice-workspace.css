@@ -1,0 +1,68 @@
+/* Landscape-only practice desk. All primary controls stay44px; records may scroll inside their own pane. */
+@media(orientation:landscape){
+ #practice-dialog[open]{width:calc(100vw - 12px);height:calc(100dvh - 12px);max-height:none;max-width:none;overflow:hidden;margin:auto}
+ #practice-dialog .practice-workspace{height:100%;box-sizing:border-box;padding:3px;display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);grid-template-rows:44px minmax(0,1fr) 44px;gap:2px 5px;min-height:0}
+ #practice-dialog .practice-header{grid-column:1/-1;grid-row:1;height:44px;min-height:0;padding:0;gap:5px;border:0}
+ #practice-dialog .practice-header>div{min-width:100px;max-width:38%;order:1}
+ #practice-dialog .practice-header h1{font-size:13px;line-height:15px;margin:0}
+ #practice-dialog .practice-close{width:44px;height:44px;min-height:44px;order:3;font-size:22px}
+ #practice-dialog .practice-scenarios{order:2;flex:1;min-width:0;border:0;border-radius:4px;padding:0;height:44px;gap:3px}
+ #practice-dialog .practice-scenarios button{flex:1;display:block;min-height:44px;height:44px;border-radius:4px;padding:2px 4px;font-size:10px;line-height:12px;word-break:keep-all}
+ #practice-dialog .practice-scenarios small{display:block;font-size:8px;line-height:10px}
+ #practice-dialog .practice-story{margin:0;display:block;line-height:10px}
+ #practice-dialog .practice-story>span,#practice-dialog .practice-story p{font-size:8px;line-height:10px;margin:0;word-break:keep-all}
+ #practice-dialog .practice-story p{color:#abb7c1}
+ #practice-dialog .practice-safe,#practice-dialog .practice-exit{display:none}
+ #practice-dialog .practice-layout{display:contents}
+ #practice-dialog .practice-match{grid-row:2;grid-column:1;display:grid;grid-template-rows:28px minmax(0,1fr) 14px 24px;min-height:0;height:100%;overflow:hidden}
+ #practice-dialog .practice-score{min-height:0;height:28px;box-sizing:border-box;padding:2px 7px;gap:5px}
+ #practice-dialog .practice-score>span{font-size:10px;line-height:12px;word-break:keep-all}
+ #practice-dialog .practice-score small{display:none}
+ #practice-dialog .practice-score>div{gap:6px}
+ #practice-dialog #practice-score-value{font-size:19px;line-height:23px}
+ #practice-dialog #practice-minute{font-size:10px;line-height:12px}
+ #practice-dialog .practice-pitch{aspect-ratio:auto;height:auto;min-height:0}
+ #practice-dialog .practice-progress{min-height:0;height:14px;box-sizing:border-box;padding:0 5px;font-size:8px;line-height:12px;gap:3px}
+ #practice-dialog .practice-commentary{padding:1px 5px;min-height:0;height:24px;box-sizing:border-box;font-size:9px;line-height:11px;word-break:keep-all;overflow-wrap:anywhere;overflow:hidden}
+ #practice-dialog .practice-events{display:none}
+ #practice-dialog .practice-decisions{position:relative;grid-row:2;grid-column:2;display:grid;grid-template-rows:44px minmax(0,1fr);gap:2px;padding:0;border:0;min-height:0;overflow:hidden}
+ #practice-workspace-pane{grid-row:1;min-height:44px;height:44px;width:100%;font-size:10px;padding:3px;border:1px solid #394b59;background:#17232d;border-radius:4px}
+ #practice-dialog .practice-decisions .practice-choice-heading,#practice-dialog .practice-rate-note{display:none}
+ #practice-dialog .practice-tactics{grid-row:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(44px,1fr));gap:2px;min-height:0}
+ #practice-dialog .practice-tactics button{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:1px;min-height:44px;padding:3px 4px;box-sizing:border-box;word-break:keep-all;overflow-wrap:anywhere}
+ #practice-dialog .practice-tactics strong{font-size:10px;line-height:12px}
+ #practice-dialog .practice-tactics small,#practice-dialog .practice-tactics span{font-size:8px;line-height:10px;text-align:left}
+ #practice-dialog .practice-sub-panel{grid-row:2;margin:0;padding:0;border:0;min-height:0;display:grid;grid-template-rows:minmax(44px,1fr) 44px;gap:2px}
+ #practice-dialog .practice-sub-title{display:none}
+ #practice-dialog .practice-selected-face{position:absolute;top:0;right:0;width:43%;height:44px;margin:0;padding:0 2px;box-sizing:border-box;display:flex;align-items:center;gap:2px;overflow:hidden;background:#17232d;pointer-events:none}
+ #practice-dialog .practice-selected-face .player-portrait{width:24px;height:24px;flex:0 0 24px}
+ #practice-dialog .practice-selected-face strong,#practice-dialog .practice-selected-face span{font-size:8px;line-height:10px;word-break:keep-all;overflow-wrap:anywhere}
+ #practice-dialog .practice-roster-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;margin:0;padding:0}
+ #practice-dialog .practice-roster-options summary{display:none}
+ #practice-dialog .practice-roster-options label{font-size:0;min-width:0;margin:0;display:flex;align-items:stretch}
+ #practice-dialog .practice-roster-options select{min-height:44px;height:100%;max-height:100%;font-size:9px;padding:2px;width:100%;min-width:0;box-sizing:border-box}
+ #practice-dialog [data-practice=sub]{min-height:44px;height:44px;margin:0;padding:3px;font-size:9px;line-height:11px;word-break:keep-all;overflow-wrap:anywhere}
+ #practice-dialog .practice-sub-running{font-size:10px;line-height:14px;word-break:keep-all}
+ #practice-dialog .practice-decisions[data-pane=tactics] .practice-sub-panel,#practice-dialog .practice-decisions[data-pane=subs] .practice-tactics{display:none}
+ #practice-dialog .practice-decisions[data-pane=subs] #practice-workspace-pane{width:56%}
+ #practice-dialog .practice-run-controls{grid-row:3;grid-column:1/-1;position:static;display:grid;grid-template-columns:minmax(100px,1.8fr) minmax(70px,.7fr) repeat(3,minmax(57px,.6fr));gap:3px;padding:0;margin:0;border:0;min-height:0;height:44px}
+ #practice-dialog .practice-feel{display:contents}
+ #practice-dialog .practice-run-controls button,#practice-dialog .practice-run-controls select{min-height:44px;height:44px;padding:3px;font-size:10px;line-height:12px;box-sizing:border-box;word-break:keep-all;overflow-wrap:anywhere}
+ #practice-dialog .practice-result{grid-column:1/-1;grid-row:2/4;min-height:0;height:100%;margin:0;padding:3px;box-sizing:border-box;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto 38px minmax(0,1fr) 44px;gap:3px;overflow:hidden}
+ #practice-dialog .practice-workspace[data-done=true] .practice-layout{display:none}
+ #practice-dialog .practice-result-heading{grid-column:1;grid-row:1}
+ #practice-dialog .practice-result-heading h2{font-size:13px;line-height:15px;margin:0}
+ #practice-dialog .practice-result-heading p{font-size:9px;line-height:11px;margin:0}
+ #practice-dialog .practice-result-note{grid-column:2;grid-row:1;font-size:9px;line-height:11px;margin:0;align-self:center}
+ #practice-dialog .practice-result-stats{grid-column:1/-1;grid-row:2;padding:0;margin:0;gap:3px}
+ #practice-dialog .practice-result-stats span{font-size:8px;line-height:10px}
+ #practice-dialog .practice-result-stats strong{font-size:15px;line-height:18px;margin:0}
+ #practice-dialog .practice-decision-log{grid-column:1;grid-row:3;overflow:auto;min-height:0}
+ #practice-dialog .practice-comparison{grid-column:2;grid-row:3;overflow:auto;min-height:0}
+ #practice-dialog .practice-decision-log h3,#practice-dialog .practice-comparison h3{font-size:9px;line-height:11px;margin:0 0 2px}
+ #practice-dialog .practice-decision-log p{font-size:9px;line-height:11px;margin:2px 0}
+ #practice-dialog .practice-comparison th,#practice-dialog .practice-comparison td{font-size:8px;line-height:10px;padding:1px}
+ #practice-dialog .practice-result-actions{grid-column:1/-1;grid-row:4;display:flex;flex-direction:row;gap:3px;height:44px}
+ #practice-dialog .practice-result-actions button{height:44px;min-height:44px;font-size:10px;padding:3px;flex:1;min-width:0;width:auto;white-space:normal;word-break:keep-all;overflow-wrap:anywhere}
+ #practice-dialog #practice-impact strong{font-size:22px;line-height:26px}
+}

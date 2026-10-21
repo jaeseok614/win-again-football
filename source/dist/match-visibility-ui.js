@@ -1,4 +1,5 @@
 function pendingVisibleMatchEvent(){
+ if(state?.continuousSetup)return null;
  if(!state||typeof lastEvent==='undefined'||!lastEvent||!motionEnabled()||typeof lastEventFast!=='undefined'&&lastEventFast||!MatchVisibility.pending(state,lastEvent))return null;
  return movementEvent!==lastEvent||movementEventAge<Movement.impactAge(lastEvent)?lastEvent:null;
 }
@@ -6,7 +7,7 @@ function visibleMatchForReports(){return MatchVisibility.read(state,pendingVisib
 function visibleMatchFacts(match=visibleMatchForReports()){return Matchday.facts(match).map(row=>row.key==='xg'&&match.presentationPending?{...row,own:'장면 재생 중',opponent:'장면 재생 중'}:row);}
 function renderVisibleMatchTimeline(){
  const host=$('timeline');if(!host||!state||view!=='match'||matchPopupActive!=='stats')return;
- const html=visibleMatchForReports().logs.filter(l=>l.type!=='break'&&l.type!=='start').slice(-7).reverse().map(l=>'<div class="event '+(l.type==='goal'?'goal':'')+'"><b>'+F.clockLabel(state,l.minute)+'′</b><span>'+escapeText(matchLogText(l))+'</span></div>').join('');
+ const html=visibleMatchForReports().logs.filter(l=>l.type!=='break'&&l.type!=='start'&&(!state.continuousSetup||MatchFlow.broadcastEvent(l))).slice(-7).reverse().map(l=>'<div class="event '+(l.type==='goal'?'goal':'')+'"><b>'+F.clockLabel(state,l.minute)+'′</b><span>'+escapeText(matchLogText(l))+'</span></div>').join('');
  if(host.dataset.visibleMarkup!==html){host.innerHTML=html;host.dataset.visibleMarkup=html;}
 }
 var visibleCompletionStatus=null;

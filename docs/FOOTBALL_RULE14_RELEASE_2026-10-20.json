@@ -1,0 +1,1467 @@
+{
+  "status": "verified-final-test-apk-replaced",
+  "version": 14,
+  "publishedRulesPreserved": "1–13",
+  "nextPhysicalRule": 15,
+  "schema": 10,
+  "saveKey": "win-again-season-v17",
+  "applicationId": "com.jaeseok614.winagainfootball",
+  "debugInstalledPackage": "com.jaeseok614.winagainfootball.debug",
+  "validationCommit": "f07d84a5c811ef0d2f03ed3bea5dfac111a46ed0",
+  "validationTree": "25bfa34bfceb630122625fbee5e1258d53c8a337",
+  "mergeCheckout": "ebd17571913fc7254980bb7f991c5bb467232609",
+  "physicalSource": {
+    "version": 14,
+    "selected": "shared-kinetic",
+    "frozenAt": "2026-10-19T23:04:13.176Z",
+    "files": {
+      "continuous-football.js": "ae87165a499885c85206671389b3340a7f519125057bc7d206116ae79e8b018d",
+      "continuous-tactics.js": "84b0c707648fde3094be71e661e244dc75f1cb8aae008a058d06d78a0de593f6",
+      "continuous-decision.js": "8879121dc3ced5c473ea61221a2016b69cc503ce06891efe396d66e2442c869a",
+      "continuous-defending.js": "c24da040edd281fe34f778dec960237e2553b523c28c2c9a1c0fd3889686655c",
+      "continuous-options.js": "af5103ffdb610bdb687adc1bfcd650884e03cc9c5de9e5837023383507774069",
+      "continuous-contact.js": "1efeda88030c9e030c4b82cc2fd8e40777818c8267b0e0807a0d59f4f73b3020"
+    }
+  },
+  "canonical": {
+    "version": 14,
+    "regular": {
+      "partial": "52456d8cd763c9e09021940ecba0bd5b76720b9c8dec0f303dfb8d3df23ff840",
+      "match": "2da19b81d30d569806cecd427d51d3c7e82dffc1bf3a02e1042879b09e0d0aa9",
+      "fullSeason": "9e34ff185723c2192cd805853654d1934b3902dfcba5dcb9602f7f46787ebb51",
+      "score": [
+        5,
+        0
+      ],
+      "shots": [
+        24,
+        13
+      ],
+      "stats": {
+        "possession": [
+          27320,
+          24525
+        ],
+        "passes": [
+          727,
+          636
+        ],
+        "completed": [
+          526,
+          463
+        ],
+        "shots": [
+          24,
+          13
+        ],
+        "onTarget": [
+          16,
+          5
+        ],
+        "xg": [
+          1.897005,
+          0.853241
+        ],
+        "corners": [
+          4,
+          0
+        ],
+        "freeKicks": [
+          9,
+          8
+        ],
+        "offsides": [
+          0,
+          0
+        ],
+        "tackles": [
+          151,
+          93
+        ],
+        "fouls": [
+          8,
+          9
+        ],
+        "saves": [
+          5,
+          11
+        ]
+      },
+      "settled": "073e97afcc49ad3359595889014f46dc7a9a0c980f42783c23786d7feb275fdd"
+    },
+    "commanded": {
+      "partial": "ccd91d61dfaac7ab1eac341ae76a3ab5bec94bcda1ae655266e8079d7cd6abc1",
+      "match": "bbe6d0540b757a3d0c8cb29dcadace1ad1cf541bdc33504ccf6d12f6a25adf62",
+      "fullSeason": "2a1ac7ab3cfba30305931c9284071538d8e2b5979ec2a3735d976b59c5a53adf",
+      "score": [
+        4,
+        0
+      ],
+      "shots": [
+        29,
+        4
+      ],
+      "stats": {
+        "possession": [
+          27515,
+          24849
+        ],
+        "passes": [
+          767,
+          660
+        ],
+        "completed": [
+          543,
+          465
+        ],
+        "shots": [
+          29,
+          4
+        ],
+        "onTarget": [
+          22,
+          2
+        ],
+        "xg": [
+          2.405204,
+          0.306082
+        ],
+        "corners": [
+          5,
+          1
+        ],
+        "freeKicks": [
+          9,
+          7
+        ],
+        "offsides": [
+          0,
+          0
+        ],
+        "tackles": [
+          150,
+          82
+        ],
+        "fouls": [
+          7,
+          9
+        ],
+        "saves": [
+          2,
+          18
+        ]
+      },
+      "settled": "d1f76f7da0ca315e15efe2ddee79f802eb1739938485fb266f89c4dc982061b8"
+    },
+    "practice": {
+      "comeback": "bfa4f29c0591ae5383b036312306e6908bdf456f12a20e14ae0acd8e7495a543",
+      "protect": "256cb89bdb0d9ab3ad6a64f5d0eb0b06aa46d258cd56a62bd14812286a7ee620"
+    }
+  },
+  "ci": {
+    "source": {
+      "runId": 39355364272,
+      "jobId": 118408778631,
+      "headSha": "f07d84a5c811ef0d2f03ed3bea5dfac111a46ed0",
+      "url": "https://github.com/jaeseok614/win-again-football/actions/runs/39355364272",
+      "conclusion": "success",
+      "suites": 205,
+      "checks": 1524,
+      "pwaGroups": 14,
+      "offlineBuild": true,
+      "committedAssetsMatch": true,
+      "logSha256": "4ab3ac53ade829089fc193729546bb1c5a5fc1d6ae226269f903b50516f8c00e",
+      "timeoutMinutes": 20,
+      "isolatedWorkers": 2
+    },
+    "android": {
+      "runId": 39355364281,
+      "headSha": "f07d84a5c811ef0d2f03ed3bea5dfac111a46ed0",
+      "url": "https://github.com/jaeseok614/win-again-football/actions/runs/39355364281",
+      "conclusion": "success",
+      "apis": [
+        {
+          "api": 34,
+          "jobId": 118408778711,
+          "conclusion": "success",
+          "tests": 32,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 667.364,
+          "artifactId": 12235502489,
+          "artifactSha256": "0dea90c4b28c3427a95dda2b3afce2179ca62eac631a9d90a02be14819098ce5"
+        },
+        {
+          "api": 35,
+          "jobId": 118408778767,
+          "conclusion": "success",
+          "tests": 32,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 612.123,
+          "artifactId": 12235062192,
+          "artifactSha256": "1052236730a91a137d330e9f4850ada751c863c4c50acbce041cd1f6456e25fd"
+        },
+        {
+          "api": 36,
+          "jobId": 118408778558,
+          "conclusion": "success",
+          "tests": 32,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 408.491,
+          "artifactId": 12235621538,
+          "artifactSha256": "a96ae6703fb26c11fe5e9abc5280818141e3a7660dac6d4fb13ebaed753c5b44"
+        }
+      ],
+      "instrumentationLimitMinutes": 20,
+      "workflowLimitMinutes": 45,
+      "sourceCountsAndAllAssertionsRetained": true,
+      "largeScreen": {
+        "disposableEmulatorOnly": true,
+        "systemSmallestWidthDpAtLeast": 600,
+        "systemSetToPortrait": true,
+        "actualActivityLandscape": true,
+        "requestedSensorLandscape": true,
+        "actualWebViewLandscapeAndWidthAtLeast600": true,
+        "portraitLockedLargeDisplayMayUseLandscapeLetterbox": true,
+        "originalDensityAndRotationRestored": true
+      },
+      "realNativeDocumentExportAndFileInputRoundtrip": true,
+      "completeUtf8PayloadCompared": true
+    }
+  },
+  "benchmark": {
+    "file": "docs/FOOTBALL_RULE14_BENCHMARK_2026-10-20.json",
+    "matchedScenarios": 512,
+    "totalGames": 1024,
+    "perRule": 512,
+    "newGames": 704,
+    "reusedPublished13": 320,
+    "conditions": 11,
+    "allResultsRetained": true,
+    "populationBalanceProven": false
+  },
+  "browser": {
+    "runtimeVersions": [
+      11,
+      12,
+      13,
+      14
+    ],
+    "partialFullCommandsPracticeExact": true,
+    "importUpgrade": {
+      "source": "isolated seed17 rule13 campaign, not a user save",
+      "oldTicks": 723,
+      "oldRule": 13,
+      "newRule": 14,
+      "previewReadOnly": true,
+      "serializedExportExact": true,
+      "headlessBrowserDownloadVerified": false,
+      "coldReloadExact": true,
+      "confirmedOldRecordVersion": 13,
+      "year": 1,
+      "round": 1,
+      "automaticSeasonAdvance": false,
+      "errors": []
+    },
+    "offlineUpgrade": {
+      "oldRule": 13,
+      "newBuildRule": 14,
+      "oldPartialTicks": 723,
+      "oldMarker": "v22:1ab805a4e1a6834e9d7f697e9f93b5dd36cd178b6f24caa7ca4cd9c37ea7896f",
+      "newMarker": "v22:57c42111ca68561ea14e04154005742f9acc4099f1bd647551e21996695ddaf0",
+      "oldOfflineReloadExact": true,
+      "updateDoesNotAutoReload": true,
+      "actualSaveAndReloadButton": true,
+      "currentOfflineReloadExact": true,
+      "entireCampaignExact": true,
+      "automaticSeasonAdvance": false,
+      "requests": 18,
+      "errors": []
+    },
+    "exportSession": {
+      "actualDialogCloseEvent": true,
+      "patterns": [
+        "helper immediate reopen",
+        "direct immediate reopen",
+        "Escape then reopen"
+      ],
+      "oldCompletionCannotUnlockNew": true,
+      "newCancellationEnablesControls": true,
+      "wholeCampaignUnchanged": true,
+      "errors": []
+    },
+    "headlessBrowserFileWriteVerified": false,
+    "headlessFileWriteLimit": "Chromium cancels actual downloads here, including an independent8-byte control; native SAF complete-UTF8 roundtrip passed on all three APIs instead.",
+    "timedWatch": {
+      "environment": "desktop Chrome headless844x364, not phone FPS",
+      "allFourActualVisibleSpeedSelections": true,
+      "speeds": [
+        {
+          "requestedRule": "14",
+          "viewport": [
+            844,
+            364
+          ],
+          "speed": "slow",
+          "cpuThrottle": 1,
+          "elapsed": 134.385,
+          "coldRestoreSeconds": 2.954,
+          "pageReloadSeconds": 2.676,
+          "explicitRestoreVerificationSeconds": 0.278,
+          "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+          "version": 14,
+          "score": [
+            4,
+            0
+          ],
+          "shots": [
+            29,
+            8
+          ],
+          "ticks": 57600,
+          "goalScenes": 4,
+          "halves": 1,
+          "shotCaptured": true,
+          "frameGaps": {
+            "count": 7722,
+            "p50": 17.30000000000291,
+            "p95": 18.10000000000582,
+            "p99": 18.39999999999418,
+            "over100ms": 3
+          },
+          "errors": []
+        },
+        {
+          "requestedRule": "14",
+          "viewport": [
+            844,
+            364
+          ],
+          "speed": "normal",
+          "cpuThrottle": 1,
+          "elapsed": 88.193,
+          "coldRestoreSeconds": 5.039,
+          "pageReloadSeconds": 4.616,
+          "explicitRestoreVerificationSeconds": 0.423,
+          "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+          "version": 14,
+          "score": [
+            4,
+            0
+          ],
+          "shots": [
+            29,
+            8
+          ],
+          "ticks": 57600,
+          "goalScenes": 4,
+          "halves": 1,
+          "shotCaptured": true,
+          "frameGaps": {
+            "count": 5143,
+            "p50": 16.69999999999709,
+            "p95": 16.80000000000291,
+            "p99": 17.299999999995634,
+            "over100ms": 1
+          },
+          "errors": []
+        },
+        {
+          "requestedRule": "14",
+          "viewport": [
+            844,
+            364
+          ],
+          "speed": "fast",
+          "cpuThrottle": 1,
+          "elapsed": 62.884,
+          "coldRestoreSeconds": 3.802,
+          "pageReloadSeconds": 3.117,
+          "explicitRestoreVerificationSeconds": 0.685,
+          "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+          "version": 14,
+          "score": [
+            4,
+            0
+          ],
+          "shots": [
+            29,
+            8
+          ],
+          "ticks": 57600,
+          "goalScenes": 4,
+          "halves": 1,
+          "shotCaptured": true,
+          "frameGaps": {
+            "count": 3547,
+            "p50": 17.899999999999636,
+            "p95": 18.19999999999891,
+            "p99": 18.599999999998545,
+            "over100ms": 2
+          },
+          "errors": []
+        },
+        {
+          "requestedRule": "14",
+          "viewport": [
+            844,
+            364
+          ],
+          "speed": "rapid",
+          "cpuThrottle": 1,
+          "elapsed": 63.693,
+          "coldRestoreSeconds": 8.052,
+          "pageReloadSeconds": 6.799,
+          "explicitRestoreVerificationSeconds": 1.253,
+          "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+          "version": 14,
+          "score": [
+            4,
+            0
+          ],
+          "shots": [
+            29,
+            8
+          ],
+          "ticks": 57600,
+          "goalScenes": 4,
+          "halves": 1,
+          "shotCaptured": true,
+          "frameGaps": {
+            "count": 3638,
+            "p50": 16.69999999999709,
+            "p95": 16.80000000000291,
+            "p99": 17.099999999998545,
+            "over100ms": 1
+          },
+          "errors": []
+        }
+      ],
+      "entireMatchExactAcrossAllFour": true,
+      "cpu4": {
+        "requestedRule": "14",
+        "viewport": [
+          844,
+          364
+        ],
+        "speed": "normal",
+        "cpuThrottle": 4,
+        "elapsed": 297.92,
+        "coldRestoreSeconds": 25.897,
+        "pageReloadSeconds": 24.864,
+        "explicitRestoreVerificationSeconds": 1.033,
+        "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+        "version": 14,
+        "score": [
+          4,
+          0
+        ],
+        "shots": [
+          29,
+          8
+        ],
+        "ticks": 57600,
+        "goalScenes": 4,
+        "halves": 1,
+        "shotCaptured": true,
+        "frameGaps": {
+          "count": 7315,
+          "p50": 33.29999999998836,
+          "p95": 100,
+          "p99": 166.79999999998836,
+          "over100ms": 316
+        },
+        "errors": []
+      },
+      "isolatedFinalNormal": {
+        "requestedRule": "14",
+        "viewport": [
+          844,
+          364
+        ],
+        "speed": "normal",
+        "cpuThrottle": 1,
+        "elapsed": 90.274,
+        "coldRestoreSeconds": 2.4,
+        "pageReloadSeconds": 2.152,
+        "explicitRestoreVerificationSeconds": 0.248,
+        "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+        "version": 14,
+        "score": [
+          4,
+          0
+        ],
+        "shots": [
+          29,
+          8
+        ],
+        "ticks": 57600,
+        "goalScenes": 4,
+        "halves": 1,
+        "shotCaptured": true,
+        "frameGaps": {
+          "count": 4845,
+          "p50": 17.89999999999418,
+          "p95": 18.299999999995634,
+          "p99": 18.5,
+          "over100ms": 13
+        },
+        "errors": []
+      },
+      "timingLimit": "Fixed goal holds, bounded highlights, sampling and screenshots mean duration is not the inverse of selected speed. CPU4 start overlapped other QA; it is a stress diagnostic.",
+      "previousStressCpu4": {
+        "requestedRule": "14",
+        "viewport": [
+          844,
+          364
+        ],
+        "speed": "normal",
+        "cpuThrottle": 4,
+        "elapsed": 314.535,
+        "coldRestoreSeconds": 29.634,
+        "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+        "version": 14,
+        "score": [
+          4,
+          0
+        ],
+        "shots": [
+          29,
+          8
+        ],
+        "ticks": 57600,
+        "goalScenes": 4,
+        "halves": 1,
+        "shotCaptured": true,
+        "frameGaps": {
+          "count": 6873,
+          "p50": 33.39999999999418,
+          "p95": 100.80000000001746,
+          "p99": 166.6999999999971,
+          "over100ms": 369
+        },
+        "errors": []
+      },
+      "finalGuardedNormal": {
+        "requestedRule": "14",
+        "viewport": [
+          844,
+          364
+        ],
+        "speed": "normal",
+        "cpuThrottle": 1,
+        "elapsed": 85.903,
+        "coldRestoreSeconds": 3.487,
+        "pageReloadSeconds": 3.127,
+        "explicitRestoreVerificationSeconds": 0.36,
+        "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+        "version": 14,
+        "score": [
+          4,
+          0
+        ],
+        "shots": [
+          29,
+          8
+        ],
+        "ticks": 57600,
+        "goalScenes": 4,
+        "halves": 1,
+        "shotCaptured": true,
+        "frameGaps": {
+          "count": 5127,
+          "p50": 16.69999999999709,
+          "p95": 16.89999999999418,
+          "p99": 17.099999999998545,
+          "over100ms": 1
+        },
+        "errors": []
+      },
+      "finalGuardedNormalInterpretation": "Functional playthrough; first16s overlapped eight-size first-install QA. Not a controlled performance improvement claim."
+    },
+    "firstInstall": {
+      "script": "source/browser/first-install.cjs",
+      "sizes": 8,
+      "twoArrivalChapters": true,
+      "twoActualOwnerAnswers": true,
+      "allThreeOptionalReports": true,
+      "eighteenSquadRows": true,
+      "footballStateNotAdvanced": true,
+      "wholeCampaignColdReloadAndContinueExact": true,
+      "noRepeatedRequiredArrival": true,
+      "finalGuardedBuildPassed": true
+    },
+    "layout": {
+      "operationsPages": 10,
+      "ordinarySizes": 8,
+      "completedSeasonSizes": 3,
+      "playerProfiles": 18,
+      "opponentReport": true,
+      "formations": 12,
+      "formationSizes": 7,
+      "regainPreviewTactics": 4,
+      "regainOwners": 2,
+      "all22Names": true,
+      "essentialControlHeightPx": 44,
+      "realRebirth": {
+        "source": "read-only ended career supplied on the command line",
+        "sizes": 9,
+        "endedYear": 4,
+        "endedDivision": 2,
+        "endedRound": 6,
+        "previousLeagueRecords": 144,
+        "explicitMemory": "calm",
+        "explicitRestartOnly": true,
+        "wholePreviousCampaignStored": true,
+        "secondLifeEqualsNode": true,
+        "coldRestoreExact": true,
+        "originalInputUnchanged": true,
+        "errors": []
+      },
+      "additionalScreens": [
+        "manager voice",
+        "press contextual answer",
+        "existing compact dialogue",
+        "six player story arcs",
+        "direct squad and market",
+        "physical analysis",
+        "lineup readiness",
+        "rule11 shot-map every shot and replay",
+        "top-tier growth art six sizes"
+      ],
+      "additionalGrowthFixture": "Completed rule14 top-tier career correctly relegates to2, so the growth script expecting division1 was rerun against the original valid top-tier start fixture; no app assertion was weakened."
+    }
+  },
+  "campaigns": {
+    "yearOne": [
+      {
+        "seed": 41,
+        "version": 14,
+        "tactic": "balanced",
+        "games": 49,
+        "explicitLineups": 24,
+        "answeredCorner": true,
+        "strategy": "recovery training; explicit strength-XI application only when readiness report recommends; one explicit new coach conversation",
+        "ending": {
+          "year": 1,
+          "round": 46,
+          "rank": {
+            "id": "brynwell",
+            "name": "토투넘 핫스퍼",
+            "en": "Brynwell Rovers",
+            "short": "토투넘",
+            "code": "TT",
+            "color": "#c8f36e",
+            "style": "빠른 유망주를 가진 작은 시민 구단",
+            "attack": 70,
+            "defense": 70,
+            "middle": 71,
+            "speed": 68,
+            "played": 46,
+            "won": 41,
+            "drawn": 3,
+            "lost": 2,
+            "gf": 259,
+            "ga": 41,
+            "points": 126,
+            "gd": 218,
+            "rank": 1
+          },
+          "balance": 625400,
+          "records": 49,
+          "cupChampion": "redmere"
+        },
+        "explicitNext": {
+          "year": 2,
+          "division": 4
+        }
+      },
+      {
+        "seed": 41,
+        "version": 14,
+        "tactic": "counter",
+        "games": 48,
+        "explicitLineups": 23,
+        "answeredCorner": true,
+        "strategy": "recovery training; explicit strength-XI application only when readiness report recommends; one explicit new coach conversation",
+        "ending": {
+          "year": 1,
+          "round": 46,
+          "rank": {
+            "id": "brynwell",
+            "name": "토투넘 핫스퍼",
+            "en": "Brynwell Rovers",
+            "short": "토투넘",
+            "code": "TT",
+            "color": "#c8f36e",
+            "style": "빠른 유망주를 가진 작은 시민 구단",
+            "attack": 70,
+            "defense": 70,
+            "middle": 71,
+            "speed": 68,
+            "played": 46,
+            "won": 44,
+            "drawn": 1,
+            "lost": 1,
+            "gf": 270,
+            "ga": 29,
+            "points": 133,
+            "gd": 241,
+            "rank": 1
+          },
+          "balance": 602900,
+          "records": 48,
+          "cupChampion": "redmere"
+        },
+        "explicitNext": {
+          "year": 2,
+          "division": 4
+        }
+      }
+    ],
+    "promoted": {
+      "source": "isolated seed41 next-balanced campaign; not a user save",
+      "strategy": "balanced; recovery training; explicit readiness-recommended strength lineups; real O.plan adaptive opponents; explicit nextSeason between seasons only",
+      "seasons": [
+        {
+          "year": 2,
+          "division": 4,
+          "games": 47,
+          "lineups": 25,
+          "rounds": 46,
+          "rank": 1,
+          "won": 37,
+          "drawn": 6,
+          "lost": 3,
+          "gf": 203,
+          "ga": 57,
+          "balance": 1262800,
+          "records": 47,
+          "statsVersion": 14,
+          "currentSeasonUnchanged": true,
+          "exactSaveAndFileRoundTrip": true,
+          "movement": {
+            "from": 4,
+            "to": 3,
+            "kind": "promotion",
+            "rank": 1,
+            "label": "리그 원 승격"
+          }
+        },
+        {
+          "year": 3,
+          "division": 3,
+          "games": 47,
+          "lineups": 22,
+          "rounds": 46,
+          "rank": 1,
+          "won": 29,
+          "drawn": 6,
+          "lost": 11,
+          "gf": 141,
+          "ga": 92,
+          "balance": 2143200,
+          "records": 47,
+          "statsVersion": 14,
+          "currentSeasonUnchanged": true,
+          "exactSaveAndFileRoundTrip": true,
+          "movement": {
+            "from": 3,
+            "to": 2,
+            "kind": "promotion",
+            "rank": 1,
+            "label": "챔피언십 승격"
+          }
+        },
+        {
+          "year": 4,
+          "division": 2,
+          "games": 47,
+          "lineups": 21,
+          "rounds": 46,
+          "rank": 24,
+          "won": 7,
+          "drawn": 10,
+          "lost": 29,
+          "gf": 87,
+          "ga": 150,
+          "balance": 3156350,
+          "records": 47,
+          "statsVersion": 14,
+          "currentSeasonUnchanged": true,
+          "exactSaveAndFileRoundTrip": true,
+          "movement": {
+            "from": 2,
+            "to": 3,
+            "kind": "relegation",
+            "rank": 24,
+            "label": "리그 원 강등"
+          }
+        },
+        {
+          "year": 5,
+          "division": 3,
+          "games": 49,
+          "lineups": 14,
+          "rounds": 46,
+          "rank": 1,
+          "won": 28,
+          "drawn": 5,
+          "lost": 13,
+          "gf": 136,
+          "ga": 99,
+          "balance": 4109750,
+          "records": 49,
+          "statsVersion": 14,
+          "currentSeasonUnchanged": true,
+          "exactSaveAndFileRoundTrip": true,
+          "movement": {
+            "from": 3,
+            "to": 2,
+            "kind": "promotion",
+            "rank": 1,
+            "label": "챔피언십 승격"
+          }
+        }
+      ]
+    },
+    "defaultRebirth": {
+      "seed": 41,
+      "rebirth": true,
+      "version": 14,
+      "games": 149,
+      "seasons": [
+        {
+          "year": 1,
+          "division": 5,
+          "rank": 1,
+          "games": 49,
+          "movement": {
+            "from": 5,
+            "to": 4,
+            "kind": "promotion",
+            "rank": 1,
+            "label": "리그 투 승격"
+          },
+          "status": "active",
+          "balance": 625400
+        },
+        {
+          "year": 2,
+          "division": 4,
+          "rank": 1,
+          "games": 47,
+          "movement": {
+            "from": 4,
+            "to": 3,
+            "kind": "promotion",
+            "rank": 1,
+            "label": "리그 원 승격"
+          },
+          "status": "active",
+          "balance": 1262800
+        },
+        {
+          "year": 3,
+          "division": 3,
+          "rank": 1,
+          "games": 47,
+          "movement": {
+            "from": 3,
+            "to": 2,
+            "kind": "promotion",
+            "rank": 1,
+            "label": "챔피언십 승격"
+          },
+          "status": "active",
+          "balance": 2143200
+        }
+      ],
+      "choices": [
+        {
+          "year": 1,
+          "round": 6,
+          "option": "steady"
+        },
+        {
+          "year": 1,
+          "round": 12,
+          "option": "steady"
+        },
+        {
+          "year": 1,
+          "round": 18,
+          "option": "steady"
+        },
+        {
+          "year": 1,
+          "round": 24,
+          "option": "steady"
+        },
+        {
+          "year": 1,
+          "round": 30,
+          "option": "steady"
+        },
+        {
+          "year": 1,
+          "round": 36,
+          "option": "steady"
+        },
+        {
+          "year": 1,
+          "round": 42,
+          "option": "steady"
+        },
+        {
+          "year": 2,
+          "round": 2,
+          "option": "steady"
+        },
+        {
+          "year": 2,
+          "round": 8,
+          "option": "steady"
+        },
+        {
+          "year": 2,
+          "round": 14,
+          "option": "steady"
+        },
+        {
+          "year": 2,
+          "round": 20,
+          "option": "steady"
+        },
+        {
+          "year": 2,
+          "round": 26,
+          "option": "steady"
+        },
+        {
+          "year": 2,
+          "round": 32,
+          "option": "steady"
+        },
+        {
+          "year": 2,
+          "round": 38,
+          "option": "steady"
+        },
+        {
+          "year": 2,
+          "round": 44,
+          "option": "steady"
+        },
+        {
+          "year": 3,
+          "round": 4,
+          "option": "steady"
+        },
+        {
+          "year": 3,
+          "round": 10,
+          "option": "steady"
+        },
+        {
+          "year": 3,
+          "round": 16,
+          "option": "steady"
+        },
+        {
+          "year": 3,
+          "round": 22,
+          "option": "steady"
+        },
+        {
+          "year": 3,
+          "round": 28,
+          "option": "steady"
+        },
+        {
+          "year": 3,
+          "round": 34,
+          "option": "steady"
+        },
+        {
+          "year": 3,
+          "round": 40,
+          "option": "steady"
+        },
+        {
+          "year": 3,
+          "round": 46,
+          "option": "steady"
+        }
+      ],
+      "cornerStoryExplicitAndReadOnlyForMoneyLineupRng": true,
+      "ending": {
+        "year": 4,
+        "round": 6,
+        "division": 2,
+        "status": "sacked",
+        "attempt": 1,
+        "balance": 2262850
+      },
+      "nextLife": {
+        "attempt": 2,
+        "division": 5,
+        "year": 1,
+        "memory": "calm",
+        "previousRecords": 144
+      },
+      "exactRestoreAndFileRoundTrip": true,
+      "noInjectedOutcomes": true
+    },
+    "topDivision": {
+      "fixture": "work/webtoon-release-20261015/top-tier-compatible.json",
+      "fixtureSha256": "4eb06646740f69c8c2ef82dbe4f9ec70b747b6226b2e680dd6e7581c6bb356a5",
+      "fixtureYear": 5,
+      "fixtureContinuous": false,
+      "strategy": "balanced; recovery training; explicit readiness-recommended strength lineups; actual O.plan opponents",
+      "year": 6,
+      "division": 1,
+      "version": 14,
+      "games": 39,
+      "leagueGames": 38,
+      "rank": {
+        "id": "brynwell",
+        "name": "토투넘 핫스퍼",
+        "en": "Brynwell Rovers",
+        "short": "토투넘",
+        "code": "TT",
+        "color": "#c8f36e",
+        "style": "빠른 유망주를 가진 작은 시민 구단",
+        "attack": 70,
+        "defense": 70,
+        "middle": 71,
+        "speed": 68,
+        "played": 38,
+        "won": 0,
+        "drawn": 3,
+        "lost": 35,
+        "gf": 49,
+        "ga": 204,
+        "points": 3,
+        "gd": -155,
+        "rank": 20
+      },
+      "balance": 5811250,
+      "history": [
+        {
+          "year": 1,
+          "division": 5,
+          "rules": "five-tier",
+          "nextDivision": 4,
+          "rank": 1,
+          "points": 101,
+          "champion": "brynwell",
+          "cupChampion": "redmere",
+          "clubIds": [
+            "brynwell",
+            "aldermere",
+            "norhaven",
+            "bellwick",
+            "redmere",
+            "montevaro",
+            "selcanto",
+            "falkenruh",
+            "eng5-afc-fylde",
+            "eng5-aldershot-town",
+            "eng5-altrincham",
+            "eng5-barrow",
+            "eng5-boston-united",
+            "eng5-eastleigh",
+            "eng5-fc-halifax-town",
+            "eng5-harrogate-town",
+            "eng5-hornchurch",
+            "eng5-kidderminster-harriers",
+            "eng5-solihull-moors",
+            "eng5-sutton-united",
+            "eng5-tamworth",
+            "eng5-wealdstone",
+            "eng5-woking",
+            "eng5-worthing"
+          ],
+          "europeChampion": null
+        },
+        {
+          "year": 2,
+          "division": 4,
+          "rules": "five-tier",
+          "nextDivision": 3,
+          "rank": 1,
+          "points": 102,
+          "champion": "brynwell",
+          "cupChampion": "castermere",
+          "clubIds": [
+            "eastwick",
+            "galdon",
+            "kingsmoor",
+            "wexford",
+            "castermere",
+            "alderwich",
+            "fenwick",
+            "dunmarsh",
+            "eng4-accrington-stanley",
+            "eng4-barnet",
+            "eng4-cheltenham-town",
+            "eng4-chesterfield",
+            "eng4-colchester-united",
+            "eng4-crawley-town",
+            "eng4-crewe-alexandra",
+            "eng4-exeter-city",
+            "brynwell",
+            "eng4-gillingham",
+            "eng4-grimsby-town",
+            "eng4-newport-county",
+            "eng4-northampton-town",
+            "eng4-rotherham-united",
+            "eng4-salford-city",
+            "eng4-tranmere-rovers"
+          ],
+          "europeChampion": null
+        },
+        {
+          "year": 3,
+          "division": 3,
+          "rules": "five-tier",
+          "nextDivision": 2,
+          "rank": 1,
+          "points": 90,
+          "champion": "brynwell",
+          "cupChampion": "brynwell",
+          "clubIds": [
+            "redcliff",
+            "westmere",
+            "ainsley",
+            "kingsford",
+            "moorhaven",
+            "elmswick",
+            "southport",
+            "newcombe",
+            "eng3-afc-wimbledon",
+            "eng3-bromley",
+            "eng3-burton-albion",
+            "eng3-cambridge-united",
+            "eng3-doncaster-rovers",
+            "eng3-huddersfield-town",
+            "brynwell",
+            "eng3-luton-town",
+            "eng3-mansfield-town",
+            "eng3-milton-keynes-dons",
+            "eng3-oxford-united",
+            "eng3-peterborough-united",
+            "eng3-plymouth-argyle",
+            "eng3-reading",
+            "eng3-sheffield-wednesday",
+            "eng3-stevenage"
+          ],
+          "europeChampion": null
+        },
+        {
+          "year": 4,
+          "division": 2,
+          "rules": "five-tier",
+          "nextDivision": 1,
+          "rank": 1,
+          "points": 87,
+          "champion": "brynwell",
+          "cupChampion": "stonemill",
+          "clubIds": [
+            "ashford",
+            "highgate",
+            "stonemill",
+            "northcastle",
+            "ravenhurst",
+            "fairbridge",
+            "wyndale",
+            "brookchester",
+            "brynwell",
+            "eng2-blackburn-rovers",
+            "eng2-bolton-wanderers",
+            "eng2-bristol-city",
+            "eng2-cardiff-city",
+            "eng2-charlton-athletic",
+            "eng2-derby-county",
+            "eng2-lincoln-city",
+            "eng2-millwall",
+            "eng2-portsmouth",
+            "eng2-preston-north-end",
+            "eng2-queens-park-rangers",
+            "eng2-stoke-city",
+            "eng2-swansea-city",
+            "eng2-watford",
+            "eng2-west-bromwich-albion"
+          ],
+          "europeChampion": null
+        },
+        {
+          "year": 5,
+          "division": 1,
+          "rules": "five-tier",
+          "nextDivision": 1,
+          "rank": 3,
+          "points": 62,
+          "champion": "brackenfort",
+          "cupChampion": "rosenholt",
+          "clubIds": [
+            "calderwick",
+            "valedoro",
+            "estenford",
+            "rosenholt",
+            "azurienne",
+            "brackenfort",
+            "monteluce",
+            "kingsbridge",
+            "eng1-afc-bournemouth",
+            "eng1-brentford",
+            "eng1-brighton-hove-albion",
+            "eng1-coventry-city",
+            "eng1-everton",
+            "eng1-fulham",
+            "eng1-hull-city",
+            "eng1-ipswich-town",
+            "eng1-leeds-united",
+            "eng1-nottingham-forest",
+            "brynwell",
+            "eng1-tottenham-hotspur"
+          ],
+          "europeChampion": null
+        }
+      ],
+      "originalUnchanged": true,
+      "restore": true,
+      "fileRoundtrip": true
+    },
+    "totalCurrent14PhysicalExecutions": 475,
+    "independentBalanceSamples": false,
+    "limits": [
+      "Repeated seeds and overlapping early career paths are functional executions, not475 independent balance observations.",
+      "Starting fifth-tier squad has a strong ability advantage; very high scoring is not a typical win-rate claim.",
+      "A separately preserved valid top-tier fixture with no investment finishes0W3D35L49GF204GA and relegates; it is not a natural current14 promotion to division1."
+    ]
+  },
+  "apk": {
+    "fileName": "win-again-20261020-football-flow-final.apk",
+    "bytes": 6629653,
+    "sha256": "06b8c94b44655f26d68d976709d88e491933b5afff0ef515942f5d9a70face92",
+    "game": {
+      "schema": 1,
+      "applicationId": "com.jaeseok614.winagainfootball",
+      "versionName": "1.0.0",
+      "versionCode": 1,
+      "saveKey": "win-again-season-v17",
+      "bytes": 6319642,
+      "sha256": "2bf2343ef05ed7f371dac35053cd6069a022709eab94bea995018e032de5cce5"
+    },
+    "previousSigner": [
+      "6558fdcc7f5c23ca5c7d4a748ab75b4ee8e3daf46d2f8da16a235849f53658f3"
+    ],
+    "newSigner": [
+      "0ac30d3606768a6e3c7c2881d69ab11179b69d594ae3a6ddf50800adc3db2a39"
+    ],
+    "sameSigner": false,
+    "artifactId": 12234822902,
+    "artifactSha256": "73c2bf1f27e8b10aa95995c52cac18fc2a61c77e939dc531e61ed8bcc0eb9b9c",
+    "offlineHtmlByteEqualToVerifiedSource": true
+  },
+  "publicPwa": {
+    "bytes": 6319868,
+    "sha256": "c32dde0a627ee85a2b3fa93628e3f5f0af23d9ec42e77756783910ce8bcd1c99",
+    "shell": "57c42111ca68561ea14e04154005742f9acc4099f1bd647551e21996695ddaf0",
+    "unchangedByteCap": 6320000,
+    "byteMargin": 132,
+    "publishedPagesUpdated": false,
+    "observedOldPublishedMarker": "v22:0c9f30d3020646353f6896e23566683450637530200920993a22745e704e1ce4",
+    "observedOldPublishedBytes": 3955537
+  },
+  "drive": {
+    "fileId": "1nSujeFdST1on5jVkSCNrH2CleLCibWkc",
+    "bytes": 6629653,
+    "sha256": "06b8c94b44655f26d68d976709d88e491933b5afff0ef515942f5d9a70face92",
+    "rawReadbackEqual": true,
+    "title": "win-again-20261020-football-flow-final.apk",
+    "modifiedUtc": "2026-10-20T02:03:08.852Z",
+    "url": "https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view",
+    "parentIdsUnchanged": true,
+    "permissionMetadataUnchanged": true,
+    "onlyApkUpdated": true,
+    "verifiedUtc": "2026-10-20T02:03:20.057Z"
+  },
+  "remaining": [
+    "Some ability60 4-4-2 press/counter advantages and low-block weakness remain;4-3-3 fixed can favor low-block.",
+    "Tackle contact counts exceed professional-football distributions.",
+    "Low-end smoothness and long-history replay remain concerns; CPU4 p95 frame gap100.8ms is not phone FPS.",
+    "Initial fifth-tier strength and top-tier roster investment/difficulty need human-play feedback.",
+    "Extra two-seed/eight-condition diagnostics show rule14 rapid-loss fraction1.3–3.6percentage points above13; possession stability remains a rule15 research target."
+  ],
+  "mainHead": "3af6f7cb8bdbabc8146df4c221e4cda6c951f26c",
+  "mainMerged": false,
+  "pr": {
+    "number": 25,
+    "url": "https://github.com/jaeseok614/win-again-football/pull/25",
+    "draft": true
+  },
+  "verifiedUtc": "2026-10-20T02:04:15.554Z",
+  "initialDelivery": {
+    "validationCommit": "13561e3f35cf7c8c73308056fb711070b45e83f8",
+    "ci": {
+      "source": {
+        "runId": 39355364272,
+        "jobId": 118408778631,
+        "headSha": "f07d84a5c811ef0d2f03ed3bea5dfac111a46ed0",
+        "url": "https://github.com/jaeseok614/win-again-football/actions/runs/39355364272",
+        "conclusion": "success",
+        "suites": 205,
+        "checks": 1524,
+        "pwaGroups": 14,
+        "offlineBuild": true,
+        "committedAssetsMatch": true,
+        "logSha256": "4ab3ac53ade829089fc193729546bb1c5a5fc1d6ae226269f903b50516f8c00e",
+        "timeoutMinutes": 20,
+        "isolatedWorkers": 2
+      },
+      "android": {
+        "runId": 39355364281,
+        "headSha": "f07d84a5c811ef0d2f03ed3bea5dfac111a46ed0",
+        "url": "https://github.com/jaeseok614/win-again-football/actions/runs/39355364281",
+        "conclusion": "success",
+        "apis": [
+          {
+            "api": 34,
+            "jobId": 118408778711,
+            "conclusion": "success",
+            "tests": 32,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "seconds": 667.364,
+            "artifactId": 12235502489,
+            "artifactSha256": "0dea90c4b28c3427a95dda2b3afce2179ca62eac631a9d90a02be14819098ce5"
+          },
+          {
+            "api": 35,
+            "jobId": 118408778767,
+            "conclusion": "success",
+            "tests": 32,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "seconds": 612.123,
+            "artifactId": 12235062192,
+            "artifactSha256": "1052236730a91a137d330e9f4850ada751c863c4c50acbce041cd1f6456e25fd"
+          },
+          {
+            "api": 36,
+            "jobId": 118408778558,
+            "conclusion": "success",
+            "tests": 32,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "seconds": 408.491,
+            "artifactId": 12235621538,
+            "artifactSha256": "a96ae6703fb26c11fe5e9abc5280818141e3a7660dac6d4fb13ebaed753c5b44"
+          }
+        ],
+        "instrumentationLimitMinutes": 20,
+        "workflowLimitMinutes": 45,
+        "sourceCountsAndAllAssertionsRetained": true,
+        "largeScreen": {
+          "disposableEmulatorOnly": true,
+          "systemSmallestWidthDpAtLeast": 600,
+          "systemSetToPortrait": true,
+          "actualActivityLandscape": true,
+          "requestedSensorLandscape": true,
+          "actualWebViewLandscapeAndWidthAtLeast600": true,
+          "portraitLockedLargeDisplayMayUseLandscapeLetterbox": true,
+          "originalDensityAndRotationRestored": true
+        },
+        "realNativeDocumentExportAndFileInputRoundtrip": true,
+        "completeUtf8PayloadCompared": true
+      }
+    },
+    "apk": {
+      "fileName": "win-again-20261020-football-flow.apk",
+      "bytes": 6629653,
+      "sha256": "a6c20eb8cda85b635a99d1b33e812a90082a2c3e3ff11bd3759c785dbbb10ab2",
+      "game": {
+        "schema": 1,
+        "applicationId": "com.jaeseok614.winagainfootball",
+        "versionName": "1.0.0",
+        "versionCode": 1,
+        "saveKey": "win-again-season-v17",
+        "bytes": 6319603,
+        "sha256": "47b8ec5b94a8a767bacf1d6a06dcae2cd83ba5f3c09c99063a1e39ea7a68286c"
+      },
+      "previousSigner": [
+        "5f134ae533a6f577c44faffb0fedbd5a9e0df6226a1b459353c150818c6b0453"
+      ],
+      "newSigner": [
+        "6558fdcc7f5c23ca5c7d4a748ab75b4ee8e3daf46d2f8da16a235849f53658f3"
+      ],
+      "sameSigner": false,
+      "artifactId": 12232965110,
+      "artifactSha256": "340c5739f79f3cd6acee4a70aedbb2eb321c9accb1dbaaa9cfb435e7c48bcee5",
+      "offlineHtmlByteEqualToVerifiedSource": true
+    },
+    "drive": {
+      "fileId": "1nSujeFdST1on5jVkSCNrH2CleLCibWkc",
+      "bytes": 6629653,
+      "sha256": "a6c20eb8cda85b635a99d1b33e812a90082a2c3e3ff11bd3759c785dbbb10ab2",
+      "rawReadbackEqual": true,
+      "title": "win-again-20261020-football-flow.apk",
+      "modifiedUtc": "2026-10-20T01:03:27.987Z",
+      "url": "https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view",
+      "parentIdsUnchanged": true,
+      "permissionMetadataUnchanged": true,
+      "onlyApkUpdated": true,
+      "verifiedUtc": "2026-10-20T01:04:14.563Z"
+    }
+  },
+  "startupResizeFix": {
+    "failedRunId": 39352209254,
+    "failedApi": 36,
+    "failedCase": "offlineGameSaveImportPauseBackAndRelaunch",
+    "error": "matchPopupActive is not defined",
+    "actualBundledListenerLine": 4364,
+    "popupDeclarationLine": 7130,
+    "cause": "resize can arrive after analysis script registers and before later popup script declares its global",
+    "productFix": "typeof guard before reading the popup state",
+    "nodeActualModuleRedThenGreen": true,
+    "browserRealResizeBetweenScriptsRedThenGreen": true,
+    "scripts": [
+      "source/test-startup-resize.cjs",
+      "source/browser/startup-resize.cjs"
+    ],
+    "nativeConsoleErrorCollectionUnchanged": true,
+    "allFinalApis32ZeroFailures": true
+  },
+  "possessionDiagnostic": {
+    "file": "docs/FOOTBALL_POSSESSION_2026-10-20.json",
+    "method": "docs/FOOTBALL_POSSESSION_2026-10-20.md",
+    "games": 512,
+    "matchedCases": 256,
+    "uniqueWorlds": 457,
+    "sharedSeedsAcrossConditions": true,
+    "allRowsRetained": true,
+    "observerDoesNotChangeWholeWorldOrRng": true,
+    "allEightConditionsRapidLossHigherFor14": true,
+    "increasePercentagePointRange": [
+      1.3,
+      3.6
+    ],
+    "notAnImprovementClaim": true
+  },
+  "viewerRefreshExperiment": {
+    "file": "docs/FOOTBALL_VIEWER_REFRESH_2026-10-20.json",
+    "accepted": false,
+    "original500msPreserved": true
+  }
+}

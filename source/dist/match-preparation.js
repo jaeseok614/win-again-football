@@ -2,7 +2,7 @@
  'use strict';
  const dependency=(name,file)=>root[name]||(typeof require==='function'?require(file):null);
  const tactics={balanced:'균형 유지',press:'전방 압박',counter:'빠른 역습',lowBlock:'수비 위주'};
- const explanations={balance:'공격과 수비의 출구를 함께 남겨두는 운영을 검토합시다.',fatigue:'압박을 높이기 전에 지친 선발과 후보의 체력을 비교합시다.',underdog:'상대 공격이나 중원이 더 강합니다. 수비 간격과 역습 출구를 함께 확인합시다.',pace:'현재 공격진 속도를 살릴 역습을 검토합시다. 기회 수가 줄어드는 점도 비교하세요.'};
+ const explanations={balance:'공격과 수비의 출구를 함께 남겨두는 운영을 검토합시다.',fatigue:'압박을 높이기 전에 지친 선발과 후보의 체력을 비교합시다.',underdog:'상대 공격이나 중원이 더 강합니다. 수비 간격과 역습 출구를 함께 확인합시다.',pace:'현재 공격진 속도를 살릴 역습을 검토합시다. 침투 공간과 첫 패스 출구를 함께 보세요.'};
  function leagueForm(s){return [...(s.statistics?.archive||[]).flatMap(a=>a.records),...(s.statistics?.records||[])].filter(g=>g.competition==='league'&&g.statisticsOriginMinute===0&&!g.unassignedGoals).slice(-3).map(g=>({year:g.year,round:g.round,score:[...g.score],result:g.score[0]>g.score[1]?'승':g.score[0]===g.score[1]?'무':'패'}));}
  function read(s,provided=[]){
   const m=s?.match;if(!m||m.phase!=='prep')return {valid:false,reason:'경기 시작 전 준비 화면입니다.'};

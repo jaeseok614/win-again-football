@@ -1,7 +1,7 @@
 (function(root){
  'use strict';
  const S=root.Season||(typeof require==='function'?require('./season.js'):null),F=root.Football||(typeof require==='function'?require('./engine.js'):null),Flow=root.MatchFlow||(typeof require==='function'?require('./match-flow.js'):null),T=root.Training||(typeof require==='function'?require('./training.js'):null);
- const format='win-again-campaign',version=1,maxBytes=16*1024*1024,dangerous=new Set(['__proto__','prototype','constructor']),views=['club','match','squad','market','academy','cup'];
+ const format='win-again-campaign',version=1,maxBytes=16*1024*1024,dangerous=new Set(['__proto__','prototype','constructor']),views=['club','match','tactics','squad','market','academy','cup'];
  const tooLarge=()=>{throw Error('백업 파일은 16MiB 이하만 불러올 수 있어요.');};
  function bytes(text){
   if(typeof TextEncoder!=='undefined')return new TextEncoder().encode(text).length;
@@ -59,11 +59,15 @@
   if(typeof text!=='string')throw Error('백업 파일의 내용을 읽을 수 없어요.');if(bytes(text)>maxBytes)tooLarge();
   let parsed;try{parsed=JSON.parse(text.replace(/^\uFEFF/,''));}catch{throw Error('백업 파일의 JSON 형식을 읽을 수 없어요.');}
   const envelope=clone(parsed);
-  if(!plain(envelope)||envelope.format!==format)throw Error('이번엔 우승한다 구단 백업 파일이 아니에요.');
+  if(!plain(envelope)||envelope.format!==format)throw Error('이 게임의 구단 백업 파일이 아니에요.');
   if(envelope.version!==version)throw Error('현재 게임에서 지원하지 않는 백업 버전이에요.');
   if(Object.keys(envelope).some(key=>!['format','version','createdAt','payload'].includes(key)))throw Error('백업 파일의 형식을 확인할 수 없어요.');timestamp(envelope.createdAt);
-  const payload=normalize(envelope.payload),s=payload.season,me=S.standings(s).find(c=>c.id===S.own),run=root.Rebirth?.read(s);
-  return {payload,summary:{...(run?.enabled?{rebirth:{attempt:run.attempt,status:run.status,memory:run.memoryInfo.name}}:{}),year:s.year,round:s.round+1,competition:s.competition,...(s.competition==='europe'?{stage:s.europe.stage}:{}),phase:s.match?.phase??'season-complete',minute:s.match?.minute??null,club:S.club(S.own).name,rank:me.rank,points:me.points,balance:s.finance.balance,playerCount:Object.keys(s.squad).length}};
+  const payload=normalize(envelope.payload);return {payload,summary:summary(payload.season)};
  }
- const api={create,stringify,read,maxBytes};root.CampaignFile=api;if(typeof module!=='undefined')module.exports=api;
+ // Presentation only: trusted in-memory season. Import/export still use full normalize/restore.
+ function summary(s){
+  const me=S.standings(s).find(c=>c.id===S.own),run=root.Rebirth?.read(s);
+  return {...(run?.enabled?{rebirth:{attempt:run.attempt,status:run.status,memory:run.memoryInfo.name}}:{}),year:s.year,round:s.round+1,competition:s.competition,...(s.competition==='europe'?{stage:s.europe.stage}:{}),phase:s.match?.phase??'season-complete',minute:s.match?.minute??null,club:S.club(S.own).name,rank:me.rank,points:me.points,balance:s.finance.balance,playerCount:Object.keys(s.squad).length};
+ }
+ const api={create,stringify,read,summary,maxBytes};root.CampaignFile=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -1,9 +1,86 @@
+# 현재 경기 규칙 — 2026-10-21 공개14 유지 · 앱 등록
+
+새 킥오프/새 연습은 **14**다. 공개1–14의 물리·난수·명령·연습·부분 저장·정산을 보존한다. 다음 물리 변경은 **15**로 분리한다. schema10, win-again-season-v17, 앱 ID와 현재 시즌을 유지한다. [물리 설계/전술 비교](docs/FOOTBALL_RULE14_2026-10-20.md)와 최신 [가로·스토어 검증](docs/RELEASE_POLISH_2026-10-21.json)을 먼저 읽는다. Drive에는14 테스트 APK가 있다. 최신 교체 상태는 HANDOFF를 확인한다. 일반 PWA는6,320,000바이트 제한을 유지한다(현재6,318,464). Source20분/Android 계측20분·전체45분 제한과 모든 판정을 유지한다. 가로 UI·실제 저장 왕복·원격 전체 바이트를 검사했지만 일부4-4-2 압박 우세/낮은 수비와 저성능 끊김은 남아 있다. PR25는 초안, main은 미병합이다.
+
+2026-10-21 추가 기준: 저장 창은 현재 구단·선택 파일·앱 정보를 한 화면에서 비교하며 주요 동작44px와 원본/직전 구단 보존을 유지한다. 현재 구단 표시에는 신뢰된 읽기 전용 summary를 쓰고, 외부 파일 읽기·내보내기의 normalize→S.restore 검증은 유지한다. 손상 JSON·저장 권한·공간 오류를 한국어로 표시하고 원본을 삭제하거나 새 시즌으로 옮기지 않는다.
+
+Android WebView의 기본 최소 글꼴은8px다. 작은 전술 카드에서는 중복 등번호를 빼고 포지션·배치 종합·이름을 분리했다. 최소 글꼴을 낮춰 검사를 맞추지 말고 source/browser/dense-workspaces.cjs --android-min-font도 실행한다. Native evaluate의 배열 판정은 JS 배열을 그대로 반환한다. JSON.stringify를 추가하면 빈 배열이 문자열로 한 번 더 인코딩된다. 실제 페인트 뒤 내부 글자 좌표와 원본 PNG를 확인하고, 판정·기존 검사·20/45분 제한을 줄이지 않는다.
+
+Play 앱과 IARC는 생성/제출했지만 공개 배포와 별개다. docs/GOOGLE_PLAY_RELEASE.md의 실제 콘솔 상태를 따른다. 업로드 키는 프로젝트 밖에만 보관하고 Git·Drive에는 올리지 않는다. 실제 키 생성은 소유자 승인 후 암호를 본인이 직접 입력하는 절차를 쓴다. 세션에서 이미 받은 승인은 반복 요청하지 않는다.
+
+로딩 중에도 resize 같은 이벤트가 스크립트 사이에 도착할 수 있다. 뒤쪽 모듈의 전역을 읽는 초기 이벤트는 준비 여부를 확인한다. source/test-startup-resize.cjs와 source/browser/startup-resize.cjs의 실제 초기화 순서 회귀를 유지한다.
+
+# 이전 공개 경기 규칙13 — 2026-10-19
+
+아래는 공개13 당시의 기록이다. 현행 규칙은 상단14 지침을 따른다. 당시 새 킥오프/새 연습은 **13**이었다. 공개1–12의 저장·물리·난수·명령·연습·정산을 유지한다. 그 다음 물리 변경은14로 분리했다. schema10, win-again-season-v17과 현재 시즌을 바꾸지 않는다. [압박·역습·탈취 전술 분석](docs/PRESS_COUNTER_RULE13_2026-10-19.md)을 먼저 읽고 HANDOFF의 최신 검증 상태를 확인한다.
+
+# 이전 공개 경기 규칙12 — 2026-10-19
+
+다음은 공개12 당시의 기록이다. 현행14는 맨 위 지침을 따른다. 당시 새 킥오프/새 연습의 연속 규칙은 **12**다. 공개된1–11의 부분 저장·물리·RNG·명령·연습·정산은 그대로 보존한다. 다음 물리 변경은13이 필요하다. 시즌/경기 스키마10과 저장키 win-again-season-v17은 변경하지 않는다. [규칙12 접촉·선발 비교·새 코치 대화](docs/FOOTBALL_DUELS_2026-10-19.md)를 먼저 확인한다. 실제 진행 경기는 저장된 규칙으로 계속하고 현재 시즌을 이동하지 않는다.
+
 # Football manager development
 
 Read DEVELOPMENT.md and the newest entry in HANDOFF.md before editing.
 Develop in source/dist; root index.html is generated. The source/ tree is the
 current implementation. football-source-v22.zip is only a historic snapshot;
 never replace current modules or restore retired legacy modules from that archive.
+
+## Landscape-only release direction (2026-10-13; supersedes portrait layouts below)
+
+The owner explicitly requires landscape-only play, including future development.
+Android uses sensorLandscape; the installed PWA requests landscape; browsers that
+cannot lock orientation show a rotate prompt and pause without auto-resuming.
+Prioritize a polished landscape management workspace: pitch and selected-player
+attributes together, persistent match navigation instead of a native menu select,
+club crests in competitions, and placement-dependent overall estimates.
+Quality takes priority over minimum download size, while offline assets, bounded
+work and responsive controls remain required. Do not inflate assets without value.
+Keep Korean words together when wrapping; use intentional two-line navigation labels.
+Keep ratings/position/name inside player cards, with numeric values alongside color.
+Check internal text bounds, card overlap and full profile visibility, not only outer panels.
+Position ratings are labelled coach estimates, separate from base attributes,
+condition and stamina; they must not silently change published engine rules.
+
+## Dense reports (permanent owner feedback, 2026-10-13)
+
+When a popup has little information, show its useful facts directly in the current
+landscape screen instead of fragmenting them behind extra buttons or small pages.
+Player reports keep age, height/unknown status, wage, preferred foot, preferred
+positions and current abilities together. Use compact numeric/color tables and
+preserve actual actions, identity routing and 44px essential controls. Unknown
+facts remain explicit, never fabricated. Read docs/PLAYER_REPORT_WORKSPACE_2026-10-13.md.
+
+## Single-screen match and management (2026-10-14)
+
+The owner requires the pitch to be larger than the statistical rail (about 62%/38%).
+This supersedes the previous 1.6 display-pitch ratio. Keep actual 22-player football
+and facts, but bound repetitive viewer highlights. Goal artwork dismisses after
+2.6 seconds without resuming a manual pause or crossing a match phase boundary.
+Put small management reports inline with consistent 44px lower actions; league
+clubs and selected-round fixtures must appear together without table pagination.
+Use compact columns plus selected-club totals on phones. Read
+docs/SINGLE_SCREEN_WORKSPACES_2026-10-14.md and test real later-campaign states.
+
+## Manager voice and visible press (2026-10-14)
+
+Use original Korean dialogue with distinct owner/coach/player/reporter voices and
+explicit manager inner thoughts. The owner dislikes overly formal, very short
+conversation cards. Group narration, thought and question into dense readable beats;
+preserve every archived sentence, actual answer ID, promise and focus effect.
+Expose article headlines and the actual current interview on the home screen.
+All reporters/outlets and quotes are fictional; scores and standings use confirmed
+records and actual promotion/relegation boundaries. Read
+docs/MANAGER_VOICE_2026-10-14.md. Viewing must never submit an answer or spend.
+
+## Match facts and entry routes (2026-10-13)
+
+The landscape match side rail compares actual displayed-match facts, inspired by
+FotMob: possession and twelve numeric statistics. Use visibleMatchForReports and
+Matchday.facts; show waiting/unknown values explicitly, never fabricated live facts.
+Generic substitutions start with no selected player. Only explicit player actions
+carry an identity; never inherit a tactical preview as a substitution selection.
+Test real bottom-menu and management-dropdown routes, not only direct helper calls.
+Read docs/PHONE_WORKSPACES_2026-10-13.md and test internal text/row/goal-action bounds.
 
 ## Current owner requirements (2026-10-07; supersede historical notes)
 
@@ -45,15 +122,52 @@ pre-rebirth full backup and handle storage failure atomically. The current one-u
 appeal from life two onward is free; real billing is not integrated. Local JSON
 history is not payment entitlement proof. Read docs/REBIRTH_LOOP_2026-10-11.md.
 
+## Full continuous engine direction (2026-10-12, supersedes hybrid notes below)
+
+The owner requested whole-match continuous football. New confirmed kickoffs use
+continuousSetup.version=10, a shared 100ms physical world for the actual two elevens.
+The minute opportunity sampler is not used for those matches. Live and replay read
+the same physical coordinates, contacts and recorded statistics. Preserve valid v10
+running/confirmed matches and the released spatial version1 solver. Never change a
+released continuous rule underneath saved receipts; future changes need explicit
+versioning. Store and validate tick-level command journals, appearances, cards,
+segments and measured statistics. Read docs/CONTINUOUS_FOOTBALL_ENGINE_2026-10-12.md.
+New rule10 adds physical arrival-based pass/shot choices, formation-bounded support
+pockets, shared-snapshot avoidance and reacted goalkeeper acceleration. Read
+docs/REA_FOOTBALL_RULE10_2026-10-15.md. Preserve published rules1–9 exactly;
+future physics changes require11+. Analysis uses the real read-only target solver.
+Read docs/CONTINUOUS_TACTICAL_AI_2026-10-12.md for version3 arrival-based
+press/cover, fatigue, safe passing and goalkeeper containment. Preserve released
+continuous versions1/2/3/4/5/6 and their exact receipts too. Read
+docs/CONTINUOUS_CONTACT_AND_BALANCE_2026-10-12.md for version4 swept contacts,
+whole-ball lines, restarts, offside rebounds and balanced recovery/keeper reactions.
+Read docs/CONTINUOUS_PASSING_FLOW_2026-10-12.md for version5 bounded pass
+lead, physical ball arrival, first touches, diagonal support and opponent response.
+Read docs/CONTINUOUS_PRESS_AND_DEFENCE_2026-10-12.md for version7 trigger-based double pressing, compact goal-side cover, actual-speed exertion and low-block outlets. Preserve published version6/7 practice seeds/parameters too. Read docs/MOBILE_MATCH_FEEDBACK_2026-10-13.md for version8 formation lanes, limited close support, stable challenger selection and formation-only arrival easing. The benchmark defaults to actual halftime reset; --half-reset false is only for reproducing historical diagnostics. Read docs/CONTINUOUS_DECISIONS_2026-10-12.md for version6 local carry/attack choices, moving-carrier interception, complementary press screens, carrying speed cost and explicit remaining tactic balance. Read docs/NOTEBOOK_STORY_2026-10-12.md for original record-driven notebook scenes and shared cast art. Use the new engine in new practice sessions too, show preparation before expensive
+replay/practice work, and keep all current names/ball/core controls on one viewport.
+Latest owner feedback (2026-10-12): no player-name connector lines in live matches,
+replays or practice. Keep names near the markers and simplify the pitch. Default
+key viewing accelerates routine play while showing actual major action in order;
+full viewing remains selectable. Display filtering never removes saved contacts.
+
 ## Pre-match squad and movement direction (2026-10-11)
 
+2026-10-12 explicit user request authorizes actual engine changes inspired by
+reference engines. New kickoffs enable optional v10 `spatialSetup.version=1`:
+fixed-step open-play paths decide pass contact/offside and affect future shots/xG.
+Preserve existing running matches and confirmed records. Rendering remains read-only
+and must reuse that recorded attack's shared solver, with all active names shown.
+Do not change the released version1 solver underneath saved version1 receipts;
+future physics changes need explicit rule versioning and preservation of those records.
+Keep the first title and mandatory arrival pages visually anchored to the bundled
+original Korean manager image, with no internal prose scroll on supported phones.
+
 The mandatory kickoff briefing shows both actual selected elevens, formation,
-calculated strength/energy and three role-based key players. Wide screens compare
-both pitches; phones switch teams without a long page. Player buttons open the
-existing own/opponent detail dialogs over the briefing. Full names and our reserves
+calculated strength/energy and three role-based key players. Both actual elevens and each team’s average ability remain simultaneously visible on phones and wide screens in compact readable comparison columns. An explicit detailed roster opens the existing own/opponent player dialogs over the briefing. Full names and our reserves
 are available in six-player pages. Closing any report never starts the match.
 Use the current custom placements and suspension replacements, not a parallel XI.
-Our overall uses TouchlinePlan; opponent overall uses Opposition consistently.
+Our overall matches TouchlinePlan’s role-weighted formula; opponent overall uses Opposition.
+Core restore/preview validation must work before late UI modules load.
 Keep individual movement timing keyed to identity, with near-ball support,
 far-side depth and limited centre-back drift. Avoid reintroducing the old shared
 large sine-wave displacement. Movement remains presentation-only and must preserve
@@ -66,7 +180,7 @@ BOTH teams must have readable names by default throughout live matches AND
 replays, including off-ball play, set pieces, pause and reduced-motion mode.
 Never gate names behind possession, focus, hover, a setting or a small-screen
 breakpoint. Use compact names without ellipses, separate crowded labels with
-leader lines, and keep the ball above them. Full identities remain accessible.
+nearby collision-aware placement without connector lines, and keep the ball above them. Full identities remain accessible.
 This is a continuing requirement for every later feature, not an optional mode.
 
 Consider mobile performance in every change. Hidden dashboards do no work during
@@ -82,7 +196,7 @@ button or let an old guide preference skip it. Completed arrivals do not replay 
 restore. The subsequent controls tour remains optional with skip and settings replay.
 During the controls tour, keep visible Previous / Next / Skip actions inside the
 actual squad, tactics and talk dialogs. Closing a report returns to its current
-explanation; only explicit Next advances the tour. A team-talk choice is optional.
+explanation; Next alone advances each explanation. Squad/tactics/talk opening uses a separate optional button. Completed mandatory arrival replies also have an explicit Next to the controls tour; no extra team-talk action is required. A team-talk choice is optional.
 Do not apply tactics, talk effects, substitutions or kickoff for a tutorial step.
 Reserve space for the guide controls without covering the tactical pitch, and
 remove them on completion, skip or deliberate navigation outside the tour.
@@ -215,3 +329,69 @@ non-selected attributes. Optional v10 stoppage activates at the next kickoff,
 plays actual engine ticks, and is recorded in player minutes and settlements.
 Existing in-progress matches keep their saved duration. Halftime substitutions
 use the actual halftime boundary (45 plus first-half added time).
+
+## Specific placement and pacing feedback (2026-10-13)
+Use distinct LS/RS, left/right midfield/defence and wingback slots in the tactics editor. Dropping onto an occupied location swaps both placement coordinates atomically, preserving identities and natural registrations. Avoid the retired nine-zone scattering UI. Keep recorded continuous1–7/spatial1 receipts exact. New rule8 movement eases only formation targets; receivers, carriers, pressing, goalkeeping and restarts must still physically reach contact. Selected playback speed also affects shooting: key shots 2× selected speed, bounded at4×; attack4× selected bounded12×; routine48× selected. Full viewing has separate readable rates. These are presentation rates, never score/clock/RNG edits.
+
+## Browser-engine reference and display performance (2026-10-13)
+
+Read docs/BROWSER_ENGINE_REFERENCES_2026-10-13.md. Keep fixed physical ticks separate
+from rendering. Reuse consecutive physical display snapshots only within a single
+RAF callback; next callback reads fresh state. Project active players into team
+frames in one pass. Display optimization must not change journal, RNG or receipts.
+Do not infer a reusable football engine from a browser-port headline; inspect
+primary source and license before any source or asset reuse.
+
+## Latest formation movement (2026-10-13)
+New kickoffs/practice use continuous9. Read docs/FORMATION_MOVEMENT_2026-10-13.md. Preserve published1–8 worlds/receipts; future physical changes require10. Use actual formation anchors, local pressing, distinct marks, far-wing width and time-bounded off-ball target changes. Drop stale targets at restarts/end changes. Never apply arrival slowdown to physical receivers. Benchmarks are diagnostics, not proof of finished tactical balance.
+
+## Latest viewing pace (2026-10-13)
+Read docs/MATCH_VIEWING_PACE_2026-10-13.md. The owner likes formation movement but wants calmer players and faster match time. Default key mode holds a clearly labelled all-player position overview during routine play (144× selected), then displays real attack3× capped6 and decisive1.5× capped3. This supersedes earlier key rates. Keep whole physical ticks, exact clock/results,6ms RAF work budget/50ms display delta and readonly presentation. Clear overview on phase/contact/pause/inactive callbacks/match/watch changes; pause shows current real coordinates. Full viewing remains available.
+
+## Latest commentary placement and slight slow motion
+The owner wants commentary directly ABOVE the pitch in portrait and landscape, with readable two-line text and no overlap with players. Keep clock text separate and all core controls in one viewport. Routine key play is180× selected; attacks stay3× capped6; shots/saves2.25× capped4.5, only25% slower than key attacks. Full-view shots use2.25× capped4.5 too. These supersede previous viewing rates; physics and saved records remain identical.
+
+Permanent owner feedback (2026-10-13): reserve real layout space for bottom navigation on management screens so club news stays above it. The tactics tab is the central entry for formation, instructions, lineup comparison and existing set-piece takers. Reuse actual editors; closing returns to the tactics centre without resuming. Competition starts with confirmed current standings (played/W/D/L/GF/GA/GD/points) and actual cup brackets; paginate vertically dense tables without horizontal swipes or future-result disclosure.
+
+## Landscape reading and match space (2026-10-13)
+Keep commentary above the enlarged pitch and the compact score beside it. Guides/story/notebook use illustration left, prose right and stable bottom actions with44px primary targets. Expand Korean narrative without moving reply controls offscreen. Test568×280 through tablet; reading must not answer or mutate the campaign. Long management lists may scroll inside a bounded report; title/close stay visible. See docs/LANDSCAPE_SCREENS_2026-10-13.md.
+
+## FM-style roster/recruitment (2026-10-13)
+Use dense list plus selected-person report, numeric/color ability comparison, actual remaining energy and stable44px primary actions. Squad selection previews; a separate visible detail button opens the full report in normal and guided views. Recruitment list uses trained owned-player values and current outgoing identity. List/mode selection never spends, saves, advances physics or changes lineup. See docs/FM_WORKSPACE_2026-10-13.md. Owner permits larger assets when they improve quality; keep shared atlases and measured performance rather than inflating bytes.
+
+## Direct formation and page workspaces (2026-10-14)
+Formation choices (all 12), actual player placement, selected numeric/color abilities,
+23 placement choices, attack/defence orders and the three set-piece assignments
+belong on the main landscape tactics page. Do not require a formation popup.
+Primary squad/recruitment navigation opens the actual inline workspace, not a modal.
+Show short home facts and illustrated article summaries directly; only the full
+article and richer reports need a modal. Preserve native back routing through
+focused child reports before returning to home, actual slot swaps and registered
+player identities. Read docs/DENSE_PAGE_WORKSPACES_2026-10-14.md and verify card
+overlap, every internal text/control bound and actual bottom-menu routes.
+
+## Single-screen training and club operations (2026-10-14)
+Primary training, coaches, owner promises, body status, saved-XI plans, current
+finance, club facts and discipline use actual landscape page workspaces. Keep all
+18 training players, all 10 staff candidates, current 5 roles and 11-player plan
+visible together with real effects/quotes and explicit actions. Short core facts
+are inline; long forecast rows/full player reports remain explicit detail reads.
+Never let hidden inactive panes occupy layout space. Preserve real node handlers,
+weekly training sharing, role contract limits, confirmed-only finance, readonly
+previews and the Android back path from an inline home operation to main home.
+Test internal glyph/photo bounds and post-action states, not only outer rectangles.
+See docs/OPERATIONS_WORKSPACES_2026-10-14.md.
+
+## Preparation report and real training comparisons (2026-10-14)
+Keep opponent formation/danger player/actual comparisons, recent confirmed league results, current body status, staff expiration and owner promises together in the club workspace. Four team-training choices show actual expected effects and energy cost before explicit execution. Only successful execution shows exact before/after values, scoped to the matching campaign/week/identities/results; the session-only receipt is not saved history and must never be fabricated on restore. Read docs/PREPARATION_DESK_2026-10-14.md.
+
+
+## Record-driven serial stories and contextual press (2026-10-15)
+Read docs/TOUCHLINE_STORIES_2026-10-15.md. Four original three-episode arcs use the existing two explicit ClubStory receipts. Freeze published serial keys, trigger rules, recorded actor identity, answer meanings and original prose; future incompatible changes need new keys/versioning. Follow-ups use two full confirmed league games after the actual last answer, including validated continuous own goals without assigning them to a normal scorer. Never consume a Rebirth deal, move a season, alter a lineup or create investment from reading. Keep all words in complete replays, show the final reply immediately after the answer, and return from a notebook scene to the same notebook tab/page. Press follow-up context uses facts only up to its actual fixture; preserve existing questions, spoken answers and archived articles. A post-match home answer stays visible until the player opens the next interview. Use one shared original drama atlas, no match-tick work, and test fresh/complete/historic/ended stories and actual native back.
+
+## Additive player threads and inline story selection (2026-10-15)
+Read docs/PLAYER_THREADS_2026-10-15.md. Keep thread-link-v1 and thread-red-v1 keys, recorded actors, trigger rules, original prose and both receipt meanings stable; incompatible changes need new keys. Preserve the four published serial arcs. Three or more available arcs use the cached inline list plus selected report. Return restores the exact selection as well as tab/page/year. Player-thread finales use their own four-panel atlas, never the goalkeeper resolution picture. Test actual glyph bounds, all six titles, all replies, whole replays and native return/save.
+
+## Actual readiness and additive corner scene (2026-10-19)
+
+LineupReadiness is readonly preparation advice, never automatic replacement. Retain explicit preview/apply, actual primary ability versus placement estimate, body-status priority and the tactical return without resuming. Keep all11 numeric/colour skills and essential44px actions in the landscape viewport. Preserve deadball-second-v1, its first full rule12+ league-corner trigger, original prose and both receipt meanings. readingVersion2 retains every word, shows the last reply immediately and routes explicit actions to existing set-piece controls. Reuse shared art; never invent corners/goals or change a taker from reading.

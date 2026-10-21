@@ -10,23 +10,30 @@ function reportDeck(host,entries,key,before){
 }
 function playerReportPages(){
  const host=$('player-detail-dialog').querySelector('.player-detail-content');if(!host)return;
- host.classList.add('report-screen');const q=s=>host.querySelector(s),all=s=>[...host.querySelectorAll(s)],entries=[];
- entries.push(['전체 능력',[q('.detail-condition'),q('.detail-skills'),q('.scouting-role-selector'),q('.scouting-role-note'),...all('.fm-attribute-groups>section').map(group=>{group.classList.add('report-attributes');return group;})]],['선수 소개',[q('.detail-intro'),q('.detail-quote'),q('.detail-summary')]],['주발 · 컨디션',[q('.player-traits-top')]]);
- for(const group of all('.player-position-groups>div'))entries.push(['포지션 · '+group.querySelector('h4').textContent,[group]]);
- entries.push(['플레이 유형',[q('.scouting-profile>header'),q('.scouting-radar')]],['역할 평가',[q('.scouting-use')]],['시즌 기록',[q('.detail-records')]],['성장 · 훈련',[q('.detail-growth')]],['평가 기준',[q('.scouting-disclosure'),q('.fm-attributes>p:last-child'),q('.player-traits-report>p')]]);
- const basis=entries.find(e=>e[0]==='평가 기준');basis[1].push(q('.detail-skills>p'),q('.detail-records>p'));
- const nav=q('.detail-navigation');reportDeck(host,entries,'player',nav);
- for(const node of all(':scope>.scouting-profile,:scope>.player-traits-report,:scope>.fm-attributes,:scope>.detail-columns'))node.remove();
+ host.classList.add('report-screen','player-report-workspace');const q=s=>host.querySelector(s),all=s=>[...host.querySelectorAll(s)],entries=[],groups=all('.fm-attribute-groups>section');
+ const identity=document.createElement('aside');identity.className='player-identity-panel';identity.setAttribute('aria-label','선수 신상과 선호 포지션');identity.append(q('.detail-hero'),q('.player-bio'));host.insertBefore(identity,q('.detail-intro'));
+ const abilities=document.createElement('div');abilities.className='player-all-attributes';for(const g of groups){g.classList.add('report-attributes');abilities.append(g);}
+ if(groups.length===4){const keeper=document.createElement('div');keeper.className='player-keeper-attributes';keeper.append(groups[0],groups[3]);abilities.prepend(keeper);}
+ const legend=document.createElement('p');legend.className='player-ability-legend';legend.textContent='기본 능력 0–100 · 아래 세부 능력 1–20 코치 평가 · 초록 16↑ / 노랑 13↑ / 파랑 10↑';
+ entries.push(['전체 능력',[q('.detail-skills'),legend,abilities]],['선수 소개',[q('.detail-intro'),q('.detail-quote'),q('.detail-summary')]],['전체 포지션',[q('.player-position-groups')]],['최근 출전',[q('.player-recent-report')]],['플레이 유형',[q('.scouting-profile>header'),q('.scouting-radar')]],['역할 평가',[q('.scouting-use'),q('.scouting-role-note')]],['시즌 기록',[q('.detail-records')]],['성장 · 훈련',[q('.detail-growth')]],['평가 기준',[q('.scouting-disclosure'),q('.fm-attributes>p:last-child'),q('.player-traits-report>p')]]);
+ entries.at(-1)[1].push(q('.detail-skills>p'),q('.detail-records>p'));
+ const role=q('.scouting-role-selector'),nav=q('.detail-navigation');reportDeck(host,entries,'player',nav);
+ const tools=document.createElement('div');tools.className='player-report-tools';tools.append(q('.report-page-select'));if(role)tools.append(role);host.insertBefore(tools,identity);
+ for(const node of all(':scope>.detail-condition,:scope>.scouting-profile,:scope>.player-traits-report,:scope>.fm-attributes,:scope>.detail-columns'))node.remove();
 }
+const workspacePlayerOpen=openPlayerDetails;openPlayerDetails=function(identity,opener){if(!$('player-detail-dialog').open)reportPagesState.player='전체 능력';workspacePlayerOpen(identity,opener);};
 const pagedPlayerRender=renderPlayerDetails;renderPlayerDetails=function(d){pagedPlayerRender(d);playerReportPages();};
 const pagedPlayerRoute=routePlayerDetails;routePlayerDetails=function(){const d=PlayerDetails.read(season,playerDetailIdentity);pagedPlayerRoute();if(d.valid&&typeof openManagementPanel==='function')openManagementPanel(d.owned?'individual-training':d.source==='academy'?'academy-overview':'transfer-search-panel');};
 function opponentReportPages(){
  const host=$('opponent-detail-dialog').querySelector('.opponent-detail-content');if(!host||host.classList.contains('report-screen'))return;host.classList.add('report-screen');
- const q=s=>host.querySelector(s);reportDeck(host,[['능력 비교',[q('.opponent-detail-compare')]],['현재 상태',[q('.opponent-detail-summary')]],['활용 유형',[q('.opponent-role-report')]],['보고서 기준',[q('.opponent-detail-source'),q('.opponent-detail-compare>p')]]],'opponent',q('footer'));q('.opponent-detail-source').open=true;
+ const q=s=>host.querySelector(s);host.classList.add('opponent-report-workspace');
+ const basis=q('.opponent-detail-compare>p'),overview=document.createElement('div');overview.className='opponent-report-overview';overview.append(q('.opponent-detail-summary'),q('.opponent-role-report'),q('.opponent-detail-compare'));
+ reportDeck(host,[['능력 비교',[overview]],['보고서 기준',[q('.opponent-detail-source'),basis]]],'opponent',q('footer'));q('.opponent-detail-source').open=true;
 }
+const workspaceOpponentOpen=openOpponentDetails;openOpponentDetails=function(identity,opener){if(!$('opponent-detail-dialog').open)reportPagesState.opponent='능력 비교';workspaceOpponentOpen(identity,opener);};
 const pagedOpponentRender=renderOpponentDetails;renderOpponentDetails=function(d){pagedOpponentRender(d);opponentReportPages();};
 function applyTacticsPage(){
- const section=$('match-popup-tactics'),host=$('tactical-editor');if(!host)return;const page=reportPagesState.tactics;section.dataset.reportPage=page;
+ const section=$('match-popup-tactics'),host=$('tactical-editor');if(!host)return;const page=reportPagesState.tactics;section.dataset.reportPage=page;if(typeof applyLandscapeTactics==='function'){applyLandscapeTactics();return;}
  for(const node of host.children){const visible=page==='배치'?node.matches('.tactical-pitch,#tactical-position-status'):page==='선수 특징'?node.matches('.tactical-selected-profile'):page==='연결 요약'?node.matches('.support-map-toggle,.tactical-team-strip,.support-summary'):page==='세트피스'?node.matches('.set-piece-plan'):page.startsWith('코치 ')?node.matches('.touchline-briefing'):page==='도움말'?node.matches('h3,h3+p,.tactical-note'):false;node.classList.toggle('report-page-off',!visible);}
  for(const node of section.children){if(node===host||node.classList.contains('tactics-page-controls'))continue;const visible=node.matches('.field-toolbar')?page==='배치':node.id==='mobile-tactics-dock'?page==='팀 지시':node.id==='pitch-player-tools'?page==='선수 역할':false;node.classList.toggle('report-page-off',!visible);}
  const briefing=host.querySelector('.touchline-briefing');if(briefing){briefing.open=true;const advice=briefing.querySelector('.touchline-advice');for(const child of briefing.children)child.classList.toggle('report-page-off',child.tagName!=='SUMMARY'&&(page==='코치 브리핑'?child===advice:child!==advice));for(const [i,article] of [...advice.children].entries())article.hidden=page!=='코치 조언 '+(i+1);}

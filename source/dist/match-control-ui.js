@@ -1,14 +1,14 @@
-var playbackPrefs={speed:'normal',coachPause65:false},matchClock=MatchFlow.createClock();
+var playbackPrefs={speed:'normal',coachPause65:false,watch:'key'},matchClock=MatchFlow.createClock();
 function renderMatchControls(){
  const host=document.getElementById('match-controls');if(!host)return;
  if(!state||state.phase==='full'){host.hidden=true;return;}host.hidden=false;
  const active=F.running(state),status=active?(state.paused?state.minute+'분 · 작전 타임':state.minute+'분 · 경기 진행 중'):state.phase==='prep'?'감독의 속도로 경기 보기':state.phase==='half'?'하프타임 · 후반을 준비하세요':'65분 · 코치 점검';
- const markup=`<section class="match-controls" aria-label="경기 속도와 작전 시간"><div class="match-control-heading"><div><span class="eyebrow">경기 진행</span><strong>${status}</strong></div><button type="button" class="secondary" data-match-planning ${active?'':'disabled'}>${active&&state.paused?'작전 마치고 경기 이어가기':'멈추고 작전 보드 열기'}</button></div><div class="match-control-settings"><div class="match-speed-buttons" role="group" aria-label="경기 진행 속도">${Object.entries(MatchFlow.speeds).map(([key,s])=>`<button type="button" data-match-speed="${key}" aria-pressed="${playbackPrefs.speed===key}" aria-label="${s.label} 경기 속도">${s.label}<small>${s.multiplier}×</small></button>`).join('')}</div><label class="coach-pause-setting"><input type="checkbox" data-coach-pause ${playbackPrefs.coachPause65?'checked':''}>65분에 코치와 자동 작전 타임</label></div><p>전술·교체는 경기 중 언제든 · 하프타임은 자동 정지 · 경기 화면에서 0.5·1·2·4배속 선택 · 주요 장면은 최대 2배속</p></section>`;
+ const markup=`<section class="match-controls" aria-label="경기 속도와 작전 시간"><div class="match-control-heading"><div><span class="eyebrow">경기 진행</span><strong>${status}</strong></div><button type="button" class="secondary" data-match-planning ${active?'':'disabled'}>${active&&state.paused?'작전 마치고 경기 이어가기':'멈추고 작전 보드 열기'}</button></div><div class="match-watch-buttons" role="group" aria-label="경기 관전 방식">${Object.entries(MatchFlow.watchModes).map(([key,label])=>`<button type="button" data-match-watch="${key}" aria-pressed="${MatchFlow.watchMode(playbackPrefs)===key}">${label}</button>`).join('')}</div><div class="match-control-settings"><div class="match-speed-buttons" role="group" aria-label="경기 진행 속도">${Object.entries(MatchFlow.speeds).map(([key,s])=>`<button type="button" data-match-speed="${key}" aria-pressed="${playbackPrefs.speed===key}" aria-label="${s.label} 경기 속도">${s.label}<small>${s.multiplier}×</small></button>`).join('')}</div><label class="coach-pause-setting"><input type="checkbox" data-coach-pause ${playbackPrefs.coachPause65?'checked':''}>65분에 코치와 자동 작전 타임</label></div><p>핵심 장면: 빠른 진행 · 중요한 공격만 잠깐 · 골 뒤 자동 진행 · 전체 관전: 패스 과정까지 자세히 · 경기 화면에서 배속 선택</p></section>`;
  // The timer must not replace the focused speed or planning control every tick.
  if(host.dataset.markup===markup)return;
  const previous=document.activeElement,focus=host.contains(previous)?previous?.dataset:null;
  host.innerHTML=markup;host.dataset.markup=markup;
- const selector=focus?.matchSpeed?'[data-match-speed="'+focus.matchSpeed+'"]':focus&&Object.hasOwn(focus,'matchPlanning')?'[data-match-planning]':focus&&Object.hasOwn(focus,'coachPause')?'[data-coach-pause]':null;
+ const selector=focus?.matchWatch?'[data-match-watch="'+focus.matchWatch+'"]':focus?.matchSpeed?'[data-match-speed="'+focus.matchSpeed+'"]':focus&&Object.hasOwn(focus,'matchPlanning')?'[data-match-planning]':focus&&Object.hasOwn(focus,'coachPause')?'[data-coach-pause]':null;
  if(selector)host.querySelector(selector)?.focus({preventScroll:true});
 }
 function pauseForPlanning(){
@@ -23,10 +23,12 @@ function toggleMatchPlanning(openBoard=false){
  if(openBoard&&state.paused){const host=document.getElementById('tactics-board'),details=host?.querySelector('details');if(details){details.open=true;details.querySelector('summary')?.scrollIntoView({behavior:'instant',block:'start'});details.querySelector('summary')?.focus({preventScroll:true});}}
 }
 document.getElementById('match-controls')?.addEventListener('click',event=>{
- const speed=event.target.closest('[data-match-speed]'),planning=event.target.closest('[data-match-planning]');
+ const watch=event.target.closest('[data-match-watch]'),speed=event.target.closest('[data-match-speed]'),planning=event.target.closest('[data-match-planning]');
+ if(watch){setMatchWatch(watch.dataset.matchWatch);document.getElementById('match-controls').querySelector('[data-match-watch="'+watch.dataset.matchWatch+'"]')?.focus({preventScroll:true});return;}
  if(speed){const chosen=speed.dataset.matchSpeed;if(!Object.hasOwn(MatchFlow.speeds,chosen))return;setMatchSpeed(chosen);document.getElementById('match-controls').querySelector('[data-match-speed="'+chosen+'"]')?.focus({preventScroll:true});}
  else if(planning&&!planning.disabled)toggleMatchPlanning(true);
 });
 document.getElementById('match-controls')?.addEventListener('change',event=>{if(!event.target.matches('[data-coach-pause]'))return;playbackPrefs.coachPause65=event.target.checked;save();renderMatchControls();renderTacticsBoard();document.getElementById('match-controls').querySelector('[data-coach-pause]')?.focus({preventScroll:true});});
 
 function setMatchSpeed(chosen){if(!Object.hasOwn(MatchFlow.speeds,chosen))return;playbackPrefs.speed=chosen;matchClock.reset();movementStamp=performance.now();const picker=$('pause');if(picker)picker.value=chosen;save();renderMatchControls();}
+function setMatchWatch(chosen){if(!Object.hasOwn(MatchFlow.watchModes,chosen))return;playbackPrefs.watch=chosen;continuousOverview=null;continuousBudget=0;continuousStamp=performance.now();save();renderMatchControls();drawField();}

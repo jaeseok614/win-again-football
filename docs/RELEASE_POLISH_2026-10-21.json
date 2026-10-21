@@ -1,0 +1,407 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "branch": "codex/football-realism-20261012",
+  "implementationHead": "f7545a2f833ec651d506041930308f300800cc3b",
+  "verificationHead": "3cb0140a375bb09655a61939ca5f5c3c382629ea",
+  "preserved": {
+    "physicsVersions": "1–14",
+    "newKickoffRule": 14,
+    "nextPhysicsVersion": 15,
+    "seasonSchema": 10,
+    "saveKey": "win-again-season-v17",
+    "automaticSeasonAdvance": false
+  },
+  "source": {
+    "runId": 39526519149,
+    "url": "https://github.com/jaeseok614/win-again-football/actions/runs/39526519149",
+    "state": "success",
+    "suites": 208,
+    "checks": 1536,
+    "pythonReleaseChecks": 16,
+    "pwaChecks": 14,
+    "finishedAt": "2026-10-21T01:29:51Z"
+  },
+  "native": {
+    "runId": 39526519084,
+    "url": "https://github.com/jaeseok614/win-again-football/actions/runs/39526519084",
+    "state": "success",
+    "expectedTestsPerApi": 34,
+    "apis": [
+      {
+        "api": 34,
+        "artifactSha256": "6c16e25b2696049f3bba3e0f28133774f073a52e6d3e81a6c1d35a7489ba4b32",
+        "xml": {
+          "name": "com.jaeseok614.winagainfootball.GameSmokeTest",
+          "tests": "34",
+          "failures": "0",
+          "errors": "0",
+          "skipped": "0",
+          "time": "849.18",
+          "timestamp": "2026-10-21T01:36:43",
+          "hostname": "localhost"
+        },
+        "head": "3cb0140a375bb09655a61939ca5f5c3c382629ea"
+      },
+      {
+        "api": 35,
+        "artifactSha256": "bdd0011b371abe74d738b4c9388ebc0401684416b7082efc3c405d9c20d444df",
+        "xml": {
+          "name": "com.jaeseok614.winagainfootball.GameSmokeTest",
+          "tests": "34",
+          "failures": "0",
+          "errors": "0",
+          "skipped": "0",
+          "time": "346.497",
+          "timestamp": "2026-10-21T01:27:33",
+          "hostname": "localhost"
+        },
+        "head": "3cb0140a375bb09655a61939ca5f5c3c382629ea"
+      },
+      {
+        "api": 36,
+        "artifactSha256": "3759020bb93c3310169eaf09091cb8073240cba3210153372ea1166835e8abec",
+        "xml": {
+          "name": "com.jaeseok614.winagainfootball.GameSmokeTest",
+          "tests": "34",
+          "failures": "0",
+          "errors": "0",
+          "skipped": "0",
+          "time": "766.251",
+          "timestamp": "2026-10-21T01:35:41",
+          "hostname": "localhost"
+        },
+        "head": "3cb0140a375bb09655a61939ca5f5c3c382629ea"
+      }
+    ]
+  },
+  "pwa": {
+    "bytes": 6318464,
+    "cap": 6320000,
+    "shell": "8d6e4a407750"
+  },
+  "android": {
+    "schema": 1,
+    "applicationId": "com.jaeseok614.winagainfootball",
+    "versionName": "1.0.0",
+    "versionCode": 1,
+    "saveKey": "win-again-season-v17",
+    "bytes": 6318607,
+    "sha256": "526d8d06b347584ab40ecf411eeea07e540dfbf96a03779fd02cb55881b09f19",
+    "minSdk": 24,
+    "targetSdk": 36,
+    "orientation": "sensorLandscape"
+  },
+  "apk": {
+    "file": "win-again-20261021-release-polish.apk",
+    "bytes": 6630141,
+    "sha256": "2b27579fbc430c2ca35d5817ede8fe45f4ee6b1e85c27f59ea00ecb3eba146e2",
+    "signerSha256": "5426958c65638937956e2efc53ecc7c3a5f7d95364bf9dbaf89dcfd5fba5e756",
+    "previousDeliveredSignerSha256": "0ac30d3606768a6e3c7c2881d69ab11179b69d594ae3a6ddf50800adc3db2a39",
+    "sameSigner": false,
+    "ciArchive": {
+      "id": 12313902481,
+      "sha256": "a56ff82e397171bcac7d053038b3da7a5a80d046f28c32304b8118d3db3c641e"
+    }
+  },
+  "aab": {
+    "file": "win-again-20261021-UNSIGNED.aab",
+    "bytes": 5703156,
+    "sha256": "aded9d6761b8e90ee4446ba1ce9e817f14848a327dff27855f65b483fa2a0242",
+    "gameBytesEqualToLocal": true,
+    "signature": "unsigned",
+    "playSubmitted": false,
+    "signed": {
+      "file": "win-again-20261021-SIGNED.aab",
+      "bytes": 5714011,
+      "sha256": "eb6ecf319ac05a37c746efe09a10f53af33654112544c887c30450c2fa4b3a6c",
+      "jdkSignatureVerified": true,
+      "localGameBytesEqual": true,
+      "uploadedToPlayInternalDraft": true
+    }
+  },
+  "browser": {
+    "tacticNormal": {
+      "sizes": 8,
+      "formationsPerSize": 12,
+      "passed": true
+    },
+    "tacticMinimum8": {
+      "sizes": 8,
+      "formationsPerSize": 12,
+      "passed": true
+    },
+    "firstInstallMinimum8": {
+      "sizes": 8,
+      "twoArrivalChapters": true,
+      "twoOwnerAnswers": true,
+      "passed": true
+    },
+    "storageFailures": {
+      "sizes": 8,
+      "quotaAndSecurityAndCorruptPrevious": true,
+      "passed": true
+    },
+    "lateCampaignImports": [
+      {
+        "name": "default-career-ending.json",
+        "inputSha256": "2adb56a6aedf72dc110bb4fd3758e5c82a2ea38739f15cf077f0cd718e203111",
+        "inputBytes": 606491,
+        "year": 4,
+        "round": 6,
+        "sizes": 8,
+        "readOnlyPreview": true,
+        "explicitWholeImport": true,
+        "wholePriorBackupExact": true,
+        "coldSeasonExact": true,
+        "originalInputUnchanged": true,
+        "errors": []
+      },
+      {
+        "name": "default-career-next-life.json",
+        "inputSha256": "4f829ed68d56bea00dca80d75035c8a31284282206a0110709b0343b5961230c",
+        "inputBytes": 21660,
+        "year": 1,
+        "round": 0,
+        "sizes": 8,
+        "readOnlyPreview": true,
+        "explicitWholeImport": true,
+        "wholePriorBackupExact": true,
+        "coldSeasonExact": true,
+        "originalInputUnchanged": true,
+        "errors": []
+      },
+      {
+        "name": "top-tier-rule14-ending.json",
+        "inputSha256": "28113b525b70c3744ca80bfac1d0bf0446aae882a8d0459d2fb038f1c3608dc2",
+        "inputBytes": 854348,
+        "year": 6,
+        "round": 38,
+        "sizes": 8,
+        "readOnlyPreview": true,
+        "explicitWholeImport": true,
+        "wholePriorBackupExact": true,
+        "coldSeasonExact": true,
+        "originalInputUnchanged": true,
+        "errors": []
+      }
+    ],
+    "nativeExpressionValueContract": {
+      "sizes": 4,
+      "visiblePlayers": 11,
+      "arrayReturn": true,
+      "passed": true
+    }
+  },
+  "balance": {
+    "newGames": 512,
+    "matchedVersionPairs": 256,
+    "changedPhysics": false,
+    "report": "FOOTBALL_HOLDOUT_2026-10-21.md",
+    "candidatesRejected": true
+  },
+  "viewer": {
+    "report": "VIEWER_NAME_CACHE_2026-10-21.json",
+    "cpuThrottling": 4,
+    "abbaRuns": 4,
+    "worldIdentical": true,
+    "elapsedMedianReductionPercent": 19.59,
+    "phoneFpsClaim": false
+  },
+  "play": {
+    "appId": "4975868083103535088",
+    "package": "com.jaeseok614.winagainfootball",
+    "created": true,
+    "free": true,
+    "supportEmail": "jaeseok614@gmail.com",
+    "iarc": {
+      "submitted": true,
+      "koreanRating": "전체이용가",
+      "submittedAtKst": "2026-10-21 09:11"
+    },
+    "storeScreenshotsUploaded": true,
+    "internalDraft": {
+      "release": 1,
+      "name": "1.0.0 내부 테스트 · 가로 감독실",
+      "notesSaved": true,
+      "bundleUploaded": true,
+      "bundleUploadStarted": true,
+      "bundleSaved": true,
+      "bundleVersionCode": 1,
+      "bundleVersionName": "1.0.0",
+      "targetSdkObserved": 36,
+      "minSdkObserved": 24,
+      "url": "https://play.google.com/console/u/0/developers/6961410092466748418/app/4975868083103535088/tracks/4701521581602929051/releases/1/prepare",
+      "saveConfirmationObserved": true,
+      "testersDistributed": false,
+      "rolloutStarted": false,
+      "savedAtUtc": "2026-10-21T01:53:00Z"
+    },
+    "publicRelease": false,
+    "paymentExecuted": false,
+    "requiredListingSaved": true,
+    "storeReviewSubmitted": false,
+    "aiAssetLabels": {
+      "declared": true,
+      "assets": 6
+    },
+    "storeListingStatus": "검토를 위해 전송 준비 완료",
+    "productionRequirements": {
+      "visibleTesters": 0,
+      "minimumHumanTesters": 12,
+      "continuousDays": 14,
+      "productionAccessRequested": false
+    }
+  },
+  "signing": {
+    "ownerKeyCreated": true,
+    "privateKeyUploaded": false,
+    "toolE2e": {
+      "checks": 10,
+      "passed": true,
+      "inputSha256": "aded9d6761b8e90ee4446ba1ce9e817f14848a327dff27855f65b483fa2a0242",
+      "helperSha256": "1f6783dd7c439804c9ad8f7051bf505a97c2b396a42f414d58d94aec289362f8"
+    },
+    "ownerKeyCreationApproved": true,
+    "passwordViaChat": false,
+    "state": "signed-verified-uploaded-internal-draft",
+    "uploadCertificateSha256": "5f2514c2c37c52cc9b7a765548fd7b206fa2c295e93fb61c3148bf08885fdb3b",
+    "allNonSignatureEntriesIdentical": 90,
+    "privateKeyInGit": false,
+    "privateKeyInDrive": false
+  },
+  "drive": {
+    "fileId": "1nSujeFdST1on5jVkSCNrH2CleLCibWkc",
+    "url": "https://drive.google.com/file/d/1nSujeFdST1on5jVkSCNrH2CleLCibWkc/view",
+    "updatedThisRun": true,
+    "wholeRawReadbackEqual": true,
+    "name": "win-again-20261021-release-polish.apk",
+    "bytes": 6630141,
+    "sha256": "2b27579fbc430c2ca35d5817ede8fe45f4ee6b1e85c27f59ea00ecb3eba146e2",
+    "wholeRawBytesEqual": true,
+    "modifiedAt": "2026-10-21T01:42:41.653Z",
+    "parentAndPermissionsPreserved": true,
+    "apkOnly": true
+  },
+  "storeAssets": {
+    "titleCharacters": 26,
+    "shortCharacters": 46,
+    "descriptionCharacters": 841,
+    "icon": {
+      "file": "app-icon-512-draft.png",
+      "width": 512,
+      "height": 512,
+      "bitDepth": 8,
+      "colourType": 6,
+      "bytes": 292460,
+      "sha256": "bf82adc02d1d54a94e48ccf1b8ef447f217726b8dca59f0d2593983f854210e0"
+    },
+    "graphic": {
+      "file": "feature-graphic-1024x500-draft.png",
+      "width": 1024,
+      "height": 500,
+      "bitDepth": 8,
+      "colourType": 2,
+      "bytes": 210327,
+      "sha256": "0aa52ec0778987435173f762482e4e70e109c8751650a350e8822a2accd3b694"
+    },
+    "screenshots": [
+      {
+        "file": "android-store-home-1920x1080.png",
+        "width": 1920,
+        "height": 1080,
+        "bitDepth": 8,
+        "colourType": 2,
+        "bytes": 658194,
+        "sha256": "e4ecffd8888f2657b56556bb8baa3e579ee50bd6781d0138b04bd6be79b8ec0f"
+      },
+      {
+        "file": "android-store-squad-1920x1080.png",
+        "width": 1920,
+        "height": 1080,
+        "bitDepth": 8,
+        "colourType": 2,
+        "bytes": 289244,
+        "sha256": "787778226fd4f6d23392ac4ff1551b8d8e450e82b7326b0dc15473df6e20744e"
+      },
+      {
+        "file": "android-store-tactics-1920x1080.png",
+        "width": 1920,
+        "height": 1080,
+        "bitDepth": 8,
+        "colourType": 2,
+        "bytes": 211541,
+        "sha256": "3994e52f61101be8ead419edccbf457ab542254caceac36b202e35790564a69e"
+      },
+      {
+        "file": "android-store-match-1920x1080.png",
+        "width": 1920,
+        "height": 1080,
+        "bitDepth": 8,
+        "colourType": 2,
+        "bytes": 265984,
+        "sha256": "086d0c2dc2d1f01eccee271729fe1c62cec4e4df2b0b5b2368235f37fb0e95ec"
+      }
+    ],
+    "nativeProvenanceVerifiedByThisScript": false,
+    "playSubmitted": true,
+    "descriptionCharactersInConsole": 840,
+    "descriptionCharactersInTextFileIncludingFinalNewline": 841,
+    "nativeProvenanceSeparatelyVerified": true
+  },
+  "nativeScreenshotProvenance": [
+    {
+      "file": "android-store-home-1920x1080.png",
+      "source": "Actual Android API35 emulator screenshot from final 34-test suite",
+      "originalSha256": "60d37338c35baaf8b131065b23c6473e77b13c37be9c8bef717c1fdc007995cc",
+      "storeSha256": "e4ecffd8888f2657b56556bb8baa3e579ee50bd6781d0138b04bd6be79b8ec0f",
+      "rgbPixelsSha256": "b0c60cb2b0ed6b44f33a895a68e3dc281896b77f329f540764ddd7accae9bfca",
+      "width": 1920,
+      "height": 1080,
+      "onlyOpaqueAlphaRemoved": true,
+      "resized": false,
+      "cropped": false,
+      "retouched": false
+    },
+    {
+      "file": "android-store-squad-1920x1080.png",
+      "source": "Actual Android API35 emulator screenshot from final 34-test suite",
+      "originalSha256": "f28064d373a1f04518982e0bf6a0aa2903ffa58261b27dc94720a08bebcb308d",
+      "storeSha256": "787778226fd4f6d23392ac4ff1551b8d8e450e82b7326b0dc15473df6e20744e",
+      "rgbPixelsSha256": "9f2aaea5d02adad237a94841287062cb8f3c25a40804a113fe58ec6e6f2ec7dd",
+      "width": 1920,
+      "height": 1080,
+      "onlyOpaqueAlphaRemoved": true,
+      "resized": false,
+      "cropped": false,
+      "retouched": false
+    },
+    {
+      "file": "android-store-tactics-1920x1080.png",
+      "source": "Actual Android API35 emulator screenshot from final 34-test suite",
+      "originalSha256": "a3083aa114db952ae5058075cb5a40c1ea9efd146a2310edef10a8fdde449da6",
+      "storeSha256": "3994e52f61101be8ead419edccbf457ab542254caceac36b202e35790564a69e",
+      "rgbPixelsSha256": "4c75010aa02a15fda03c5c9c5788a6e1b9b4c2892f2fa1a506f9949206f4252d",
+      "width": 1920,
+      "height": 1080,
+      "onlyOpaqueAlphaRemoved": true,
+      "resized": false,
+      "cropped": false,
+      "retouched": false
+    },
+    {
+      "file": "android-store-match-1920x1080.png",
+      "source": "Actual Android API35 emulator screenshot from final 34-test suite",
+      "originalSha256": "ac19712e97e0d6d74631af52d8619c12c5e29eb046fd9b604807161a1e29554b",
+      "storeSha256": "086d0c2dc2d1f01eccee271729fe1c62cec4e4df2b0b5b2368235f37fb0e95ec",
+      "rgbPixelsSha256": "f4dfb9f685ce162533f9c79939bd3334cb1c071aae570075d1029416dcc63da8",
+      "width": 1920,
+      "height": 1080,
+      "onlyOpaqueAlphaRemoved": true,
+      "resized": false,
+      "cropped": false,
+      "retouched": false
+    }
+  ],
+  "completedAtUtc": "2026-10-21T01:54:25.061Z"
+}

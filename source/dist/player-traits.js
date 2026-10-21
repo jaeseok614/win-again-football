@@ -63,5 +63,17 @@
   const tier=score>=75?'good':score>=55?'normal':'poor';
   return {score,tier,label:tier==='good'?'좋음':tier==='normal'?'보통':'저조'};
  }
- const api={feet,preferredPositions,suitability,allPositions,condition,positions};root.PlayerTraits=api;if(typeof module!=='undefined')module.exports=api;
+ function placement(player,code){
+  const aliases={LS:'ST',RS:'ST',LAM:'AM',RAM:'AM',LCM:'CM',RCM:'CM',LDM:'DM',RDM:'DM',LCB:'CB',RCB:'CB'};
+  const normalized=aliases[code]||code,spec=positions[normalized];
+  const natural=Math.round(player[F.roleKey(player)]*.55+player.passing*.15+player.speed*.15+player.endurance*.15);
+  if(!spec)return {code,base:natural,overall:natural,delta:0,valid:false};
+  const preferred=preferredPositions(player),weighted=Object.entries(spec[2]).reduce((n,[key,w])=>n+(player[key]||0)*w,0);
+  const unfamiliar=preferred.includes(normalized)?0:spec[1]===player.pos?4:12;
+  const foot=feet(player),wide=['LB','RB','LWB','RWB','LM','RM','LW','RW'].includes(normalized);
+  const wrongSide=wide&&(normalized[0]==='L'?foot.left<foot.right:foot.right<foot.left)?2:0;
+  const overall=player.pos==='GK'&&normalized!=='GK'||player.pos!=='GK'&&normalized==='GK'?1:Math.round(clamp(weighted-unfamiliar-wrongSide,1,99));
+  return {code,base:natural,overall,delta:overall-natural,valid:true,familiar:preferred.includes(normalized)};
+ }
+ const api={placement,feet,preferredPositions,suitability,allPositions,condition,positions};root.PlayerTraits=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

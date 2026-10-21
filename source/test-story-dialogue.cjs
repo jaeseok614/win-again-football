@@ -33,7 +33,7 @@ test('existing partial and completed v1 dialogue receipts need no migration or r
 });
 test('turn-specific lines remain hidden until chosen and replay reconstructs the same exchange',()=>{
  const s=S.create(726,{startingClub:true}),nodes={'.story-conversation':{innerHTML:''},'.story-choices':{hidden:false},'.story-complete':null,'[data-story-action]':null};
- const ctx=vm.createContext({ClubStory:N,season:s,escapeText:String,$:()=>({querySelector:key=>nodes[key]})});
+ const ctx=vm.createContext({ClubStory:N,ClubArt:require('./dist/club-art.js'),season:s,escapeText:String,$:()=>({dataset:{},querySelector:key=>nodes[key]})});
  const source=fs.readFileSync(__dirname+'/dist/club-story-ui.js','utf8');vm.runInContext(source.slice(0,source.indexOf('const storyPanel=')),ctx);
  const opening=N.scene(s,'1:arrival');ctx.renderStoryPage(opening);assert.ok(nodes['.story-choices'].hidden);
  assert.ok(!nodes['.story-conversation'].innerHTML.includes(opening.replies[1]));
@@ -42,7 +42,7 @@ test('turn-specific lines remain hidden until chosen and replay reconstructs the
  vm.runInContext('clubStoryPage++',ctx);ctx.renderStoryPage(second);assert.equal(nodes['.story-choices'].hidden,false);
  assert.ok(nodes['.story-conversation'].innerHTML.includes(second.question));
  const done=N.choose(s,'1:arrival',1,'honest',N.fingerprint(s)),before=JSON.stringify(s),pages=ctx.clubStoryPages(done);
- assert.equal(pages[4].text,second.question);assert.equal(pages[5].text,second.choices[1].label);assert.equal(pages[6].text,done.reply);assert.equal(JSON.stringify(s),before);
+ const q=pages.findIndex(p=>p.text===second.question);assert.ok(q>0);assert.equal(pages[q+1].text,second.choices[1].label);assert.equal(pages[q+2].text,done.reply);assert.equal(JSON.stringify(s),before);
 });
 test('the actual rookie minute promise retains its deadline and is not replaced by general dialogue',()=>{
  const s=copy(established),id='1:rookie';N.choose(s,id,0,'listen',N.fingerprint(s));const pending=N.scene(s,id);

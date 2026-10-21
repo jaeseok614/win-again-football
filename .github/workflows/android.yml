@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api-level: [34, 35]
+        api-level: [34, 35, 36]
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
@@ -37,6 +37,11 @@ jobs:
       - name: Compile APK, unsigned Play bundle, and lint
         working-directory: android
         run: bash ./gradlew --no-daemon assembleDebug bundleRelease lintDebug assembleDebugAndroidTest
+      - name: Verify actual Play bundle identity and offline game bytes
+        run: |
+          python3 -m unittest source.release.test_verify_play_bundle source.release.test_verify_store_assets
+          python3 source/release/verify_store_assets.py
+          python3 source/release/verify_play_bundle.py android/app/build/outputs/bundle/release/app-release.aab --assets android/app/src/main/assets/game --json android/app/build/play-bundle-verification.json
       - name: Upload installable debug APK and unsigned release AAB
         uses: actions/upload-artifact@v4
         with:
@@ -46,6 +51,7 @@ jobs:
             android/app/build/outputs/bundle/release/*.aab
             android/app/build/reports/lint-results-debug.html
             android/app/src/main/assets/game/build-info.json
+            android/app/build/play-bundle-verification.json
           if-no-files-found: error
           retention-days: 30
       - name: Enable KVM for emulator
@@ -61,7 +67,9 @@ jobs:
           target: google_apis
           profile: pixel_6
           ram-size: 3072M
-          emulator-options: -no-window -gpu software -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none -feature -Vulkan
+          # Explicit ANGLE/SwiftShader backend: automatic software selection
+          # crashed the host RenderThread on both API levels (2026-10-12).
+          emulator-options: -no-window -gpu swangle -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none -feature -Vulkan
           working-directory: android
           disable-animations: true
           script: |
