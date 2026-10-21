@@ -1,4 +1,12 @@
-# 최신 완료 — 2026-10-21 가로 저장·전술 글자와 Play 등록 준비
+# 최신 외부 설정 — 2026-10-21 무료 비공개 테스트 심사·모집
+
+소유자가 직접 보안문자를 완료해 [테스터 그룹](https://groups.google.com/g/win-again-football-testers)을 만들었다. 그룹을 Play 비공개 Alpha에 연결하고 기존 서명1.0.0/code1 AAB와 한국어 노트·178국가항목(기타 포함)을 저장한 뒤16개 변경을 검토에 제출했다. 자동 검사 완료 뒤 **Google 실제 검토 중**을 확인했다. 관리형 게시 꺼짐으로 승인 시 해당 비공개 트랙에 게시된다. 공개 프로덕션·프로덕션 접근 신청·결제는 실행하지 않았다. 제품 소스·번들·키는 바꾸지 않았다. [실제 상태 증빙](docs/FREE_CLOSED_TEST_2026-10-21.json), [상세 설정](docs/GOOGLE_PLAY_RELEASE.md), [참여·플레이 안내](docs/PLAY_TEST_PLAN_KO.md).
+
+- 그룹은 누구나 가입, 회원 목록 소유자만, 대화/게시 회원만. 한국어/영어 참여·피드백·저장 이전 환영 안내를 저장했다. 마지막 관찰 회원1명은 소유자다. 시작 시 Play 참여0명을 확인했고 현재 신규 테스터 확보·실제 피드백은 확인되지 않았다. [Play 참여 링크](https://play.google.com/apps/testing/com.jaeseok614.winagainfootball)는 첫 Google 승인 뒤 같은 계정으로 사용한다. 그룹 가입만으로 Play 참여가 되지 않는다.
+- 무료 모집: r/AndroidClosedTesting·r/KoreanGameDev 각1건은 Reddit 필터 제거, 관리자 검토 요청 각1회. Testers Community Hub1건은 승인 대기. 공개 모집 성공이나12명 확보로 기록하지 않는다. 보상/상호 테스트 약속과 비용은 없다. 기존 게시물·관리자 결정을 먼저 확인하며 필터 우회/중복 재게시를 하지 않는다.
+- 실제12명·연속14일 참여 선택 유지와 플레이 의견이 남는다. 이후 테스트·수정 내역으로 프로덕션 접근을 신청해야 하며 자동 공개가 아니다. AI·에뮬레이터는 인원으로 세지 않는다. 향후 감시 예약은 만들지 않았다. 공개 키와 개인 키를 혼동하지 말고 기존 업로드 키를 유지한다. 최신 제품 검증은3cb0140이며 이번 작업은 외부 설정·문서만이다.
+
+# 이전 완료 — 2026-10-21 가로 저장·전술 글자와 Play 등록 준비
 
 [설계/실제 검사](docs/RELEASE_POLISH_2026-10-21.md), [최종 기계 증빙](docs/RELEASE_POLISH_2026-10-21.json), [신규512경기 진단](docs/FOOTBALL_HOLDOUT_2026-10-21.md), [Play 상태/서명](docs/GOOGLE_PLAY_RELEASE.md), [사람 테스트 계획](docs/PLAY_TEST_PLAN_KO.md).
 
