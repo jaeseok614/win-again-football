@@ -61,11 +61,11 @@ body.inline-tactics-view #tactics-pane{display:grid!important;grid-template-colu
 #match-popup-tactics[data-inline-workspace] #tactical-editor>:is(h3,p,.support-map-toggle,.touchline-briefing){display:none!important}
 #match-popup-tactics[data-inline-workspace] .tactical-team-strip{grid-column:1/-1;grid-row:1;font-size:9px;line-height:12px;padding:2px;margin:0}
 #match-popup-tactics[data-inline-workspace] .tactical-pitch{grid-column:1;grid-row:2;min-height:0;height:100%;width:100%;aspect-ratio:auto;margin:0}
-#match-popup-tactics[data-inline-workspace] .tactical-pitch>button{min-height:28px!important;height:28px;width:54px;padding:0;grid-template-rows:10px 8px 10px}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button{min-height:28px!important;height:28px;width:54px;padding:0;grid-template-columns:minmax(0,1fr) 18px;grid-template-rows:12px 12px}
 #match-popup-tactics[data-inline-workspace] .placement-badge{font-size:8px;line-height:10px}
-#match-popup-tactics[data-inline-workspace] .tactical-pitch>button b{font-size:7px;line-height:8px}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button b{grid-column:1;grid-row:1;height:12px;font-size:7px;line-height:12px}
 #match-popup-tactics[data-inline-workspace] .tactical-pitch>button .tactical-full-name{display:none}
-#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .tactical-short-name{display:block;font-size:7px;line-height:8px;white-space:normal}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .tactical-short-name{grid-column:1/-1;grid-row:2;display:block;height:12px;font-size:7px;line-height:12px;white-space:normal}
 #match-popup-tactics[data-inline-workspace] .tactical-selected-profile{grid-column:2;grid-row:2;display:flex;flex-direction:column;gap:2px;min-height:0;overflow:auto;padding:4px}
 #match-popup-tactics[data-inline-workspace] .tactical-selected-profile header{min-height:22px;gap:3px;margin:0}
 #match-popup-tactics[data-inline-workspace] .tactical-selected-profile header .player-portrait{width:22px;height:22px;flex-basis:22px}
@@ -104,9 +104,10 @@ body.inline-tactics-view #tactics-pane{display:grid!important;grid-template-colu
 #match-popup-tactics[data-inline-workspace] .tactical-pitch{position:relative;overflow:hidden;background:#173f30;border:1px solid #6c9b80;border-radius:5px}
 #match-popup-tactics[data-inline-workspace] .tactical-pitch>button{position:absolute!important;transform:translate(-50%,-50%)!important;display:grid!important;align-content:center;justify-items:center;box-sizing:border-box;background:#19343d;color:#eff4e9;border:1px solid #537460;border-radius:4px;gap:0;min-width:0}
 #match-popup-tactics[data-inline-workspace] .tactical-pitch>button>.player-portrait{display:none!important}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button b>em{font-size:7px;line-height:12px}
 #match-popup-tactics[data-inline-workspace] .tactical-pitch>button b{display:flex;align-items:center;gap:2px;margin:0}
-#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .placement-badge{position:static!important;transform:none!important;min-width:0;width:auto;background:transparent;border:0;height:10px;padding:0}
-#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .placement-badge strong{font-size:9px;line-height:10px;color:#d1e89b}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .placement-badge{grid-column:2;grid-row:1;position:static!important;transform:none!important;min-width:0;width:auto;background:transparent;border:0;height:12px;padding:0}
+#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .placement-badge strong{font-size:9px;line-height:12px;color:#d1e89b}
 #match-popup-tactics[data-inline-workspace] .tactical-pitch>button .placement-badge small{display:none}
 #squad-overview-dialog[data-inline-workspace] #squad-overview-preview{display:grid;grid-template-rows:minmax(0,1fr) 44px;gap:3px;padding:3px}
 #squad-overview-dialog[data-inline-workspace] .squad-preview-body{min-height:0;overflow:auto}
@@ -158,7 +159,7 @@ body.dense-workspace-view .app{grid-template-rows:minmax(0,1fr) 44px!important}b
 #squad-overview-dialog[data-inline-workspace] .squad-overview-row>.player-portrait{display:block!important}#squad-overview-dialog[data-inline-workspace] .squad-overview-name{grid-column:2}
 @media(max-height:350px){#squad-overview-dialog[data-inline-workspace] .squad-overview-row>.player-portrait{display:none!important}#squad-overview-dialog[data-inline-workspace] .squad-overview-name{grid-column:1}}
 
-@media(max-width:740px){#match-popup-tactics[data-inline-workspace] .tactical-pitch>button{width:42px;min-height:24px!important;height:24px;grid-template-rows:8px 6px 8px}#match-popup-tactics[data-inline-workspace] .placement-badge{font-size:7px;line-height:8px}#match-popup-tactics[data-inline-workspace] .tactical-pitch>button b{font-size:6px;line-height:6px}#match-popup-tactics[data-inline-workspace] .tactical-short-name{font-size:6px!important;line-height:8px!important;white-space:nowrap!important}}
+@media(max-width:740px){#match-popup-tactics[data-inline-workspace] .tactical-pitch>button{width:42px;min-height:24px!important;height:24px;grid-template-columns:minmax(0,1fr) 15px;grid-template-rows:10px 10px}#match-popup-tactics[data-inline-workspace] .placement-badge{font-size:7px;line-height:8px}#match-popup-tactics[data-inline-workspace] .tactical-pitch>button b{height:10px;font-size:6px;line-height:10px}#match-popup-tactics[data-inline-workspace] .tactical-pitch>button b>em{font-size:6px;line-height:10px}#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .placement-badge{height:10px}#match-popup-tactics[data-inline-workspace] .tactical-pitch>button .placement-badge strong{font-size:8px;line-height:10px}#match-popup-tactics[data-inline-workspace] .tactical-short-name{height:10px!important;font-size:6px!important;line-height:10px!important;white-space:nowrap!important}}
 
 body.dense-workspace-view .app{grid-template-columns:minmax(0,1fr)!important;align-items:stretch!important}body.dense-workspace-view .app>main{grid-column:1!important;align-self:stretch!important;justify-self:stretch!important;height:100%!important;max-height:none!important;width:100%!important;max-width:none!important}body.dense-workspace-view .app>.view-nav{grid-column:1!important}
 

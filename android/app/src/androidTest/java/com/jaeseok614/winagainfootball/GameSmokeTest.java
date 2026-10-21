@@ -1419,6 +1419,7 @@ public final class GameSmokeTest {
                 screenshot(scenario,"android-store-squad-1920x1080.png");
                 tapWebElement(scenario,".view-nav [data-view=tactics]");
                 awaitTrue(scenario,"document.querySelectorAll('[data-workspace-formation]').length===12&&document.querySelectorAll('#tactics-pane [data-tactical-player]').length===11");
+                assertEquals("Rating and position glyphs fit separate cells", "true",evaluate(scenario,"(()=>{const cards=[...document.querySelectorAll('#tactics-pane [data-tactical-player]')];return cards.length===11&&cards.every(card=>{const cr=card.getBoundingClientRect(),parts=[...card.querySelectorAll('.placement-badge strong,.tactical-shirt,b>em')].filter(n=>n.checkVisibility()).map(n=>{const r=document.createRange();r.selectNodeContents(n);return r.getBoundingClientRect();});return parts.every(a=>a.left>=cr.left-.5&&a.right<=cr.right+.5&&a.top>=cr.top-.5&&a.bottom<=cr.bottom+.5)&&parts.every((a,i)=>parts.slice(i+1).every(b=>Math.min(a.right,b.right)-Math.max(a.left,b.left)<=.5||Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)<=.5));});})()"));
                 screenshot(scenario,"android-store-tactics-1920x1080.png");
                 assertEquals("Store reading routes never spend or alter the club",evaluate(scenario,"storeCaptureOriginal"),evaluate(scenario,"JSON.stringify(season)"));
                 tapWebElement(scenario,".view-nav [data-view=match]");tapWebElement(scenario,"#primary");
