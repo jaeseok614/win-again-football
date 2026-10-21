@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "collectedAt": "2026-10-21T02:37:43.799Z",
+  "collectedAt": "2026-10-21T03:17:20.205Z",
   "scope": "Free volunteer recruitment and closed Alpha setup; no production rollout",
   "budgetKrw": 0,
   "package": "com.jaeseok614.winagainfootball",
@@ -16,7 +16,8 @@
     "welcomeMessageSaved": true,
     "lastObservedMembers": 1,
     "memberCountIncludesOwner": true,
-    "confirmedRecruitedTesters": 0
+    "confirmedRecruitedTesters": 0,
+    "approvalNoticeUrl": "https://groups.google.com/g/win-again-football-testers/c/UkV2w23LJtM"
   },
   "play": {
     "track": "closed Alpha",
@@ -27,10 +28,10 @@
     "releaseName": "1.0.0 무료 비공개 테스트",
     "bundleSource": "existing library bundle 1 (1.0.0)",
     "aabSha256": "eb6ecf319ac05a37c746efe09a10f53af33654112544c887c30450c2fa4b3a6c",
-    "status": "Google review in progress; automated checks finished",
+    "status": "Published closed Alpha; available to selected eligible testers",
     "reviewRequested": true,
-    "approved": false,
-    "installAvailabilityConfirmed": false,
+    "approved": true,
+    "installAvailabilityConfirmed": true,
     "managedPublishing": false,
     "approvedClosedReleaseWillPublishAutomatically": true,
     "countryEntries": 178,
@@ -40,7 +41,7 @@
     "feedbackEmail": "jaeseok614@gmail.com",
     "optInUrl": "https://play.google.com/apps/testing/com.jaeseok614.winagainfootball",
     "lastObservedOptedIn": 0,
-    "optInCountObservedAt": "2026-10-21T02:04:00Z",
+    "optInCountObservedAt": "2026-10-21",
     "requiredHumans": 12,
     "requiredConsecutiveDays": 14,
     "productionAccessRequested": false,
@@ -48,7 +49,13 @@
     "warning": "No deobfuscation file; release minifyEnabled false; no blocking release errors observed",
     "publishingUrl": "https://play.google.com/console/u/0/developers/6961410092466748418/app/4975868083103535088/publishing",
     "existingGooglePlayGamesPcMetadata": "included among pre-existing pending metadata; not changed in this task; no PC-specific verification claimed",
-    "optInCountObservedAtApproximate": true
+    "optInCountObservedAtApproximate": false,
+    "publishedAtKst": "2026-10-21 11:29",
+    "publishedTimePrecision": "minute, directly displayed by Console",
+    "availabilityVerification": "Console says available to selected testers; owner/group-member account sees Become a tester invitation. No opt-in submitted by agent and no physical-phone Play installation claimed.",
+    "actualPlayPhoneInstallationVerified": false,
+    "releaseDetailsUrl": "https://play.google.com/console/u/0/developers/6961410092466748418/app/4975868083103535088/tracks/4700391144400624721/releases/1/details",
+    "optInCountTimestampPrecision": "date; observed on live dashboard after publication in this recruitment round"
   },
   "recruitment": [
     {
@@ -80,6 +87,35 @@
       "publicVisibilityConfirmed": false,
       "allMessagesEmailSubscription": false,
       "googleProfileLinked": false
+    },
+    {
+      "channel": "r/GooglePlayDeveloper weekly tester discovery",
+      "url": "https://www.reddit.com/r/GooglePlayDeveloper/comments/1x9wypb/comment/phz2os5/",
+      "status": "comment posted; permalink content confirmed; no removal notice observed",
+      "publicVisibilityConfirmed": false,
+      "publicVisibilityLimit": "Logged-out web fetch returned cache miss; do not count views or own upvote as a tester",
+      "repliesFromHumansConfirmed": 0
+    },
+    {
+      "channel": "Disquiet",
+      "url": "https://disquiet.io/products/5-1",
+      "status": "product submitted for approval; feed-post button disabled until approval",
+      "actualAndroidScreenshots": 2,
+      "iconUploaded": true,
+      "publicVisibilityConfirmed": false,
+      "repliesFromHumansConfirmed": 0
+    },
+    {
+      "channel": "r/betatests",
+      "url": "https://www.reddit.com/r/betatests/comments/1xbc5ek/android_korean_football_manager_can_you_follow/",
+      "title": "[Android] Korean football manager: can you follow the match on a phone? Free closed Alpha",
+      "status": "post published; detail content and 2 images confirmed; no removal notice observed",
+      "actualAndroidScreenshots": 2,
+      "publicVisibilityConfirmed": false,
+      "publicVisibilityLimit": "Logged-in detail verified; independent logged-out fetch not confirmed",
+      "onlyReplyObserved": "AutoModerator",
+      "automatedReplyId": "phz3d0w",
+      "repliesFromHumansConfirmed": 0
     }
   ],
   "reciprocalTestingPromised": false,
@@ -89,19 +125,83 @@
   "productChanged": false,
   "productValidationCommit": "3cb0140a375bb09655a61939ca5f5c3c382629ea",
   "nextActions": [
-    "Confirm Google closed-release approval before advertising installation as available",
-    "Check existing moderator decisions before any additional posting; do not duplicate removed posts",
-    "Count genuine Play opt-ins separately from Google Group membership",
-    "Record real feedback and fixes during the 14-day period; never invent participation"
+    "Check existing post replies and moderator decisions on daily 10:00 KST heartbeat; do not duplicate removed posts",
+    "After Disquiet product approval, publish one tailored Korean recruitment post for that product",
+    "Count actual Play opt-ins, not group membership, views, bot comments or agent actions",
+    "If below 12 and no progress, check rules and post at most one tailored request in another suitable free community per run",
+    "Record real feedback privately with personal data omitted; do not claim fixes before implementation/verification"
   ],
   "officialReferences": [
     "https://support.google.com/googleplay/android-developer/answer/14151465?hl=ko",
-    "https://support.google.com/googleplay/android-developer/answer/9845334?hl=ko"
+    "https://support.google.com/googleplay/android-developer/answer/9845334?hl=ko",
+    "https://developers.openai.com/training/walkthroughs/scheduled-tasks"
   ],
   "localIgnoredEvidence": [
     "work/free-closed-test-20261021/group-created.png",
     "work/free-closed-test-20261021/play-closed-review-requested.png",
     "work/free-closed-test-20261021/reddit-korean-filter-notice.png",
-    "work/free-closed-test-20261021/google-community-pending.png"
-  ]
+    "work/free-closed-test-20261021/google-community-pending.png",
+    "work/free-closed-test-20261021/play-alpha-live.png",
+    "work/free-closed-test-20261021/play-testers-zero.png",
+    "work/free-closed-test-20261021/reddit-weekly-comment.png",
+    "work/free-closed-test-20261021/reddit-betatests-posted.png",
+    "work/free-closed-test-20261021/disquiet-approval-pending.png"
+  ],
+  "previousObservations": [
+    {
+      "collectedAt": "2026-10-21T02:37:43.799Z",
+      "playStatus": "Google review in progress; automated checks finished",
+      "approved": false,
+      "recruited": 0,
+      "channels": [
+        {
+          "channel": "r/AndroidClosedTesting",
+          "status": "removed by Reddit filters"
+        },
+        {
+          "channel": "r/KoreanGameDev",
+          "status": "removed by Reddit filters"
+        },
+        {
+          "channel": "Testers Community Hub",
+          "status": "message posted but awaiting approval"
+        }
+      ],
+      "note": "Earlier observation before publication; retained as history"
+    }
+  ],
+  "channelsInvestigatedNotPosted": [
+    {
+      "channel": "itch.io Help Wanted or Offered",
+      "url": "https://itch.io/board/10020/help-wanted-or-offered",
+      "reason": "No signed-in account; no account creation or terms acceptance performed"
+    },
+    {
+      "channel": "BetaTests Discord",
+      "url": "https://discord.com/invite/AN8P9M9fp8",
+      "reason": "Account creation requests birth date and acceptance of Discord terms; no account created or invented data entered"
+    },
+    {
+      "channel": "TestMyApps / mutual-exchange boards",
+      "url": "https://testmyapps.app/community",
+      "reason": "Free route expects reciprocal real app testing; no such commitment made"
+    },
+    {
+      "channel": "Developers Community",
+      "url": "https://groups.google.com/g/developers-community-official/about",
+      "reason": "Mutual testing required and only owners/managers may post; no attempt to bypass"
+    }
+  ],
+  "automation": {
+    "id": "12",
+    "kind": "heartbeat",
+    "status": "ACTIVE",
+    "name": "축구게임 무료 테스터 12명 모집",
+    "scheduleLocal": "매일 오전 10시 Asia/Seoul",
+    "nextScheduledLocalDate": "2026-10-22",
+    "attachedToThisThread": true,
+    "savedConfigurationVerified": true,
+    "budgetKrw": 0,
+    "completion": "Stop new recruiting and disable this recruiting automation after Console confirms at least 12 genuine opt-ins; 14-day completion remains a separate requirement"
+  }
 }
