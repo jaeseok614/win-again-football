@@ -164,6 +164,10 @@ public final class GameSmokeTest {
         return folder;
     }
     private JSONObject screenState(ActivityScenario<MainActivity> scenario, String stage) throws Exception {
+        // A real Android configuration change can recreate the Activity between
+        // drawing the PNG and reading its metadata. Probe the new document with
+        // the existing bounded readiness check before reading game globals.
+        awaitTrue(scenario,"typeof view!=='undefined'&&typeof mobileDashboardExpanded!=='undefined'&&!!window.WinAgainAndroid&&!!document.getElementById('club-life-panel')");
         String encoded = evaluate(scenario,
             "(()=>{const bounds=id=>{const e=document.getElementById(id);if(!e)return null;const r=e.getBoundingClientRect();" +
             "return {text:e.textContent,left:r.left,top:r.top,bottom:r.bottom,width:r.width,height:r.height,display:getComputedStyle(e).display}};" +
@@ -1421,7 +1425,7 @@ public final class GameSmokeTest {
                 awaitTrue(scenario,"document.getElementById('match-ceremony').open&&document.getElementById('match-ceremony').dataset.kind==='preview'&&state.phase==='prep'");
                 tapWebElement(scenario,"#ceremony-ready");
                 awaitTrue(scenario,"document.getElementById('match-ceremony').open&&document.getElementById('match-ceremony').dataset.kind==='kickoff'");
-                tapWebElement(scenario,"#ceremony-ready");awaitTrue(scenario,"state.continuous?.tick>300");
+                awaitTrue(scenario,"!document.getElementById('match-ceremony').open&&state.continuous?.tick>300");
                 tapWebElement(scenario,"#primary");awaitTrue(scenario,"state.paused&&document.getElementById('match-names')._labels?.length===22");
                 assertEquals("true",evaluate(scenario,"document.getElementById('field').getBoundingClientRect().width>document.getElementById('match-live-stats').getBoundingClientRect().width&&document.documentElement.scrollHeight<=innerHeight+1"));
                 screenshot(scenario,"android-store-match-1920x1080.png");
