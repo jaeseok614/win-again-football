@@ -10,4 +10,10 @@ android/signing.properties
 *.keystore
 *.p12
 *.pfx
+.dev.vars*
+.env*
+!*.example
+.wrangler/
+*service-account*.json
+*.pem
 __pycache__/

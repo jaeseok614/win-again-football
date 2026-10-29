@@ -7,6 +7,19 @@ on:
 permissions:
   contents: read
 jobs:
+  billing-worker-bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node source/test-billing-worker.cjs
+      - name: Bundle optional free Worker without publishing or cloud credentials
+        run: npx --yes wrangler@4 deploy --dry-run --config billing-server/wrangler.jsonc --outdir work/billing-worker-bundle
   verify:
     runs-on: ubuntu-24.04
     timeout-minutes: 20

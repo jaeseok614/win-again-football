@@ -26,6 +26,8 @@ Billing SDK의 Google DataTransport 의존성이 일반 권한 ACCESS_NETWORK_ST
 
 ## 판매 활성화에 필요한 실제 설정
 
+후속: 소유자1명 전용 라이선스 테스트 목록 생성/선택/최종 저장을 Console에서 확인했다. 전용 Google Cloud 프로젝트 `win-again-billing`은 생성했지만 API 사용 약관 승인/활성화·서비스 계정/키/권한·Cloudflare 로그인/배포는 남아 있다. 판매자 등록 iframe은 로딩에서 멈추며 상품 페이지는 판매자 프로필 선행 조건으로 잠겼다. 비용 회피용 [Workers Free 배포안](../billing-server/README.md)과 [상품 확정 입력값](../billing-server/product-plan.json)을 준비했다. 실제 판매자/상품/서버 설정 완료를 뜻하지 않는다. 실제 결제는 라이선스 테스터의 Google 테스트 카드로 검증할 수 있어 ₩4,900을 직접 낼 필요가 없다.
+
 2026-10-29 Console에는 판매자 계정 설정 안내가 남아 있다. 계정 소유자가 판매자 결제 프로필·신원/은행·약관 단계를 직접 완료해야 한다. 기존 앱은 무료로 유지하며 앱 자체를 유료로 바꾸지 않는다.
 
 Google의 [판매 준비 절차](https://developer.android.com/google/play/billing/getting-ready)에 따르면 상품 설정 기능을 열려면 Billing 라이브러리가 포함된 버전을 내부 테스트 등의 트랙에 먼저 게시해야 한다. 현재 code1에는 Billing이 없다. 소유자 결제 프로필 준비 후 이 후보 code2를 기존 키로 서명해 **개발자용 내부 테스트**에 먼저 게시하고, 일반 무료 모집 Alpha/code1은 유지한다. 기본 후보의 실제 구매 버튼은 비활성이다. 이어 아래 상품·서버·공개 설정을 넣은 최종 빌드는 이미 사용한 code2를 재사용하지 않고 versionCode를 올려야 한다. 이 선행 게시·서명도 이번 작업에서는 실행하지 않았다.

@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "win-again-billing",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-29",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": false },
+  "vars": { "ENABLE_VERIFICATION": "false", "ALLOW_LICENSE_TEST_PURCHASES": "false" },
+  "env": {
+    "license": {
+      "name": "win-again-billing-license",
+      "vars": { "ENABLE_VERIFICATION": "false", "ALLOW_LICENSE_TEST_PURCHASES": "true" }
+    }
+  }
+}

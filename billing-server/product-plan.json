@@ -1,0 +1,17 @@
+{
+  "note": "Console 입력용 확정값. API 업로드/상품 생성 완료 기록이 아님.",
+  "packageName": "com.jaeseok614.winagainfootball",
+  "productId": "full_game",
+  "purchaseOptionId": "buy",
+  "type": "permanent_non_consumable_one_time",
+  "locale": "ko-KR",
+  "title": "정식판",
+  "description": "두 번째 시즌 이후와 모든 새 삶을 계속 즐기는 영구 이용권",
+  "region": "KR",
+  "currency": "KRW",
+  "price": 4900,
+  "subscription": false,
+  "rental": false,
+  "preorder": false,
+  "consumePurchase": false
+}
