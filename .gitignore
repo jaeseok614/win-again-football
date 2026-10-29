@@ -8,3 +8,12 @@ android/local.properties
 android/signing.properties
 *.jks
 *.keystore
+*.p12
+*.pfx
+.dev.vars*
+.env*
+!*.example
+.wrangler/
+*service-account*.json
+*.pem
+__pycache__/

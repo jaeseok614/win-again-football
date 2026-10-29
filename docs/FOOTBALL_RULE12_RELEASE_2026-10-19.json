@@ -1,0 +1,292 @@
+{
+  "schema": 1,
+  "date": "2026-10-19",
+  "functionalCommit": "61acb0f6a86db4885ed6c9806f1962cc52e0ba85",
+  "verifiedCommit": "50fcaecc764fdf519db09bcb52c22ea20c32bec9",
+  "verifiedTree": "b2376734b807c68e741bc500f60a0de764614406",
+  "sourceSubtree": "e37529b46e13e1c563a401241fc1feee7ebb1497",
+  "branch": "codex/football-realism-20261012",
+  "pullRequest": 25,
+  "continuousVersion": 12,
+  "seasonSchema": 10,
+  "saveKey": "win-again-season-v17",
+  "preservedContinuousVersions": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "canonicalFingerprints": {
+    "partial": "2389cb3ff18f3647de83bd811ff3a24912c0b878060244f9a234fac2a8513d76",
+    "practice": {
+      "comeback": "5040bd16b191c6b71450de4fc0d7dc2ee967fbe1a59d7783589b0495c4256d3e",
+      "protect": "e7707fe4d5a1cf60adca844c1aec2d1f325d52de09d9ae7c7c49deb8dd498516"
+    },
+    "match": "6a98f77a32bc7da100183d166f8b0d1f113bda3a350a895a0f43ee2688618a52",
+    "settled": "29f99dc3f9ec5dbca7168e8679f4e50de8dd01f94a93b13f21673b796b0f5f77"
+  },
+  "browser": {
+    "lineupViewports": 8,
+    "newDialogueViewports": 9,
+    "existingDialogueViewports": 8,
+    "physicalLiveAndPracticeViewports": 8,
+    "smallest": [
+      568,
+      252
+    ],
+    "largest": [
+      1280,
+      720
+    ],
+    "rule11And12CrossRuntimeExact": true,
+    "coldRestoration": true,
+    "repeatedOpenGuard": true,
+    "importUpgrade": {
+      "source": "isolated seed17 rule11 campaign, not a user save",
+      "oldTicks": 723,
+      "oldRule": 11,
+      "newRule": 12,
+      "previewReadOnly": true,
+      "serializedExportExact": true,
+      "headlessBrowserDownloadVerified": false,
+      "coldReloadExact": true,
+      "confirmedOldRecordVersion": 11,
+      "year": 1,
+      "round": 1,
+      "automaticSeasonAdvance": false,
+      "errors": []
+    },
+    "actualTimedPlayback": {
+      "viewport": [
+        844,
+        364
+      ],
+      "watch": "key",
+      "measurements": [
+        {
+          "speed": "slow",
+          "elapsedMs": 141433,
+          "score": [
+            2,
+            1
+          ],
+          "shots": [
+            31,
+            4
+          ],
+          "ticks": 57600,
+          "automaticGoals": 3,
+          "restorable": true,
+          "head": "50fcaecc764fdf519db09bcb52c22ea20c32bec9"
+        },
+        {
+          "speed": "normal",
+          "elapsedMs": 91836,
+          "score": [
+            2,
+            1
+          ],
+          "shots": [
+            31,
+            4
+          ],
+          "ticks": 57600,
+          "automaticGoals": 3,
+          "restorable": true,
+          "head": "61acb0f6a86db4885ed6c9806f1962cc52e0ba85"
+        },
+        {
+          "speed": "rapid",
+          "elapsedMs": 64137,
+          "score": [
+            2,
+            1
+          ],
+          "shots": [
+            31,
+            4
+          ],
+          "ticks": 57600,
+          "automaticGoals": 3,
+          "restorable": true,
+          "head": "50fcaecc764fdf519db09bcb52c22ea20c32bec9"
+        }
+      ],
+      "limitation": "Desktop Chrome wall time; fixed goal scenes and bounded highlight rates mean the speed selector is not the inverse of whole-match duration. Long tasks include bootstrap; not phone FPS evidence."
+    }
+  },
+  "campaign": {
+    "seed": 41,
+    "version": 12,
+    "games": 48,
+    "leagueGames": 46,
+    "cupGames": 2,
+    "strategy": "recovery training; explicit strength-XI application only when readiness report recommends; one explicit new coach conversation",
+    "explicitLineupApplications": 14,
+    "answeredCorner": true,
+    "ending": {
+      "year": 1,
+      "round": 46,
+      "rank": {
+        "id": "brynwell",
+        "name": "토투넘 핫스퍼",
+        "en": "Brynwell Rovers",
+        "short": "토투넘",
+        "code": "TT",
+        "color": "#c8f36e",
+        "style": "빠른 유망주를 가진 작은 시민 구단",
+        "attack": 70,
+        "defense": 70,
+        "middle": 71,
+        "speed": 68,
+        "played": 46,
+        "won": 40,
+        "drawn": 2,
+        "lost": 4,
+        "gf": 264,
+        "ga": 47,
+        "points": 122,
+        "gd": 217,
+        "rank": 1
+      },
+      "balance": 593900,
+      "records": 48,
+      "cupChampion": "redmere"
+    },
+    "explicitNext": {
+      "year": 2,
+      "division": 4
+    },
+    "restoreAndFileRoundTrip": true,
+    "automaticSeasonAdvance": false,
+    "limitation": "One real campaign under the stated training and selection strategy; high scores remain a difficulty/balance concern, not general win-rate evidence.",
+    "defaultRebirthIntegration": {
+      "defaultRebirth": true,
+      "seed": 17,
+      "year": 1,
+      "round": 1,
+      "status": "active",
+      "version": 12,
+      "score": [
+        8,
+        1
+      ],
+      "corners": [
+        9,
+        1
+      ],
+      "originalCornerStoryAvailable": true,
+      "twoExplicitReplies": true,
+      "moneyLineupRngAndSeasonUnchangedByReplies": true,
+      "exactRestoreAndFileRoundTrip": true
+    }
+  },
+  "apk": {
+    "name": "win-again-20261019-rebound-football.apk",
+    "artifact": 12158833819,
+    "artifactZipSha256": "160ef303a5adfe216ae5ded219574eb7c900160a2270f6bfc3992e355e48bc64",
+    "bytes": 6627433,
+    "sha256": "f0ff6e472dc17f5325547bee2b29d3fef7c8af1364424a9ed1bab48d55a0c67e",
+    "certificateSha256": "abd1be7871fcdd629ac8566559dec15ce1b61c902e92e1199fd156da8b9b351f",
+    "previousCertificateSha256": "8ec4e18c51a6ae6b3fabde438b6ae820fac1f809597471e1d47092e7ad32b0ac",
+    "sameCertificate": false,
+    "installation": "Export the existing save before removing the old test APK; install and import."
+  },
+  "source": {
+    "localBeforeDialogGuard": {
+      "suites": 192,
+      "checks": 1469
+    },
+    "finalTargeted": "story pagination5, readiness5, corner story4, PWA14, native source/export guard and real nine-size repeated dialog opening",
+    "pwa": {
+      "bytes": 6310794,
+      "shell": "7812b34319ac"
+    },
+    "androidGame": {
+      "schema": 1,
+      "applicationId": "com.jaeseok614.winagainfootball",
+      "versionName": "1.0.0",
+      "versionCode": 1,
+      "saveKey": "win-again-season-v17",
+      "bytes": 6310568,
+      "sha256": "492cf39585368e2a0b740658e5e047d9f6080a0e66b7d6d46f6f72ff1afc4522"
+    },
+    "remote": {
+      "run": 39189617264,
+      "job": 117859327268,
+      "conclusion": "success",
+      "suites": 192,
+      "checks": 1469,
+      "pwaGroups": 14,
+      "committedAssetsMatchSource": true
+    }
+  },
+  "remainingLimits": [
+    "High contact frequency, pressure/low-block performance and long-term difficulty remain under review.",
+    "No copied game code, external player database, copyrighted artwork or novel dialogue."
+  ],
+  "android": {
+    "run": 39189617263,
+    "conclusion": "success",
+    "newNativeScreenshotsInspected": [
+      "android-lineup-readiness",
+      "android-coach-skill-comparison",
+      "android-corner-coach-question",
+      "android-corner-coach-reply"
+    ],
+    "initialFailure": {
+      "run": 39188104049,
+      "api": 34,
+      "test": "naturalCornerReceiptOpensOriginalCoachDialogueAndTheRealSetPieceEditor",
+      "reason": "Repeated showModal on an already-open story dialog in WebView",
+      "fix": "Guard dialog.open; repeat the opening in browser and native regression checks; preserve all error assertions and existing time limits."
+    },
+    "api34": {
+      "job": 117859327715,
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 476.909,
+      "verificationArtifact": 12159821457,
+      "zipSha256": "c400cfb05f77cee3437769f7d722fb11642189ec467d14819a77a673966aa755"
+    },
+    "api35": {
+      "job": 117859327995,
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 529.15,
+      "verificationArtifact": 12160006574,
+      "zipSha256": "59aacf6616489bb9c4e71c53a10db7c2b1a841f33f3b0d9461592b554acec67e"
+    }
+  },
+  "drive": {
+    "id": "1nSujeFdST1on5jVkSCNrH2CleLCibWkc",
+    "parentId": "0ACEDMU5UjS2_Uk9PVA",
+    "modifiedAt": "2026-10-19T02:35:11.023Z",
+    "name": "win-again-20261019-rebound-football.apk",
+    "apkOnly": true,
+    "rawByteReadback": true,
+    "fullBytesEqual": true,
+    "bytes": 6627433,
+    "sha256": "f0ff6e472dc17f5325547bee2b29d3fef7c8af1364424a9ed1bab48d55a0c67e"
+  },
+  "balanceDiagnostics": {
+    "reference": "FOOTBALL_RULE12_BENCHMARK_2026-10-19.json",
+    "fixedAllTacticGames": 256,
+    "adaptiveAllTacticGames": 128,
+    "conditions": "equal ability60,energy95,96 minutes,halftime kickoff position reset with energy preserved,both team directions; adaptive labels are base tactics",
+    "unreleasedContactCandidateGames": 128,
+    "contactResearchReference": "CONTACT_RECOVERY_RESEARCH_2026-10-19.md",
+    "prototype13Installed": false
+  }
+}

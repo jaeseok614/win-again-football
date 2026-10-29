@@ -7,9 +7,22 @@ on:
 permissions:
   contents: read
 jobs:
+  billing-worker-bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node source/test-billing-worker.cjs
+      - name: Bundle optional free Worker without publishing or cloud credentials
+        run: npx --yes wrangler@4 deploy --dry-run --config billing-server/wrangler.jsonc --outdir work/billing-worker-bundle
   verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,6 +32,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: node source/run-tests.cjs
+      - run: python3 -m unittest source.release.test_verify_play_bundle source.release.test_verify_store_assets
+      - run: python3 source/release/verify_store_assets.py
       - run: node source/build-pwa.cjs
       - run: node source/test-pwa.cjs index.html
         env:

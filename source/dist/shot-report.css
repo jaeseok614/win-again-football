@@ -1,0 +1,33 @@
+/* Read-only completed-shot workspace; keep the existing navigation and replay actions. */
+#match-popup-stats[data-report-tab="슈팅 위치"]{position:relative;display:block!important;height:100%;min-height:0}
+#compact-match-report:has(.shot-workspace){position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:44px minmax(0,1fr) auto;gap:4px 6px;height:100%;min-height:0}
+#compact-match-report:has(.shot-workspace)>.match-report-heading{display:none}
+#compact-match-report:has(.shot-workspace)>.match-report-select{grid-column:1;grid-row:1;min-width:0;width:calc(68% - 4px);font-size:0;gap:0}
+#compact-match-report:has(.shot-workspace)>.match-report-select select{width:100%;font-size:10px}
+#compact-match-report:has(.shot-workspace)>.match-report-content{grid-column:1/-1;grid-row:2;min-height:0;overflow:hidden}
+#compact-match-report:has(.shot-workspace)>#match-report-confirm{grid-column:2;grid-row:3}
+#match-popup-stats[data-report-tab="슈팅 위치"]:has(#match-replay-entry:not([hidden])) #compact-match-report{grid-template-rows:44px minmax(0,1fr) 44px}
+#match-popup-stats[data-report-tab="슈팅 위치"] #match-replay-entry:not([hidden]){position:absolute;left:0;bottom:0;width:calc(50% - 3px);height:44px;margin:0}
+.shot-workspace{height:100%;min-height:0;display:grid;grid-template-rows:minmax(0,1fr) 13px;gap:3px;font-size:10px;color:#dce9e3}
+.shot-filter-row{position:absolute;top:0;left:34%;right:0;height:44px;display:grid;grid-template-columns:minmax(75px,.6fr) minmax(0,1.4fr);gap:5px;min-width:0}
+.shot-filter-row select{width:100%;min-width:0;height:44px;min-height:44px;box-sizing:border-box;padding:3px;font-size:10px;border:1px solid #47675a;border-radius:5px;background:#1b302c;color:#e5f0e9}
+.shot-body{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:6px;min-height:0;min-width:0}
+.shot-diagram{min-height:0;min-width:0;margin:0;background:#16382e;border:1px solid #47675a;border-radius:5px}
+.shot-diagram svg{display:block;width:100%;height:100%}
+.shot-detail{min-width:0;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:3px}
+.shot-detail table{border-collapse:collapse;width:100%;font-size:10px;line-height:12px}
+.shot-detail caption{font-size:11px;line-height:13px;text-align:left;color:#e5f0e5;word-break:keep-all}
+.shot-detail th,.shot-detail td{padding:1px;text-align:center;border-bottom:1px solid #38564b}
+.shot-detail th:first-child{width:38%;text-align:left}
+.shot-person{display:flex;gap:5px;align-items:center;min-width:0;line-height:12px}
+.shot-person .player-portrait{width:26px;height:26px;flex:0 0 26px}
+.shot-person>div{min-width:0;flex:1}
+.shot-person b,.shot-person span{display:block;word-break:keep-all;overflow-wrap:anywhere}
+.shot-person b{font-size:10px;color:#d7f497}
+.shot-measures,.shot-empty,.shot-note{margin:0;font-size:9px;line-height:12px;word-break:keep-all;overflow-wrap:anywhere}
+.shot-note span:first-child{color:#9edcff}.shot-note span:nth-child(2){color:#ffb588}
+.shot-mini-totals{display:none;margin:0;font-size:8px;line-height:10px;word-break:keep-all}
+@media(max-height:300px){.shot-workspace{grid-template-rows:minmax(0,1fr) 11px;gap:2px}.shot-body{gap:4px}.shot-detail{gap:1px}.shot-detail table{font-size:8px;line-height:10px}.shot-detail caption{font-size:9px;line-height:11px}.shot-detail th,.shot-detail td{padding:0}.shot-person .player-portrait{width:20px;height:20px;flex-basis:20px}.shot-person b,.shot-person span{font-size:8px;line-height:10px}.shot-measures,.shot-note{font-size:8px;line-height:10px}}
+@media(max-height:270px){.shot-detail table thead,.shot-detail table tbody{display:none}.shot-mini-totals{display:block}}
+
+@media(min-width:740px) and (min-height:340px){.shot-detail{gap:5px}.shot-detail table{font-size:11px;line-height:15px}.shot-detail caption{font-size:12px;line-height:15px}.shot-person{line-height:15px}.shot-person b{font-size:12px}.shot-person span,.shot-measures{font-size:11px;line-height:15px}.shot-person .player-portrait{width:32px;height:32px;flex-basis:32px}.shot-detail th:first-child{width:25%}}

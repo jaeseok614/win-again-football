@@ -1,0 +1,107 @@
+{
+  "plan": {
+    "recordedAt": "2026-10-20T23:57:51.218Z",
+    "head": "dd1e53878b1b6d6223203c1dbe34ddab3df63218",
+    "comparison": "Production tactical cache restored; exact grouped full-name labels only; physical rules1-14 unchanged",
+    "order": [
+      "baseline",
+      "grouped-final",
+      "grouped-final",
+      "baseline"
+    ],
+    "baselineSHA": "c32dde0a627ee85a2b3fa93628e3f5f0af23d9ec42e77756783910ce8bcd1c99",
+    "candidateSHA": "66b952735eae673b14efdc69b88ea259468b01d27c5a1e78f9266702a621c59a",
+    "viewport": [
+      844,
+      364
+    ],
+    "cpuThrottle": 4,
+    "speed": "normal",
+    "watch": "key",
+    "fixedSeed": 41,
+    "otherLocalCPUWork": "No local browser suites, engine simulations or source tests during these four runs",
+    "acceptance": {
+      "sameWholeWorldAndColdRestore": true,
+      "elapsedMedianMaxRegressionPercent": 10,
+      "frameP95MaxRegressionPercent": 10
+    },
+    "limitations": "Desktop throttling is not phone FPS; no picking only fast trials.",
+    "previousAttempt": {
+      "trial": 1,
+      "failed": "baseline reload exceeded unchanged 30s bound after 186.278s full match; no baseline result accepted"
+    },
+    "observationOnly": "Write pre-restore checkpoint after the match; retain original 30s reload, 10min match, exact cold restore and all assertions. Continue four trials to expose every failure; no discarded failed trial."
+  },
+  "runs": [
+    {
+      "variant": "baseline",
+      "elapsed": 214.094,
+      "coldRestoreSeconds": 26.732,
+      "p95": 83.20000000001164,
+      "over100ms": 179,
+      "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+      "score": [
+        4,
+        0
+      ],
+      "ticks": 57600
+    },
+    {
+      "variant": "grouped-final",
+      "elapsed": 168.925,
+      "coldRestoreSeconds": 26.64,
+      "p95": 66.59999999999854,
+      "over100ms": 76,
+      "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+      "score": [
+        4,
+        0
+      ],
+      "ticks": 57600
+    },
+    {
+      "variant": "grouped-final",
+      "elapsed": 188.47,
+      "coldRestoreSeconds": 18.257,
+      "p95": 66.69999999999709,
+      "over100ms": 105,
+      "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+      "score": [
+        4,
+        0
+      ],
+      "ticks": 57600
+    },
+    {
+      "variant": "baseline",
+      "elapsed": 230.381,
+      "coldRestoreSeconds": 23.963,
+      "p95": 83.30000000000291,
+      "over100ms": 187,
+      "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+      "score": [
+        4,
+        0
+      ],
+      "ticks": 57600
+    }
+  ],
+  "elapsed": {
+    "baseline": 222.2375,
+    "candidate": 178.6975,
+    "regressionPercent": -19.591653073851177
+  },
+  "p95": {
+    "baseline": 83.25000000000728,
+    "candidate": 66.64999999999782,
+    "regressionPercent": -19.939939939949557
+  },
+  "coldRestore": {
+    "baseline": 25.3475,
+    "candidate": 22.448500000000003,
+    "regressionPercent": -11.437025347667419
+  },
+  "allExactWorldHashes": true,
+  "allColdRestores": true,
+  "withinPreRegisteredLimits": true
+}

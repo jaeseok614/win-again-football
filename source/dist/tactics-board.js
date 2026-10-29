@@ -21,6 +21,14 @@
    const fingerprint=JSON.stringify(signature),segment={start:m.minute,end:forecastEnd,minutes:forecastEnd-m.minute};
    const condition={averageEnergy:mean(lineup.map(p=>p.energy)),minimumEnergy:Math.min(...lineup.map(p=>p.energy)),tiredIds:lineup.filter(p=>p.energy<65).map(p=>p.id),criticalIds:lineup.filter(p=>p.energy<50).map(p=>p.id)};
    const rating=copy(F.ratings(m)),comparisons=[['attack','공격','attack'],['defense','수비','defense'],['middle','중원','middle'],['pace','공격진 속도','speed']].map(([key,label,opponentKey])=>({key,label,ours:rating[key],opponent:rating.opponent[opponentKey],delta:rating[key]-rating.opponent[opponentKey]}));
+   if(m.continuous?.version>=3){
+    const rival=m.continuous.tactics?.[1]||m.continuousSetup.opponentTactic;let tactic='balanced',rule='balance',reason='패스 출구와 골문 앞 커버를 함께 유지합니다.';
+    if(condition.averageEnergy<65||condition.minimumEnergy<50){rule='fatigue';reason='압박 전에 지친 선수의 교체를 확인하세요. 전력질주 뒤에는 회복할 시간이 필요합니다.';}
+    else if(m.minute>=70&&m.score[0]<m.score[1]){tactic='press';rule='chase';reason='남은 시간이 짧습니다. 두 명 압박으로 공을 되찾되 수비 뒷공간과 체력 소모를 확인하세요.';}
+    else if(m.minute>=75&&m.score[0]>m.score[1]){tactic='lowBlock';rule='protect';reason='골문 앞 수비 간격을 좁혀 리드를 지키세요. 공을 되찾은 뒤 연결할 선수도 필요합니다.';}
+    else if(rival==='press'&&rating.pace>rating.opponent.speed){tactic='counter';rule='opponent-chase';reason='상대 압박 뒤의 공간을 노릴 수 있습니다. 공을 되찾은 순간 빠른 공격수의 침투를 활용하세요.';}
+    return {valid:true,continuous:true,reason:null,fingerprint,context,segment,lineup,condition,current:{rating,comparisons},previews:Object.entries(labels).map(([tactic,label])=>({tactic,label})),recommendation:{tactic,label:labels[tactic],reason,rule},assumption:'현재 선수의 체력과 상대 지시를 읽은 코치 의견입니다. 실제 패스와 경합으로 결과가 결정됩니다.'};
+   }
    const previews=['balanced','press','counter',...(m.version>=7?['lowBlock']:[])].map(tactic=>{
     const rating=copy(F.ratings({...m,tactic})),energy=lineup.map(p=>{const costPer90=35*(1+(50-p.endurance)/250)+(tactic==='press'?8:0),rawCost=costPer90*segment.minutes/90,after=Math.max(0,p.energy-rawCost);return {id:p.id,identity:p.identity,before:p.energy,after,cost:p.energy-after,costPer90,rawCost};});
     return {tactic,label:labels[tactic],rating,expectedChances:{ours:rating.ourRate*segment.minutes,opponent:rating.oppRate*segment.minutes},goalChance:{ours:rating.ourGoal,opponent:rating.oppGoal},paceBonus:rating.paceBonus,energy,averageCost:mean(energy.map(p=>p.cost))};
@@ -32,7 +40,7 @@
    else if(m.version>=9&&F.opponentPlan(m)==='chase'&&counter.paceBonus>0){tactic='counter';rule='opponent-chase';reason='상대 감독이 공격 숫자를 늘려 뒷공간을 내줍니다. 현재 공격진 속도로 역습 보너스를 얻을 수 있습니다. 예상 찬스와 체력도 비교하세요.';}
    else if(m.version>=9&&F.opponentPlan(m)==='protect'&&m.score[0]<=m.score[1]){tactic='press';rule='opponent-protect';reason='상대 감독이 리드를 지키려고 수비를 좁힙니다. 체력이 충분하다면 전방 압박으로 공격 기회를 늘려보세요.';}
    else if(counter.paceBonus>0){tactic='counter';rule='pace';reason='현재 공격진의 체력을 반영한 속도가 상대보다 높아 역습 보너스가 생깁니다. 찬스 횟수 지표가 줄어드는 점도 함께 비교하세요.';}
-   return {valid:true,reason:null,fingerprint,context,segment,lineup,condition,current:{rating,comparisons},previews,recommendation:{tactic,label:labels[tactic],reason,rule},assumption:'현재 활동 선수와 미리보기 전술을 유지하고 추가 교체·퇴장이 없다고 가정합니다. 찬스 지표는 현재 체력·전술의 분당 찬스 비율 × 다음 구간 시간입니다. 실제 경기는 매분 체력과 능력 지표가 변하므로 확정 찬스 수나 예상 스코어를 뜻하지 않습니다.'};
+   return {valid:true,continuous:!!m.continuousSetup,reason:null,fingerprint,context,segment,lineup,condition,current:{rating,comparisons},previews,recommendation:{tactic,label:labels[tactic],reason,rule},assumption:'현재 활동 선수와 미리보기 전술을 유지하고 추가 교체·퇴장이 없다고 가정합니다. 찬스 지표는 현재 체력·전술의 분당 찬스 비율 × 다음 구간 시간입니다. 실제 경기는 매분 체력과 능력 지표가 변하므로 확정 찬스 수나 예상 스코어를 뜻하지 않습니다.'};
   }catch{return invalid('현재 선발과 전술 지표를 읽을 수 없습니다.');}
  }
  const api={read};root.TacticsBoard=api;if(typeof module!=='undefined')module.exports=api;

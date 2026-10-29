@@ -1,0 +1,40 @@
+.voice-context{padding:4px;background:#122930;border-left:2px solid #8caa6d;border-radius:0 4px 4px 0;min-width:0;word-break:keep-all}
+.voice-context>small{display:block;color:#d5e5ad;font-size:8px;line-height:1.3}
+.voice-context>p{font-size:9px;line-height:1.3;margin:2px 0 0}.voice-context b{color:#bcd2da}
+.voice-echo{color:#c0cfba!important;border-left:2px solid #84965d;padding-left:4px}
+[data-voice-review]{cursor:pointer}[data-voice-review]:focus-visible{outline:2px solid #cce99d;outline-offset:-2px}
+.voice-press-side .voice-interview{position:relative;isolation:isolate}
+.voice-press-art{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden;border-radius:inherit;opacity:.33}
+.voice-press-art>.club-art{height:100%;width:100%;position:static;margin:0;border:0;border-radius:0}
+.voice-press-art:after{content:'';position:absolute;inset:0;background:linear-gradient(#11272be8,#11272b9c 65%,#11272bf5)}
+.voice-press-art span{display:none}
+@media(orientation:landscape){
+ .voice-press-centre{grid-template-columns:minmax(0,.40fr) minmax(0,.60fr);grid-template-rows:44px minmax(0,1fr);gap:4px;overflow:hidden}
+ .voice-press-centre>header{grid-column:1;grid-row:1;display:flex;flex-direction:column;align-items:start;justify-content:center;gap:2px;width:60px;min-width:0;font-size:8px;line-height:1.3}
+ .voice-press-centre>header>b{font-size:8px;line-height:1.3;word-break:keep-all}
+ .voice-press-centre>header .life-note{position:static!important;inset:auto;margin:0;padding:0;font-size:7px;line-height:1.3;background:none;border:0;pointer-events:auto;word-break:keep-all}
+ .voice-press-centre>.voice-reviews{grid-column:1;grid-row:2;grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(3,minmax(0,1fr));gap:3px}
+ .voice-press-side,.voice-news-record{display:contents}
+ .voice-press-side>label,.voice-news-record>label{grid-column:1;grid-row:1;align-self:start;min-width:0;width:calc((100% - 64px)/2)}
+ .voice-press-side>label{margin-left:64px;justify-self:start}.voice-news-record>label{justify-self:end}
+ .voice-press-side select,.voice-news-record select{height:44px;min-height:44px;width:100%;font-size:9px;padding:3px;box-sizing:border-box}
+ .voice-press-side>.voice-interview{grid-column:2;grid-row:2;--voice-interview-size:9px;display:flex;flex-direction:column;min-height:0;min-width:0;padding:5px;gap:3px;box-sizing:border-box}
+ .voice-press-side .voice-interview h3{font-size:var(--voice-interview-size);line-height:1.3;margin:0;flex-shrink:0}
+ .voice-press-side .voice-inner,.voice-press-side .voice-saved p,.voice-press-side .voice-context>p{font-size:calc(var(--voice-interview-size) - .5px)!important;line-height:1.3!important;margin:0;flex-shrink:0}
+ .voice-press-side .voice-context>small{font-size:calc(var(--voice-interview-size) - 1px);line-height:1.3}
+ .voice-press-side .voice-context{flex-shrink:0;padding:3px}
+ .voice-press-side .voice-saved{display:grid;gap:4px;min-height:0}.voice-press-side .voice-saved .voice-echo{padding-left:4px}
+ .voice-press-side .voice-answers{margin-top:auto;flex-shrink:0}
+ .voice-news-record>div{grid-column:2;grid-row:1;min-height:0;min-width:0;overflow:hidden;font-size:8px;line-height:1.3;padding:3px;box-sizing:border-box;background:#1a2f2b}
+ .voice-news-record>div>b{font-size:9px;line-height:1.3}.voice-news-record>div>p{margin:1px 0 0}
+ .voice-news-record .newsroom-record strong{font-size:9px;line-height:1.3}.voice-news-record .newsroom-record span,.voice-news-record .newsroom-record small{font-size:8px;line-height:1.3}
+ .voice-press-centre .newsroom-thumb{width:24%;height:28px;margin:0 0 2px 4px}
+ .voice-press-centre .voice-article{padding:3px}.voice-press-centre .voice-article h3{margin:1px 0}.voice-press-centre .voice-article p{margin:1px 0}
+}
+@media(orientation:landscape) and (max-height:300px){
+ #club-press-desk [data-voice-review] .voice-saved p{font-size:8px;line-height:1.3}
+ .voice-press-side>.voice-interview{padding:3px;gap:2px}
+ .voice-press-centre .newsroom-thumb{height:18px;width:18%}
+ .voice-press-centre .voice-article{padding:2px}.voice-press-centre .voice-article small{font-size:7px;line-height:1.2}
+ .voice-press-side .voice-saved{gap:2px}.voice-press-side .voice-context{padding:2px}
+}

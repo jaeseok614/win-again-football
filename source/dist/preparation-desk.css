@@ -1,0 +1,61 @@
+/* Current facts and coach checks share one landscape viewport. */
+body.operations-page #club-overview{display:block!important}
+.preparation-desk{display:grid;grid-template-rows:24px 44px minmax(0,1fr) 44px;gap:4px;height:100%;min-height:0;padding:3px;box-sizing:border-box}
+.preparation-desk-title{display:flex;align-items:center;justify-content:space-between;gap:4px;min-width:0}
+body.operations-page #club-overview .preparation-desk-title h2{font-size:12px!important;line-height:16px!important}
+.preparation-desk-title>span{font-size:8px;line-height:12px}
+.preparation-metrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;margin:0;min-height:0}
+.preparation-metrics>div{padding:2px 4px;background:#203b30;border:1px solid #385749;border-radius:4px;min-width:0;box-sizing:border-box}
+.preparation-metrics dt{font-size:8px;line-height:12px;word-break:keep-all}
+.preparation-metrics dd{font-size:14px;line-height:20px;margin:0;font-weight:700;color:#d8f4a3;overflow-wrap:anywhere}
+.preparation-main{display:grid;grid-template-columns:minmax(0,.46fr) minmax(0,.54fr);gap:4px;min-height:0}
+.preparation-fixture{display:grid;grid-template-rows:auto minmax(0,1fr) 34px;gap:3px;min-height:0}
+.preparation-opponent{padding:3px;background:#142a32;border:1px solid #38566a;border-radius:4px;min-width:0}
+.preparation-opponent header{display:flex;align-items:center;gap:4px}
+.preparation-opponent .club-mark{height:25px!important;width:25px!important;min-width:25px!important}
+body.operations-page #club-overview .preparation-opponent h3,body.operations-page #club-overview .preparation-reports h3{font-size:10px!important;line-height:14px!important;margin:0}
+.preparation-opponent p,.preparation-opponent span,.preparation-opponent small{font-size:7px;line-height:10px;margin:1px 0}
+.preparation-comparisons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;margin:2px 0}
+.preparation-comparisons>div{display:grid;grid-template-columns:1fr auto auto;gap:2px;align-items:center;font-size:8px;line-height:11px}
+.preparation-comparisons span{grid-column:1/-1;font-size:7px;line-height:10px}
+.preparation-comparisons b{color:#d9f5a2;font-size:10px;line-height:12px}
+.preparation-comparisons b:last-child{color:#f4bb95}
+.preparation-comparisons i{font-size:6px;line-height:10px;font-style:normal}
+.preparation-stadium{min-height:0;overflow:hidden}
+body.operations-page #club-overview .preparation-stadium .club-growth{display:grid!important;grid-template-rows:minmax(0,1fr) 12px!important;height:100%!important;min-height:0!important;margin:0!important;gap:0}
+body.operations-page #club-overview .preparation-stadium .club-growth-picture{height:100%!important;min-height:0!important;aspect-ratio:auto}
+body.operations-page #club-overview .preparation-stadium figcaption{display:flex!important;justify-content:space-between;font-size:6px!important;line-height:9px!important;padding:0 2px!important}
+.preparation-last h3{font-size:7px!important;line-height:10px!important;margin:0}
+.preparation-last ul{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;margin:0;padding:0;list-style:none}
+.preparation-last li{display:flex;flex-direction:column;gap:0;padding:1px 2px;border-radius:3px;background:#203842;font-size:6px;line-height:9px;min-width:0}
+.preparation-last li b{font-size:9px;line-height:11px}
+.preparation-last li span{font-size:6px;line-height:9px;white-space:nowrap}
+.preparation-form-win{border-bottom:2px solid #92c868}.preparation-form-draw{border-bottom:2px solid #e7cf78}.preparation-form-loss{border-bottom:2px solid #db8f78}
+.preparation-reports{display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:3px;min-height:0}
+.preparation-reports article{padding:3px 5px;border:1px solid #385465;border-radius:4px;background:#1c303d;min-width:0;box-sizing:border-box;min-height:0}
+.preparation-reports article[data-preparation-tone=warning]{border-color:#e0b46c;background:#392f23}
+.preparation-reports article[data-preparation-tone=good]{border-color:#769c6b}
+.preparation-reports article header{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.preparation-reports article header b{font-size:11px;line-height:15px;color:#d8f4a3}
+.preparation-reports article p{font-size:8px;line-height:12px;margin:2px 0 0;word-break:keep-all;overflow-wrap:break-word}
+.preparation-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;min-height:0}
+.preparation-actions button{min-height:44px!important;height:44px!important;font-size:10px!important;line-height:14px!important;margin:0;padding:3px}
+body.operations-page #training-card .training-actions{grid-template-columns:minmax(0,1fr) 96px!important}
+body.operations-page #training-card .training-actions #training-focus{display:none!important}
+.preparation-training-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;min-width:0}
+body.operations-page #training-card .preparation-training-choices button{display:grid!important;grid-template-rows:12px 10px 14px!important;gap:0;align-content:center;height:44px!important;min-height:44px!important;min-width:0;padding:2px!important;text-align:left}
+.preparation-training-choices button[aria-pressed=true]{border-color:#d4f29c!important;background:#425d2c!important}
+.preparation-training-choices b{font-size:9px!important;line-height:12px!important}
+.preparation-training-choices span,.preparation-training-choices small{font-size:6px!important;line-height:10px!important;white-space:normal;word-break:keep-all}
+@media(max-height:350px){.preparation-desk{grid-template-rows:20px 36px minmax(0,1fr) 44px;gap:2px;padding:2px}.preparation-metrics dt{font-size:6px;line-height:9px}.preparation-metrics dd{font-size:11px;line-height:16px}.preparation-reports article{padding:1px 3px}.preparation-reports article p{font-size:6px;line-height:9px;margin:0}.preparation-reports article header b{font-size:9px;line-height:12px}.preparation-opponent p,.preparation-opponent span,.preparation-opponent small{font-size:6px;line-height:8px}.preparation-main{grid-template-columns:minmax(0,.45fr) minmax(0,.55fr)}.preparation-desk-title>span{font-size:6px;line-height:9px}.preparation-last li span{font-size:5px;line-height:8px}.preparation-last h3{line-height:9px!important}}
+
+body.operations-page #management-content>#club-overview{display:block!important;grid-template-columns:none!important;grid-template-rows:none!important}
+.preparation-actions{margin:0!important;padding:0!important;border:0!important;box-sizing:border-box}
+.preparation-metrics>div{min-height:0}.preparation-metrics dt{padding:0;margin:0}.preparation-last li:only-child{grid-column:1/-1}
+
+body.operations-page #club-overview .preparation-stadium .club-growth{box-sizing:border-box!important;padding:0!important;border:0!important}
+body.operations-page #club-overview .preparation-stadium figcaption{height:12px!important;min-height:0!important;box-sizing:border-box;margin:0!important;align-items:center}
+
+.preparation-opponent{font-size:7px;line-height:10px}.preparation-opponent header>div{min-width:0;line-height:10px}.preparation-opponent header span,.preparation-opponent>small{display:block;line-height:10px!important}.preparation-comparisons>div{grid-template-columns:minmax(0,1fr) 8px minmax(0,1fr)}.preparation-actions button{background:#243e34;color:#e3f0e9;border:1px solid #476153;border-radius:4px}.preparation-actions button.primary{background:#ed0013;color:white}
+
+@media(orientation:landscape) and (max-height:300px){.preparation-reports{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:2px}.preparation-reports article{padding:1px 2px}body.operations-page #club-overview .preparation-reports h3{font-size:clamp(6px,1.15vw,9px)!important;line-height:10px!important}.preparation-reports article header b{font-size:clamp(7px,1.3vw,9px);line-height:11px}.preparation-reports article p{font-size:clamp(6px,1.05vw,8px);line-height:9px}}

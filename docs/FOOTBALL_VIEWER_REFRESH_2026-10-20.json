@@ -1,0 +1,91 @@
+{
+  "status": "rejected-not-installed",
+  "recordedCriteriaUtc": "2026-10-20T01:24:37.171Z",
+  "baselineCommit": "f07d84a5c811ef0d2f03ed3bea5dfac111a46ed0",
+  "physicalRule": 14,
+  "sharedStartupGuard": true,
+  "physicalFilesUnchanged": true,
+  "environment": "Desktop Chrome headless844x364, CPU throttling4, sequential after all heavy matrix jobs finished; one paired diagnostic, not phone FPS.",
+  "candidateChange": "Key routine render threshold500→1000ms; important/minute/full-view/practice paths retain their original conditions.",
+  "criteria": {
+    "p95RelativeAtMost": 0.9,
+    "orOver100msFractionRelativeAtMost": 0.75,
+    "elapsedRelativeAtMost": 1.1,
+    "pwaByteCap": 6320000,
+    "allCorePlaybackAssertionsRequired": true
+  },
+  "baseline": {
+    "requestedRule": "14",
+    "viewport": [
+      844,
+      364
+    ],
+    "speed": "normal",
+    "cpuThrottle": 4,
+    "elapsed": 297.92,
+    "coldRestoreSeconds": 25.897,
+    "pageReloadSeconds": 24.864,
+    "explicitRestoreVerificationSeconds": 1.033,
+    "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+    "version": 14,
+    "score": [
+      4,
+      0
+    ],
+    "shots": [
+      29,
+      8
+    ],
+    "ticks": 57600,
+    "goalScenes": 4,
+    "halves": 1,
+    "shotCaptured": true,
+    "frameGaps": {
+      "count": 7315,
+      "p50": 33.29999999998836,
+      "p95": 100,
+      "p99": 166.79999999998836,
+      "over100ms": 316
+    },
+    "errors": []
+  },
+  "candidate": {
+    "requestedRule": "14",
+    "viewport": [
+      844,
+      364
+    ],
+    "speed": "normal",
+    "cpuThrottle": 4,
+    "elapsed": 293.556,
+    "coldRestoreSeconds": 20.147,
+    "pageReloadSeconds": 19.243,
+    "explicitRestoreVerificationSeconds": 0.904,
+    "hash": "29b4a25df2cf0cc1c3add7b3fda25dde7d31f9c641ae3430d07242ae6fedda99",
+    "version": 14,
+    "score": [
+      4,
+      0
+    ],
+    "shots": [
+      29,
+      8
+    ],
+    "ticks": 57600,
+    "goalScenes": 4,
+    "halves": 1,
+    "shotCaptured": true,
+    "frameGaps": {
+      "count": 7293,
+      "p50": 33.29999999998836,
+      "p95": 100,
+      "p99": 183.29999999998836,
+      "over100ms": 308
+    },
+    "errors": []
+  },
+  "longFrameFractionRelative": 0.977623766156901,
+  "accepted": false,
+  "reason": "p95 remains100ms and over100ms fraction changes by only about2.2%, below the registered25% reduction; p99 increased. Keep500ms.",
+  "restoreInterpretation": "The live-only refresh condition cannot establish a cold-restore improvement; the observed restore-time difference is not attributed to it."
+}

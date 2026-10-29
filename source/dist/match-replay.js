@@ -7,15 +7,15 @@
   const origin=Math.max(0,m.statisticsOriginMinute||0),scenes=[];
   for(let index=0;index<m.logs.length;index++){
    const e=m.logs[index];if(e===pendingEvent||!Object.hasOwn(kinds,e?.type)||![0,1].includes(e.team)||!Number.isInteger(e.minute)||e.minute<=origin||e.minute>m.minute)continue;
-   const segment=m.segments.find(seg=>e.minute>seg.start&&e.minute<=(seg.end??m.minute));if(!segment)continue;
-   const actor=e.team===0?m.players[e.actorId||e.scorerId]:null;
+   const segment=m.segments.find(seg=>m.continuousSetup?e.tick>seg.startTick&&e.tick<=(seg.endTick??m.continuous.tick):e.minute>seg.start&&e.minute<=(seg.end??m.minute));if(!segment)continue;
+   const actor=m.continuousSetup?m.continuous.players.find(p=>p.id===(e.actorId||e.scorerId)):e.team===0?m.players[e.actorId||e.scorerId]:null;
    scenes.push({id:index,minute:e.minute,team:e.team,type:e.type,path:paths[e.setPiece||e.action]||'공격 장면',actorName:actor?.name||null,label:e.minute+'′ · '+(e.team===0?'우리':'상대')+' · '+kinds[e.type]+' · '+(paths[e.setPiece||e.action]||'공격')});
   }
-  return {valid:true,scenes,minute:m.minute,limited:origin>0,note:'현재 경기의 기록된 장면을 당시 선발과 전술로 2D 재구성합니다. 실제 위치 추적 영상은 아닙니다. 결과 확정 후에는 이번 장면 목록이 끝납니다.'};
+  return {valid:true,scenes,minute:m.minute,limited:origin>0,note:m.continuousSetup?'경기 당시 공과 22명의 실제 계산 위치를 같은 규칙으로 다시 재생합니다. 결과 확정 후에는 이번 장면 목록이 끝납니다.':'현재 경기의 기록된 장면을 당시 선발과 전술로 2D 재구성합니다. 실제 위치 추적 영상은 아닙니다. 결과 확정 후에는 이번 장면 목록이 끝납니다.'};
  }
  function prepare(s,id,{pendingEvent=null,positions={}}={}){
   const list=read(s,{pendingEvent}),scene=list.scenes.find(e=>e.id===id);if(!scene)return {valid:false};
-  const m=s.match,event=m.logs[id],segment=m.segments.find(seg=>event.minute>seg.start&&event.minute<=(seg.end??m.minute)),cards=(m.discipline?.events||[]).filter(e=>e.minute<event.minute),ownRed=new Set(cards.filter(e=>e.team===0&&e.card==='red').map(e=>e.id)),opponentRed=cards.filter(e=>e.team===1&&e.card==='red').map(e=>e.id),score=[0,0];
+  const m=s.match,event=m.logs[id];if(m.continuousSetup){const physical=F.continuousClip(m,event),report=O.read(s);return {valid:true,scene,event,physical,duration:physical.duration,club:report.club,ownName:m.homeName,input:{match:{...m,tactic:physical.frames.find(f=>f.tick>=event.tick)?.tactic||m.tactic},positions:physical.frames[0]?.own||[],dismissedOpponent:Array.from({length:11},(_,i)=>'opp'+i).filter(id=>!physical.frames[0]?.opponent.some(p=>p.id===id))}};}const segment=m.segments.find(seg=>event.minute>seg.start&&event.minute<=(seg.end??m.minute)),cards=(m.discipline?.events||[]).filter(e=>e.minute<event.minute),ownRed=new Set(cards.filter(e=>e.team===0&&e.card==='red').map(e=>e.id)),opponentRed=cards.filter(e=>e.team===1&&e.card==='red').map(e=>e.id),score=[0,0];
   for(const e of m.logs.slice(0,id))if(e.type==='goal'&&[0,1].includes(e.team))score[e.team]++;
   const match={...m,lineup:[...segment.lineup],tactic:segment.tactic,minute:event.minute,phase:'first',score,opponentPlans:(m.opponentPlans||[]).filter(p=>p.minute<event.minute),discipline:m.discipline?{...m.discipline,events:cards}:undefined},report=O.read({...s,match});if(!report.valid)return {valid:false};
   const counts={DEF:0,MID:0,FW:0},layout=F.formationPositions[m.formation],rows=segment.lineup.map(id=>{const p=m.players[id],base=p.pos==='GK'?[50,88]:layout[p.pos]?.[counts[p.pos]++]||[50,50],saved=positions[p.identity],point=Array.isArray(saved)&&saved.length===2&&saved.every(Number.isFinite)?saved:base;return {id,p,x:point[0],y:point[1]};}).filter(p=>!ownRed.has(p.id));
@@ -24,6 +24,7 @@
   const performer=M.frame({...input,elapsedMs:eventElapsedMs+M.timing.shot,eventAgeMs:M.timing.shot}).performerName;
   return {valid:true,scene:{...scene,actorName:scene.actorName||performer||null},event,input,duration:M.timing.end-1,club:report.club,ownName:m.homeName};
  }
- function frame(clip,age=0){if(!clip?.valid)return {valid:false};const elapsed=Math.max(0,Math.min(clip.duration,Number.isFinite(age)?age:0)),value=M.frame({...clip.input,elapsedMs:clip.input.eventElapsedMs+elapsed,eventAgeMs:elapsed});return {valid:true,...value,age:elapsed,commentary:elapsed>=M.impactAge(clip.event)?M.commentary(clip.event,clip.input.match,clip.input.opponentRoster,value):M.liveCommentary(value)};}
- const api={read,prepare,frame,kinds,paths};root.MatchReplay=api;if(typeof module!=='undefined')module.exports=api;
+ function sceneForShot(s,shot,{pendingEvent=null}={}){if(!shot||![0,1].includes(shot.team)||!Number.isInteger(shot.tick))return null;const list=read(s,{pendingEvent});return list.scenes.slice().reverse().find(scene=>{const event=s.match.logs[scene.id];return event.team===shot.team&&event.shotTick===shot.tick;})||null;}
+ function frame(clip,age=0){if(!clip?.valid)return {valid:false};if(clip.physical){const elapsed=Math.max(0,Math.min(clip.duration,Number.isFinite(age)?age:0)),index=Math.min(clip.physical.frames.length-1,Math.floor(elapsed/100)),raw=clip.physical.frames[index],next=clip.physical.frames[index+1],C=typeof ContinuousFootball!=='undefined'?ContinuousFootball:require('./continuous-football.js'),blend=next?C.interpolate(raw,next,(elapsed%100)/100):raw,value={...raw,own:blend.own,opponent:blend.opponent,ball:blend.ball,ballHeight:blend.ballHeight};return {valid:true,...value,age:elapsed,commentary:value.tick>=clip.event.tick?clip.event.text:(value.focusName?value.focusName+' · ':'')+value.label};}const elapsed=Math.max(0,Math.min(clip.duration,Number.isFinite(age)?age:0)),value=M.frame({...clip.input,elapsedMs:clip.input.eventElapsedMs+elapsed,eventAgeMs:elapsed});return {valid:true,...value,age:elapsed,commentary:elapsed>=M.impactAge(clip.event)?M.commentary(clip.event,clip.input.match,clip.input.opponentRoster,value):M.liveCommentary(value)};}
+ const api={read,prepare,frame,sceneForShot,kinds,paths};root.MatchReplay=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

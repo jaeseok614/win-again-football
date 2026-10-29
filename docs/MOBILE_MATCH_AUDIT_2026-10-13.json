@@ -1,0 +1,3328 @@
+{
+  "conditions": {
+    "equalAbility": 60,
+    "initialEnergy": 95,
+    "seedsMatched": [
+      41,
+      42,
+      43
+    ],
+    "seedsFirst": [
+      11,
+      23,
+      41
+    ],
+    "halfReset": true,
+    "opponentCoach": "adaptive",
+    "substitutions": 0,
+    "talks": 0,
+    "sampleCaution": "three games per tactic per condition; not real-match calibration"
+  },
+  "old7": {
+    "version": 7,
+    "mode": "matched",
+    "ability": 60,
+    "initialEnergy": 95,
+    "minutes": 96,
+    "halftimeReset": true,
+    "opponentCoach": "adaptive",
+    "substitutions": 0,
+    "talks": 0,
+    "seeds": [
+      41,
+      42,
+      43
+    ],
+    "summary": [
+      {
+        "tactic": "balanced",
+        "matches": 3,
+        "ownGoals": 1,
+        "conceded": 1,
+        "shots": 3.3333333333333335,
+        "passes": 1211,
+        "completion": 72.37273144974476,
+        "middlePassShare": 75.2675984782286,
+        "attackPossessionShare": 9.781773867260279,
+        "carryingMetres": 7155.424419549393,
+        "wins": 1,
+        "draws": 0,
+        "energy": 51.29397076183367
+      },
+      {
+        "tactic": "press",
+        "matches": 3,
+        "ownGoals": 1.6666666666666667,
+        "conceded": 0.6666666666666666,
+        "shots": 11,
+        "passes": 1224.3333333333333,
+        "completion": 69.34151235288927,
+        "middlePassShare": 64.21096088245552,
+        "attackPossessionShare": 14.570766510323672,
+        "carryingMetres": 7068.3772716775375,
+        "wins": 1,
+        "draws": 2,
+        "energy": 49.85389949912686
+      },
+      {
+        "tactic": "counter",
+        "matches": 3,
+        "ownGoals": 1.6666666666666667,
+        "conceded": 0,
+        "shots": 9.666666666666666,
+        "passes": 1202.3333333333333,
+        "completion": 70.19939000584397,
+        "middlePassShare": 68.74945637584314,
+        "attackPossessionShare": 13.182589902077593,
+        "carryingMetres": 7219.788552003015,
+        "wins": 3,
+        "draws": 0,
+        "energy": 49.89520212153419
+      },
+      {
+        "tactic": "lowBlock",
+        "matches": 3,
+        "ownGoals": 0.6666666666666666,
+        "conceded": 1,
+        "shots": 9.333333333333334,
+        "passes": 1234.6666666666667,
+        "completion": 72.04698946562776,
+        "middlePassShare": 72.0747254437157,
+        "attackPossessionShare": 12.491666066338604,
+        "carryingMetres": 6911.144626052657,
+        "wins": 1,
+        "draws": 1,
+        "energy": 50.300470801089496
+      }
+    ],
+    "results": [
+      {
+        "version": 7,
+        "mode": "matched",
+        "seed": 41,
+        "tactic": "balanced",
+        "score": [
+          0,
+          2
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            23877,
+            27195
+          ],
+          "passes": [
+            575,
+            633
+          ],
+          "completed": [
+            406,
+            469
+          ],
+          "shots": [
+            0,
+            2
+          ],
+          "onTarget": [
+            0,
+            2
+          ],
+          "xg": [
+            0,
+            0.09061092849649072
+          ],
+          "corners": [
+            0,
+            3
+          ],
+          "freeKicks": [
+            7,
+            6
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            231,
+            200
+          ],
+          "fouls": [
+            6,
+            7
+          ],
+          "saves": [
+            2,
+            0
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            168,
+            894,
+            146
+          ],
+          "possessionTicksByThird": [
+            6227,
+            29632,
+            3830
+          ],
+          "carryingMetres": [
+            3352.76104813025,
+            3746.624840698781
+          ],
+          "crosses": 5,
+          "maxQuietTicks": 183
+        },
+        "teamEnergy": [
+          49.95151419199058,
+          51.14094554941686
+        ],
+        "energy": 50.577530695899156
+      },
+      {
+        "version": 7,
+        "mode": "matched",
+        "seed": 42,
+        "tactic": "balanced",
+        "score": [
+          0,
+          1
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            24559,
+            26574
+          ],
+          "passes": [
+            581,
+            611
+          ],
+          "completed": [
+            408,
+            463
+          ],
+          "shots": [
+            1,
+            3
+          ],
+          "onTarget": [
+            0,
+            2
+          ],
+          "xg": [
+            0.02768773269446581,
+            0.4189645555719294
+          ],
+          "corners": [
+            1,
+            0
+          ],
+          "freeKicks": [
+            12,
+            9
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            234,
+            212
+          ],
+          "fouls": [
+            9,
+            12
+          ],
+          "saves": [
+            1,
+            0
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            151,
+            891,
+            150
+          ],
+          "possessionTicksByThird": [
+            5592,
+            30310,
+            4364
+          ],
+          "carryingMetres": [
+            3497.687478943982,
+            3711.746297519137
+          ],
+          "crosses": 3,
+          "maxQuietTicks": 146
+        },
+        "teamEnergy": [
+          50.64463972328547,
+          52.73857140048369
+        ],
+        "energy": 51.69160556188457
+      },
+      {
+        "version": 7,
+        "mode": "matched",
+        "seed": 43,
+        "tactic": "balanced",
+        "score": [
+          3,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            25143,
+            25551
+          ],
+          "passes": [
+            626,
+            607
+          ],
+          "completed": [
+            454,
+            429
+          ],
+          "shots": [
+            3,
+            1
+          ],
+          "onTarget": [
+            1,
+            1
+          ],
+          "xg": [
+            0.26196417533958344,
+            0.10529204630029187
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            12,
+            7
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            233,
+            237
+          ],
+          "fouls": [
+            7,
+            12
+          ],
+          "saves": [
+            1,
+            1
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            150,
+            950,
+            133
+          ],
+          "possessionTicksByThird": [
+            5709,
+            30656,
+            3534
+          ],
+          "carryingMetres": [
+            3551.7392466661627,
+            3605.7143466898656
+          ],
+          "crosses": 0,
+          "maxQuietTicks": 205
+        },
+        "teamEnergy": [
+          51.598437400874786,
+          51.62870783532006
+        ],
+        "energy": 51.612776027717274
+      },
+      {
+        "version": 7,
+        "mode": "matched",
+        "seed": 41,
+        "tactic": "press",
+        "score": [
+          1,
+          1
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            26025,
+            24585
+          ],
+          "passes": [
+            653,
+            606
+          ],
+          "completed": [
+            444,
+            397
+          ],
+          "shots": [
+            3,
+            4
+          ],
+          "onTarget": [
+            3,
+            2
+          ],
+          "xg": [
+            0.22121089533364086,
+            0.582772878119786
+          ],
+          "corners": [
+            3,
+            1
+          ],
+          "freeKicks": [
+            8,
+            8
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            237,
+            221
+          ],
+          "fouls": [
+            8,
+            8
+          ],
+          "saves": [
+            1,
+            2
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            202,
+            886,
+            171
+          ],
+          "possessionTicksByThird": [
+            6530,
+            27698,
+            4888
+          ],
+          "carryingMetres": [
+            3707.8232798245563,
+            3413.505233493241
+          ],
+          "crosses": 9,
+          "maxQuietTicks": 179
+        },
+        "teamEnergy": [
+          49.25473562187193,
+          50.298628602540354
+        ],
+        "energy": 49.77668211220614
+      },
+      {
+        "version": 7,
+        "mode": "matched",
+        "seed": 42,
+        "tactic": "press",
+        "score": [
+          3,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            24859,
+            25708
+          ],
+          "passes": [
+            610,
+            580
+          ],
+          "completed": [
+            433,
+            428
+          ],
+          "shots": [
+            9,
+            1
+          ],
+          "onTarget": [
+            6,
+            1
+          ],
+          "xg": [
+            0.9808425496440211,
+            0.09821222193371151
+          ],
+          "corners": [
+            1,
+            0
+          ],
+          "freeKicks": [
+            10,
+            10
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            230,
+            188
+          ],
+          "fouls": [
+            10,
+            10
+          ],
+          "saves": [
+            1,
+            4
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            250,
+            716,
+            224
+          ],
+          "possessionTicksByThird": [
+            9187,
+            23306,
+            6068
+          ],
+          "carryingMetres": [
+            3351.075848475515,
+            3641.555810633352
+          ],
+          "crosses": 5,
+          "maxQuietTicks": 159
+        },
+        "teamEnergy": [
+          50.713976494309335,
+          49.065885119004015
+        ],
+        "energy": 49.9333016323226
+      },
+      {
+        "version": 7,
+        "mode": "matched",
+        "seed": 43,
+        "tactic": "press",
+        "score": [
+          1,
+          1
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            26353,
+            24111
+          ],
+          "passes": [
+            645,
+            579
+          ],
+          "completed": [
+            455,
+            388
+          ],
+          "shots": [
+            12,
+            4
+          ],
+          "onTarget": [
+            5,
+            2
+          ],
+          "xg": [
+            1.3730840287387471,
+            0.5019125162140783
+          ],
+          "corners": [
+            3,
+            0
+          ],
+          "freeKicks": [
+            9,
+            7
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            215,
+            229
+          ],
+          "fouls": [
+            7,
+            9
+          ],
+          "saves": [
+            1,
+            4
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            228,
+            760,
+            236
+          ],
+          "possessionTicksByThird": [
+            7433,
+            25343,
+            6003
+          ],
+          "carryingMetres": [
+            3697.4074251169122,
+            3393.7642174890357
+          ],
+          "crosses": 4,
+          "maxQuietTicks": 147
+        },
+        "teamEnergy": [
+          50.76823789335371,
+          48.83335570784973
+        ],
+        "energy": 49.85171475285182
+      },
+      {
+        "version": 7,
+        "mode": "matched",
+        "seed": 41,
+        "tactic": "counter",
+        "score": [
+          3,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            23320,
+            27422
+          ],
+          "passes": [
+            578,
+            635
+          ],
+          "completed": [
+            389,
+            455
+          ],
+          "shots": [
+            9,
+            6
+          ],
+          "onTarget": [
+            4,
+            3
+          ],
+          "xg": [
+            0.8076634522978239,
+            0.6448431930743697
+          ],
+          "corners": [
+            0,
+            1
+          ],
+          "freeKicks": [
+            9,
+            11
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            203,
+            175
+          ],
+          "fouls": [
+            11,
+            9
+          ],
+          "saves": [
+            3,
+            1
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            226,
+            776,
+            211
+          ],
+          "possessionTicksByThird": [
+            8009,
+            24917,
+            6145
+          ],
+          "carryingMetres": [
+            3264.872103883248,
+            3861.701852849634
+          ],
+          "crosses": 1,
+          "maxQuietTicks": 164
+        },
+        "teamEnergy": [
+          50.788867479918295,
+          49.02737718437577
+        ],
+        "energy": 49.95447733992447
+      },
+      {
+        "version": 7,
+        "mode": "matched",
+        "seed": 42,
+        "tactic": "counter",
+        "score": [
+          1,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            24323,
+            27016
+          ],
+          "passes": [
+            558,
+            640
+          ],
+          "completed": [
+            388,
+            461
+          ],
+          "shots": [
+            6,
+            0
+          ],
+          "onTarget": [
+            3,
+            0
+          ],
+          "xg": [
+            0.5760270164864908,
+            0
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            6,
+            12
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            215,
+            215
+          ],
+          "fouls": [
+            12,
+            6
+          ],
+          "saves": [
+            0,
+            2
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            181,
+            835,
+            182
+          ],
+          "possessionTicksByThird": [
+            6427,
+            28649,
+            4930
+          ],
+          "carryingMetres": [
+            3511.7983054017272,
+            3859.6260498639695
+          ],
+          "crosses": 4,
+          "maxQuietTicks": 146
+        },
+        "teamEnergy": [
+          49.536099534419066,
+          49.99925858696947
+        ],
+        "energy": 49.76767906069426
+      },
+      {
+        "version": 7,
+        "mode": "matched",
+        "seed": 43,
+        "tactic": "counter",
+        "score": [
+          1,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            22012,
+            28597
+          ],
+          "passes": [
+            530,
+            666
+          ],
+          "completed": [
+            349,
+            490
+          ],
+          "shots": [
+            7,
+            1
+          ],
+          "onTarget": [
+            3,
+            0
+          ],
+          "xg": [
+            0.4776221110051566,
+            0.10577201435270518
+          ],
+          "corners": [
+            1,
+            0
+          ],
+          "freeKicks": [
+            16,
+            2
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            236,
+            184
+          ],
+          "fouls": [
+            2,
+            16
+          ],
+          "saves": [
+            0,
+            2
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            172,
+            868,
+            156
+          ],
+          "possessionTicksByThird": [
+            5941,
+            28654,
+            4494
+          ],
+          "carryingMetres": [
+            3104.513681901293,
+            4056.8536621091757
+          ],
+          "crosses": 2,
+          "maxQuietTicks": 111
+        },
+        "teamEnergy": [
+          50.50180076423508,
+          49.425099163732604
+        ],
+        "energy": 49.96344996398385
+      },
+      {
+        "version": 7,
+        "mode": "matched",
+        "seed": 41,
+        "tactic": "lowBlock",
+        "score": [
+          1,
+          1
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            26088,
+            24480
+          ],
+          "passes": [
+            624,
+            584
+          ],
+          "completed": [
+            450,
+            408
+          ],
+          "shots": [
+            2,
+            8
+          ],
+          "onTarget": [
+            2,
+            5
+          ],
+          "xg": [
+            0.3919808512397198,
+            0.9104745098543372
+          ],
+          "corners": [
+            0,
+            1
+          ],
+          "freeKicks": [
+            6,
+            10
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            211,
+            216
+          ],
+          "fouls": [
+            10,
+            6
+          ],
+          "saves": [
+            4,
+            1
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            186,
+            861,
+            161
+          ],
+          "possessionTicksByThird": [
+            5820,
+            28135,
+            4743
+          ],
+          "carryingMetres": [
+            3570.9011837905664,
+            3298.659410360376
+          ],
+          "crosses": 4,
+          "maxQuietTicks": 131
+        },
+        "teamEnergy": [
+          48.485943293486756,
+          51.48105552444707
+        ],
+        "energy": 50.149894532909144
+      },
+      {
+        "version": 7,
+        "mode": "matched",
+        "seed": 42,
+        "tactic": "lowBlock",
+        "score": [
+          0,
+          2
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            24304,
+            26451
+          ],
+          "passes": [
+            573,
+            673
+          ],
+          "completed": [
+            426,
+            487
+          ],
+          "shots": [
+            0,
+            11
+          ],
+          "onTarget": [
+            0,
+            6
+          ],
+          "xg": [
+            0,
+            1.4166836652857941
+          ],
+          "corners": [
+            0,
+            1
+          ],
+          "freeKicks": [
+            9,
+            13
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            197,
+            229
+          ],
+          "fouls": [
+            13,
+            9
+          ],
+          "saves": [
+            4,
+            0
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            157,
+            893,
+            196
+          ],
+          "possessionTicksByThird": [
+            5370,
+            28591,
+            5138
+          ],
+          "carryingMetres": [
+            3310.4402186981483,
+            3497.374573107659
+          ],
+          "crosses": 5,
+          "maxQuietTicks": 180
+        },
+        "teamEnergy": [
+          48.02842575999174,
+          51.80282475980688
+        ],
+        "energy": 50.125314093222386
+      },
+      {
+        "version": 7,
+        "mode": "matched",
+        "seed": 43,
+        "tactic": "lowBlock",
+        "score": [
+          1,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            24285,
+            26637
+          ],
+          "passes": [
+            586,
+            664
+          ],
+          "completed": [
+            417,
+            481
+          ],
+          "shots": [
+            1,
+            6
+          ],
+          "onTarget": [
+            1,
+            3
+          ],
+          "xg": [
+            0.10807735195913716,
+            0.5614843043983223
+          ],
+          "corners": [
+            1,
+            1
+          ],
+          "freeKicks": [
+            7,
+            8
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            215,
+            241
+          ],
+          "fouls": [
+            8,
+            7
+          ],
+          "saves": [
+            3,
+            0
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            159,
+            916,
+            175
+          ],
+          "possessionTicksByThird": [
+            4797,
+            30168,
+            4803
+          ],
+          "carryingMetres": [
+            3425.852210004572,
+            3630.2062821966488
+          ],
+          "crosses": 6,
+          "maxQuietTicks": 135
+        },
+        "teamEnergy": [
+          49.2850402593484,
+          51.96736729492551
+        ],
+        "energy": 50.62620377713696
+      }
+    ]
+  },
+  "new8Matched": {
+    "version": 8,
+    "mode": "matched",
+    "ability": 60,
+    "initialEnergy": 95,
+    "minutes": 96,
+    "halftimeReset": true,
+    "opponentCoach": "adaptive",
+    "substitutions": 0,
+    "talks": 0,
+    "seeds": [
+      41,
+      42,
+      43
+    ],
+    "summary": [
+      {
+        "tactic": "balanced",
+        "matches": 3,
+        "ownGoals": 0,
+        "conceded": 0.6666666666666666,
+        "shots": 5.333333333333333,
+        "passes": 1190.6666666666667,
+        "completion": 70.00892448243762,
+        "middlePassShare": 74.71696836864128,
+        "attackPossessionShare": 10.89145176549139,
+        "carryingMetres": 7135.368941322585,
+        "wins": 0,
+        "draws": 1,
+        "energy": 53.493848537041536
+      },
+      {
+        "tactic": "press",
+        "matches": 3,
+        "ownGoals": 0.6666666666666666,
+        "conceded": 0,
+        "shots": 4.666666666666667,
+        "passes": 1184.3333333333333,
+        "completion": 64.53522156717833,
+        "middlePassShare": 70.05799678121271,
+        "attackPossessionShare": 13.380735913338441,
+        "carryingMetres": 7123.6180093101075,
+        "wins": 1,
+        "draws": 2,
+        "energy": 52.40193472284262
+      },
+      {
+        "tactic": "counter",
+        "matches": 3,
+        "ownGoals": 0,
+        "conceded": 0.3333333333333333,
+        "shots": 5.333333333333333,
+        "passes": 1168,
+        "completion": 65.7650294189291,
+        "middlePassShare": 74.25058664439406,
+        "attackPossessionShare": 11.933971365864656,
+        "carryingMetres": 7242.251024102581,
+        "wins": 0,
+        "draws": 2,
+        "energy": 52.045323612438175
+      },
+      {
+        "tactic": "lowBlock",
+        "matches": 3,
+        "ownGoals": 0,
+        "conceded": 1,
+        "shots": 5.333333333333333,
+        "passes": 1207.6666666666667,
+        "completion": 70.11170079883212,
+        "middlePassShare": 79.33385977128337,
+        "attackPossessionShare": 9.101223841851604,
+        "carryingMetres": 7091.32216750687,
+        "wins": 0,
+        "draws": 0,
+        "energy": 53.82500647067554
+      }
+    ],
+    "results": [
+      {
+        "version": 8,
+        "mode": "matched",
+        "seed": 41,
+        "tactic": "balanced",
+        "score": [
+          0,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            22845,
+            28319
+          ],
+          "passes": [
+            538,
+            635
+          ],
+          "completed": [
+            356,
+            458
+          ],
+          "shots": [
+            1,
+            1
+          ],
+          "onTarget": [
+            0,
+            1
+          ],
+          "xg": [
+            0.052755941844188484,
+            0.10147613626061641
+          ],
+          "corners": [
+            2,
+            0
+          ],
+          "freeKicks": [
+            7,
+            6
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            234,
+            193
+          ],
+          "fouls": [
+            6,
+            7
+          ],
+          "saves": [
+            1,
+            0
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            144,
+            887,
+            142
+          ],
+          "possessionTicksByThird": [
+            4836,
+            30376,
+            4303
+          ],
+          "carryingMetres": [
+            3150.650978686342,
+            3986.1381139450687
+          ],
+          "crosses": 6,
+          "maxQuietTicks": 111
+        },
+        "teamEnergy": [
+          53.008560643511814,
+          53.54146565206152
+        ],
+        "energy": 53.27501314778666
+      },
+      {
+        "version": 8,
+        "mode": "matched",
+        "seed": 42,
+        "tactic": "balanced",
+        "score": [
+          0,
+          1
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            24251,
+            26223
+          ],
+          "passes": [
+            576,
+            617
+          ],
+          "completed": [
+            398,
+            430
+          ],
+          "shots": [
+            0,
+            8
+          ],
+          "onTarget": [
+            0,
+            7
+          ],
+          "xg": [
+            0,
+            0.6465698730258873
+          ],
+          "corners": [
+            0,
+            1
+          ],
+          "freeKicks": [
+            6,
+            13
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            225,
+            219
+          ],
+          "fouls": [
+            13,
+            6
+          ],
+          "saves": [
+            6,
+            0
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            164,
+            854,
+            175
+          ],
+          "possessionTicksByThird": [
+            5616,
+            28723,
+            4864
+          ],
+          "carryingMetres": [
+            3474.5457746633965,
+            3657.003919629494
+          ],
+          "crosses": 3,
+          "maxQuietTicks": 123
+        },
+        "teamEnergy": [
+          51.75648772736619,
+          54.35336094520445
+        ],
+        "energy": 53.199195070609676
+      },
+      {
+        "version": 8,
+        "mode": "matched",
+        "seed": 43,
+        "tactic": "balanced",
+        "score": [
+          0,
+          1
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            25257,
+            25667
+          ],
+          "passes": [
+            591,
+            615
+          ],
+          "completed": [
+            421,
+            438
+          ],
+          "shots": [
+            1,
+            5
+          ],
+          "onTarget": [
+            0,
+            4
+          ],
+          "xg": [
+            0.14356570701718335,
+            0.3675907201277467
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            8,
+            8
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            226,
+            239
+          ],
+          "fouls": [
+            8,
+            8
+          ],
+          "saves": [
+            3,
+            0
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            149,
+            928,
+            129
+          ],
+          "possessionTicksByThird": [
+            5095,
+            30767,
+            3711
+          ],
+          "carryingMetres": [
+            3536.3552502418374,
+            3601.4127868016153
+          ],
+          "crosses": 1,
+          "maxQuietTicks": 140
+        },
+        "teamEnergy": [
+          54.55173249278674,
+          53.517381802675594
+        ],
+        "energy": 54.007337392728246
+      },
+      {
+        "version": 8,
+        "mode": "matched",
+        "seed": 41,
+        "tactic": "press",
+        "score": [
+          0,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            26080,
+            25090
+          ],
+          "passes": [
+            621,
+            571
+          ],
+          "completed": [
+            417,
+            358
+          ],
+          "shots": [
+            1,
+            3
+          ],
+          "onTarget": [
+            1,
+            3
+          ],
+          "xg": [
+            0.39172840845656964,
+            0.26298126178830694
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            6,
+            11
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            197,
+            212
+          ],
+          "fouls": [
+            11,
+            6
+          ],
+          "saves": [
+            3,
+            1
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            181,
+            819,
+            192
+          ],
+          "possessionTicksByThird": [
+            6566,
+            27227,
+            5070
+          ],
+          "carryingMetres": [
+            3638.0570956822717,
+            3478.8490297679896
+          ],
+          "crosses": 5,
+          "maxQuietTicks": 159
+        },
+        "teamEnergy": [
+          52.8964556202712,
+          51.98845460880511
+        ],
+        "energy": 52.46634987799778
+      },
+      {
+        "version": 8,
+        "mode": "matched",
+        "seed": 42,
+        "tactic": "press",
+        "score": [
+          2,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            24886,
+            25589
+          ],
+          "passes": [
+            598,
+            583
+          ],
+          "completed": [
+            394,
+            375
+          ],
+          "shots": [
+            3,
+            2
+          ],
+          "onTarget": [
+            3,
+            1
+          ],
+          "xg": [
+            0.22415402772346588,
+            0.2254295022605296
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            15,
+            5
+          ],
+          "offsides": [
+            0,
+            1
+          ],
+          "tackles": [
+            220,
+            204
+          ],
+          "fouls": [
+            5,
+            14
+          ],
+          "saves": [
+            1,
+            1
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            166,
+            829,
+            186
+          ],
+          "possessionTicksByThird": [
+            5750,
+            27646,
+            5660
+          ],
+          "carryingMetres": [
+            3501.0260150033782,
+            3639.1987972302113
+          ],
+          "crosses": 5,
+          "maxQuietTicks": 161
+        },
+        "teamEnergy": [
+          53.19216521537013,
+          51.578744226088816
+        ],
+        "energy": 52.38545472072948
+      },
+      {
+        "version": 8,
+        "mode": "matched",
+        "seed": 43,
+        "tactic": "press",
+        "score": [
+          0,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            26315,
+            24264
+          ],
+          "passes": [
+            630,
+            550
+          ],
+          "completed": [
+            412,
+            337
+          ],
+          "shots": [
+            3,
+            2
+          ],
+          "onTarget": [
+            1,
+            1
+          ],
+          "xg": [
+            0.41145673185449233,
+            0.12807964529839766
+          ],
+          "corners": [
+            2,
+            0
+          ],
+          "freeKicks": [
+            5,
+            9
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            226,
+            241
+          ],
+          "fouls": [
+            9,
+            5
+          ],
+          "saves": [
+            1,
+            1
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            179,
+            841,
+            160
+          ],
+          "possessionTicksByThird": [
+            5858,
+            27951,
+            4876
+          ],
+          "carryingMetres": [
+            3755.764206902566,
+            3357.958883343907
+          ],
+          "crosses": 6,
+          "maxQuietTicks": 135
+        },
+        "teamEnergy": [
+          53.23347376174894,
+          51.47452537785229
+        ],
+        "energy": 52.353999569800614
+      },
+      {
+        "version": 8,
+        "mode": "matched",
+        "seed": 41,
+        "tactic": "counter",
+        "score": [
+          0,
+          1
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            25345,
+            25666
+          ],
+          "passes": [
+            550,
+            610
+          ],
+          "completed": [
+            354,
+            426
+          ],
+          "shots": [
+            4,
+            1
+          ],
+          "onTarget": [
+            2,
+            1
+          ],
+          "xg": [
+            0.4485755007233006,
+            0.01
+          ],
+          "corners": [
+            0,
+            2
+          ],
+          "freeKicks": [
+            9,
+            9
+          ],
+          "offsides": [
+            1,
+            0
+          ],
+          "tackles": [
+            227,
+            208
+          ],
+          "fouls": [
+            8,
+            9
+          ],
+          "saves": [
+            0,
+            2
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            145,
+            867,
+            148
+          ],
+          "possessionTicksByThird": [
+            5032,
+            29603,
+            4770
+          ],
+          "carryingMetres": [
+            3688.2704964515788,
+            3557.419036436267
+          ],
+          "crosses": 4,
+          "maxQuietTicks": 157
+        },
+        "teamEnergy": [
+          53.130661694271744,
+          52.51181969128198
+        ],
+        "energy": 52.82124069277686
+      },
+      {
+        "version": 8,
+        "mode": "matched",
+        "seed": 42,
+        "tactic": "counter",
+        "score": [
+          0,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            25350,
+            25556
+          ],
+          "passes": [
+            558,
+            598
+          ],
+          "completed": [
+            351,
+            409
+          ],
+          "shots": [
+            1,
+            7
+          ],
+          "onTarget": [
+            0,
+            5
+          ],
+          "xg": [
+            0.09711139432044297,
+            0.5751010057174665
+          ],
+          "corners": [
+            1,
+            0
+          ],
+          "freeKicks": [
+            9,
+            13
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            204,
+            181
+          ],
+          "fouls": [
+            13,
+            9
+          ],
+          "saves": [
+            5,
+            0
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            168,
+            844,
+            144
+          ],
+          "possessionTicksByThird": [
+            5553,
+            29026,
+            4269
+          ],
+          "carryingMetres": [
+            3694.3700839394664,
+            3585.2502202057517
+          ],
+          "crosses": 3,
+          "maxQuietTicks": 157
+        },
+        "teamEnergy": [
+          51.951428413616156,
+          52.30216459013003
+        ],
+        "energy": 52.136026401255045
+      },
+      {
+        "version": 8,
+        "mode": "matched",
+        "seed": 43,
+        "tactic": "counter",
+        "score": [
+          0,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            22984,
+            28147
+          ],
+          "passes": [
+            522,
+            666
+          ],
+          "completed": [
+            304,
+            460
+          ],
+          "shots": [
+            3,
+            0
+          ],
+          "onTarget": [
+            1,
+            0
+          ],
+          "xg": [
+            0.3879816658131951,
+            0
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            6,
+            6
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            256,
+            229
+          ],
+          "fouls": [
+            6,
+            6
+          ],
+          "saves": [
+            0,
+            1
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            150,
+            891,
+            147
+          ],
+          "possessionTicksByThird": [
+            4629,
+            29806,
+            5013
+          ],
+          "carryingMetres": [
+            3217.903878573259,
+            3983.5393567014225
+          ],
+          "crosses": 3,
+          "maxQuietTicks": 135
+        },
+        "teamEnergy": [
+          50.621898958715164,
+          51.73550852785009
+        ],
+        "energy": 51.17870374328262
+      },
+      {
+        "version": 8,
+        "mode": "matched",
+        "seed": 41,
+        "tactic": "lowBlock",
+        "score": [
+          0,
+          1
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            25123,
+            25761
+          ],
+          "passes": [
+            606,
+            608
+          ],
+          "completed": [
+            428,
+            416
+          ],
+          "shots": [
+            0,
+            6
+          ],
+          "onTarget": [
+            0,
+            3
+          ],
+          "xg": [
+            0,
+            0.4783375908038844
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            9,
+            11
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            204,
+            215
+          ],
+          "fouls": [
+            11,
+            9
+          ],
+          "saves": [
+            2,
+            0
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            147,
+            935,
+            132
+          ],
+          "possessionTicksByThird": [
+            4503,
+            30998,
+            4219
+          ],
+          "carryingMetres": [
+            3481.186653227219,
+            3562.10986148992
+          ],
+          "crosses": 5,
+          "maxQuietTicks": 135
+        },
+        "teamEnergy": [
+          53.8729449181784,
+          54.00901240891745
+        ],
+        "energy": 53.94097866354793
+      },
+      {
+        "version": 8,
+        "mode": "matched",
+        "seed": 42,
+        "tactic": "lowBlock",
+        "score": [
+          0,
+          1
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            26057,
+            24667
+          ],
+          "passes": [
+            618,
+            591
+          ],
+          "completed": [
+            433,
+            406
+          ],
+          "shots": [
+            1,
+            3
+          ],
+          "onTarget": [
+            0,
+            1
+          ],
+          "xg": [
+            0.10807290396393888,
+            0.07893372339478454
+          ],
+          "corners": [
+            0,
+            1
+          ],
+          "freeKicks": [
+            6,
+            11
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            223,
+            230
+          ],
+          "fouls": [
+            11,
+            6
+          ],
+          "saves": [
+            0,
+            0
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            127,
+            967,
+            115
+          ],
+          "possessionTicksByThird": [
+            3765,
+            32848,
+            3319
+          ],
+          "carryingMetres": [
+            3597.6526416124857,
+            3477.5280761997033
+          ],
+          "crosses": 2,
+          "maxQuietTicks": 138
+        },
+        "teamEnergy": [
+          52.88537673047133,
+          53.71011680339493
+        ],
+        "energy": 53.31945045306269
+      },
+      {
+        "version": 8,
+        "mode": "matched",
+        "seed": 43,
+        "tactic": "lowBlock",
+        "score": [
+          0,
+          1
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            23775,
+            27194
+          ],
+          "passes": [
+            577,
+            623
+          ],
+          "completed": [
+            396,
+            461
+          ],
+          "shots": [
+            4,
+            2
+          ],
+          "onTarget": [
+            1,
+            2
+          ],
+          "xg": [
+            0.47834915663852384,
+            0.2049237275470412
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            8,
+            9
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            274,
+            201
+          ],
+          "fouls": [
+            9,
+            8
+          ],
+          "saves": [
+            1,
+            1
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            124,
+            972,
+            104
+          ],
+          "possessionTicksByThird": [
+            4131,
+            32126,
+            3312
+          ],
+          "carryingMetres": [
+            3350.494117147635,
+            3804.9951528436463
+          ],
+          "crosses": 2,
+          "maxQuietTicks": 135
+        },
+        "teamEnergy": [
+          53.398000178225985,
+          55.03118041260601
+        ],
+        "energy": 54.214590295415995
+      }
+    ]
+  },
+  "new8First": {
+    "version": 8,
+    "mode": "first-opponent",
+    "ability": "actual-first-fixture",
+    "initialEnergy": "actual",
+    "minutes": "actual-regulation-and-stoppage",
+    "halftimeReset": true,
+    "opponentCoach": "adaptive",
+    "substitutions": 0,
+    "talks": 0,
+    "seeds": [
+      11,
+      23,
+      41
+    ],
+    "summary": [
+      {
+        "tactic": "balanced",
+        "matches": 3,
+        "ownGoals": 2.3333333333333335,
+        "conceded": 0,
+        "shots": 20,
+        "passes": 1137.6666666666667,
+        "completion": 69.92432459853035,
+        "middlePassShare": 65.76297984108739,
+        "attackPossessionShare": 17.646296435836494,
+        "carryingMetres": 10135.188144627498,
+        "wins": 2,
+        "draws": 1,
+        "energy": 51.60168245293179
+      },
+      {
+        "tactic": "press",
+        "matches": 3,
+        "ownGoals": 6.333333333333333,
+        "conceded": 0,
+        "shots": 25.333333333333332,
+        "passes": 1161,
+        "completion": 67.77160351797396,
+        "middlePassShare": 58.522423039428816,
+        "attackPossessionShare": 21.131573477079,
+        "carryingMetres": 10072.444406843562,
+        "wins": 3,
+        "draws": 0,
+        "energy": 50.7698039451962
+      },
+      {
+        "tactic": "counter",
+        "matches": 3,
+        "ownGoals": 2.6666666666666665,
+        "conceded": 0.3333333333333333,
+        "shots": 19,
+        "passes": 1133,
+        "completion": 67.11483376865569,
+        "middlePassShare": 67.71103784113252,
+        "attackPossessionShare": 16.12207421086886,
+        "carryingMetres": 9943.568761955117,
+        "wins": 2,
+        "draws": 1,
+        "energy": 49.845006301676534
+      },
+      {
+        "tactic": "lowBlock",
+        "matches": 3,
+        "ownGoals": 2.6666666666666665,
+        "conceded": 0.3333333333333333,
+        "shots": 19.666666666666668,
+        "passes": 1094.3333333333333,
+        "completion": 72.43129076953204,
+        "middlePassShare": 68.68196873300003,
+        "attackPossessionShare": 16.455385701068625,
+        "carryingMetres": 10491.939068667949,
+        "wins": 2,
+        "draws": 1,
+        "energy": 51.64119136271973
+      }
+    ],
+    "results": [
+      {
+        "version": 8,
+        "mode": "first-opponent",
+        "seed": 11,
+        "tactic": "balanced",
+        "score": [
+          4,
+          0
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            27007,
+            24295
+          ],
+          "passes": [
+            602,
+            543
+          ],
+          "completed": [
+            419,
+            372
+          ],
+          "shots": [
+            23,
+            3
+          ],
+          "onTarget": [
+            13,
+            1
+          ],
+          "xg": [
+            2.492725821050499,
+            0.2305620794736336
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            10,
+            11
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            184,
+            110
+          ],
+          "fouls": [
+            11,
+            10
+          ],
+          "saves": [
+            1,
+            10
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            183,
+            693,
+            269
+          ],
+          "possessionTicksByThird": [
+            5782,
+            26371,
+            8754
+          ],
+          "carryingMetres": [
+            5760.916264968371,
+            4444.160677418604
+          ],
+          "crosses": 12,
+          "maxQuietTicks": 241
+        },
+        "teamEnergy": [
+          56.44769864496718,
+          45.60947245110426
+        ],
+        "energy": 51.02858554803572
+      },
+      {
+        "version": 8,
+        "mode": "first-opponent",
+        "seed": 23,
+        "tactic": "balanced",
+        "score": [
+          3,
+          0
+        ],
+        "elapsedTicks": 57000,
+        "stats": {
+          "possession": [
+            25908,
+            25498
+          ],
+          "passes": [
+            584,
+            565
+          ],
+          "completed": [
+            391,
+            401
+          ],
+          "shots": [
+            14,
+            3
+          ],
+          "onTarget": [
+            10,
+            0
+          ],
+          "xg": [
+            1.6096778222600012,
+            0.27885438141563024
+          ],
+          "corners": [
+            0,
+            1
+          ],
+          "freeKicks": [
+            4,
+            6
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            203,
+            125
+          ],
+          "fouls": [
+            6,
+            4
+          ],
+          "saves": [
+            0,
+            7
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            154,
+            789,
+            206
+          ],
+          "possessionTicksByThird": [
+            4644,
+            29892,
+            6520
+          ],
+          "carryingMetres": [
+            5295.274029092091,
+            4687.406069748276
+          ],
+          "crosses": 13,
+          "maxQuietTicks": 166
+        },
+        "teamEnergy": [
+          57.107552805384316,
+          46.41578499948417
+        ],
+        "energy": 51.761668902434245
+      },
+      {
+        "version": 8,
+        "mode": "first-opponent",
+        "seed": 41,
+        "tactic": "balanced",
+        "score": [
+          0,
+          0
+        ],
+        "elapsedTicks": 56400,
+        "stats": {
+          "possession": [
+            26107,
+            24685
+          ],
+          "passes": [
+            582,
+            537
+          ],
+          "completed": [
+            409,
+            394
+          ],
+          "shots": [
+            15,
+            2
+          ],
+          "onTarget": [
+            8,
+            2
+          ],
+          "xg": [
+            1.458730424416979,
+            0.46291781134269977
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            9,
+            12
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            186,
+            124
+          ],
+          "fouls": [
+            12,
+            9
+          ],
+          "saves": [
+            2,
+            8
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            153,
+            762,
+            204
+          ],
+          "possessionTicksByThird": [
+            4617,
+            29414,
+            6318
+          ],
+          "carryingMetres": [
+            5601.402642260126,
+            4616.404750395023
+          ],
+          "crosses": 9,
+          "maxQuietTicks": 158
+        },
+        "teamEnergy": [
+          57.2198013699426,
+          46.809784446708214
+        ],
+        "energy": 52.01479290832541
+      },
+      {
+        "version": 8,
+        "mode": "first-opponent",
+        "seed": 11,
+        "tactic": "press",
+        "score": [
+          4,
+          0
+        ],
+        "elapsedTicks": 58200,
+        "stats": {
+          "possession": [
+            26124,
+            25307
+          ],
+          "passes": [
+            584,
+            548
+          ],
+          "completed": [
+            405,
+            374
+          ],
+          "shots": [
+            25,
+            4
+          ],
+          "onTarget": [
+            18,
+            3
+          ],
+          "xg": [
+            2.6233985129553554,
+            0.300324315139679
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            13,
+            9
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            187,
+            120
+          ],
+          "fouls": [
+            9,
+            13
+          ],
+          "saves": [
+            3,
+            14
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            208,
+            675,
+            249
+          ],
+          "possessionTicksByThird": [
+            7448,
+            24311,
+            8664
+          ],
+          "carryingMetres": [
+            5513.992454885785,
+            4452.812529449135
+          ],
+          "crosses": 14,
+          "maxQuietTicks": 206
+        },
+        "teamEnergy": [
+          56.294457747758806,
+          44.63001336162214
+        ],
+        "energy": 50.462235554690466
+      },
+      {
+        "version": 8,
+        "mode": "first-opponent",
+        "seed": 23,
+        "tactic": "press",
+        "score": [
+          6,
+          0
+        ],
+        "elapsedTicks": 58200,
+        "stats": {
+          "possession": [
+            25571,
+            25630
+          ],
+          "passes": [
+            602,
+            564
+          ],
+          "completed": [
+            389,
+            397
+          ],
+          "shots": [
+            24,
+            1
+          ],
+          "onTarget": [
+            17,
+            1
+          ],
+          "xg": [
+            3.2434273614118596,
+            0.24279874250600936
+          ],
+          "corners": [
+            2,
+            0
+          ],
+          "freeKicks": [
+            4,
+            13
+          ],
+          "offsides": [
+            1,
+            0
+          ],
+          "tackles": [
+            220,
+            116
+          ],
+          "fouls": [
+            12,
+            4
+          ],
+          "saves": [
+            1,
+            11
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            201,
+            667,
+            298
+          ],
+          "possessionTicksByThird": [
+            6775,
+            24981,
+            8844
+          ],
+          "carryingMetres": [
+            5312.524417701473,
+            4682.21740573975
+          ],
+          "crosses": 18,
+          "maxQuietTicks": 171
+        },
+        "teamEnergy": [
+          57.05141983676642,
+          45.4606347165426
+        ],
+        "energy": 51.25602727665451
+      },
+      {
+        "version": 8,
+        "mode": "first-opponent",
+        "seed": 41,
+        "tactic": "press",
+        "score": [
+          9,
+          0
+        ],
+        "elapsedTicks": 60000,
+        "stats": {
+          "possession": [
+            27036,
+            25385
+          ],
+          "passes": [
+            614,
+            571
+          ],
+          "completed": [
+            408,
+            387
+          ],
+          "shots": [
+            21,
+            1
+          ],
+          "onTarget": [
+            15,
+            1
+          ],
+          "xg": [
+            2.2529585216003802,
+            0.13953775083247733
+          ],
+          "corners": [
+            1,
+            0
+          ],
+          "freeKicks": [
+            12,
+            10
+          ],
+          "offsides": [
+            1,
+            0
+          ],
+          "tackles": [
+            214,
+            155
+          ],
+          "fouls": [
+            9,
+            12
+          ],
+          "saves": [
+            1,
+            6
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            226,
+            696,
+            263
+          ],
+          "possessionTicksByThird": [
+            7742,
+            25598,
+            8428
+          ],
+          "carryingMetres": [
+            5673.304994991991,
+            4582.481417762554
+          ],
+          "crosses": 15,
+          "maxQuietTicks": 184
+        },
+        "teamEnergy": [
+          56.74916967124197,
+          44.43312833724527
+        ],
+        "energy": 50.591149004243626
+      },
+      {
+        "version": 8,
+        "mode": "first-opponent",
+        "seed": 11,
+        "tactic": "counter",
+        "score": [
+          6,
+          0
+        ],
+        "elapsedTicks": 58800,
+        "stats": {
+          "possession": [
+            25143,
+            27391
+          ],
+          "passes": [
+            574,
+            616
+          ],
+          "completed": [
+            367,
+            444
+          ],
+          "shots": [
+            14,
+            5
+          ],
+          "onTarget": [
+            13,
+            4
+          ],
+          "xg": [
+            1.4661814600448773,
+            0.5839581804432096
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            10,
+            11
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            190,
+            99
+          ],
+          "fouls": [
+            11,
+            10
+          ],
+          "saves": [
+            4,
+            8
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            171,
+            769,
+            250
+          ],
+          "possessionTicksByThird": [
+            5485,
+            27447,
+            7628
+          ],
+          "carryingMetres": [
+            5002.364407560393,
+            4978.990430436177
+          ],
+          "crosses": 12,
+          "maxQuietTicks": 182
+        },
+        "teamEnergy": [
+          53.68792787613677,
+          43.81123742568239
+        ],
+        "energy": 48.74958265090957
+      },
+      {
+        "version": 8,
+        "mode": "first-opponent",
+        "seed": 23,
+        "tactic": "counter",
+        "score": [
+          2,
+          1
+        ],
+        "elapsedTicks": 57600,
+        "stats": {
+          "possession": [
+            22623,
+            29049
+          ],
+          "passes": [
+            506,
+            602
+          ],
+          "completed": [
+            292,
+            427
+          ],
+          "shots": [
+            16,
+            2
+          ],
+          "onTarget": [
+            11,
+            1
+          ],
+          "xg": [
+            2.159899025264432,
+            0.2987408758207441
+          ],
+          "corners": [
+            0,
+            1
+          ],
+          "freeKicks": [
+            7,
+            5
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            210,
+            133
+          ],
+          "fouls": [
+            5,
+            7
+          ],
+          "saves": [
+            0,
+            9
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            146,
+            790,
+            172
+          ],
+          "possessionTicksByThird": [
+            4758,
+            29639,
+            5943
+          ],
+          "carryingMetres": [
+            4497.741776522235,
+            5468.745959077435
+          ],
+          "crosses": 13,
+          "maxQuietTicks": 184
+        },
+        "teamEnergy": [
+          55.53198910467985,
+          45.149243371453814
+        ],
+        "energy": 50.34061623806683
+      },
+      {
+        "version": 8,
+        "mode": "first-opponent",
+        "seed": 41,
+        "tactic": "counter",
+        "score": [
+          0,
+          0
+        ],
+        "elapsedTicks": 57000,
+        "stats": {
+          "possession": [
+            23748,
+            27574
+          ],
+          "passes": [
+            521,
+            580
+          ],
+          "completed": [
+            324,
+            428
+          ],
+          "shots": [
+            17,
+            3
+          ],
+          "onTarget": [
+            9,
+            1
+          ],
+          "xg": [
+            2.3233151423112335,
+            0.30170042461861785
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            7,
+            8
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            222,
+            121
+          ],
+          "fouls": [
+            8,
+            7
+          ],
+          "saves": [
+            1,
+            9
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            171,
+            740,
+            190
+          ],
+          "possessionTicksByThird": [
+            5222,
+            28796,
+            5922
+          ],
+          "carryingMetres": [
+            4726.838067228357,
+            5156.025645040754
+          ],
+          "crosses": 4,
+          "maxQuietTicks": 160
+        },
+        "teamEnergy": [
+          56.45346962918467,
+          45.637900325548
+        ],
+        "energy": 50.44482001605319
+      },
+      {
+        "version": 8,
+        "mode": "first-opponent",
+        "seed": 11,
+        "tactic": "lowBlock",
+        "score": [
+          1,
+          1
+        ],
+        "elapsedTicks": 57000,
+        "stats": {
+          "possession": [
+            26982,
+            24917
+          ],
+          "passes": [
+            601,
+            515
+          ],
+          "completed": [
+            423,
+            380
+          ],
+          "shots": [
+            13,
+            4
+          ],
+          "onTarget": [
+            6,
+            1
+          ],
+          "xg": [
+            1.2306236118340772,
+            0.400858418288696
+          ],
+          "corners": [
+            0,
+            1
+          ],
+          "freeKicks": [
+            7,
+            4
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            186,
+            125
+          ],
+          "fouls": [
+            4,
+            7
+          ],
+          "saves": [
+            1,
+            5
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            157,
+            771,
+            188
+          ],
+          "possessionTicksByThird": [
+            4459,
+            29987,
+            6970
+          ],
+          "carryingMetres": [
+            5692.053783251603,
+            4840.8639950167735
+          ],
+          "crosses": 10,
+          "maxQuietTicks": 180
+        },
+        "teamEnergy": [
+          56.800324809966995,
+          45.83460880335643
+        ],
+        "energy": 51.317466806661706
+      },
+      {
+        "version": 8,
+        "mode": "first-opponent",
+        "seed": 23,
+        "tactic": "lowBlock",
+        "score": [
+          1,
+          0
+        ],
+        "elapsedTicks": 56400,
+        "stats": {
+          "possession": [
+            24709,
+            25993
+          ],
+          "passes": [
+            548,
+            528
+          ],
+          "completed": [
+            378,
+            387
+          ],
+          "shots": [
+            12,
+            7
+          ],
+          "onTarget": [
+            7,
+            2
+          ],
+          "xg": [
+            1.2911775994003416,
+            0.6740766973507651
+          ],
+          "corners": [
+            0,
+            1
+          ],
+          "freeKicks": [
+            8,
+            10
+          ],
+          "offsides": [
+            1,
+            0
+          ],
+          "tackles": [
+            173,
+            110
+          ],
+          "fouls": [
+            9,
+            8
+          ],
+          "saves": [
+            2,
+            7
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            155,
+            734,
+            187
+          ],
+          "possessionTicksByThird": [
+            4295,
+            29339,
+            6481
+          ],
+          "carryingMetres": [
+            5192.871913791655,
+            4903.106078882567
+          ],
+          "crosses": 8,
+          "maxQuietTicks": 215
+        },
+        "teamEnergy": [
+          57.074877061325665,
+          47.23281706783658
+        ],
+        "energy": 52.41284864335715
+      },
+      {
+        "version": 8,
+        "mode": "first-opponent",
+        "seed": 41,
+        "tactic": "lowBlock",
+        "score": [
+          6,
+          0
+        ],
+        "elapsedTicks": 58200,
+        "stats": {
+          "possession": [
+            28067,
+            23508
+          ],
+          "passes": [
+            584,
+            507
+          ],
+          "completed": [
+            435,
+            375
+          ],
+          "shots": [
+            16,
+            7
+          ],
+          "onTarget": [
+            12,
+            1
+          ],
+          "xg": [
+            1.949129015760011,
+            0.6897174236675642
+          ],
+          "corners": [
+            0,
+            0
+          ],
+          "freeKicks": [
+            14,
+            9
+          ],
+          "offsides": [
+            0,
+            0
+          ],
+          "tackles": [
+            163,
+            136
+          ],
+          "fouls": [
+            9,
+            14
+          ],
+          "saves": [
+            1,
+            6
+          ]
+        },
+        "trace": {
+          "passesByThird": [
+            150,
+            750,
+            191
+          ],
+          "possessionTicksByThird": [
+            4942,
+            29923,
+            6830
+          ],
+          "carryingMetres": [
+            6252.703035005541,
+            4594.218400055707
+          ],
+          "crosses": 12,
+          "maxQuietTicks": 207
+        },
+        "teamEnergy": [
+          56.763079737462384,
+          45.62343753881832
+        ],
+        "energy": 51.19325863814036
+      }
+    ]
+  },
+  "pacing": {
+    "minute": 96,
+    "seconds": {
+      "key": 187.5812499999275,
+      "full": 1191.183333333733
+    },
+    "phases": {
+      "routine": 55011,
+      "attack": 2259,
+      "decisive": 330
+    },
+    "score": [
+      4,
+      0
+    ],
+    "shots": [
+      9,
+      8
+    ],
+    "logs": 2990,
+    "major": 73,
+    "types": {
+      "start": 1,
+      "pass": 1122,
+      "receive": 817,
+      "tackle": 321,
+      "recovery": 595,
+      "attempt": 17,
+      "shot": 14,
+      "parry": 5,
+      "block": 7,
+      "foul": 15,
+      "restart": 59,
+      "goal": 4,
+      "keeper-clear": 1,
+      "header": 3,
+      "added-time": 2,
+      "break": 3,
+      "opponent-tactic": 2,
+      "tactic": 2
+    },
+    "measurement": "nominal display time; excludes processing, pauses, celebrations and user decisions"
+  }
+}
