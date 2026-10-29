@@ -33,6 +33,13 @@ final class FullGameBilling {
     private String status = "unavailable", message = "정식판 판매를 준비하고 있습니다. 첫 시즌은 무료입니다.";
     private boolean busy, connecting, closed;
     private int generation;
+    private final Runnable expiryCheck = () -> {
+        if (!closed) {
+            status="check_required";
+            message="오프라인 구매 확인 기간이 끝났어요. 인터넷 연결 후 구매 복원을 눌러 주세요. 다시 결제할 필요는 없습니다.";
+            emit();
+        }
+    };
 
     FullGameBilling(Activity activity, Consumer<JSONObject> listener) {
         this.activity=activity; this.listener=listener;
@@ -59,12 +66,17 @@ final class FullGameBilling {
                 && !BuildConfig.BILLING_ENTITLEMENT_PUBLIC_KEY.isEmpty();
         } catch(Exception error){return false;}
     }
-    private boolean owned() {
+    private long expiry() {
         return EntitlementVerifier.verify(prefs.getString("grant", ""),BuildConfig.BILLING_ENTITLEMENT_PUBLIC_KEY,
-            installation,null,System.currentTimeMillis()/1000)>0;
+            installation,null,System.currentTimeMillis()/1000);
     }
+    private boolean owned() { return expiry()>0; }
     void emit() {
         if(closed)return;
+        main.removeCallbacks(expiryCheck);
+        long expires=expiry();
+        // Expire even when the same app session remains open for a whole week.
+        if(expires>0)main.postDelayed(expiryCheck,Math.max(100,expires*1000-System.currentTimeMillis()+100));
         try {
             JSONObject state=new JSONObject();state.put("type","billing");state.put("owned",owned());
             state.put("busy",busy);state.put("status",status);state.put("message",message);
