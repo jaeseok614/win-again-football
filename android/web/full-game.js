@@ -74,7 +74,7 @@
  if (bridge) bridge.onmessage=event=>{
   let value;try{value=JSON.parse(event.data);}catch{return;}
   if(value?.type!=='billing'||typeof value.owned!=='boolean')return;
-  billing={owned:value.owned,canBuy:value.canBuy===true,busy:value.busy===true,status:String(value.status||''),price:String(value.price||''),message:String(value.message||'')};
+  billing={owned:value.owned,canBuy:value.canBuy===true&&value.status!=='pending',busy:value.busy===true,status:String(value.status||''),price:String(value.price||''),message:String(value.message||'')};
   if(!billing.owned&&Number(season.year)>1&&state)state.paused=true;
   update();renderAppShell();
  };

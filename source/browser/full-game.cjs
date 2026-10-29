@@ -26,7 +26,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),assert=req
   }
   await emit({price:'₩4,900',canBuy:true});await page.locator('[data-full-buy]').click();
   assert.equal(await page.locator('[data-full-buy]').isDisabled(),true);assert.equal(await page.evaluate(()=>billingRequests.at(-1).action),'buy');
-  await emit({status:'pending'});assert.equal(await page.evaluate(()=>WinAgainFullGame.status.owned),false);
+  await emit({status:'pending',canBuy:true});assert.equal(await page.evaluate(()=>WinAgainFullGame.status.owned),false);assert.equal(await page.locator('[data-full-buy]').isDisabled(),true);
   await page.locator('[data-full-restore]').click();assert.equal(await page.evaluate(()=>billingRequests.at(-1).action),'restore');
   await emit({status:'error'});await page.locator('[data-full-save]').click();
   assert.equal(await page.locator('#portability-dialog').isVisible(),true);await page.locator('[data-full-open]').click();assert.equal(await page.locator('#full-game-dialog').isVisible(),true);

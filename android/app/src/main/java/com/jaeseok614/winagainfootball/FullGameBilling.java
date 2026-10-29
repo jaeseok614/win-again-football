@@ -31,7 +31,7 @@ final class FullGameBilling {
     private ProductDetails product;
     private ProductDetails.OneTimePurchaseOfferDetails offer;
     private String status = "unavailable", message = "정식판 판매를 준비하고 있습니다. 첫 시즌은 무료입니다.";
-    private boolean busy, connecting, closed;
+    private boolean busy, connecting, closed, ownershipChecked, knownPurchase;
     private int generation;
     private final Runnable expiryCheck = () -> {
         if (!closed) {
@@ -80,7 +80,7 @@ final class FullGameBilling {
         try {
             JSONObject state=new JSONObject();state.put("type","billing");state.put("owned",owned());
             state.put("busy",busy);state.put("status",status);state.put("message",message);
-            state.put("canBuy",configured() && client.isReady() && offer!=null && !busy && !owned());
+            state.put("canBuy",configured() && client.isReady() && offer!=null && ownershipChecked && !knownPurchase && !busy && !owned());
             state.put("price",offer==null?"":offer.getFormattedPrice());listener.accept(state);
         } catch(Exception error){/* A discarded WebView cannot receive state. */}
     }
@@ -139,6 +139,7 @@ final class FullGameBilling {
             if(purchase.getPurchaseState()==Purchase.PurchaseState.PURCHASED){found=purchase;break;}
             if(purchase.getPurchaseState()==Purchase.PurchaseState.PENDING)pending=true;
         }
+        ownershipChecked=true;knownPurchase=found!=null||pending;
         if(found!=null){verify(found.getPurchaseToken());return;}
         // Only a successful authoritative Play query/update reaches here. A refund
         // or account change must not keep an old signed grant alive indefinitely.
@@ -184,7 +185,7 @@ final class FullGameBilling {
     }
     private void buy() {
         if(owned()){finish("owned","이미 정식판을 이용 중입니다.");return;}
-        if(!configured()||!client.isReady()||product==null||offer==null){refresh();return;}
+        if(!configured()||!client.isReady()||product==null||offer==null||!ownershipChecked||knownPurchase){refresh();return;}
         busy=true;status="purchasing";message="Google Play 결제 화면에서 상품과 가격을 확인해 주세요.";emit();
         BillingFlowParams.ProductDetailsParams item=BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(product).setOfferToken(offer.getOfferToken()).build();
         BillingResult result=client.launchBillingFlow(activity,BillingFlowParams.newBuilder().setProductDetailsParamsList(Collections.singletonList(item)).build());
