@@ -45,6 +45,8 @@ tasks.named('preBuild').configure { dependsOn 'prepareGameAssets' }
 
 dependencies {
     implementation 'androidx.activity:activity:1.12.4'
+    // Billing's transitive old Fragment must not break ActivityResult file pickers.
+    implementation 'androidx.fragment:fragment:1.8.9'
     implementation 'androidx.webkit:webkit:1.17.1'
     implementation 'com.android.billingclient:billing:9.1.0'
     androidTestImplementation 'androidx.test:runner:1.6.2'

@@ -66,8 +66,9 @@
  document.querySelectorAll('[data-open-portability]').forEach(button=>button.textContent='저장·정식판');
  // First disclosure is visible before the player enters a new trial campaign.
  let disclosed=false;
+ try{disclosed=localStorage.getItem('win-again-trial-notice-v1')==='seen';}catch{/* The notice can be shown again if storage is unavailable. */}
  document.addEventListener('click',event=>{
-  if(event.target.closest?.('#launch-continue')&&!disclosed&&!billing.owned){disclosed=true;event.preventDefault();event.stopImmediatePropagation();show();}
+  if(event.target.closest?.('#launch-continue')&&!disclosed&&!billing.owned){disclosed=true;try{localStorage.setItem('win-again-trial-notice-v1','seen');}catch{}event.preventDefault();event.stopImmediatePropagation();show();}
   if(event.target.closest?.('#confirm-next-season')&&!billing.owned){event.preventDefault();event.stopImmediatePropagation();show();}
  },true);
  if (bridge) bridge.onmessage=event=>{
@@ -83,8 +84,9 @@
   '#full-game-dialog[open]{display:flex;flex-direction:column;gap:10px}#full-game-dialog header,#full-game-dialog footer{display:flex;gap:8px;align-items:center;flex-shrink:0}'+
   '#full-game-dialog h2{font-size:18px;line-height:1.3;margin:0;flex:1}#full-game-dialog p{font-size:14px;line-height:1.45;margin:0 0 8px}'+
   '#full-game-dialog .full-game-copy{min-height:0;overflow:auto}#full-game-dialog .full-game-note{font-size:12px}#full-game-dialog button{min-height:44px;white-space:normal}'+
-  '#full-game-dialog footer{flex-wrap:wrap}#full-game-dialog footer button{flex:1}#full-game-dialog [data-full-status]{margin:0;color:#c9e8ac}'+
-  '@media(max-height:390px){#full-game-dialog{padding:10px;gap:6px}#full-game-dialog h2{font-size:16px}#full-game-dialog p{font-size:12px;line-height:1.35;margin-bottom:6px}#full-game-dialog .full-game-note{font-size:11px}}';
+  '#full-game-dialog footer{flex-wrap:wrap;margin:0;padding:0;border:0}#full-game-dialog footer button{flex:1}#full-game-dialog [data-full-status]{margin:0;color:#c9e8ac}'+
+  '@media(max-height:390px){#full-game-dialog[open]{padding:10px;gap:6px}#full-game-dialog h2{font-size:16px}#full-game-dialog p{font-size:12px;line-height:1.35;margin-bottom:6px}#full-game-dialog .full-game-note{font-size:11px}}';
  document.head.appendChild(style);
+ renderAppShell();
  request('status');
 })();
