@@ -1,0 +1,35 @@
+{
+  "observedDate": "2026-10-29",
+  "package": "com.jaeseok614.winagainfootball",
+  "playOptedIn": 1,
+  "target": 12,
+  "needed": 11,
+  "liveRelease": "Alpha 1.0.0/code1: free, no purchases",
+  "constraints": {"paidRecruitment": false, "rewards": false, "reciprocalTestingPromise": false, "purchaseRequired": false},
+  "group": "https://groups.google.com/g/win-again-football-testers",
+  "optIn": "https://play.google.com/apps/testing/com.jaeseok614.winagainfootball",
+  "newChannelThisImplementationTurn": {
+    "channel": "r/TestMyApp",
+    "url": "https://www.reddit.com/r/TestMyApp/comments/1xi4wvp/android_70_korean_ui_can_you_follow_a_football/",
+    "duplicateCheck": "Restricted author:jaeseok614 search returned no previous posts; existing recruitment records checked.",
+    "rulesChecked": "App testing allowed. Do not spam or solicit services. No reciprocal-testing requirement.",
+    "status": "Submitted and visible in community feed and permalink; no removal notice observed at verification.",
+    "flair": "Android",
+    "requestedFeedback": ["match/ball clarity", "Korean text, match speed and substitutions", "club save export/restart/import"],
+    "monetizationDisclosure": "Published Alpha is free. A later first-season trial / one-time unlock is in development. No purchase or free paid licence reward for testing.",
+    "humanFeedbackConfirmed": false
+  },
+  "existingDoNotDuplicate": [
+    "https://www.reddit.com/r/AndroidTesting/comments/1xi4fie/closed_test_android_70_korean_ui_football_manager/",
+    "https://www.reddit.com/r/MobileGameDiscoveries/comments/1xf5goy/comment/19rsyllkp5u0z/",
+    "https://www.reddit.com/r/GooglePlayDeveloper/comments/1xfwvx0/comment/19rsyd6mar0md/",
+    "https://www.reddit.com/r/droidapptesters/comments/1xeoyod/",
+    "https://www.reddit.com/r/betatests/comments/1xbc5ek/",
+    "https://www.reddit.com/r/alphaandbetausers/comments/1xdve0a/",
+    "https://groups.google.com/g/win-again-football-testers/c/UkV2w23LJtM",
+    "https://disquiet.io/products/5-1"
+  ],
+  "removedDoNotRepost": ["r/KoreanGameDev 1xbb7qz", "r/AndroidClosedTesting 1xbb39a"],
+  "otherLimits": ["Androidpub and GeekNews need user login", "r/devDang disallows promotion", "reciprocal-credit testing platforms excluded"],
+  "accounting": "Posts, views, bots and group membership are not real Play opted-in testers. No additional humans confirmed from the new post. Twelve testers and fourteen consecutive days are not complete."
+}

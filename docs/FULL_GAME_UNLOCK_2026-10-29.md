@@ -1,6 +1,6 @@
 # 첫 시즌 무료 체험 · 정식판 1회 해제
 
-소유자의 2026-10-29 요청과 가격 답변에 따라 **첫 시즌 무료 → 정식판 ₩4,900 1회 구매**로 Android 1.1.0/code2 후보를 구현한다. 현재 Play에 배포된 1.0.0/code1은 그대로 무료이며 결제 기능이 없다. 이 문서는 새 후보에 관한 설계와 활성화 절차다. 판매 시작이나 Play 실결제 검증 완료를 뜻하지 않는다.
+소유자의 2026-10-29 요청과 가격 답변에 따라 **첫 시즌 무료 → 정식판 ₩4,900 1회 구매**로 Android 1.1.0/code2 후보를 구현했다. 현재 Play에 배포된 1.0.0/code1은 그대로 무료이며 결제 기능이 없다. 이 문서는 새 후보에 관한 설계와 활성화 절차다. 판매 시작이나 Play 실결제 검증 완료를 뜻하지 않는다.
 
 ## 플레이 범위
 
@@ -28,9 +28,11 @@ Billing SDK의 Google DataTransport 의존성이 일반 권한 ACCESS_NETWORK_ST
 
 2026-10-29 Console에는 판매자 계정 설정 안내가 남아 있다. 계정 소유자가 판매자 결제 프로필·신원/은행·약관 단계를 직접 완료해야 한다. 기존 앱은 무료로 유지하며 앱 자체를 유료로 바꾸지 않는다.
 
+Google의 [판매 준비 절차](https://developer.android.com/google/play/billing/getting-ready)에 따르면 상품 설정 기능을 열려면 Billing 라이브러리가 포함된 버전을 내부 테스트 등의 트랙에 먼저 게시해야 한다. 현재 code1에는 Billing이 없다. 소유자 결제 프로필 준비 후 이 후보 code2를 기존 키로 서명해 **개발자용 내부 테스트**에 먼저 게시하고, 일반 무료 모집 Alpha/code1은 유지한다. 기본 후보의 실제 구매 버튼은 비활성이다. 이어 아래 상품·서버·공개 설정을 넣은 최종 빌드는 이미 사용한 code2를 재사용하지 않고 versionCode를 올려야 한다. 이 선행 게시·서명도 이번 작업에서는 실행하지 않았다.
+
 1. Play Console에서 일회성 상품 `full_game`과 영구 구매 옵션 `buy` 생성. 표시명 **정식판**, 설명 **두 번째 시즌 이후와 모든 새 삶을 계속 즐기는 영구 이용권**, 한국 가격 **₩4,900**. 구독/대여/소비형 상품으로 만들지 않는다.
 2. `billing-server/server.cjs`를 HTTPS 호스팅에 배포한다. 제공 Dockerfile은 Node22, 외부 npm 의존성 없음. Cloud Run/GCE workload identity를 사용한다. 새 프로젝트·과금 계정·보안 권한은 자동 생성하지 않았다.
-3. 서버 실행 계정에 Google Play Developer API의 이 앱 구매 조회/관리 권한만 부여한다. RSA2048 이상 서명키를 Secret Manager의 `ENTITLEMENT_PRIVATE_KEY_PEM`으로 주입한다. 키 생성/권한 부여/배포는 현재 완료되지 않았다. `GET /health`, `POST /verify` 외 경로는 제공하지 않는다. 요청8KiB·응답 no-store·시간 제한·동시16개·소켓 주소당 분30회 제한을 둔다. 프록시 앞에서는 호스팅의 신뢰된 IP 제한도 설정한다. 요청 본문/토큰 로깅을 켜지 않는다.
+3. 프로젝트에서 Google Play Developer API를 활성화하고 서버 실행 계정에 이 앱 구매 조회/관리 권한만 부여한다. RSA2048 이상 서명키를 Secret Manager의 `ENTITLEMENT_PRIVATE_KEY_PEM`으로 주입한다. 키 생성/권한 부여/배포는 현재 완료되지 않았다. `GET /health`, `POST /verify` 외 경로는 제공하지 않는다. 요청8KiB·응답 no-store·시간 제한·동시16개·소켓 주소당 분30회 제한을 둔다. 프록시 앞에서는 호스팅의 신뢰된 IP 제한도 설정한다. 요청 본문/토큰 로깅을 켜지 않는다.
 4. Gradle 공개 설정 `-PbillingVerificationUrl=https://<실제호스트>/verify`, `-PbillingEntitlementPublicKey=<서명키의 X509 DER 공개키 base64>`를 주어 빌드한다. 비밀키를 이 인수로 넣지 않는다. 기본 CI 후보는 설정이 비어 있어 실제 구매가 비활성이다.
 5. 소유자의 라이선스 테스트 계정을 Console에 설정한 별도 검증 환경에서는 `ALLOW_LICENSE_TEST_PURCHASES=true`를 사용한다. 테스트 구매를 실제 매출로 세지 않는다. 일반 무료 모집 테스터에게 결제를 요구하지 않는다.
 6. 실제 Play 배포 패키지에서 테스트 결제 승인/취소/지연 승인·재시작·중복 탭·앱 데이터 삭제 후 복원·다른 기기/같은 계정 복원·환불·오프라인 만료를 검증한다. `.debug` APK는 출시 패키지와 다르므로 실제 상품 구매 검증을 대신하지 않는다.

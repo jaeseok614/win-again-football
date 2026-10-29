@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "date": "2026-10-29",
+  "package": "com.jaeseok614.winagainfootball",
+  "branch": "codex/football-realism-20261012",
+  "productCommit": "c4c8a717b8d7b1f1b9cba9f8a7ffc31030645fd8",
+  "verificationCommit": "4c5a07dd707de9b77410d321f21aa88fa8c1fb77",
+  "candidate": {
+    "versionName": "1.1.0",
+    "versionCode": 2,
+    "trial": "first season league, cups and review",
+    "requestedKoreaPriceKRW": 4900,
+    "productId": "full_game",
+    "purchaseOptionId": "buy",
+    "consumable": false,
+    "subscription": false,
+    "offlineEntitlementMaxDays": 7,
+    "purchaseConfigurationPresent": false,
+    "playSubmitted": false
+  },
+  "validation": {
+    "source": {
+      "suites": 209,
+      "checks": 1543,
+      "runId": 40795739184
+    },
+    "pythonReleaseChecks": 16,
+    "pwaGroups": 14,
+    "pwaBytes": 6318464,
+    "pwaShell": "8d6e4a407750",
+    "android": {
+      "runId": 40795739235,
+      "results": [
+        {
+          "api": 34,
+          "tests": 36,
+          "failed": 0,
+          "skipped": 0,
+          "jobId": 123191667655
+        },
+        {
+          "api": 35,
+          "tests": 36,
+          "failed": 0,
+          "skipped": 0,
+          "jobId": 123191667317
+        },
+        {
+          "api": 36,
+          "tests": 36,
+          "failed": 0,
+          "skipped": 0,
+          "jobId": 123191667533
+        }
+      ]
+    },
+    "browser": {
+      "minimumFontPx": 8,
+      "fullGameViewports": 8,
+      "purchaseStatesPerViewport": 5,
+      "minimumActionPx": 44,
+      "groups": 11,
+      "existingWorkspaceViewports": 8,
+      "formationsPerViewport": 12,
+      "laterSeasonHistoryReadableWithoutOwnership": true,
+      "laterSeasonMatchBlockedWithoutOwnership": true,
+      "syntheticFixturesExcludedFromGameApkAndAab": true
+    },
+    "realPlayLicenseCheckoutTested": false
+  },
+  "artifacts": {
+    "androidBuildArtifactId": 12863028663,
+    "apk": {
+      "file": "win-again-1.1.0-trial-preview.apk",
+      "bytes": 7648388,
+      "sha256": "9d25213262ec153e8cd4b78281551bb44a408887a32cf534a29f1bad369e3de7",
+      "type": "debug preview, separate .debug package"
+    },
+    "aab": {
+      "file": "win-again-1.1.0-unsigned.aab",
+      "bytes": 6484415,
+      "sha256": "24673dc5bb75dde2b7bfa0291cd86113e00aeba8d6c5a4e2c455a2b05b12367d",
+      "signature": "unsigned"
+    },
+    "nativeHtml": {
+      "bytes": 6327499,
+      "sha256": "69a812464fce843349ae505a4c6dc26be3bcbda830f5d72500a6044bc691241c",
+      "equalToAab": true
+    }
+  },
+  "livePlay": {
+    "version": "1.0.0/code1",
+    "track": "closed Alpha",
+    "price": "free",
+    "inAppPurchases": false,
+    "production": "inactive"
+  },
+  "activationRemaining": [
+    "Owner merchant/payment profile",
+    "Signed Billing-enabled developer internal release before product configuration",
+    "Non-consumable full_game / buy; Korea price KRW4900",
+    "Verification service hosting, Play API permissions and signing key/public configuration",
+    "License checkout, cancellation, pending approval, restore, refund and offline expiry on Play-installed release package",
+    "Bump versionCode after any already-uploaded code2; owner signing and intended-track submission"
+  ],
+  "recruitment": {
+    "playOptedIn": 1,
+    "target": 12,
+    "needed": 11,
+    "cost": 0,
+    "newChannel": "r/TestMyApp",
+    "url": "https://www.reddit.com/r/TestMyApp/comments/1xi4wvp/android_70_korean_ui_can_you_follow_a_football/",
+    "paidRecruitment": false,
+    "rewards": false,
+    "reciprocalTestingPromise": false,
+    "purchaseRequired": false,
+    "newHumanFeedbackConfirmed": false,
+    "existingAutomation": {
+      "id": "12",
+      "updated": true,
+      "newAutomationCreated": false,
+      "status": "ACTIVE",
+      "schedule": "daily 10:00 Asia/Seoul",
+      "quietWhenUnchanged": true
+    }
+  }
+}
