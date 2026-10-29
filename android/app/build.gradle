@@ -28,6 +28,7 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
     buildFeatures { buildConfig true }
+    sourceSets.androidTest.assets.srcDir(layout.buildDirectory.dir('generated/androidTestAssets'))
     lint { abortOnError true }
 }
 
@@ -42,6 +43,15 @@ tasks.register('prepareGameAssets', Exec) {
     outputs.dir(file('src/main/assets/game'))
 }
 tasks.named('preBuild').configure { dependsOn 'prepareGameAssets' }
+
+tasks.register('prepareTestCampaign', Exec) {
+    workingDir rootProject.projectDir.parentFile
+    commandLine 'node', 'source/build-android-fixtures.cjs', layout.buildDirectory.dir('generated/androidTestAssets').get().asFile.absolutePath
+    inputs.dir(rootProject.file('../source/dist'))
+    inputs.file(rootProject.file('../source/build-android-fixtures.cjs'))
+    outputs.dir(layout.buildDirectory.dir('generated/androidTestAssets'))
+}
+tasks.matching { it.name == 'mergeDebugAndroidTestAssets' }.configureEach { dependsOn 'prepareTestCampaign' }
 
 dependencies {
     implementation 'androidx.activity:activity:1.12.4'

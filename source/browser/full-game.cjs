@@ -1,6 +1,6 @@
 'use strict';
 // Run against generated native HTML in an isolated browser, never a real Play purchase.
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),assert=require('node:assert/strict'),path=require('node:path'),{pathToFileURL}=require('node:url');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs'),{pathToFileURL}=require('node:url');
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--blink-settings=minimumFontSize=8,minimumLogicalFontSize=8'],...(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{})});
  try{
@@ -32,5 +32,23 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),assert=req
   assert.equal(await page.locator('#portability-dialog').isVisible(),true);await page.locator('[data-full-open]').click();assert.equal(await page.locator('#full-game-dialog').isVisible(),true);
   assert.equal(await page.locator('[data-full-buy]').isDisabled(),true);assert.deepEqual(errors,[]);
   console.log('PASS buy/restore loading and access to the existing save/export screen without entitlement');
+  const fixtures=path.resolve(__dirname,'../../work/native-test-assets');require('../build-android-fixtures.cjs').build(fixtures);
+  const history=JSON.parse(fs.readFileSync(path.join(fixtures,'notebook-history.json'),'utf8'));
+  await page.evaluate(value=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;season=S.restore(value);state=season.match;setView('club');openManagerNotebook();},history);
+  await page.waitForFunction(()=>!!notebookRows);
+  assert.equal(await page.evaluate(()=>season.year===3&&!WinAgainFullGame.status.owned),true);
+  await page.locator('[data-notebook-tab=history]').click();
+  await page.locator('[data-notebook-year]').selectOption('1');await page.locator('[data-notebook-page="1"]').click();
+  const before=await page.evaluate(()=>JSON.stringify(season));await page.locator('[data-notebook-event^="1:"]').first().click();
+  assert.equal(await page.evaluate(()=>ClubStory.scene(season,clubStoryEvent).readOnly),true);assert.equal(await page.locator('#club-story-dialog [data-story-choice]').count(),0);
+  assert.equal(await page.evaluate(()=>JSON.stringify(season)),before);
+  await page.evaluate(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());});
+  assert.equal(await page.evaluate(()=>{try{F.begin(state);return false;}catch{return !!document.querySelector('#full-game-dialog[open]');}}),true);
+  assert.deepEqual(errors,[]);console.log('PASS validated later-season history stays readable and byte-identical while paid match progression stays blocked');
+  const trained=JSON.parse(fs.readFileSync(path.join(fixtures,'trained-season.json'),'utf8'));
+  await page.evaluate(value=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeOperationsPage();season=S.restore(value);state=season.match;setView('club');openManagementPanel('training-card');},trained);
+  assert.equal(await page.evaluate(()=>{const rows=[...document.querySelectorAll('.team-training-preview li')];return season.year===2&&!WinAgainFullGame.status.owned&&rows.length===18&&rows.every(e=>e.querySelector('small').title==='성장 한계 도달');}),true);
+  const trainedBefore=await page.evaluate(()=>JSON.stringify(season));await page.locator('[data-team-focus=recovery]').click();assert.equal(await page.evaluate(()=>JSON.stringify(season)),trainedBefore);
+  assert.deepEqual(errors,[]);console.log('PASS capped 18-player later-season forecast remains readable without an entitlement or campaign mutation');
  }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

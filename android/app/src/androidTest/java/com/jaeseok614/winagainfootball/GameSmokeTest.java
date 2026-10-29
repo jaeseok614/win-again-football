@@ -58,6 +58,14 @@ public final class GameSmokeTest {
         assertTrue("WebView did not respond to verification", ready.await(15, TimeUnit.SECONDS));
         return value.get();
     }
+    private String testCampaignFixture(String name) throws Exception {
+        try (InputStream input=InstrumentationRegistry.getInstrumentation().getContext().getAssets().open(name);
+             ByteArrayOutputStream output=new ByteArrayOutputStream()) {
+            byte[] buffer=new byte[16384];int count;
+            while((count=input.read(buffer))!=-1)output.write(buffer,0,count);
+            return output.toString("UTF-8");
+        }
+    }
     private void awaitReady(ActivityScenario<MainActivity> scenario) throws Exception {
         android.util.Log.i("GameSmoke", "offline-game:await-ready");
         long until = System.nanoTime() + TimeUnit.SECONDS.toNanos(45);
@@ -833,7 +841,10 @@ public final class GameSmokeTest {
             assertEquals(receipt,evaluate(reopened,"JSON.stringify(season.clubStory.records.filter(r=>r.event==='1:notebook-first'))"));
             assertEquals("The same explicit answers restore into the completed scene", "true", evaluate(reopened,
                 "(()=>{const d=ClubStory.scene(season,'1:notebook-first');return d.step===2&&d.answered[0].choice==='practical'&&d.answered[1].choice==='honest'&&!!d.reply;})()"));
-            evaluate(reopened,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.create(41);for(let y=0;y<2;y++){while(!S.ready(season)){while(season.match.phase!=='full'){if(!F.running(season.match))F.begin(season.match);F.finishSegment(season.match);}season=S.settle(season);}season=S.nextSeason(season);}state=season.match;managementMeetingKey=season.seed+':'+season.year+':'+season.round;setView('club');openManagerNotebook();return true;})()");
+            // Restore a validated synthetic history instead of advancing two paid
+            // seasons in an unentitled app. The production purchase gate stays on.
+            evaluate(reopened,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.restore(JSON.parse("+JSONObject.quote(testCampaignFixture("notebook-history.json"))+"));state=season.match;managementMeetingKey=season.seed+':'+season.year+':'+season.round;setView('club');openManagerNotebook();return true;})()");
+            assertEquals("Historical saves stay readable without a full-game grant", "true", evaluate(reopened,"season.year===3&&!WinAgainFullGame.status.owned"));
             awaitTrue(reopened,"!!notebookRows");
             tapWebElement(reopened,"#manager-notebook [data-notebook-tab=history]");
             String historical=evaluate(reopened,"JSON.stringify(season)");
@@ -1377,7 +1388,7 @@ public final class GameSmokeTest {
     @Test public void cappedSquadForecastKeepsAllEighteenRowsAndTheCampaign() throws Exception {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitReady(scenario);
-            evaluate(scenario,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeOperationsPage();managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;launchBusy=false;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;let trained=S.create(41,{startingClub:true,suspensions:true});while(!S.ready(trained)){if(trained.competition==='league'&&S.trainingPreview(trained,'technique').available)S.train(trained,'technique');while(trained.match.phase!=='full'){if(!F.running(trained.match))F.begin(trained.match);F.finishSegment(trained.match);}trained=S.settle(trained);}season=S.nextSeason(trained);state=season.match;if(JSON.stringify(S.restore(JSON.parse(JSON.stringify(season))))!==JSON.stringify(season))throw Error('Capped fixture must be a valid completed-season career');setView('club');openManagementPanel('training-card');return true;})()");
+            evaluate(scenario,"(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());closeOperationsPage();managerGuideActive=false;managerGuideWaiting=null;appSessionStarted=true;launchBusy=false;document.body.classList.remove('launch-mode');document.getElementById('launch-screen').hidden=true;document.querySelector('.app').hidden=false;season=S.restore(JSON.parse("+JSONObject.quote(testCampaignFixture("trained-season.json"))+"));state=season.match;if(JSON.stringify(S.restore(JSON.parse(JSON.stringify(season))))!==JSON.stringify(season))throw Error('Capped fixture must be a valid completed-season career');setView('club');openManagementPanel('training-card');return true;})()");
             String before=evaluate(scenario,"JSON.stringify(season)");
             assertEquals("true",evaluate(scenario,"(()=>{const rows=[...document.querySelectorAll('.team-training-preview li')];return rows.length===18&&rows.every(e=>e.querySelector('small').title==='성장 한계 도달'&&e.textContent.includes('한계'));})()"));
             assertEquals("Capped forecast names and numbers must remain inside their rows", "true",evaluate(scenario,"[...document.querySelectorAll('.team-training-preview,.team-training-preview ul,.team-training-preview li,.team-training-preview small,.team-training-preview strong,.team-energy')].filter(e=>e.checkVisibility()).every(e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.top>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1&&e.scrollWidth<=e.clientWidth+2&&e.scrollHeight<=e.clientHeight+2;})"));
