@@ -51,7 +51,8 @@ tasks.register('prepareTestCampaign', Exec) {
     inputs.file(rootProject.file('../source/build-android-fixtures.cjs'))
     outputs.dir(layout.buildDirectory.dir('generated/androidTestAssets'))
 }
-tasks.matching { it.name == 'mergeDebugAndroidTestAssets' }.configureEach { dependsOn 'prepareTestCampaign' }
+// Lint also reads instrumentation assets independently of the merge task.
+tasks.matching { it.name in ['mergeDebugAndroidTestAssets', 'lintAnalyzeDebugAndroidTest', 'generateDebugAndroidTestLintModel'] }.configureEach { dependsOn 'prepareTestCampaign' }
 
 dependencies {
     implementation 'androidx.activity:activity:1.12.4'
