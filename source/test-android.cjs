@@ -2,11 +2,11 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os'),vm=require('node:vm'),crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..'),android=path.join(root,'android'),read=file=>fs.readFileSync(path.join(android,file),'utf8');
 function test(name,run){run();console.log('PASS '+name);}
-test('native app targets API36, keeps offline permissions, and disables OS backup',()=>{
+test('native app targets API36, limits permissions to billing verification, and disables OS backup',()=>{
  const manifest=read('app/src/main/AndroidManifest.xml'),gradle=read('app/build.gradle');
  assert.match(gradle,/applicationId 'com\.jaeseok614\.winagainfootball'/);assert.match(gradle,/targetSdk 36/);assert.match(gradle,/minSdk 24/);
  assert.match(manifest,/android:appCategory="game"/);assert.match(fs.readFileSync(path.join(root,'.github/workflows/android.yml'),'utf8'),/api-level: \[34, 35, 36\]/);
- assert.doesNotMatch(manifest,/<uses-permission/);assert.match(manifest,/allowBackup="false"/);assert.match(manifest,/usesCleartextTraffic="false"/);
+ assert.deepEqual([...manifest.matchAll(/<uses-permission android:name="([^"]+)"/g)].map(m=>m[1]).sort(),['android.permission.INTERNET','com.android.vending.BILLING']);assert.match(manifest,/allowBackup="false"/);assert.match(manifest,/usesCleartextTraffic="false"/);
  assert.doesNotMatch(gradle,/signingConfig\s/);assert.match(read('.gitignore'),/\*\.jks/);
  assert.doesNotMatch(read('app/src/main/res/values/styles.xml'),/windowLightNavigationBar/);
 });

@@ -88,6 +88,8 @@ public final class MainActivity extends ComponentActivity {
     private String pendingExportName;
     private boolean destroyed;
     private boolean verificationRunning;
+    private FullGameBilling billing;
+    private JavaScriptReplyProxy billingReply;
 
     private final ActivityResultLauncher<Intent> importPicker = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -212,6 +214,11 @@ public final class MainActivity extends ComponentActivity {
             return insets;
         });
         setContentView(root);
+        billing = new FullGameBilling(this, value -> {
+            if (!destroyed && billingReply != null && isCurrentGame()) {
+                try { billingReply.postMessage(value.toString()); } catch (Exception ignored) { /* Navigated document. */ }
+            }
+        });
         if (state != null && state.containsKey("pendingExportId") && exportCache().isFile()) {
             pendingExportId = state.getString("pendingExportId");
             pendingExportName = state.getString("pendingExportName");
@@ -260,6 +267,7 @@ public final class MainActivity extends ComponentActivity {
     }
 
     private void createGameView() {
+        billingReply = null;
         if (gameView != null) { root.removeView(gameView); gameView.destroy(); }
         gameView = new WebView(this);
         gameView.setId(View.generateViewId());
@@ -368,6 +376,18 @@ public final class MainActivity extends ComponentActivity {
                 if (view != gameView || !isMainFrame || !isCurrentGame()
                         || !isGameOrigin(sourceOrigin) || message.getType() != WebMessageCompat.TYPE_STRING) return;
                 receiveExport(message.getData(), reply);
+            });
+        WebViewCompat.addWebMessageListener(gameView, "WinAgainBilling", Collections.singleton(GAME_ORIGIN),
+            (view, message, sourceOrigin, isMainFrame, reply) -> {
+                if (view != gameView || !isMainFrame || !isCurrentGame() || !isGameOrigin(sourceOrigin)
+                        || message.getType() != WebMessageCompat.TYPE_STRING || message.getData() == null
+                        || message.getData().length() > 128) return;
+                try {
+                    JSONObject request = new JSONObject(message.getData());
+                    String action = request.getString("action");
+                    if (!action.equals("status") && !action.equals("buy") && !action.equals("restore")) return;
+                    billingReply = reply; billing.request(action);
+                } catch (Exception ignored) { /* No untrusted request may grant access. */ }
             });
         root.addView(gameView, 0, new FrameLayout.LayoutParams(-1, -1));
         showLoading("게임을 불러오는 중…", false);
@@ -483,7 +503,7 @@ public final class MainActivity extends ComponentActivity {
     private void toast(String text) { Toast.makeText(this, text, Toast.LENGTH_LONG).show(); }
     private int dp(int pixels) { return Math.round(pixels * getResources().getDisplayMetrics().density); }
     @Override protected void onPause() { pauseGame(); super.onPause(); if (gameView != null) gameView.onPause(); }
-    @Override protected void onResume() { super.onResume(); if (gameView != null) gameView.onResume(); }
+    @Override protected void onResume() { super.onResume(); if (gameView != null) gameView.onResume(); if (billing != null) billing.refresh(); }
     @Override protected void onSaveInstanceState(Bundle state) {
         pauseGame();
         if (pendingExportId != null) { state.putString("pendingExportId", pendingExportId); state.putString("pendingExportName", pendingExportName); }
@@ -491,6 +511,7 @@ public final class MainActivity extends ComponentActivity {
     }
     @Override protected void onDestroy() {
         destroyed = true;
+        if (billing != null) billing.close();
         if (importCallback != null) importCallback.onReceiveValue(null);
         if (gameView != null) { root.removeView(gameView); gameView.destroy(); gameView = null; }
         io.shutdown(); super.onDestroy();

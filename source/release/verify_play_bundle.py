@@ -95,14 +95,15 @@ def verify_bundle(file, assets=None, require_signature="unsigned"):
         app = [n for n in children if n["name"] == "application"]
         check(len(sdk) == len(app) == 1, "Missing or duplicate release nodes")
         check(attr(sdk[0], "minSdkVersion") == "24" and attr(sdk[0], "targetSdkVersion") == "36", "Wrong SDK targets")
-        # AndroidX merges this app-private signature permission. It does not grant
-        # Internet, storage, contacts, or any other device-data access.
+        # Billing adds only native HTTPS verification and Play Billing access.
+        # The WebView still blocks all network requests and native file paths.
         private_permission = PACKAGE + ".DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         uses = [n for n in children if n["name"].startswith("uses-permission")]
         declarations = [n for n in children if n["name"] == "permission"]
-        check(all(attr(n, "name") == private_permission for n in uses), "Unexpected network or device permission")
+        allowed_permissions = {private_permission, "android.permission.INTERNET", "com.android.vending.BILLING"}
+        check(all(attr(n, "name") in allowed_permissions for n in uses), "Unexpected network or device permission")
         check(all(attr(n, "name") == private_permission and attr(n, "protectionLevel") == "signature" for n in declarations), "Unexpected declared permission")
-        check(not uses or len(declarations) == 1, "Missing private signature permission declaration")
+        check(not any(attr(n, "name") == private_permission for n in uses) or len(declarations) == 1, "Missing private signature permission declaration")
         app = app[0]
         check(attr(app, "debuggable") in (None, "false"), "Debuggable release")
         check(attr(app, "allowBackup") == "false" and attr(app, "usesCleartextTraffic") == "false", "Wrong release storage/network policy")

@@ -78,9 +78,10 @@ class BundleTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Debuggable"):
             verify_bundle(self.bundle(debug="true"))
 
-    def test_reject_network_permission(self):
+    def test_allow_billing_but_reject_unrelated_permissions(self):
+        verify_bundle(self.bundle(permissions=[node("uses-permission", [("name", name, ANDROID)]) for name in ("android.permission.INTERNET", "com.android.vending.BILLING")]))
         with self.assertRaisesRegex(ValueError, "Unexpected network"):
-            verify_bundle(self.bundle(permissions=[node("uses-permission", [("name", "android.permission.INTERNET", ANDROID)])]))
+            verify_bundle(self.bundle(permissions=[node("uses-permission", [("name", "android.permission.READ_CONTACTS", ANDROID)])]))
 
     def test_androidx_permission_is_only_own_signature(self):
         name = PACKAGE + ".DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"

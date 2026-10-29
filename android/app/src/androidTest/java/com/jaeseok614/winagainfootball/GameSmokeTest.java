@@ -413,6 +413,11 @@ public final class GameSmokeTest {
             String before = evaluate(scenario, "JSON.stringify({year:season.year,round:season.round,minute:state.minute,rng:state.rng})");
             screenshot(scenario, "android-title-menu.png");
             tapWebElement(scenario, "#launch-continue");
+            awaitTrue(scenario, "!!document.querySelector('#full-game-dialog[open]')");
+            assertEquals("true", evaluate(scenario, "document.getElementById('full-game-dialog').textContent.includes('첫 시즌')&&document.querySelector('[data-full-buy]').disabled"));
+            screenshot(scenario, "android-first-season-trial.png");
+            tapWebElement(scenario, "[data-full-close]");
+            tapWebElement(scenario, "#launch-continue");
             awaitTrue(scenario, "appSessionStarted||document.getElementById('manager-guide').open");
             if ("true".equals(evaluate(scenario, "document.getElementById('manager-guide').open"))) {
                 assertEquals("First arrival introduces the contract before the club's fall", "true", evaluate(scenario,

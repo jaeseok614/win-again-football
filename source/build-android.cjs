@@ -15,16 +15,18 @@ function buildAndroid(output=defaultOutput){
  if(html.split(pwaScript).length!==2)throw Error('Expected exactly one shared PWA module in the offline build.');
  html=html.replace(pwaScript,'');
  const adapter=fs.readFileSync(path.join(android,'web/android-adapter.js'),'utf8').replace(/\r\n/g,'\n');
+ const billing=fs.readFileSync(path.join(android,'web/full-game.js'),'utf8').replace(/\r\n/g,'\n');
+ new vm.Script(billing,{filename:'full-game.js'});
  new vm.Script(adapter,{filename:'android-adapter.js'});
  if(html.includes('WinAgainAndroid'))throw Error('The native adapter must only be injected once.');
  const csp="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; font-src data:; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'none'";
  html=html.replace('<head>','<head><meta http-equiv="Content-Security-Policy" content="'+csp+'">');
- html=html.replace('</body>','<script>'+adapter.replaceAll('</script','<\\/script')+'</script></body>');
+ html=html.replace('</body>','<script>'+adapter.replaceAll('</script','<\\/script')+'</script><script>'+billing.replaceAll('</script','<\\/script')+'</script></body>');
  if(/<script src=|<link rel="(?:stylesheet|manifest)"|navigator\.serviceWorker\.register/.test(html))throw Error('Native app contains a network or PWA bootstrap dependency.');
  // Reject forgotten relative artwork instead of shipping broken faces offline.
  if(/(?:src|url\()=["']?assets\//.test(html)||/url\(["']?assets\//.test(html))throw Error('The offline game has an unbundled artwork dependency.');
  const bytes=Buffer.byteLength(html),sha256=crypto.createHash('sha256').update(html).digest('hex');
- const metadata={schema:1,applicationId:'com.jaeseok614.winagainfootball',versionName:'1.0.0',versionCode:1,saveKey:'win-again-season-v17',bytes,sha256};
+ const metadata={schema:1,applicationId:'com.jaeseok614.winagainfootball',versionName:'1.1.0',versionCode:2,saveKey:'win-again-season-v17',bytes,sha256};
  fs.writeFileSync(path.join(output,'index.html'),html);
  fs.writeFileSync(path.join(output,'build-info.json'),JSON.stringify(metadata,null,2)+'\n');
  return {output,...metadata};

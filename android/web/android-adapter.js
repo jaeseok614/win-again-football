@@ -6,7 +6,7 @@
  const maxBytes = 16 * 1024 * 1024;
  const appTitle = '눈 떠보니 5부 리그 감독! 토투넘 1부 귀환기';
  const api = {
-  version: '1.0.0',
+  version: '1.1.0',
   get available() { return !!(window.WinAgainNative && typeof WinAgainNative.postMessage === 'function'); },
   pause() {
    if (typeof pauseForPlanning === 'function') pauseForPlanning();
@@ -70,8 +70,9 @@
   dialog.setAttribute('aria-labelledby', 'android-privacy-title');
   dialog.style.cssText = 'width:min(560px,calc(100% - 24px));max-height:80dvh;overflow:auto;padding:20px';
   dialog.innerHTML = '<h2 id="android-privacy-title">개인정보처리 안내</h2>' +
-   '<p>시행일 2026-10-02 · 개발자 이번생 게임즈 · ' + appTitle + '</p>' +
-   '<p>가입과 로그인이 없는 오프라인 게임입니다. 광고, 결제, 분석·추적 SDK가 없으며 개발자 서버로 개인정보나 게임 기록을 보내지 않습니다.</p>' +
+   '<p>구매 기능 안내 2026-10-29 · 개발자 이번생 게임즈 · ' + appTitle + '</p>' +
+   '<p>첫 시즌은 무료이며 정식판은 Google Play에서 한 번 구매해 해제합니다. 광고와 분석·추적 SDK는 없습니다. 구단 기록은 개발자 서버로 보내지 않습니다.</p>' +
+   '<h3>구매와 복원</h3><p>결제는 Google Play가 처리합니다. 카드 정보는 개발자가 받지 않습니다. 구매 토큰, 임의의 앱 설치 식별자와 일회성 검증 요청값을 개발자의 구매 검증 서버에 보내 Google Play에서 확인합니다. 서버는 이 요청을 저장하지 않습니다. 운영 호스팅의 보안·접속 로그는 제공자의 보존 정책을 따릅니다. 구매 권한은 서명된 확인서로 기기에 저장하며 최대 7일간 오프라인으로 이용합니다. 이후에는 인터넷 연결과 구매 복원이 필요합니다. 같은 Play 계정으로 앱을 다시 설치하거나 다른 기기에서 복원할 수 있습니다.</p>' +
    '<h3>기기 안의 구단</h3><p>구단, 선수, 경기, 전술, 대화·기사와 설정은 이 앱의 내부 저장 공간에 보관합니다. 개발자가 원격으로 읽지 않으며 자동 클라우드 동기화는 제공하지 않습니다.</p>' +
    '<h3>직접 선택한 파일</h3><p>내보내기는 문서 선택기에서 고른 위치에 JSON 파일을 씁니다. 불러오기는 선택한 파일 하나를 읽고, 확인 후 교체를 누르면 반영합니다. 다른 문서, 사진, 주소록, 위치, 마이크, 카메라에 접근하지 않습니다.</p>' +
    '<p>클라우드 문서 제공자를 선택하면 선택한 파일은 해당 제공자의 정책에 따라 저장되거나 전송될 수 있습니다. 개발자 서버로 전송하지 않습니다. 내보내기 임시 파일은 완료·취소 또는 다음 시작 때 삭제합니다.</p>' +
@@ -108,7 +109,7 @@
  window.renderPwaStatus = () => {
   const installation = document.getElementById('pwa-state')?.closest('section');
   if (installation) {
-   installation.innerHTML = '<h3>앱 정보</h3><p class="portable-hint">' + appTitle + ' ' + api.version + ' · 인터넷 없이 플레이 · 광고와 결제 없음</p>' +
+   installation.innerHTML = '<h3>앱 정보</h3><p class="portable-hint">' + appTitle + ' ' + api.version + ' · 첫 시즌 무료 · 정식판 1회 구매 · 구매 확인에는 인터넷 필요</p>' +
     '<button type="button" class="secondary" data-android-privacy>개인정보처리 안내</button>';
    installation.querySelector('[data-android-privacy]').onclick = showPrivacy;
    const policy = document.querySelector('.portable-policy');
