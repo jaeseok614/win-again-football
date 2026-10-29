@@ -100,8 +100,8 @@ def verify_bundle(file, assets=None, require_signature="unsigned"):
         private_permission = PACKAGE + ".DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         uses = [n for n in children if n["name"].startswith("uses-permission")]
         declarations = [n for n in children if n["name"] == "permission"]
-        allowed_permissions = {private_permission, "android.permission.INTERNET", "com.android.vending.BILLING"}
-        check(all(attr(n, "name") in allowed_permissions for n in uses), "Unexpected network or device permission")
+        allowed_permissions = {private_permission, "android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE", "com.android.vending.BILLING"}
+        check(all(attr(n, "name") in allowed_permissions for n in uses), "Unexpected network or device permission: " + str([attr(n, "name") for n in uses if attr(n, "name") not in allowed_permissions]))
         check(all(attr(n, "name") == private_permission and attr(n, "protectionLevel") == "signature" for n in declarations), "Unexpected declared permission")
         check(not any(attr(n, "name") == private_permission for n in uses) or len(declarations) == 1, "Missing private signature permission declaration")
         app = app[0]

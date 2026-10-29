@@ -1,3 +1,11 @@
+# 2026-10-29 — 첫 시즌 무료/정식판 후보 (검증 진행)
+
+- 소유자 요청: 첫 시즌 무료 체험 뒤 **₩4,900 1회 구매**. Android 1.1.0/code2 후보에만 체험 경계/Play Billing9.1.0/구매 복원/서버 서명 검증을 추가한다. 웹/PWA·물리1–14·schema10·저장키·현재 구단/시즌·무료 환생/유예는 유지한다. 구매/복원으로 시즌을 자동 시작하지 않는다.
+- `android/web/full-game.js`는 첫 진입/저장 메뉴/시즌 경계 안내, 외부 후기 구단의 경기 진행 차단, 기록 열람/내보내기를 제공한다. 원점과 주 프레임을 검증하는 별도 네이티브 메시지 채널에는 status/buy/restore만 허용한다. 구단 JSON/JS 플래그로 구매 권한을 만들지 않는다.
+- `billing-server/server.cjs`는 Google Play 상품 조회/구매 확인 후 설치/nonce/상품/최대7일 유효 RS256 권한을 서명한다. 네이티브에서 서명·만료를 검증한다. 구매 토큰은 JS/구단/로그에 넣지 않는다. 상품은 영구 `full_game`, 구매 옵션 `buy`. 인터넷은 구매 확인에만 사용하며 WebView 네트워크 차단은 유지한다. [설계/활성화 절차](docs/FULL_GAME_UNLOCK_2026-10-29.md).
+- 현재 Play 배포는 기존1.0.0/code1·무료·결제 없음. Console 실제 참여 **1명/12명**, 추가11명 필요. 판매자 계정 설정 안내가 있어 수익화가 아직 준비되지 않았다. 판매자 계약/KYC·은행·상품 활성화·검증 서버 배포/권한/키·라이선스 결제·새 AAB 서명/제출은 완료하지 않았다. 기본 CI 빌드의 결제 공개 설정은 비어 있고 구매 비활성이다. 무료 모집 테스터에게 결제/보상을 요구하지 않는다.
+- 로컬 구매 회귀7그룹, PWA14그룹, Python출시16검사 통과. PWA는 기존6,318,464바이트/shell8d6e4a407750로 동일. 전체 source·Android 컴파일/실기 에뮬레이터·가로 화면 검증 결과는 아래에 이어 갱신한다. 아직 미실행/진행 중인 검사를 통과로 세지 않는다.
+
 # 최신 외부 상태 — 2026-10-21 비공개 Alpha 게시·모집 자동화
 
 Google은11:29 KST에 선택한 테스터에게 Alpha1.0.0/code1을 게시했다. Play 링크에 앱과 Become a tester 초대가 표시됨을 확인했다. 소유자 계정을 에이전트가 참여 처리하거나 휴대전화 설치한 것은 아니다. 최신 대시보드 **실제 참여0명**, 그룹1명은 소유자다. 그룹 공지에 설치 순서와 첫 플레이 질문을 게시했다. [상태/모집 링크](docs/FREE_CLOSED_TEST_2026-10-21.json), [Play 상세](docs/GOOGLE_PLAY_RELEASE.md), [참여 안내](docs/PLAY_TEST_PLAN_KO.md).
@@ -1382,11 +1390,3 @@ Play 신원 확인·서명 키 등 출시 준비는 기존 인수인계의 상�
 
 ## 2026-10-08 Korean-first presentation
 The owner requested Korean as the default for the Korean audience. Translated launch, manager home, player/transfer/academy/cup/records/planning headings, match labels and substitution notices. EnglishPyramid.koreanName translates all 116 reference names; generated league club display names and opponent source references use Korean while original club IDs, ratings, reference metadata and save history stay intact. Existing valid campaigns restore unchanged. Familiar football position abbreviations and club crest codes remain. Added a durable AGENTS.md requirement. Actual six-view touch navigation, report opening, unchanged campaign and reload passed at 360x640; eight portrait/landscape/tablet layouts retained readable opponent/starter rows without horizontal overflow. Full tests and new Android CI are required before handing out the new APK. See docs/KOREAN_PRESENTATION_2026-10-08.md.
-# 2026-10-29 — 첫 시즌 무료/정식판 후보 (검증 진행)
-
-- 소유자 요청: 첫 시즌 무료 체험 뒤 **₩4,900 1회 구매**. Android 1.1.0/code2 후보에만 체험 경계/Play Billing9.1.0/구매 복원/서버 서명 검증을 추가한다. 웹/PWA·물리1–14·schema10·저장키·현재 구단/시즌·무료 환생/유예는 유지한다. 구매/복원으로 시즌을 자동 시작하지 않는다.
-- `android/web/full-game.js`는 첫 진입/저장 메뉴/시즌 경계 안내, 외부 후기 구단의 경기 진행 차단, 기록 열람/내보내기를 제공한다. 원점과 주 프레임을 검증하는 별도 네이티브 메시지 채널에는 status/buy/restore만 허용한다. 구단 JSON/JS 플래그로 구매 권한을 만들지 않는다.
-- `billing-server/server.cjs`는 Google Play 상품 조회/구매 확인 후 설치/nonce/상품/최대7일 유효 RS256 권한을 서명한다. 네이티브에서 서명·만료를 검증한다. 구매 토큰은 JS/구단/로그에 넣지 않는다. 상품은 영구 `full_game`, 구매 옵션 `buy`. 인터넷은 구매 확인에만 사용하며 WebView 네트워크 차단은 유지한다. [설계/활성화 절차](docs/FULL_GAME_UNLOCK_2026-10-29.md).
-- 현재 Play 배포는 기존1.0.0/code1·무료·결제 없음. Console 실제 참여 **1명/12명**, 추가11명 필요. 판매자 계정 설정 안내가 있어 수익화가 아직 준비되지 않았다. 판매자 계약/KYC·은행·상품 활성화·검증 서버 배포/권한/키·라이선스 결제·새 AAB 서명/제출은 완료하지 않았다. 기본 CI 빌드의 결제 공개 설정은 비어 있고 구매 비활성이다. 무료 모집 테스터에게 결제/보상을 요구하지 않는다.
-- 로컬 구매 회귀7그룹, PWA14그룹, Python출시16검사 통과. PWA는 기존6,318,464바이트/shell8d6e4a407750로 동일. 전체 source·Android 컴파일/실기 에뮬레이터·가로 화면 검증 결과는 아래에 이어 갱신한다. 아직 미실행/진행 중인 검사를 통과로 세지 않는다.
-

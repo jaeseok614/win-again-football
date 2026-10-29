@@ -22,6 +22,8 @@ Play Billing 9.1.0의 비소모성 INAPP 상품 하나만 사용한다. 구매 �
 
 WebView의 CSP `connect-src 'none'`, 로컬 원점/주 프레임/현재 문서 검증과 파일 접근 차단을 유지한다. 별도의 `WinAgainBilling` 메시지 채널은 `status/buy/restore` 세 동작만 수신한다. INTERNET 및 BILLING 권한을 추가했으며 네트워크 게임이나 분석 SDK를 추가하지 않는다.
 
+Billing SDK의 Google DataTransport 의존성이 일반 권한 ACCESS_NETWORK_STATE를 병합한다. 실제 번들 검사는 INTERNET/ACCESS_NETWORK_STATE/BILLING과 AndroidX 앱 전용 서명 권한만 허용하며 위치·주소록 등은 거부한다. 앱은 위치 권한을 선언하거나 요청하지 않는다. Google SDK의 결제 운영·보안·진단 통신은 Google 정책을 따르므로 “모든 데이터가 기기 밖으로 전혀 나가지 않는다”는 안내를 새 버전에 사용하지 않는다.
+
 ## 판매 활성화에 필요한 실제 설정
 
 2026-10-29 Console에는 판매자 계정 설정 안내가 남아 있다. 계정 소유자가 판매자 결제 프로필·신원/은행·약관 단계를 직접 완료해야 한다. 기존 앱은 무료로 유지하며 앱 자체를 유료로 바꾸지 않는다.

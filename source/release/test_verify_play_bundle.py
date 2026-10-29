@@ -79,7 +79,7 @@ class BundleTests(unittest.TestCase):
             verify_bundle(self.bundle(debug="true"))
 
     def test_allow_billing_but_reject_unrelated_permissions(self):
-        verify_bundle(self.bundle(permissions=[node("uses-permission", [("name", name, ANDROID)]) for name in ("android.permission.INTERNET", "com.android.vending.BILLING")]))
+        verify_bundle(self.bundle(permissions=[node("uses-permission", [("name", name, ANDROID)]) for name in ("android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE", "com.android.vending.BILLING")]))
         with self.assertRaisesRegex(ValueError, "Unexpected network"):
             verify_bundle(self.bundle(permissions=[node("uses-permission", [("name", "android.permission.READ_CONTACTS", ANDROID)])]))
 

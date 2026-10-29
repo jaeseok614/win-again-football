@@ -24,9 +24,9 @@
    dialog = document.createElement('dialog'); dialog.id = 'full-game-dialog';
    dialog.setAttribute('aria-labelledby','full-game-title');
    dialog.innerHTML = '<header><h2 id="full-game-title">첫 시즌 무료 · 정식판 1회 구매</h2><button type="button" data-full-close aria-label="정식판 안내 닫기">닫기</button></header>'+
-    '<div class="full-game-copy"><p>첫 시즌의 모든 리그·컵 경기와 결산까지 무료입니다. 두 번째 시즌부터는 정식판이 필요해요. 자동 결제·구독·광고는 없습니다.</p>'+
-    '<p>한 번 구매하면 이후 시즌과 새 삶을 계속 즐길 수 있어요. 같은 Google Play 계정으로 구매를 복원할 수 있습니다. 구단 기록 열람·저장·내보내기는 계속 가능해요.</p>'+
-    '<p class="full-game-note">구매·복원 및 7일마다 권한 확인에 인터넷이 필요합니다. 구매 토큰은 개발자의 검증 서버와 Google Play에서 확인하며 구단 파일에는 구매 권한이 포함되지 않습니다.</p>'+
+    '<div class="full-game-copy"><p>첫 시즌의 리그·컵·결산은 무료입니다. 두 번째 시즌부터 정식판이 필요해요. 구독·자동 결제·광고는 없습니다.</p>'+
+    '<p>1회 구매로 이후 시즌과 새 삶을 해제합니다. 같은 Google Play 계정으로 복원할 수 있어요. 구단 기록 열람·저장·내보내기는 계속 가능합니다.</p>'+
+    '<p class="full-game-note">구매·복원과 7일마다 권한 확인에 인터넷이 필요합니다. 구매 토큰·임의 설치 식별자를 개발자 서버와 Google Play에서 검증합니다.</p>'+
     '<p data-full-status role="status" aria-live="polite"></p></div>'+
     '<footer><button type="button" class="primary" data-full-buy></button><button type="button" class="secondary" data-full-restore>구매 복원</button><button type="button" class="secondary" data-full-save>구단 저장·내보내기</button></footer>';
    dialog.querySelector('[data-full-close]').onclick = () => dialog.close();
@@ -85,7 +85,8 @@
   '#full-game-dialog h2{font-size:18px;line-height:1.3;margin:0;flex:1}#full-game-dialog p{font-size:14px;line-height:1.45;margin:0 0 8px}'+
   '#full-game-dialog .full-game-copy{min-height:0;overflow:auto}#full-game-dialog .full-game-note{font-size:12px}#full-game-dialog button{min-height:44px;white-space:normal}'+
   '#full-game-dialog footer{flex-wrap:wrap;margin:0;padding:0;border:0}#full-game-dialog footer button{flex:1}#full-game-dialog [data-full-status]{margin:0;color:#c9e8ac}'+
-  '@media(max-height:390px){#full-game-dialog[open]{padding:10px;gap:6px}#full-game-dialog h2{font-size:16px}#full-game-dialog p{font-size:12px;line-height:1.35;margin-bottom:6px}#full-game-dialog .full-game-note{font-size:11px}}';
+  '@media(max-height:390px){#full-game-dialog[open]{padding:10px;gap:6px}#full-game-dialog h2{font-size:16px}#full-game-dialog p{font-size:12px;line-height:1.35;margin-bottom:6px}#full-game-dialog .full-game-note{font-size:11px}}'+
+  '@media(max-height:300px){#full-game-dialog[open]{padding:8px;gap:2px}#full-game-dialog p{margin-bottom:2px}}';
  document.head.appendChild(style);
  renderAppShell();
  request('status');
