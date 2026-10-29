@@ -1,5 +1,7 @@
 # Google Play 출시 준비
 
+2026-10-29 판매 설정 후속: 소유자1명 전용 라이선스 테스트 목록을 생성·선택·저장했다. 판매자 프로필은 미생성/등록 iframe 로딩 중이며 일회성 제품 페이지는 잠겨 있다. Google Cloud `win-again-billing` 생성과 과금 계정 미연결을 확인했지만 API 약관 승인/활성화·서비스 계정/키/권한·Cloudflare 로그인/배포는 남아 있다. Workers Free용 서버와 별도 license 설정은 Source210 suites/1,547checks·Python16·PWA14·Wrangler dry-run으로 검사했다. [정확한 상태](BILLING_SETUP_2026-10-29.json). 현재 Alpha/code1 무료와 프로덕션 비활성은 그대로이며 실제 판매·테스트 결제를 완료하지 않았다.
+
 ## 2026-10-29 — 첫 시즌 체험/정식판 후보
 
 소유자가 **첫 시즌 무료 체험 → ₩4,900 1회 정식판 해제**를 요청했다. Android 1.1.0/code2 후보에 Play Billing과 서버 서명 검증/복원을 추가했다. Source209 suites/1,543 checks·Python16·PWA14와 Android API34/35/36 각각36검사(실패/건너뜀0)를 통과했다. [검증 증빙](FULL_GAME_RELEASE_2026-10-29.json). 현재 Play의 1.0.0/code1은 무료·결제 없음 상태를 유지한다. 판매자 계정, Billing 포함 개발자 내부 트랙 선행 게시, 실제 상품 `full_game`/구매 옵션 `buy`, 검증 서버와 공개 설정, 라이선스 결제 검증은 판매 활성화에 필요하다. [구현과 활성화 절차](FULL_GAME_UNLOCK_2026-10-29.md). 아래 “광고/결제/네트워크 없음”은 배포된 1.0.0의 기록이며 새 후보의 설명이 아니다.

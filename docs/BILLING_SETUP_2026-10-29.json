@@ -1,0 +1,85 @@
+{
+  "observedDate": "2026-10-29",
+  "package": "com.jaeseok614.winagainfootball",
+  "codeCommit": "d4951593ff6f3a4e5f45a00d07df3a07711011fb",
+  "licenseTesters": {
+    "saved": true,
+    "list": "Win Again 소유자 결제 테스트",
+    "members": 1,
+    "onlyOwner": true,
+    "response": "RESPOND_NORMALLY",
+    "actualCheckoutTested": false
+  },
+  "merchantProfile": {
+    "created": false,
+    "blocker": "Google registration iframe remains loading; owner must complete financial identity and final account registration"
+  },
+  "product": {
+    "created": false,
+    "pageLockedUntilMerchantProfile": true,
+    "id": "full_game",
+    "purchaseOption": "buy",
+    "krPrice": 4900,
+    "currency": "KRW",
+    "permanent": true
+  },
+  "googleCloud": {
+    "projectName": "Win Again Billing",
+    "projectId": "win-again-billing",
+    "projectCreated": true,
+    "billingLinkActionPerformed": false,
+    "playApiEnabled": false,
+    "apiTermsPending": true,
+    "serviceAccountCreated": false,
+    "keysCreated": false,
+    "playPermissionsGranted": false,
+    "billingLinked": false,
+    "billingConnectionVerified": true
+  },
+  "hosting": {
+    "candidate": "Cloudflare Workers Free",
+    "accountSignedIn": false,
+    "userWillNotifyAfterLogin": true,
+    "deployed": false,
+    "paidUpgradePerformed": false,
+    "freeAccountPlanVerified": false,
+    "edgeRuntimeAndCpuTested": false
+  },
+  "checks": {
+    "workerLocalGroups": 4,
+    "trialAndNodeHttpGroups": 7,
+    "pwaGroups": 14,
+    "workerBundle": {
+      "result": "success",
+      "wrangler": "4.155.0",
+      "uploadKiB": 12.21,
+      "gzipKiB": 4.07,
+      "published": false,
+      "workflow": "https://github.com/jaeseok614/win-again-football/actions/runs/40802203076",
+      "job": 123212680940
+    },
+    "fullSource": "success: 210 suites / 1547 checks, Python16, PWA14, generated public assets unchanged",
+    "localFullSource": "Stopped partial local run after starting complete Linux CI; not reported as pass"
+  },
+  "unchanged": {
+    "publicPwaBytes": 6318464,
+    "androidHtmlSha256": "69a812464fce843349ae505a4c6dc26be3bcbda830f5d72500a6044bc691241c",
+    "liveAlpha": "1.0.0/code1 free",
+    "production": "inactive",
+    "playOptedIn": 1,
+    "target": 12
+  },
+  "spendingActions": {
+    "realPurchase": 0,
+    "paidHostingSignup": 0,
+    "paidRecruitment": 0
+  },
+  "remaining": [
+    "Owner merchant-profile registration",
+    "Owner Cloudflare login then verify Workers Free",
+    "Action-time approval of API terms and service-account credentials/limited Play permissions",
+    "Secure secret provisioning and staging deployment",
+    "Real Google license test cards, restore and test cancellation",
+    "Billing-enabled signed internal release, actual product creation and final version with public server config"
+  ]
+}

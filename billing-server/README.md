@@ -37,4 +37,6 @@ Console에서 판매자 결제 프로필을 만든 다음 Billing 포함 버전�
 
 `node source/test-billing-worker.cjs` 및 `node source/test-full-game.cjs`. 합성 키/토큰과 Google 모의 응답만 사용한다. 실제 결제/배포/비용 발생이 없다. 기존 전체 source 검사는 `node source/run-tests.cjs`다.
 
+2026-10-29 코드d495159의 [CI40802203076](https://github.com/jaeseok614/win-again-football/actions/runs/40802203076)에서 전체210 suites/1,547checks·Python16·PWA14·공개 생성물 일치와 **Wrangler4.155.0 dry-run**(12.21KiB/gzip4.07KiB)을 통과했다. 이후 실제 설정에도 검증한 CLI 버전을 사용할 수 있다. 번들 성공은 실제 Workers CPU/운영 배포 또는 Google 실결제 검증을 대신하지 않는다.
+
 공식 근거: [Play 테스트 결제](https://developer.android.com/google/play/billing/test), [Play API 권한](https://developers.google.com/android-publisher/getting_started), [서비스 계정 OAuth](https://developers.google.com/identity/protocols/oauth2/service-account), [Worker secrets](https://developers.cloudflare.com/workers/configuration/secrets/), [Node crypto 지원](https://developers.cloudflare.com/workers/runtime-apis/nodejs/crypto/).
